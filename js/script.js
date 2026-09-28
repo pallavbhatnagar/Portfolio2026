@@ -232,6 +232,7 @@
     const head = section ? section.querySelector(".proj-head") : null;
     const cards = Array.from(projStack.querySelectorAll(".project"));
     const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const footer = document.querySelector(".site-footer");
     let active = false;
     let pinned = false;
     let headTop = 0;
@@ -256,7 +257,7 @@
         const stackTop = headTop + head.offsetHeight + (parseFloat(hs.marginBottom) || 0);
         section.style.setProperty("--stack-top", `${stackTop}px`);
         const lastTop = parseFloat(getComputedStyle(cards[cards.length - 1]).top) || stackTop;
-        const fits = !reduceMq.matches && hs.position === "sticky" && lastTop + tallest + rootFs * 1.5 <= window.innerHeight;
+        const fits = !reduceMq.matches && hs.position === "sticky" && lastTop + tallest + rootFs * 0.93 <= window.innerHeight;
         if (fits) {
           pinned = true;
         } else {
@@ -265,6 +266,26 @@
         }
       }
       active = !reduceMq.matches && getComputedStyle(cards[0]).position === "sticky";
+
+      // Very tall windows can run out of page before the last card lands on
+      // the pile. Then add just enough room under the footer for it to land,
+      // so the page ends with the whole pile in view; normally this stays 0.
+      if (footer) {
+        footer.style.paddingBottom = "";
+        if (!active) return;
+        const inShell = shellScroll && document.body.classList.contains("ask-open");
+        const scroller = inShell ? shellScroll : document.scrollingElement;
+        const viewTop = inShell ? shellScroll.getBoundingClientRect().top : 0;
+        const viewH = inShell ? shellScroll.clientHeight : window.innerHeight;
+        const last = cards[cards.length - 1];
+        const ls = getComputedStyle(last);
+        const lastNatural = projStack.getBoundingClientRect().bottom - viewTop + scroller.scrollTop
+          - (parseFloat(getComputedStyle(projStack).paddingBottom) || 0)
+          - (parseFloat(ls.marginBottom) || 0) - last.offsetHeight;
+        const need = lastNatural - (parseFloat(ls.top) || 0);
+        const room = Math.ceil(need - (scroller.scrollHeight - viewH));
+        if (room > 0) footer.style.paddingBottom = `${room}px`;
+      }
     };
 
     // The cards stack by CSS alone. The only scroll work is the heading: the
@@ -812,7 +833,7 @@
       });
       entering.forEach((it, k) => {
         it.animate(
-          [{ opacity: 0, transform: "translateY(1.4rem)" }, { opacity: 1, transform: "none" }],
+          [{ opacity: 0, transform: "translateY(0.868rem)" }, { opacity: 1, transform: "none" }],
           { duration: 450, delay: 120 + k * 60, easing: EASE_OUT, fill: "backwards" }
         );
       });
@@ -887,7 +908,7 @@
       url: "https://api.soundcloud.com/playlists/1589234278", auto_play: "false", hide_related: "true",
       show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
     });
-    return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Avasa on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.7rem;display:block" allow="autoplay"></iframe>`;
+    return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Avasa on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.434rem;display:block" allow="autoplay"></iframe>`;
   };
 
   const topics = [

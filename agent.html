@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="favicon/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png" />
+<link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#0d0d0d" />
+<link rel="manifest" href="favicon/site.webmanifest" />
+<meta name="msapplication-config" content="favicon/browserconfig.xml" />
+<meta name="theme-color" content="#ffffff" />
+<title>Talk to my Work | Pallav Bhatnagar</title>
+<meta name="description" content="Talk to a voice guide to Pallav Bhatnagar's projects, process and background." />
+<link rel="preload" href="assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
+<script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body class="ag-body">
+
+<header class="ag-topbar" id="top">
+  <a class="ag-back" href="index.html" aria-label="Back to home">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>
+    <span>Back</span>
+  </a>
+  <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+      <circle class="sun-core" cx="12" cy="12" r="4"/>
+      <g class="sun-rays"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></g>
+      <path class="moon" fill="currentColor" stroke="none" d="M20.2 14.7A8.5 8.5 0 1 1 9.3 3.8a7 7 0 0 0 10.9 10.9z"/>
+    </svg>
+  </button>
+</header>
+
+<!-- ============ FULL-SCREEN APP SHELL: no card, no footer. A top bar, one
+     scrolling conversation column, a composer pinned to the bottom of the
+     viewport — the same shape as a dedicated chat app. Answers that have
+     real content (projects, work history, music, books, contact) render as
+     cards pulled from the data below, not as a sentence pointing elsewhere. ============ -->
+<main class="ag" id="main">
+  <div class="ag-scroll" id="agentScroll">
+    <div class="ag-col">
+
+      <div class="ag-welcome">
+        <p class="ag-count">Voice first, typing optional</p>
+        <h1 class="ag-title">Ask about the work.</h1>
+        <div class="ag-suggest" id="agentSuggest" aria-label="Try asking">
+          <button class="wk-chip" type="button" data-q="What have you shipped?">What have you shipped?</button>
+          <button class="wk-chip" type="button" data-q="How do you work?">How do you work?</button>
+          <button class="wk-chip" type="button" data-q="Where have you worked?">Where have you worked?</button>
+          <button class="wk-chip" type="button" data-q="Tell me about Ledgerly.">Tell me about Ledgerly</button>
+        </div>
+      </div>
+
+      <div class="ag-thread" id="agentLog" role="log" aria-live="polite" aria-label="Conversation"></div>
+
+    </div>
+  </div>
+
+  <div class="ag-composer">
+    <div class="ag-fade" aria-hidden="true"></div>
+    <div class="ag-col">
+      <div class="ag-status-row">
+        <p class="ag-status" id="agentStatus" aria-live="polite">Tap to ask</p>
+        <button class="ag-mute" id="agentMute" type="button" aria-pressed="false" aria-label="Mute spoken replies">
+          <svg class="i-vol" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11"/></svg>
+          <svg class="i-mute" viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+        </button>
+      </div>
+      <form class="ag-form" id="agentForm">
+        <button class="ag-mic" id="agentMic" type="button" aria-pressed="false">
+          <span class="ag-mic-ring r1" aria-hidden="true"></span>
+          <span class="ag-mic-ring r2" aria-hidden="true"></span>
+          <svg class="ag-mic-ic" viewBox="0 0 24 24" width="21" height="21" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <path d="M12 14.5a3.2 3.2 0 0 0 3.2-3.2V6.2a3.2 3.2 0 0 0-6.4 0v5.1a3.2 3.2 0 0 0 3.2 3.2z"/>
+            <path d="M6.3 10.8a5.7 5.7 0 0 0 11.4 0"/>
+            <path d="M12 16.5v3M9 19.5h6"/>
+          </svg>
+        </button>
+        <label class="ag-form-label" for="agentInput">Type a question</label>
+        <input class="ag-input" id="agentInput" type="text" autocomplete="off" placeholder="Or type a question&hellip;" />
+        <button class="ag-send" type="submit" aria-label="Send">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</main>
+
+<!-- ============ VOICE MODE: opens when the mic is tapped. One reactive orb —
+     it takes its shape from the mic while you're talking, breathes while the
+     reply is worked out, and pulses while it's read back. The answer renders
+     with the same markup the thread uses, so nothing gets said here that
+     isn't also on the record when you close this and look at the thread. ============ -->
+<div class="ag-voice" id="agentVoice" hidden>
+  <button class="ag-voice-close" id="agentVoiceClose" type="button" aria-label="Close voice mode">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+  </button>
+
+  <div class="ag-orb" aria-hidden="true">
+    <span class="ag-mic-ring r1"></span>
+    <span class="ag-mic-ring r2"></span>
+    <span class="ag-orb-core" id="agentOrbCore"></span>
+  </div>
+
+  <p class="ag-voice-status" id="agentVoiceStatus" aria-live="polite">Listening…</p>
+  <p class="ag-voice-caption" id="agentVoiceCaption" aria-live="polite"></p>
+
+  <div class="ag-voice-answer ag-content" id="agentVoiceAnswer"></div>
+
+  <button class="ag-voice-again" id="agentVoiceAgain" type="button" hidden>
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 14.5a3.2 3.2 0 0 0 3.2-3.2V6.2a3.2 3.2 0 0 0-6.4 0v5.1a3.2 3.2 0 0 0 3.2 3.2z"/>
+      <path d="M6.3 10.8a5.7 5.7 0 0 0 11.4 0"/>
+    </svg>
+    <span>Ask another</span>
+  </button>
+</div>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>
