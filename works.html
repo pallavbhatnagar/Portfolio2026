@@ -1,0 +1,189 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="favicon/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="favicon/apple-touch-icon.png" />
+<link rel="mask-icon" href="favicon/safari-pinned-tab.svg" color="#0d0d0d" />
+<link rel="manifest" href="favicon/site.webmanifest" />
+<meta name="msapplication-config" content="favicon/browserconfig.xml" />
+<meta name="theme-color" content="#ffffff" />
+<title>Works | Pallav Bhatnagar</title>
+<meta name="description" content="Selected work by Pallav Bhatnagar: case studies and explorations, with the problem, the process and the outcome." />
+<link rel="preload" href="assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
+<script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<div class="app-row" id="appRow">
+<div class="site-shell" id="siteShell">
+<div class="scroll-sentinel" aria-hidden="true"></div>
+
+<header class="site-header" id="top">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-home" href="index.html">Home</a>
+    <ul class="nav-links">
+      <li><a href="works.html" aria-current="page">Works</a></li>
+      <li><a href="about.html">About me</a></li>
+      <li>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <circle class="sun-core" cx="12" cy="12" r="4"/>
+            <g class="sun-rays"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></g>
+            <path class="moon" fill="currentColor" stroke="none" d="M20.2 14.7A8.5 8.5 0 1 1 9.3 3.8a7 7 0 0 0 10.9 10.9z"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<div class="page">
+
+<main class="wk" id="main">
+
+  <!-- ============ INTRO ============ -->
+  <section class="wk-hero">
+    <p class="wk-count ab-r">Six products, 2021 to 2025</p>
+    <h1 class="wk-title ab-r">Selected work</h1>
+    <p class="wk-lede ab-r">Products I've redesigned or built from scratch, plus a few explorations. Each one starts with where people got stuck, and ends with something that moved.</p>
+  </section>
+
+  <!-- ============ FILTER: Case studies are shipped client work; Explorations are
+       self-initiated concepts. A card's group is set by data-cat on its <li>
+       ("case" or "explore"); the counts update themselves. ============ -->
+  <div class="wk-filter-bar">
+    <div class="wk-filter" role="group" aria-label="Filter work">
+      <span class="wk-filter-thumb" aria-hidden="true"></span>
+      <button class="wk-seg" type="button" data-filter="all" aria-pressed="true">All work <span class="wk-seg-n" data-count="all"></span></button>
+      <button class="wk-seg" type="button" data-filter="case" aria-pressed="false">Case studies <span class="wk-seg-n" data-count="case"></span></button>
+      <button class="wk-seg" type="button" data-filter="explore" aria-pressed="false">Explorations <span class="wk-seg-n" data-count="explore"></span></button>
+    </div>
+  </div>
+
+  <!-- ============ WORK LIST (sample data): roles and timelines are placeholders ============ -->
+  <ol class="wk-list" aria-label="Selected projects">
+
+    <li class="wk-item" data-cat="case" style="--i:0">
+      <a class="wk-card" href="case-study.html?p=ledgerly" aria-label="Read the Ledgerly case study" style="--tint: var(--mint-bg); --tint-ink: var(--mint-ink)">
+        <div class="wk-copy">
+          <div class="wk-top"><span class="wk-cat">Fintech</span><span class="wk-year">2025</span></div>
+          <h2 class="wk-name">Ledgerly</h2>
+          <p class="wk-what">A personal finance app that makes budgeting feel calm. I led research, redesigned onboarding and simplified the spending overview so first-time users could see where their money went in under a minute.</p>
+          <p class="wk-meta"><span>Lead product designer</span><span>10 weeks &middot; with 1 researcher, 3 engineers</span></p>
+        </div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">Case study</span></div><div class="wk-media"><img src="images/image_1.jpg" alt="Ledgerly mobile screens" loading="eager" fetchpriority="high"></div></div>
+      </a>
+    </li>
+    <li class="wk-item" data-cat="case" data-locked style="--i:1">
+      <a class="wk-card" href="case-study.html?p=wayfarer" aria-label="Read the Wayfarer Health case study (password protected)" style="--tint: var(--lilac-bg); --tint-ink: var(--lilac-ink)">
+        <div class="wk-copy">
+          <div class="wk-top"><span class="wk-cat">Healthcare</span><span class="wk-year">2024</span></div>
+          <h2 class="wk-name">Wayfarer Health</h2>
+          <p class="wk-what">Booking and care-plan flow for a telehealth clinic, designed with patients and nurses in the room. We cut the booking form from eleven fields to four and moved the rest into a guided conversation.</p>
+          <p class="wk-meta"><span>Senior UX designer</span><span>14 weeks &middot; with 2 researchers, 4 engineers</span></p>
+        </div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">Case study</span><span class="shot-lock" title="Password protected"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><span class="sr-only">Password protected</span></span></div><div class="wk-media"><img src="images/image_3.jpg" alt="Wayfarer Health mobile screen" loading="lazy"></div></div>
+      </a>
+    </li>
+    <li class="wk-item" data-cat="case" data-locked style="--i:2">
+      <a class="wk-card" href="case-study.html?p=parcelo" aria-label="Read the Parcelo case study (password protected)" style="--tint: var(--rose-bg); --tint-ink: var(--rose-ink)">
+        <div class="wk-copy">
+          <div class="wk-top"><span class="wk-cat">B2B SaaS</span><span class="wk-year">2024</span></div>
+          <h2 class="wk-name">Parcelo</h2>
+          <p class="wk-what">A dispatch dashboard redesign so logistics teams can spot late deliveries and act in seconds, not minutes. I mapped the dispatcher's real workflow first, then rebuilt the screen around it.</p>
+          <p class="wk-meta"><span>Lead product designer</span><span>8 weeks &middot; with 1 researcher, 2 engineers</span></p>
+        </div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">Case study</span><span class="shot-lock" title="Password protected"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg><span class="sr-only">Password protected</span></span></div><div class="wk-media"><img src="images/image_2.jpg" alt="Parcelo dashboard on a laptop" loading="lazy"></div></div>
+      </a>
+    </li>
+    <li class="wk-item" data-cat="case" style="--i:3">
+      <a class="wk-card" href="case-study.html?p=lumen" aria-label="Read the Lumen Learn case study" style="--tint: var(--sky-bg); --tint-ink: var(--sky-ink)">
+        <div class="wk-copy">
+          <div class="wk-top"><span class="wk-cat">EdTech</span><span class="wk-year">2023</span></div>
+          <h2 class="wk-name">Lumen Learn</h2>
+          <p class="wk-what">Onboarding and lesson flow for an online learning platform, tested across three rounds of usability sessions with real students. The biggest fix was quiet: fewer choices on the first screen.</p>
+          <p class="wk-meta"><span>UX designer and researcher</span><span>9 weeks &middot; with 2 engineers</span></p>
+        </div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">Case study</span></div><div class="wk-media"><img src="images/image_6.jpg" alt="Lumen Learn onboarding screen" loading="lazy"></div></div>
+      </a>
+    </li>
+    <li class="wk-item" data-cat="explore" style="--i:4">
+      <a class="wk-card" href="case-study.html?p=tradewise" aria-label="Read the Tradewise exploration" style="--tint: var(--sand-bg); --tint-ink: var(--sand-ink)">
+        <div class="wk-copy">
+          <div class="wk-top"><span class="wk-cat">Fintech</span><span class="wk-year">2022</span></div>
+          <h2 class="wk-name">Tradewise</h2>
+          <p class="wk-what">A trading screen concept that puts the price, the order book and one clear buy or sell decision on a single card you can read with your thumb, even in a fast market.</p>
+          <p class="wk-meta"><span>Personal exploration</span><span>3 weeks &middot; solo</span></p>
+        </div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">Exploration</span></div><div class="wk-media"><img src="images/image_4.jpg" alt="Tradewise trading screen on a phone" loading="lazy"></div></div>
+      </a>
+    </li>
+    <li class="wk-item" data-cat="explore" style="--i:5">
+      <a class="wk-card" href="case-study.html?p=jda" aria-label="Read the JDA Infra exploration" style="--tint: var(--mint-bg); --tint-ink: var(--mint-ink)">
+        <div class="wk-copy">
+          <div class="wk-top"><span class="wk-cat">Infrastructure</span><span class="wk-year">2021</span></div>
+          <h2 class="wk-name">JDA Infra</h2>
+          <p class="wk-what">A website concept for an infrastructure firm that leads with finished projects instead of service lists, so prospective clients see the proof before the pitch.</p>
+          <p class="wk-meta"><span>Visual and web design</span><span>2 weeks &middot; solo</span></p>
+        </div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">Exploration</span></div><div class="wk-media"><img src="images/image_5.jpg" alt="JDA Infra website on a laptop" loading="lazy"></div></div>
+      </a>
+    </li>
+  </ol>
+
+</main>
+<span class="page-end" aria-hidden="true"></span>
+</div>
+<footer class="site-footer" id="contact">
+  <div class="footer-inner">
+    <div class="footer-bar">
+      <div class="footer-mail-row">
+        <a class="footer-mail" href="mailto:hello@example.com">hello@example.com</a>
+        <button class="copy-mail" type="button" data-copy="hello@example.com" aria-label="Copy email address">
+          <svg class="i-copy" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V7.5A2.5 2.5 0 017.5 5H15"/></svg>
+          <svg class="i-done" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </button>
+        <span class="copy-note" role="status" aria-live="polite"></span>
+      </div>
+      <nav class="footer-links" aria-label="Social">
+        <a href="#" target="_blank" rel="noopener" aria-label="LinkedIn"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 11v5"/><path d="M8 8v.01"/><path d="M12 16v-5"/><path d="M16 16v-3a2 2 0 1 0 -4 0"/><path d="M3 7a4 4 0 0 1 4 -4h10a4 4 0 0 1 4 4v10a4 4 0 0 1 -4 4h-10a4 4 0 0 1 -4 -4l0 -10"/></svg></a>
+        <a href="#" target="_blank" rel="noopener" aria-label="Behance"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 18v-12h4.5a3 3 0 0 1 0 6a3 3 0 0 1 0 6h-4.5"/><path d="M3 12l4.5 0"/><path d="M14 13h7a3.5 3.5 0 0 0 -7 0v2a3.5 3.5 0 0 0 6.64 1"/><path d="M16 6l3 0"/></svg></a>
+        <a href="#" target="_blank" rel="noopener" aria-label="Dribbble"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 1 0 18 0a9 9 0 1 0 -18 0"/><path d="M9 3.6c5 6 7 10.5 7.5 16.2"/><path d="M6.4 19c3.5 -3.5 6 -6.5 14.5 -6.4"/><path d="M3.1 10.75c5 0 9.814 -.38 15.314 -5"/></svg></a>
+      </nav>
+    </div>
+  </div>
+</footer>
+<a class="to-top" href="#top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+</a>
+</div>
+</div>
+
+<!-- ============ PASSWORD DIALOG for locked case studies. A project is locked
+     when its card has data-locked. The password is checked in script.js
+     (block 11c); see the note there on how to change it. ============ -->
+<dialog class="lock-dialog" id="lockDialog" aria-labelledby="lockTitle" aria-describedby="lockDesc">
+  <form class="lock-form" id="lockForm" novalidate>
+    <span class="lock-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span>
+    <h2 id="lockTitle">This case study is password protected</h2>
+    <p id="lockDesc">Enter the password to read this case study. Don't have one? Email <a href="mailto:hello@example.com">hello@example.com</a> and I'll share it.</p>
+    <label class="lock-label" for="lockInput">Password</label>
+    <input class="lock-input" id="lockInput" name="password" type="password" autocomplete="current-password" aria-describedby="lockError">
+    <p class="lock-error" id="lockError" role="alert"></p>
+    <div class="lock-actions">
+      <button class="btn btn-secondary" type="button" id="lockCancel">Cancel</button>
+      <button class="btn btn-primary" type="submit">Unlock</button>
+    </div>
+  </form>
+</dialog>
+
+<script src="js/script.js" defer></script>
+</body>
+</html>
+
