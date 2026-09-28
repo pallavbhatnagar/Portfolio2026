@@ -1222,7 +1222,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.75re
    counters; all transform/opacity/stroke and off for reduced motion.
    ========================================================= */
 .nav-links a[aria-current="page"] { font-weight: 500; }
-.ab { max-width: 97rem; margin: 0 auto; padding: 0 var(--pad) 12rem; }
+/* overflow-x: clip keeps the carousel's hidden end slides from widening the
+   page on phones (clip, unlike hidden, leaves position: sticky working). */
+.ab { max-width: 97rem; margin: 0 auto; padding: 0 var(--pad) 12rem; overflow-x: clip; }
 .ab > section + section { margin-top: var(--space-section); }
 .ab-h2 { font-size: var(--fs-h2); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.08; }
 
