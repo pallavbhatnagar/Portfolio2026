@@ -11,6 +11,11 @@
    - image      the cover screenshot; crops of it illustrate the decisions
    - headline   one sentence under the project name
    - meta       role, timeline, team, platform
+   - tools      the tools used on the project, in the order to show them
+   - team       members (initials + name, shown as avatars) and one sentence
+                about who you worked with; leave members empty for solo work
+   - role       one sentence on what you owned ({role} becomes meta.role in
+                bold) and the focus areas shown as tags
    - outcomes   three results; `to` is the number, prefix/suffix wrap it
    - chapters   overview, problem (+ quote), insights, process, decisions,
                 results (+ testimonial), reflection */
@@ -31,6 +36,15 @@ window.CASE_STUDIES = [
       timeline: "10 weeks, 2025",
       team: "1 researcher, 3 engineers, 1 PM",
       platform: "iOS and Android"
+    },
+    tools: ["Figma", "FigJam", "Maze", "Dovetail", "Notion"],
+    team: {
+      members: [{ initials: "RS", name: "Riya Sen, researcher" }, { initials: "AM", name: "Arjun Mehta, engineer" }, { initials: "KT", name: "Kavya Thomas, engineer" }, { initials: "VN", name: "Vikram Nair, engineer" }, { initials: "MK", name: "Meera Kapoor, Head of Product" }],
+      text: "I worked with a researcher, three engineers and a product manager, and reported to Meera Kapoor, Head of Product. Research and design ran side by side with the build."
+    },
+    role: {
+      text: "As the {role}, I led the onboarding redesign end to end: planning the research with our researcher, shaping the flows, designing the screens and testing every round with real users before it shipped.",
+      focus: ["User research", "Onboarding flows", "Interaction design", "Usability testing", "Prototyping", "Design handoff"]
     },
     outcomes: [
       { to: 92, suffix: "%", label: "task success in the final usability round, up from 61%" },
@@ -78,6 +92,15 @@ window.CASE_STUDIES = [
       team: "2 researchers, 4 engineers, 2 nurses",
       platform: "Web and mobile web"
     },
+    tools: ["Figma", "Miro", "Lookback", "Jira"],
+    team: {
+      members: [{ initials: "DO", name: "Daniel Okafor, researcher" }, { initials: "LS", name: "Leena Shah, researcher" }, { initials: "PR", name: "Priya Rao, nurse" }, { initials: "TM", name: "Tom Mathew, nurse" }, { initials: "SG", name: "Sahil Gupta, engineer" }, { initials: "AN", name: "Anjali Nair, engineer" }, { initials: "RK", name: "Rohit Kumar, engineer" }, { initials: "FI", name: "Farah Iqbal, engineer" }],
+      text: "Two researchers, four engineers and two nurses from the clinic, who joined every design review. I reported to the clinic's product lead."
+    },
+    role: {
+      text: "As the {role}, I designed the new booking and care-plan flow, from the first co-design sessions with patients and nurses to tested, accessible screens the engineers could build.",
+      focus: ["Co-design workshops", "Conversation design", "Accessibility", "Usability testing", "Design system updates"]
+    },
     outcomes: [
       { to: 81, suffix: "%", label: "of started bookings now completed" },
       { to: 44, prefix: "-", suffix: "%", label: "support calls about booking" },
@@ -123,6 +146,15 @@ window.CASE_STUDIES = [
       timeline: "8 weeks, 2024",
       team: "1 researcher, 2 engineers",
       platform: "Desktop web"
+    },
+    tools: ["Figma", "FigJam", "Hotjar", "Amplitude", "Linear"],
+    team: {
+      members: [{ initials: "NB", name: "Nikhil Bose, researcher" }, { initials: "SJ", name: "Sara Joseph, engineer" }, { initials: "HK", name: "Harsh Kulkarni, engineer" }],
+      text: "A small team: one researcher and two engineers, working directly with the dispatch managers who use the dashboard every day."
+    },
+    role: {
+      text: "As the {role}, I started on the dispatch floor to map how the work really happens, then rebuilt the dashboard around the decisions dispatchers make most often.",
+      focus: ["Contextual inquiry", "Workflow mapping", "Information architecture", "Data-dense UI", "Analytics review"]
     },
     outcomes: [
       { to: 52, prefix: "-", suffix: "%", label: "time to resolve a late delivery" },
@@ -170,6 +202,15 @@ window.CASE_STUDIES = [
       team: "2 engineers, 1 content lead",
       platform: "Web"
     },
+    tools: ["Figma", "Maze", "Miro", "Google Analytics"],
+    team: {
+      members: [{ initials: "IM", name: "Isha Menon, engineer" }, { initials: "KD", name: "Karan Dev, engineer" }, { initials: "AR", name: "Aisha Rahman, content lead" }],
+      text: "Two engineers and a content lead. I ran the research myself and tested every round with real students."
+    },
+    role: {
+      text: "As the {role}, I owned both halves of the work: three rounds of usability sessions, the new onboarding, and a simpler lesson flow students actually finish.",
+      focus: ["Usability testing", "Onboarding flows", "Content structure", "Interaction design", "Analytics review"]
+    },
     outcomes: [
       { to: 41, prefix: "+", suffix: "%", label: "course completion across the pilot" },
       { to: 86, label: "usability score, up from 64" },
@@ -216,6 +257,15 @@ window.CASE_STUDIES = [
       team: "Solo",
       platform: "iOS concept"
     },
+    tools: ["Figma", "ProtoPie", "Framer"],
+    team: {
+      members: [],
+      text: "A solo exploration. I set the brief, designed and prototyped it myself, and tested it with five friends who trade every day."
+    },
+    role: {
+      text: "A personal exploration into how much of a trade fits on one card you can use with your thumb, taken from paper sketches to a working prototype.",
+      focus: ["Concept design", "Interaction design", "Prototyping", "Guerrilla testing"]
+    },
     outcomes: [
       { to: 1, label: "card for price, depth and the decision" },
       { to: 5, label: "traders who reviewed the concept" },
@@ -261,6 +311,15 @@ window.CASE_STUDIES = [
       timeline: "2 weeks, 2021",
       team: "Solo",
       platform: "Web concept"
+    },
+    tools: ["Figma", "Framer", "Webflow"],
+    team: {
+      members: [],
+      text: "A solo concept, reviewed along the way with two people who hire infrastructure firms for a living."
+    },
+    role: {
+      text: "A concept for how an infrastructure firm could lead with proof. I handled the site structure, the visual design and a working Framer build.",
+      focus: ["Site structure", "Visual design", "Content strategy", "Web build"]
     },
     outcomes: [
       { to: 3, label: "clicks to any finished project" },

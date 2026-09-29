@@ -53,6 +53,53 @@
       <p class="cs-out-label">${esc(o.label)}</p>
     </div>`;
 
+  // ---------- Team, role, timeline and tools (under the heading) ----------
+  // Teammates show as initials in the site's pastel tints (three, then +N);
+  // solo work shows just Pallav. Tools show as a letter tile in the tool's
+  // own colour, with its name.
+  const avatarTints = ["mint", "lilac", "rose", "sky", "sand"];
+  const toolColours = {
+    Figma: "#f24e1e", FigJam: "#9747ff", Maze: "#1d1d1f", Dovetail: "#6c47ff", Notion: "#1d1d1f",
+    Miro: "#ffd02f", Lookback: "#2c2c54", Jira: "#0052cc", Hotjar: "#ff3c00", Amplitude: "#1e61f0",
+    Linear: "#5e6ad2", "Google Analytics": "#e37400", ProtoPie: "#ff5a5f", Framer: "#0055ff", Webflow: "#4353ff"
+  };
+  const darkText = { Miro: true };
+  const context = () => {
+    const team = p.team || { members: [], text: p.meta.team };
+    const people = team.members.length ? team.members : [{ initials: "PB", name: "Pallav Bhatnagar" }];
+    const shown = people.slice(0, 3);
+    const more = people.length - shown.length;
+    const avatars = shown.map((m, i) => {
+      const t = avatarTints[i % avatarTints.length];
+      return `<li title="${esc(m.name)}" style="--a-bg: var(--${t}-bg); --a-ink: var(--${t}-ink)"><span aria-hidden="true">${esc(m.initials)}</span><span class="sr-only">${esc(m.name)}</span></li>`;
+    }).join("") + (more > 0 ? `<li class="cs-avatar-more" title="${more} more"><span aria-hidden="true">+${more}</span><span class="sr-only">and ${more} more</span></li>` : "");
+    const role = p.role || { text: "", focus: [] };
+    const roleText = esc(role.text).replace("{role}", `<strong>${esc(p.meta.role)}</strong>`);
+    const tools = (p.tools || []).map((t) => `<li><span class="cs-tool-ic" aria-hidden="true" style="--tool: ${toolColours[t] || "var(--ink)"}${darkText[t] ? "; --tool-ink: #1d1d1f" : ""}">${esc(t.charAt(0))}</span>${esc(t)}</li>`).join("");
+    return `
+      <section class="cs-context cs-in" style="--d:3" aria-label="Team, role and tools">
+        <div class="cs-ctx-col">
+          <div class="cs-ctx-block">
+            <h2 class="cs-ctx-h">The team</h2>
+            <ul class="cs-avatars">${avatars}</ul>
+            <p>${esc(team.text)}</p>
+          </div>
+          ${tools ? `<div class="cs-ctx-block"><h2 class="cs-ctx-h">Tools used</h2><ul class="cs-tools">${tools}</ul></div>` : ""}
+        </div>
+        <div class="cs-ctx-col">
+          <div class="cs-ctx-block">
+            <h2 class="cs-ctx-h">My role</h2>
+            <p>${roleText}</p>
+            ${role.focus.length ? `<ul class="cs-focus">${role.focus.map((f) => `<li>${esc(f)}</li>`).join("")}</ul>` : ""}
+          </div>
+          <div class="cs-ctx-block">
+            <h2 class="cs-ctx-h">Timeline and platform</h2>
+            <p><strong>${esc(p.meta.timeline)}</strong> on ${esc(p.meta.platform)}</p>
+          </div>
+        </div>
+      </section>`;
+  };
+
   root.setAttribute("style", tint(p.tint));
   root.innerHTML = `
     <nav class="cs-side" aria-label="Case study">
@@ -72,12 +119,7 @@
         </div>
         <div class="cs-in" style="--d:2">${askButton("cs-ask")}</div>
       </div>
-      <dl class="cs-meta cs-in" style="--d:3">
-        <div><dt>Role</dt><dd>${esc(p.meta.role)}</dd></div>
-        <div><dt>Timeline</dt><dd>${esc(p.meta.timeline)}</dd></div>
-        <div><dt>Team</dt><dd>${esc(p.meta.team)}</dd></div>
-        <div><dt>Platform</dt><dd>${esc(p.meta.platform)}</dd></div>
-      </dl>
+      ${context()}
     </header>
 
     <section class="cs-gate" aria-labelledby="cs-gate-title">
@@ -229,6 +271,7 @@
       [/process|approach|steps|how did|method/, () => ({ text: "The work ran in five steps:", render: () => list(p.process.map((s) => `<strong>${para(s.phase)}.</strong> ${para(s.text)}`)) })],
       [/decision|solution|design|chang|built|feature/, () => ({ text: "The key decisions:", render: () => list(p.decisions.map((d) => `<strong>${para(d.title)}.</strong> ${para(d.text)}`)) })],
       [/result|impact|outcome|number|metric|work(ed)? out|success/, () => ({ text: para(p.results), render: () => list(p.outcomes.map((o) => `<strong>${esc(o.prefix || "")}${o.to}${esc(o.suffix || "")}</strong> ${para(o.label)}`)) })],
+      [/tool|software|figma|stack|app(s)? did you use/, () => ({ text: p.tools && p.tools.length ? `On ${para(p.name)}, Pallav worked in ${para(p.tools.slice(0, -1).join(", "))}${p.tools.length > 1 ? " and " : ""}${para(p.tools[p.tools.length - 1])}.` : `The tools for ${para(p.name)} aren't listed yet.` })],
       [/role|team|who|timeline|long|platform/, () => ({ text: `Pallav was the ${para(p.meta.role.toLowerCase())} on ${para(p.name)}: ${para(p.meta.timeline)}, working with ${para(p.meta.team)}, on ${para(p.meta.platform)}.` })],
       [/reflect|differently|next time|looking back|improve/, () => ({ text: para(p.reflection) })]
     ];
