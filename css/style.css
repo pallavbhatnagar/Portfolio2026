@@ -412,6 +412,12 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 @media (max-width: 640px) {
   .hero { display: flex; flex-direction: column; }
   .trail { order: -1; margin: 0 0 1.75rem; }
+  /* The drawing shrinks to about a third of its desktop size here, so the
+     dot, line and nodes get thicker in SVG units to read the same. */
+  .trail-dot { r: 16px; }
+  .trail-line { stroke-width: 6; }
+  .trail-ghost { stroke-width: 3; }
+  .trail-node { r: 12px; stroke-width: 4.5; }
   .hero-title { font-size: clamp(1.375rem, 7.4vw, 2.25rem); white-space: nowrap; }
   .hero-title .hl, .hero-title .hl > span { display: inline-block; }
 }
@@ -673,10 +679,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .proj-stack .project { position: relative; top: auto; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
 }
-/* Phones: as in the original design, the cards simply scroll by. */
+/* Phones: as in the original design, the cards simply scroll by, and the
+   heading scrolls with the page too (no pinning). script.js reads the
+   heading's position, so with it not sticky it stops pinning altogether. */
 @media (max-width: 900px) {
-  .proj-stack .project { position: relative; top: auto; grid-template-columns: 1fr; min-height: 0; margin-bottom: 1.25rem; }
-  .projects + .value { margin-top: calc(var(--space-section) - 2rem); }
+  .proj-stack .project { position: relative; top: auto; grid-template-columns: 1fr; min-height: 0; margin-bottom: 2rem; }
+  .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
+  .projects + .value { margin-top: calc(var(--space-section) - 2.75rem); }
   .proj-stack .project-panel { order: -1; margin: -1.125rem -1.125rem 0; border-radius: 0.5rem 0.5rem 0 0; }
   .proj-stack .project-shot { min-height: 0; aspect-ratio: 16 / 9; }
   .proj-stack .metrics { margin-top: 1.125rem; }

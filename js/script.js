@@ -89,6 +89,17 @@
   const trail = document.querySelector(".trail");
   const trailSvg = document.querySelector(".trail-svg");
   if (trail && trailSvg) {
+    // On phones the drawing shrinks, so the dot and nodes get larger radii
+    // (style.css does the same with the CSS r property, which some Safari
+    // versions ignore; setting the attribute works in every browser).
+    const smallMq = window.matchMedia("(max-width: 640px)");
+    const sizeTrail = () => {
+      const small = smallMq.matches;
+      trailSvg.querySelectorAll(".trail-dot").forEach((c) => c.setAttribute("r", small ? "16" : "7"));
+      trailSvg.querySelectorAll(".trail-node").forEach((c) => c.setAttribute("r", small ? "12" : "6"));
+    };
+    sizeTrail();
+    if (smallMq.addEventListener) smallMq.addEventListener("change", sizeTrail);
     if (reduce.matches) {
       trailSvg.querySelectorAll("animateMotion").forEach((m) => m.remove());
       const dot = trailSvg.querySelector(".trail-dot");
@@ -1316,7 +1327,12 @@
     };
     askInput.addEventListener("input", autosizeAsk);
     askInput.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); askForm.requestSubmit(); }
+      if (e.key === "Enter" && !e.shiftKey) {
+        e.preventDefault();
+        // requestSubmit arrived in Safari 16; older Safari gets the same submit event.
+        if (askForm.requestSubmit) askForm.requestSubmit();
+        else askForm.dispatchEvent(new Event("submit", { cancelable: true }));
+      }
     });
     askForm.addEventListener("submit", (e) => { e.preventDefault(); askAsk(askInput.value); autosizeAsk(); });
     if (askSuggest) {
