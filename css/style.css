@@ -493,7 +493,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .proj-stack .project-title {
   margin-top: 0.75rem;
   font-size: clamp(1.6875rem, 4.35vw, 1.9375rem);
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: var(--track-heading);
   line-height: 1.08;
 }
