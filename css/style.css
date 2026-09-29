@@ -319,7 +319,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   align-items: center;
   justify-content: center;
   min-width: 5.875rem;
-  height: 2.375rem;
+  height: 2.5rem;
   padding: 0 1.125rem;
   border: 1px solid transparent;
   border-radius: var(--radius-btn);
@@ -496,11 +496,11 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   border-radius: 0.5rem;
   background: var(--card);
 }
-.proj-stack .project-copy { display: flex; flex-direction: column; padding: 0.4375rem 0.5rem 0.125rem; }
+.proj-stack .project-copy { display: flex; flex-direction: column; padding: 0.125rem; }
 .proj-stack .project-tag { font-size: 1rem; font-weight: 700; color: var(--ink-tag); }
 .proj-stack .project-title {
   margin-top: 0.75rem;
-  font-size: clamp(1.6875rem, 4.35vw, 1.9375rem);
+  font-size: clamp(1.375rem, 3.75vw, 1.6667rem);
   font-weight: 700;
   letter-spacing: var(--track-heading);
   line-height: 1.08;
@@ -526,8 +526,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 0.75rem;
-  padding: 0.625rem 0.875rem;
+  margin-top: 1rem;
+  padding: 0.4375rem 0.75rem;
   border: 1px solid rgba(13, 13, 13, 0.08);
   border-radius: 0.375rem;
   background: var(--panel);
@@ -548,7 +548,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 }
 .proj-stack .project-link span {
   display: inline-block;
-  font-size: 1.375rem;
+  font-size: 1.125rem;
   color: #777;
   transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
@@ -2324,6 +2324,74 @@ body.ask-open .cs-side { display: none; }
 .cs-testimonial figcaption { display: flex; flex-direction: column; gap: 0.0625rem; margin-top: 0.75rem; font-size: 1rem; color: var(--ink-soft); }
 .cs-testimonial strong { font-weight: 600; color: var(--ink); }
 
+/* Detailed story blocks (projects with a `story` in case-data.js). Same
+   type sizes as the standard chapters: headings 1.125rem / 500, text
+   --fs-body, labels --fs-small; hairlines and the project tint for surfaces. */
+.cs-sub { margin-top: 2.25rem; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+.cs-ch > .cs-sub + p { margin-top: 0.5rem; }
+.cs-insights.cs-cards { grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr)); }
+/* In a two-column grid, an odd last card takes the full row, so there's no gap. */
+.cs-cards[style*="--cols:2"] > .cs-insight:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.cs-tags { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0.75rem 0 0; padding: 0; list-style: none; }
+.cs-tags li { padding: 0.1875rem 0.5rem; border: 1px solid var(--line); border-radius: 0.375rem; font-size: var(--fs-small); font-weight: 500; line-height: 1.4; color: var(--ink); }
+.cs-impact li { border-color: transparent; background: color-mix(in srgb, var(--tint) 80%, var(--bg)); }
+.cs-decision-copy .cs-tags { margin-top: 0.875rem; }
+.cs-bullets { margin: 0.375rem 0 0; padding-left: 1rem; list-style: disc; }
+.cs-bullets li { font-size: var(--fs-body); line-height: 1.55; color: var(--ink-soft); }
+.cs-bullets li + li { margin-top: 0.1875rem; }
+
+/* Rows: a finding beside its detail, divided by hairlines. */
+.cs-rows { margin-top: 1.25rem; border-top: 1px solid var(--hairline); }
+.cs-row { position: relative; display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr); align-items: baseline; gap: 0.375rem 1.5rem; padding: 0.875rem 0; }
+/* The row's hairline is a pseudo-element so it can draw in (motion below). */
+.cs-row::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1px; background: var(--hairline); transform-origin: left center; }
+.cs-row h3 { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+.cs-row p { font-size: var(--fs-body); line-height: 1.6; color: var(--ink-soft); }
+
+/* Personas: three outlined cards. */
+.cs-personas { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; margin-top: 1.25rem; }
+.cs-persona { padding: 1.125rem 1rem 1.25rem; border: 1px solid var(--hairline); border-radius: 0.4375rem; }
+.cs-persona-kind { font-size: var(--fs-small); color: var(--ink-soft); }
+.cs-persona h3 { margin-top: 0.25rem; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+.cs-persona-line { margin-top: 0.375rem; font-size: var(--fs-body); line-height: 1.55; color: var(--ink-soft); }
+.cs-persona-h { margin-top: 1rem; font-size: var(--fs-small); font-weight: 600; color: var(--ink); }
+
+/* Principles: three columns under a short ink rule. */
+.cs-principles { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.5rem; margin-top: 1.25rem; }
+.cs-principle { position: relative; padding-top: 0.875rem; }
+.cs-principle::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 2px; background: var(--ink); transform-origin: left center; }
+.cs-principle h3 { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
+.cs-principle > p { margin-top: 0.375rem; font-size: var(--fs-body); line-height: 1.55; color: var(--ink); }
+
+/* Priority matrix: 2 x 2, the key quadrant on the project's tint. */
+.cs-matrix { margin: 1.5rem 0 0; }
+.cs-matrix-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; }
+.cs-quad { min-height: 8rem; padding: 1rem; border-radius: 0.4375rem; background: var(--surface); }
+.cs-quad.is-key { background: var(--tint-panel); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--ink) 12%, transparent); }
+.cs-quad-label { font-size: var(--fs-small); font-weight: 600; color: var(--ink); }
+.cs-quad-items { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0.625rem 0 0; padding: 0; list-style: none; }
+.cs-quad-items li { padding: 0.1875rem 0.5rem; border-radius: 0.375rem; background: var(--bg); font-size: var(--fs-small); font-weight: 500; color: var(--ink); }
+.cs-matrix figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.625rem; font-size: var(--fs-small); color: var(--ink-soft); }
+
+/* Before / after: the new version on the project's tint. */
+.cs-compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 1.25rem; }
+.cs-side-card { padding: 1.125rem 1.25rem 1.25rem; border: 1px solid var(--hairline); border-radius: 0.4375rem; }
+.cs-side-card.is-after { border-color: transparent; background: color-mix(in srgb, var(--tint) 75%, var(--bg)); }
+.cs-side-label { font-size: var(--fs-small); font-weight: 600; color: var(--ink); }
+.cs-side-card.is-after .cs-bullets li { color: var(--ink); }
+
+/* Numbers: four results in a row, in the outcome style. */
+.cs-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; margin-top: 1.5rem; }
+.cs-stat-num { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
+.cs-note { margin-top: 1rem; font-size: var(--fs-small); color: var(--ink-soft); }
+.cs-ch > .cs-note { font-size: var(--fs-small); color: var(--ink-soft); }
+
+@media (max-width: 765px) {
+  .cs-insights.cs-cards, .cs-personas, .cs-principles, .cs-compare { grid-template-columns: 1fr; }
+  .cs-row { grid-template-columns: 1fr; }
+  .cs-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
 /* Next project: a full-width link that fills with the next project's tint. */
 .cs-next {
   position: relative;
@@ -2377,6 +2445,34 @@ body.ask-open .cs-side { display: none; }
   .cs-cover { animation: cs-wipe 1.2s var(--ease-io) 0.45s both; }
   .cs-cover-media { animation: cs-settle 1.8s var(--ease-out) 0.45s both; }
   .cs-insight.ab-r, .cs-step.ab-r { transition-delay: calc(var(--i, 0) * 70ms); }
+
+  /* Detailed story motion. One idea throughout: things arrive in reading
+     order, and lines draw the structure as you reach it. Transform and
+     opacity only (clip-path for the image wipe); the site's curves. */
+  .cs-row.ab-r, .cs-persona.ab-r, .cs-principle.ab-r, .cs-stat.ab-r, .cs-side-card.ab-r { transition-delay: calc(var(--i, 0) * 70ms); }
+
+  /* Principles: the ink rule draws left to right as each one arrives. */
+  .cs-principle::before { transition: transform 0.9s var(--ease-io) calc(var(--i, 0) * 70ms + 150ms); }
+  .js .cs-principle:not(.is-in)::before { transform: scaleX(0); }
+
+  /* Pain points: each hairline draws in, pacing the list. */
+  .cs-row::after { transition: transform 0.8s var(--ease-io) calc(var(--i, 0) * 70ms + 100ms); }
+  .js .cs-row:not(.is-in)::after { transform: scaleX(0); }
+
+  /* Priority matrix: quadrants arrive in turn, their actions pop in, then
+     the "important and frequent" corner fills with the project tint. */
+  .cs-quad { transition: opacity 0.6s var(--ease-out), transform 0.6s var(--ease-out), background-color 0.6s ease; transition-delay: calc(var(--q, 0) * 90ms), calc(var(--q, 0) * 90ms), 0s; }
+  .cs-quad.is-key { transition-delay: calc(var(--q, 0) * 90ms), calc(var(--q, 0) * 90ms), 0.95s; }
+  .js .cs-matrix:not(.is-in) .cs-quad { opacity: 0; transform: translateY(0.5rem); }
+  .js .cs-matrix:not(.is-in) .cs-quad.is-key { background-color: var(--surface); }
+  .cs-quad-items li { transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); transition-delay: calc(var(--q, 0) * 90ms + 250ms + var(--t, 0) * 45ms); }
+  .js .cs-matrix:not(.is-in) .cs-quad-items li { opacity: 0; transform: translateY(0.25rem) scale(0.96); }
+
+  /* Decisions: the crop wipes up like the cover, then the impact tags follow. */
+  .cs-decision .cs-crop { transition: clip-path 1s var(--ease-io) 0.1s; clip-path: inset(0 0 0 0 round 0.4375rem); }
+  .js .cs-decision:not(.is-in) .cs-crop { clip-path: inset(100% 0 0 0 round 0.4375rem); }
+  .cs-impact li { transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); transition-delay: calc(350ms + var(--t, 0) * 50ms); }
+  .js .cs-decision:not(.is-in) .cs-impact li { opacity: 0; transform: translateY(0.25rem); }
 }
 @keyframes cs-rise { from { opacity: 0; transform: translateY(0.875rem); } }
 @keyframes cs-wipe { from { clip-path: inset(100% 0 0 0 round 0.625rem); } to { clip-path: inset(0 0 0 0 round 0.625rem); } }

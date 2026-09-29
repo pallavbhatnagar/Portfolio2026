@@ -241,59 +241,554 @@ window.CASE_STUDIES = [
     reflection: "The goal question worked so well that I'd test making it the whole home page."
   },
   {
-    slug: "tradewise",
-    name: "Tradewise",
-    kind: "Exploration",
+    // Wave 2.0 for 63 Moons, designed at THEM Consulting. Pallav was one of two
+    // product designers. Before publishing, check: the team initials, the
+    // tools list, and that every decision below is one you worked on. There
+    // is no quote or testimonial on purpose: add real ones (quote: { text,
+    // who }, testimonial: { text, who, role }) and they appear on the page.
+    slug: "wave",
+    name: "Wave 2.0",
+    kind: "Case study",
     category: "Fintech",
-    year: "2022",
+    year: "2021",
     tint: "sand",
     locked: false,
     image: "images/image_4.jpg",
-    alt: "Tradewise trading screen concept on a phone",
-    headline: "A trading screen concept that fits one clear decision on a card you can read with your thumb.",
+    alt: "Wave 2.0 on a phone: a stock card with the price, market depth and Buy and Sell buttons",
+    headline: "A white-label trading app that lets brokerage firms launch a modern, branded mobile app of their own, without building one from scratch.",
     meta: {
-      role: "Personal exploration",
-      timeline: "3 weeks, 2022",
-      team: "Solo",
-      platform: "iOS concept"
+      role: "Product designer",
+      timeline: "11 months, 2020–21",
+      team: "Lead designer, 2 product designers, 4 PMs, 5 developers",
+      platform: "iOS and Android"
     },
-    tools: ["Figma", "ProtoPie", "Framer"],
+    tools: ["Adobe XD", "Sketch", "Jira", "Microsoft Teams", "Excel"],
     team: {
-      members: [],
-      text: "A solo exploration. I set the brief, designed and prototyped it myself, and tested it with five friends who trade every day."
+      members: [
+        { initials: "ED", name: "Experience design director" },
+        { initials: "LD", name: "Lead designer" },
+        { initials: "PD", name: "Product designer" },
+        { initials: "PM", name: "Product managers (4)" },
+        { initials: "DV", name: "Developers (5)" }
+      ],
+      text: "I was one of two product designers at THEM Consulting, working with our lead designer and experience design director, four product managers and five developers, with the 63 Moons team in every review."
     },
     role: {
-      text: "A personal exploration into how much of a trade fits on one card you can use with your thumb, taken from paper sketches to a working prototype.",
-      focus: ["Concept design", "Interaction design", "Prototyping", "Guerrilla testing"]
+      text: "As a {role}, I designed core trading journeys for Wave 2.0, the flagship product of our client 63 Moons: from turning research into flows, to screens, interactions and components for the shared design system, through to handoff and support during the build.",
+      focus: ["Research synthesis", "User flows and journeys", "UI design", "Design system components", "Micro-interactions", "Developer handoff"]
     },
     outcomes: [
-      { to: 1, label: "card for price, depth and the decision" },
-      { to: 5, label: "traders who reviewed the concept" },
-      { to: 2, label: "taps from watchlist to order" }
+      { to: 25, suffix: "+", label: "brokers launched their own branded app on Wave 2.0" },
+      { to: 4, suffix: "M", label: "trades placed every day across those apps" },
+      { to: 73, suffix: "K", label: "average peak sessions at a time" }
     ],
-    overview: "A self-initiated concept: what would a trading app look like if it were built for fast, confident decisions on a small screen?",
-    problem: "Most trading apps spread price, order book and actions across separate screens. In a fast market, every switch costs a moment of doubt.",
-    quote: { text: "I want to see the book and hit buy without scrolling.", who: "Day trader, concept review" },
+    overview: "Traditional brokerage firms were losing customers to digital-first brokers with slicker, cheaper apps. 63 Moons built Wave 2.0 so any broker could offer a modern trading app under its own brand, and our team at THEM Consulting designed the experience end to end.",
+    problem: "Existing trading apps made people remember too much and dig through deep menus, with little sense of what the market was doing around them. New traders didn't know where to begin, experienced ones missed opportunities while switching screens, and every broker needed the result to feel like its own product, not a template.",
     insights: [
-      { title: "Depth is a feeling", text: "Traders read the order book as a shape, not as numbers. Bars beat digits." },
-      { title: "Buy and sell must not look alike", text: "Under pressure, similar buttons cause costly mistakes." },
-      { title: "Context stays visible", text: "The day's range mattered at the moment of decision, not before it." }
+      { title: "Emotion drives the trade", text: "Fear of missing out, fear of loss and the confidence of a past win shaped when people traded far more than any single feature did." },
+      { title: "Recall is the enemy", text: "Competing apps expected traders to remember symbols, screens and order states. Showing things at the right moment beat asking people to remember them." },
+      { title: "Context builds trust", text: "Traders acted faster when news, order status and guidance sat next to the decision, instead of a few taps away." }
     ],
     process: [
-      { phase: "Listen", text: "Conversations with five active traders about their worst misclicks." },
-      { phase: "Map", text: "Listed every glance a trader makes before placing an order." },
-      { phase: "Sketch", text: "Dozens of card layouts, sized for one-handed use." },
-      { phase: "Test", text: "Clickable prototype reviewed by the same five traders." },
-      { phase: "Share", text: "Wrote up the concept and the trade-offs I'd still want to test." }
+      { phase: "Listen", text: "Sessions with brokerage firms, active traders and the 63 Moons sales team, to see the market from both the broker's and the trader's side." },
+      { phase: "Envision", text: "A product envisioning workshop to agree what a 'superior experience' meant for brokers and for their customers." },
+      { phase: "Map", text: "A frequency-versus-importance map of every trading action, which reshaped the app's navigation around what people do most." },
+      { phase: "Design", text: "Flows, screens and interactions for the core journeys, built on one design system that each broker could brand." },
+      { phase: "Ship", text: "Handoff and day-to-day support with developers on a single cross-platform build, then rollout to brokers." }
     ],
     decisions: [
-      { title: "Everything on one card", text: "Price, change, depth and the two actions share a single card you can read in one look.", focus: "50% 45%" },
-      { title: "Depth as bars", text: "Bid and ask quantities show as bars, so the book reads as a shape.", focus: "50% 70%" },
-      { title: "Unmistakable actions", text: "Buy and sell differ in colour, position and label, never colour alone.", focus: "50% 55%" }
+      { title: "Start from a ready-made watchlist", text: "New traders pick a watchlist curated by experts instead of building one from scratch, so the path to a first trade is short and less daunting.", focus: "50% 30%" },
+      { title: "Trade right from the list", text: "Buy and sell sit on the watchlist itself, with enough market context to act with confidence, so people don't lose the moment switching screens.", focus: "50% 65%" },
+      { title: "One system, many brands", text: "Colours, type and contrast adapt to each broker's brand from a single set of components, so every app feels like the broker's own while the team keeps shipping fast.", focus: "50% 85%" }
     ],
-    results: "Reviewers found the order they wanted faster than in the apps they use today, and all five asked to try a working version.",
-    testimonial: { text: "This is the first mock-up where I didn't have to hunt for the book.", who: "Concept reviewer", role: "Active trader" },
-    reflection: "A concept never meets real market stress. I'd want to test it with live, fast-moving prices."
+    results: "In its first couple of years in market, more than 25 brokers launched their own apps on Wave 2.0, together handling around 4 million trades a day and more than 2 billion a year. The shared design system also let the team design new features roughly four times faster. These figures are approximate, based on 2021 to 2023 data.",
+    reflection: "Working inside a large, multi-team project taught me to design for the system, not just the screen: every decision had to hold up across brands, platforms and very different kinds of trader. I also learned to move forward through ambiguity, making a reasoned call and testing it rather than waiting for certainty.",
+    // Detailed chapters (see js/case.js: "Detailed story"). The page shows
+    // these instead of the standard seven sections.
+    story: [
+      {
+        "id": "overview",
+        "nav": "Overview",
+        "title": "Overview",
+        "lead": "Traditional brokerage firms were losing customers to digital-first brokers with slicker, cheaper apps. 63 Moons built Wave 2.0 so any broker could launch a modern trading app under its own name, and our team at THEM Consulting designed the experience from the first workshop to the final build.",
+        "blocks": [
+          {
+            "type": "cards",
+            "cols": 3,
+            "items": [
+              {
+                "title": "The market",
+                "text": "New-age brokers were winning with better technology, low or zero fees and apps that made trading feel easy. Their large, growing user bases gave them an edge that older firms couldn't match with their existing tools."
+              },
+              {
+                "title": "The business goal",
+                "text": "Established brokers wanted a competitive, future-ready mobile app with a genuinely better experience, to win new investors faster and keep the ones they already had."
+              },
+              {
+                "title": "The product",
+                "text": "Wave 2.0 is a white-label trading app. Each broker rebrands it and switches features on or off to match its own services, so it launches a polished app in weeks instead of building one over years."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "users",
+        "nav": "Users",
+        "title": "Who we designed for",
+        "lead": "Wave 2.0 had two sets of customers: the brokers who buy and brand it, and the traders who use it every day. We designed for traders first, because their trust and activity is what brokers were paying for.",
+        "blocks": [
+          {
+            "type": "personas",
+            "items": [
+              {
+                "kind": "Just starting out",
+                "name": "The first-time investor",
+                "line": "Has money to invest and a lot of curiosity, but no idea which stocks to pick or where to start.",
+                "needs": [
+                  "A safe, guided first trade",
+                  "Plain language instead of jargon",
+                  "Proof that others are doing it too"
+                ],
+                "pains": [
+                  "Building a watchlist from nothing",
+                  "Fear of making an expensive mistake"
+                ]
+              },
+              {
+                "kind": "Trades most days",
+                "name": "The active trader",
+                "line": "Watches the market through the day and acts quickly on news, alerts and price moves.",
+                "needs": [
+                  "Speed from idea to order",
+                  "Live context next to every decision",
+                  "Alerts that are worth opening"
+                ],
+                "pains": [
+                  "Hopping between screens to place one trade",
+                  "Missing a move while searching the app"
+                ]
+              },
+              {
+                "kind": "Years of experience",
+                "name": "The seasoned investor",
+                "line": "Researches carefully, trades options and manages a diverse portfolio.",
+                "needs": [
+                  "Deep research without the busywork",
+                  "A clear, scannable option chain",
+                  "Control over every order detail"
+                ],
+                "pains": [
+                  "Research spread across tools and tabs",
+                  "Dense tables that are slow to read"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "research",
+        "nav": "Research",
+        "title": "What we learned",
+        "lead": "We spoke with brokerage firms, active traders and the 63 Moons sales team, who hear what brokers ask for every day. Brokers needed to reinvent their image with digital experiences, and a better experience had to show up in their numbers: more transactions, more engagement, more customers who stay.",
+        "blocks": [
+          {
+            "type": "subhead",
+            "title": "What moves people to trade",
+            "text": "Synthesising the research in a product envisioning workshop, we kept coming back to human motives rather than features. Five shaped the product more than anything else:"
+          },
+          {
+            "type": "cards",
+            "cols": 2,
+            "items": [
+              {
+                "title": "Fear of missing out",
+                "text": "People act when they see gains they might miss, especially when a stock is trending or friends and influencers are profiting from it."
+              },
+              {
+                "title": "Confidence from experience",
+                "text": "A good first experience and a better understanding of the market make people more willing to trade again. Early positive returns build momentum."
+              },
+              {
+                "title": "Fear of loss",
+                "text": "Avoiding a loss matters more than chasing a gain. People hold onto losing stocks or spread their money out to feel safe."
+              },
+              {
+                "title": "Personal goals",
+                "text": "Building wealth, planning for retirement or saving for something specific gives people a reason to invest and keep investing."
+              },
+              {
+                "title": "Money arriving",
+                "text": "A bonus, a salary hike or any large sum landing in the bank is a common moment when people decide to put money to work."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "problem",
+        "nav": "Problem",
+        "title": "Where existing apps let traders down",
+        "lead": "Reviewing competitor apps alongside the research showed the same gaps again and again. Each one was an opportunity for Wave 2.0.",
+        "blocks": [
+          {
+            "type": "rows",
+            "items": [
+              {
+                "title": "No hand-holding",
+                "text": "Apps didn't match how people actually decide. New users were left to figure everything out alone."
+              },
+              {
+                "title": "Too much to remember",
+                "text": "Screens demanded constant attention and memory, from stock symbols to order states, which made people hesitate before trading."
+              },
+              {
+                "title": "No sense of the market",
+                "text": "Order statuses, market updates and news lived on separate screens, so every decision was made with part of the picture missing."
+              },
+              {
+                "title": "Missed opportunities",
+                "text": "With little guidance on what to buy, people struggled to choose and often didn't act at all."
+              },
+              {
+                "title": "Guesswork instead of insight",
+                "text": "Without clear, contextual guidance, the fear of making a mistake grew. Informed decisions build confidence; guesswork erodes it."
+              },
+              {
+                "title": "Confusing navigation",
+                "text": "Deep, rigid menus made it hard to find the right screen, especially during time-sensitive tasks like placing or changing an order."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "goals",
+        "nav": "Goals",
+        "title": "What we set out to achieve",
+        "lead": "We agreed five product goals with 63 Moons and used them to judge every design decision, from the smallest interaction to the navigation.",
+        "blocks": [
+          {
+            "type": "cards",
+            "cols": 2,
+            "items": [
+              {
+                "title": "Drive engagement and transactions",
+                "text": "Make trading feel effortless so people trade more often. This is where brokers earn their revenue."
+              },
+              {
+                "title": "Win and keep customers",
+                "text": "Give new investors an easy start and give existing ones reasons to stay instead of switching apps."
+              },
+              {
+                "title": "Easy to customise",
+                "text": "A modular product that every broker can brand, and switch features on or off, without redesigning it."
+              },
+              {
+                "title": "Guidance that builds trust",
+                "text": "Explain what's happening at the moment it matters, so people trade with confidence rather than anxiety."
+              },
+              {
+                "title": "Easy to find your way",
+                "text": "Put the most important actions within reach and make the rest easy to discover."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "principles",
+        "nav": "Principles",
+        "title": "Design principles",
+        "lead": "Three principles kept a large team consistent. When two good ideas competed, the one that served these better won.",
+        "blocks": [
+          {
+            "type": "principles",
+            "items": [
+              {
+                "title": "Trust and reliability",
+                "text": "Money is involved, so every screen has to feel dependable.",
+                "points": [
+                  "Consistent patterns everywhere",
+                  "Clear feedback for every action",
+                  "Prevent errors, and let people undo",
+                  "Social proof where it helps"
+                ]
+              },
+              {
+                "title": "Power and confidence",
+                "text": "Help people feel in control of their decisions.",
+                "points": [
+                  "Simple, human language",
+                  "Less ambiguity and confusion",
+                  "Information that supports the decision",
+                  "Room to learn and explore"
+                ]
+              },
+              {
+                "title": "Fast and actionable",
+                "text": "In a moving market, a few seconds decide the outcome.",
+                "points": [
+                  "Surface time-sensitive opportunities",
+                  "Important actions within reach",
+                  "Recognition over recall",
+                  "Context that adapts to the person"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "architecture",
+        "nav": "Architecture",
+        "title": "Rebuilding the navigation",
+        "lead": "We listed every action a trader takes and mapped them on two questions: how often do people do this, and how much does it matter when they do? The top-right corner became the heart of the app; the rest moved out of the way.",
+        "blocks": [
+          {
+            "type": "matrix",
+            "x": "Horizontal: how often people do it",
+            "y": "Vertical: how much it matters",
+            "quadrants": [
+              {
+                "label": "Important, less often",
+                "items": [
+                  "Add funds",
+                  "Option chain",
+                  "Price alerts",
+                  "Order history"
+                ]
+              },
+              {
+                "label": "Important and frequent",
+                "key": true,
+                "items": [
+                  "Watchlist",
+                  "Buy and sell",
+                  "Portfolio",
+                  "Order status",
+                  "Search"
+                ]
+              },
+              {
+                "label": "Less important, less often",
+                "items": [
+                  "Settings",
+                  "Profile",
+                  "Help and support"
+                ]
+              },
+              {
+                "label": "Frequent, less important",
+                "items": [
+                  "Market news",
+                  "Top movers",
+                  "Indices"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "text",
+            "text": "Frequent, high-stakes actions got the shortest paths and a place on the main screens. Occasional but important tasks stayed one clear step away, and everything else moved into a lighter secondary layer."
+          }
+        ]
+      },
+      {
+        "id": "solution",
+        "nav": "Solution",
+        "title": "Making investing smarter and more actionable",
+        "lead": "Our strategy was to lower the barriers to each decision, then give people good reasons to come back. These are the decisions that mattered most.",
+        "blocks": [
+          {
+            "type": "decisions",
+            "items": [
+              {
+                "title": "Start with a ready-made watchlist",
+                "text": "Choosing stocks was the first big hurdle for new users. They can now pick a watchlist curated by experts, or create their own, and be ready to trade in minutes.",
+                "focus": "50% 30%",
+                "impact": [
+                  "Easier start",
+                  "More first trades",
+                  "Higher confidence",
+                  "Better acquisition"
+                ]
+              },
+              {
+                "title": "Opportunities come to you",
+                "text": "New events and opportunities from across all watchlists surface at the top of the screen, so traders stop switching between lists to find what's moving.",
+                "focus": "50% 55%",
+                "impact": [
+                  "Recognition over recall",
+                  "Fewer taps",
+                  "Faster decisions",
+                  "More trades"
+                ]
+              },
+              {
+                "title": "Trade right from the list",
+                "text": "Buy and sell sit on the watchlist itself, with just enough context to act with confidence. The app flexes to different trading styles instead of forcing one path.",
+                "focus": "50% 75%",
+                "impact": [
+                  "More conversions",
+                  "Trust and reliability",
+                  "Ease of use"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "subhead",
+            "title": "Building a habit, not just a feature",
+            "text": "Getting someone to trade once is not enough. We designed small, useful reasons to come back every day:"
+          },
+          {
+            "type": "cards",
+            "cols": 2,
+            "items": [
+              {
+                "title": "Content that changes",
+                "text": "Curated watchlists, opportunities, recommendations, news and research refresh through the day, so there's always something new worth checking."
+              },
+              {
+                "title": "Alerts that prompt action",
+                "text": "Price alerts and portfolio milestones reach people on their lock screen at the moment they can act on them."
+              },
+              {
+                "title": "Widgets on the home screen",
+                "text": "The things people care about stay visible outside the app, which keeps the market, and the app, top of mind."
+              },
+              {
+                "title": "An app that adapts",
+                "text": "The market screen learns what each person follows and puts it first, making it harder to switch to a competitor."
+              }
+            ]
+          },
+          {
+            "type": "subhead",
+            "title": "Research without the rabbit hole",
+            "text": "Researching a stock usually meant hopping between tools. We brought indices, top gainers, news and search into one market screen, so seasoned investors can go from a hunch to an informed trade without leaving the app."
+          },
+          {
+            "type": "subhead",
+            "title": "Options trading, re-thought",
+            "text": "Options are where experienced traders spend the most time, and where existing apps were the hardest to read. We redesigned the option chain around how people scan it:"
+          },
+          {
+            "type": "compare",
+            "before": {
+              "title": "Existing apps",
+              "points": [
+                "Dense tables with every column at once",
+                "Calls and puts hard to tell apart",
+                "The current price lost in the list",
+                "Several screens to place one order"
+              ]
+            },
+            "after": {
+              "title": "Wave 2.0",
+              "points": [
+                "Calls and puts side by side around the strike price",
+                "The current price marked where the eye expects it",
+                "Only the columns that matter, the rest on demand",
+                "Trade straight from the chain"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "system",
+        "nav": "Design system",
+        "title": "One design system, every broker",
+        "lead": "Because Wave 2.0 is sold to many brokers, the design system is the product as much as the screens are. The Moon Design System grew to more than 250 components and made designing new features about four times faster.",
+        "blocks": [
+          {
+            "type": "cards",
+            "cols": 2,
+            "items": [
+              {
+                "title": "Fast design and delivery",
+                "text": "Designers and developers assemble new mobile and web screens from ready-made components, and it's still how new features are designed and built today."
+              },
+              {
+                "title": "Modular and easy to update",
+                "text": "A flexible structure absorbs new features and changes, and lets each broker adapt any component to its own needs."
+              },
+              {
+                "title": "Adapts to each brand",
+                "text": "Colours, contrast and type adjust to a broker's brand from a single set of tokens, without breaking accessibility."
+              },
+              {
+                "title": "Built for one codebase",
+                "text": "The system follows the Ionic framework's structure, so one build serves iOS and Android and developers and designers speak the same language."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "results",
+        "nav": "Results",
+        "title": "Results",
+        "lead": "Wave 2.0 went on to exceed expectations for 63 Moons and the brokers who adopted it.",
+        "blocks": [
+          {
+            "type": "stats",
+            "items": [
+              {
+                "value": "25+",
+                "label": "branded broker apps launched"
+              },
+              {
+                "value": "4M",
+                "label": "trades placed every day"
+              },
+              {
+                "value": "2B+",
+                "label": "trades placed every year"
+              },
+              {
+                "value": "73K",
+                "label": "average peak sessions at a time"
+              }
+            ],
+            "note": "Figures are approximate, based on data from 2021 to 2023."
+          }
+        ]
+      },
+      {
+        "id": "reflection",
+        "nav": "Reflection",
+        "title": "What I took away",
+        "lead": "Wave 2.0 was my first project at this scale, and it changed how I work.",
+        "blocks": [
+          {
+            "type": "cards",
+            "cols": 2,
+            "items": [
+              {
+                "title": "Speed and polish can coexist",
+                "text": "I kept improving the product as I understood it better, but not everything could be solved in one release. Shipping the best possible version within the limits, then improving it, beat waiting for perfect."
+              },
+              {
+                "title": "Ambiguity doesn't go away",
+                "text": "I started out wanting research and testing to answer everything. Some questions stay open, and a reasoned call based on experience, tested quickly, is often the right move."
+              },
+              {
+                "title": "Design for value, not features",
+                "text": "Product teams naturally want to add more. The pain points, context and behaviour behind a feature decide whether it's worth building, so I learned to ask the hard questions early."
+              },
+              {
+                "title": "Teams make each other better",
+                "text": "The best work came when we understood each other's constraints and made it safe to share problems early. That openness is what let a team this size move fast."
+              }
+            ]
+          }
+        ]
+      }
+    ]
   },
   {
     slug: "jda",

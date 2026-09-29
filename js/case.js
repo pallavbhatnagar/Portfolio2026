@@ -38,7 +38,9 @@
   try { unlocked = sessionStorage.getItem("caseStudiesUnlocked") === "1"; } catch (e) { /* private mode */ }
   const gated = p.locked && !unlocked;
 
-  const chapters = [
+  // A project with a detailed `story` lists its own chapters; the others use
+  // the standard seven.
+  const chapters = p.story ? p.story.map((c) => [c.id, c.nav]) : [
     ["overview", "Overview"], ["problem", "Problem"], ["research", "Research"],
     ["process", "Process"], ["solution", "Solution"], ["results", "Results"], ["reflection", "Reflection"]
   ];
@@ -53,6 +55,51 @@
       <p class="cs-out-label">${esc(o.label)}</p>
     </div>`;
 
+  // ---------- Detailed story (optional, per project) ----------
+  // p.story is a list of chapters: { id, nav, title, lead, blocks }. Each
+  // block has a type and draws one kind of content with the page's existing
+  // type sizes: text, subhead, cards, rows, personas, principles, matrix,
+  // decisions, compare, stats, quote.
+  // --t on each tag and --q on each quadrant drive the staggered entrances.
+  const tags = (list, cls = "cs-tags") => list && list.length ? `<ul class="${cls}">${list.map((t, k) => `<li style="--t:${k}">${esc(t)}</li>`).join("")}</ul>` : "";
+  const bullets = (list) => list && list.length ? `<ul class="cs-bullets">${list.map((t) => `<li>${esc(t)}</li>`).join("")}</ul>` : "";
+  const blocks = {
+    text: (b) => `<p class="ab-r">${esc(b.text)}</p>`,
+    subhead: (b) => `<h3 class="cs-sub ab-r">${esc(b.title)}</h3>${b.text ? `<p class="ab-r">${esc(b.text)}</p>` : ""}`,
+    cards: (b) => `<div class="cs-insights cs-cards" style="--cols:${b.cols || 3}">${b.items.map((it, i) => `<article class="cs-insight ab-r" style="--i:${i}"><h3>${esc(it.title)}</h3><p>${esc(it.text)}</p>${tags(it.tags)}</article>`).join("")}</div>`,
+    rows: (b) => `<div class="cs-rows">${b.items.map((it, i) => `<div class="cs-row ab-r" style="--i:${i}"><h3>${esc(it.title)}</h3><p>${esc(it.text)}</p></div>`).join("")}</div>`,
+    personas: (b) => `<div class="cs-personas">${b.items.map((it, i) => `
+      <article class="cs-persona ab-r" style="--i:${i}">
+        <p class="cs-persona-kind">${esc(it.kind)}</p>
+        <h3>${esc(it.name)}</h3>
+        <p class="cs-persona-line">${esc(it.line)}</p>
+        <p class="cs-persona-h">Needs</p>${bullets(it.needs)}
+        <p class="cs-persona-h">Gets in the way</p>${bullets(it.pains)}
+      </article>`).join("")}</div>`,
+    principles: (b) => `<div class="cs-principles">${b.items.map((it, i) => `<article class="cs-principle ab-r" style="--i:${i}"><h3>${esc(it.title)}</h3><p>${esc(it.text)}</p>${bullets(it.points)}</article>`).join("")}</div>`,
+    matrix: (b) => `
+      <figure class="cs-matrix ab-r">
+        <div class="cs-matrix-grid">
+          ${b.quadrants.map((q, k) => `<div class="cs-quad${q.key ? " is-key" : ""}" style="--q:${k}"><p class="cs-quad-label">${esc(q.label)}</p>${tags(q.items, "cs-quad-items")}</div>`).join("")}
+        </div>
+        <figcaption><span>${esc(b.x)}</span><span>${esc(b.y)}</span></figcaption>
+      </figure>`,
+    decisions: (b) => `<div class="cs-decisions">${b.items.map((d) => `
+      <article class="cs-decision ab-r">
+        <div class="cs-crop"><img src="${esc(d.image || p.image)}" alt="" loading="lazy" style="object-position: ${esc(d.focus)}; transform-origin: ${esc(d.focus)}"></div>
+        <div class="cs-decision-copy"><h3>${esc(d.title)}</h3><p>${esc(d.text)}</p>${tags(d.impact, "cs-tags cs-impact")}</div>
+      </article>`).join("")}</div>`,
+    compare: (b) => `<div class="cs-compare">${[b.before, b.after].map((side, i) => `<div class="cs-side-card ab-r${i ? " is-after" : ""}" style="--i:${i}"><p class="cs-side-label">${esc(side.title)}</p>${bullets(side.points)}</div>`).join("")}</div>`,
+    stats: (b) => `<div class="cs-stats">${b.items.map((s, i) => `<div class="cs-stat ab-r" style="--i:${i}"><p class="cs-stat-num" data-value="${esc(s.value)}">${esc(s.value)}</p><p class="cs-out-label">${esc(s.label)}</p></div>`).join("")}</div>${b.note ? `<p class="cs-note ab-r">${esc(b.note)}</p>` : ""}`,
+    quote: (b) => `<blockquote class="cs-quote ab-r"><p>&ldquo;${esc(b.text)}&rdquo;</p><cite>${esc(b.who)}</cite></blockquote>`
+  };
+  const story = (list) => list.map((c) => `
+    <section class="cs-ch" id="${esc(c.id)}">
+      <h2 class="ab-r">${esc(c.title)}</h2>
+      ${c.lead ? `<p class="cs-lead ab-r">${esc(c.lead)}</p>` : ""}
+      ${(c.blocks || []).map((b) => (blocks[b.type] ? blocks[b.type](b) : "")).join("")}
+    </section>`).join("");
+
   // ---------- Team, role, timeline and tools (under the heading) ----------
   // Teammates show as initials in the site's pastel tints (three, then +N);
   // solo work shows just Pallav. Tools show as a letter tile in the tool's
@@ -61,9 +108,11 @@
   const toolColours = {
     Figma: "#f24e1e", FigJam: "#9747ff", Maze: "#1d1d1f", Dovetail: "#6c47ff", Notion: "#1d1d1f",
     Miro: "#ffd02f", Lookback: "#2c2c54", Jira: "#0052cc", Hotjar: "#ff3c00", Amplitude: "#1e61f0",
-    Linear: "#5e6ad2", "Google Analytics": "#e37400", ProtoPie: "#ff5a5f", Framer: "#0055ff", Webflow: "#4353ff"
+    Linear: "#5e6ad2", "Google Analytics": "#e37400", ProtoPie: "#ff5a5f", Framer: "#0055ff", Webflow: "#4353ff",
+    "Adobe XD": "#470137", Sketch: "#f7b500", "Microsoft Teams": "#5059c9", Excel: "#1d6f42"
   };
-  const darkText = { Miro: true };
+  const darkText = { Miro: true, Sketch: true };
+  const toolLetter = { "Adobe XD": "Xd", "Microsoft Teams": "T", Excel: "X", "Google Analytics": "G" };
   const context = () => {
     const team = p.team || { members: [], text: p.meta.team };
     const people = team.members.length ? team.members : [{ initials: "PB", name: "Pallav Bhatnagar" }];
@@ -75,7 +124,7 @@
     }).join("") + (more > 0 ? `<li class="cs-avatar-more" title="${more} more"><span aria-hidden="true">+${more}</span><span class="sr-only">and ${more} more</span></li>` : "");
     const role = p.role || { text: "", focus: [] };
     const roleText = esc(role.text).replace("{role}", `<strong>${esc(p.meta.role)}</strong>`);
-    const tools = (p.tools || []).map((t) => `<li><span class="cs-tool-ic" aria-hidden="true" style="--tool: ${toolColours[t] || "var(--ink)"}${darkText[t] ? "; --tool-ink: #1d1d1f" : ""}">${esc(t.charAt(0))}</span>${esc(t)}</li>`).join("");
+    const tools = (p.tools || []).map((t) => `<li><span class="cs-tool-ic" aria-hidden="true" style="--tool: ${toolColours[t] || "var(--ink)"}${darkText[t] ? "; --tool-ink: #1d1d1f" : ""}">${esc(toolLetter[t] || t.charAt(0))}</span>${esc(t)}</li>`).join("");
     return `
       <section class="cs-context cs-in" style="--d:3" aria-label="Team, role and tools">
         <div class="cs-ctx-col">
@@ -141,6 +190,7 @@
 
       <div class="cs-body">
         <div class="cs-content">
+          ${p.story ? story(p.story) : `
           <section class="cs-ch" id="overview">
             <h2 class="ab-r">Overview</h2>
             <p class="cs-lead ab-r">${esc(p.overview)}</p>
@@ -149,7 +199,7 @@
           <section class="cs-ch" id="problem">
             <h2 class="ab-r">The problem</h2>
             <p class="ab-r">${esc(p.problem)}</p>
-            <blockquote class="cs-quote ab-r"><p>&ldquo;${esc(p.quote.text)}&rdquo;</p><cite>${esc(p.quote.who)}</cite></blockquote>
+            ${p.quote ? `<blockquote class="cs-quote ab-r"><p>&ldquo;${esc(p.quote.text)}&rdquo;</p><cite>${esc(p.quote.who)}</cite></blockquote>` : ""}
           </section>
 
           <section class="cs-ch" id="research">
@@ -180,16 +230,16 @@
           <section class="cs-ch" id="results">
             <h2 class="ab-r">Results</h2>
             <p class="cs-lead ab-r">${esc(p.results)}</p>
-            <figure class="cs-testimonial ab-r">
+            ${p.testimonial ? `<figure class="cs-testimonial ab-r">
               <blockquote><p>&ldquo;${esc(p.testimonial.text)}&rdquo;</p></blockquote>
               <figcaption><strong>${esc(p.testimonial.who)}</strong>${esc(p.testimonial.role)}</figcaption>
-            </figure>
+            </figure>` : ""}
           </section>
 
           <section class="cs-ch" id="reflection">
             <h2 class="ab-r">Looking back</h2>
             <p class="ab-r">${esc(p.reflection)}</p>
-          </section>
+          </section>`}
         </div>
       </div>
     </div>
@@ -219,7 +269,16 @@
     requestAnimationFrame(step);
     setTimeout(() => show(to), 1300);
   };
-  const nums = Array.from(root.querySelectorAll(".cs-num"));
+  // Story numbers ("25+", "4M", "2B+") count up the same way: split each into
+  // prefix, number and suffix. Values without a number are left as they are.
+  root.querySelectorAll(".cs-stat-num[data-value]").forEach((el) => {
+    const m = el.dataset.value.match(/^([^\d]*)(\d+)(.*)$/);
+    if (!m) return;
+    el.dataset.prefix = m[1];
+    el.dataset.to = m[2];
+    el.dataset.suffix = m[3];
+  });
+  const nums = Array.from(root.querySelectorAll(".cs-num, .cs-stat-num[data-to]"));
   if ("IntersectionObserver" in window) {
     const numIo = new IntersectionObserver((entries) => {
       entries.forEach((e) => { if (e.isIntersecting) { countUp(e.target); numIo.unobserve(e.target); } });
@@ -266,7 +325,7 @@
     const t = q.toLowerCase();
     const aboutThis = t.includes(p.name.toLowerCase()) || t.includes(p.slug) || /\b(this|the) (project|case study|work)\b/.test(t);
     const topics = [
-      [/problem|challenge|issue|wrong|why/, () => ({ text: para(p.problem) + ` <em>&ldquo;${para(p.quote.text)}&rdquo;</em>` })],
+      [/problem|challenge|issue|wrong|why/, () => ({ text: para(p.problem) + (p.quote ? ` <em>&ldquo;${para(p.quote.text)}&rdquo;</em>` : "") })],
       [/learn|research|insight|found|discover/, () => ({ text: "Three things stood out from the research:", render: () => list(p.insights.map((i) => `<strong>${para(i.title)}.</strong> ${para(i.text)}`)) })],
       [/process|approach|steps|how did|method/, () => ({ text: "The work ran in five steps:", render: () => list(p.process.map((s) => `<strong>${para(s.phase)}.</strong> ${para(s.text)}`)) })],
       [/decision|solution|design|chang|built|feature/, () => ({ text: "The key decisions:", render: () => list(p.decisions.map((d) => `<strong>${para(d.title)}.</strong> ${para(d.text)}`)) })],
