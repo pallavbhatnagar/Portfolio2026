@@ -328,15 +328,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   white-space: nowrap;
   transition: transform 0.4s var(--hero-ease), background-color 0.3s var(--ease-out), color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
 }
-.btn-primary { background: var(--fill); color: var(--fill-ink); }
-/* Hero "Download resume": the one blue call to action on the site. White
-   text in both themes; a slightly deeper blue on hover. */
-.hero-actions .btn-primary { --cta-blue: #1a6ae4; background: var(--cta-blue); color: #fff; }
-@media (hover: hover) and (pointer: fine) {
-  .hero-actions .btn-primary:hover { background: #1559c7; }
-}
-.hero-actions .btn-primary:focus-visible { outline: 2px solid var(--cta-blue); outline-offset: 3px; }
-.btn-secondary { background: var(--bg); color: var(--ink); border-color: var(--line); }
+.btn-primary { background: var(--fill); color: var(--fill-ink); }.btn-secondary { background: var(--bg); color: var(--ink); border-color: var(--line); }
 /* Ask AI CTA: outlined, matched in shape/size to .btn-primary. Hover
    doesn't fill to black (that read as too heavy for a secondary action) —
    instead a soft wash of the same violet accent the icon already carries,
