@@ -1,5 +1,5 @@
 /* Case study page (case-study.html). Renders one project from
-   window.CASE_STUDIES (js/case-data.js), chosen by ?p=slug, then runs the
+   window.CASE_STUDIES (js/projects.js), chosen by ?p=slug, then runs the
    page's motion:
    - a fixed chapter list at the top left (the chapter you're reading is
      highlighted), a Back button above the heading, and an "Ask AI about this
@@ -55,6 +55,10 @@
       <p class="cs-out-label">${esc(o.label)}</p>
     </div>`;
 
+  // A decision image: its own detail image (or the cover). With a `focus`
+  // it shows as a zoomed crop at that point; without one, in full.
+  const decisionImage = (d) => `<div class="cs-crop${d.focus ? " is-crop" : ""}"><img src="${esc(d.image || p.image)}" alt="" loading="lazy"${d.focus ? ` style="object-position: ${esc(d.focus)}; transform-origin: ${esc(d.focus)}"` : ""}></div>`;
+
   // ---------- Detailed story (optional, per project) ----------
   // p.story is a list of chapters: { id, nav, title, lead, blocks }. Each
   // block has a type and draws one kind of content with the page's existing
@@ -86,7 +90,7 @@
       </figure>`,
     decisions: (b) => `<div class="cs-decisions">${b.items.map((d) => `
       <article class="cs-decision ab-r">
-        <div class="cs-crop"><img src="${esc(d.image || p.image)}" alt="" loading="lazy" style="object-position: ${esc(d.focus)}; transform-origin: ${esc(d.focus)}"></div>
+        ${decisionImage(d)}
         <div class="cs-decision-copy"><h3>${esc(d.title)}</h3><p>${esc(d.text)}</p>${tags(d.impact, "cs-tags cs-impact")}</div>
       </article>`).join("")}</div>`,
     compare: (b) => `<div class="cs-compare">${[b.before, b.after].map((side, i) => `<div class="cs-side-card ab-r${i ? " is-after" : ""}" style="--i:${i}"><p class="cs-side-label">${esc(side.title)}</p>${bullets(side.points)}</div>`).join("")}</div>`,
@@ -221,7 +225,7 @@
             <div class="cs-decisions">
               ${p.decisions.map((d) => `
                 <article class="cs-decision ab-r">
-                  <div class="cs-crop"><img src="${esc(p.image)}" alt="" loading="lazy" style="object-position: ${esc(d.focus)}; transform-origin: ${esc(d.focus)}"></div>
+                  ${decisionImage(d)}
                   <div class="cs-decision-copy"><h3>${esc(d.title)}</h3><p>${esc(d.text)}</p></div>
                 </article>`).join("")}
             </div>
@@ -340,7 +344,7 @@
     const hit = topics.find(([re]) => re.test(bare));
     if (!hit && !aboutThis) return null;
     if (document.body.classList.contains("cs-gated")) {
-      return { text: `The ${para(p.name)} case study is password protected. Unlock it on this page, or email hello@example.com and Pallav will share it.` };
+      return { text: `The ${para(p.name)} case study is password protected. Unlock it on this page, or email ${esc((window.SITE && window.SITE.email) || "hello@example.com")} and Pallav will share it.` };
     }
     if (hit) return hit[1]();
     return { text: `${para(p.name)}: ${para(p.headline)} ${para(p.overview)}`, render: () => list(p.outcomes.map((o) => `<strong>${esc(o.prefix || "")}${o.to}${esc(o.suffix || "")}</strong> ${para(o.label)}`)) };

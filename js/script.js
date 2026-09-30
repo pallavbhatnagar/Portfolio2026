@@ -880,20 +880,27 @@
   //     history or contact answer renders the exact same real content —
   //     never a redirect — wherever someone asks. Swap match() for a live
   //     model later and every consumer keeps working unchanged.
-  const PROJECTS = [
-    { id: "ledgerly", name: "Ledgerly", tag: "Fintech · 2025", glyph: "g1", tint: "mint",
-      desc: "A personal finance app that makes budgeting feel calm — redesigned onboarding and a spending overview people read in under a minute.",
-      metric: "92%", metricLabel: "task success, up from 61%" },
-    { id: "wayfarer", name: "Wayfarer Health", tag: "Healthcare · 2024", glyph: "g2", tint: "lilac",
-      desc: "Booking and care-plan flow for a telehealth clinic, cut from eleven form fields down to four.",
-      metric: "81%", metricLabel: "of bookings completed" },
-    { id: "parcelo", name: "Parcelo", tag: "B2B SaaS · 2024", glyph: "g3", tint: "rose",
-      desc: "A dispatch dashboard rebuilt around the dispatcher's real workflow, so late deliveries get caught in seconds.",
-      metric: "2×", metricLabel: "faster issue resolution" },
-    { id: "lumen", name: "Lumen Learn", tag: "EdTech · 2023", glyph: "g4", tint: "sky",
-      desc: "Onboarding and lesson flow for an online learning platform, tested across three rounds with real students.",
-      metric: "41%", metricLabel: "more course completions" },
-  ];
+  // Project cards come from js/projects.js (the Home page's featured
+  // projects, in the same order), and the contact email from js/content.js.
+  const SITE_EMAIL = (window.SITE && window.SITE.email) || "hello@example.com";
+  const PROJECTS = (window.CASE_STUDIES || [])
+    .filter((p) => p.home)
+    .sort((a, b) => (a.home.order || 0) - (b.home.order || 0))
+    .map((p, i) => {
+      const o = (p.outcomes && p.outcomes[0]) || null;
+      return {
+        id: p.slug, name: p.name, tag: `${p.category} · ${p.year}`, glyph: `g${(i % 4) + 1}`, tint: p.tint,
+        desc: p.home.text,
+        metric: o ? `${o.prefix || ""}${o.to}${o.suffix || ""}` : "",
+        metricLabel: o ? o.label : ""
+      };
+    });
+  const EXTRA_KEYWORDS = {
+    ledgerly: ["finance app", "budgeting"],
+    wayfarer: ["telehealth", "clinic"],
+    parcelo: ["logistics", "dispatch"],
+    lumen: ["edtech", "course", "e-learning"]
+  };
   const EXPERIENCE = [
     { co: "Akash", role: "Senior UX Designer", years: "2023 — Now", tint: "mint" },
     { co: "Sellium", role: "Product Designer", years: "2021 — 2023", tint: "lilac" },
@@ -902,7 +909,7 @@
     { co: "Klutch", role: "Junior Designer", years: "2018 — 2019", tint: "sand" },
   ];
 
-  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="works.html" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
+  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="case-study.html?p=${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
     + `<div class="ag-card-top"><span class="ag-glyph glyph ${p.glyph}"></span><b>${p.name}</b></div>`
     + `<p>${p.desc}</p>`
     + `<span class="ag-card-metric"><b>${p.metric}</b>${p.metricLabel}</span></a>`;
@@ -912,7 +919,7 @@
     return p ? `<div class="ag-cards">${projectCardHtml(p, true)}</div>` : "";
   };
   const renderExperience = () => `<div class="ag-xp">${EXPERIENCE.map((e) => `<div class="ag-xp-row"><span class="ag-xp-dot" style="background:var(--${e.tint}-ink)"></span><b>${e.co}</b><span>${e.role}</span><em>${e.years}</em></div>`).join("")}</div>`;
-  const renderContactCard = () => '<div class="ag-info"><span><b><a href="mailto:hello@example.com">hello@example.com</a></b><span>Usually replies within two days</span></span></div>';
+  const renderContactCard = () => `<div class="ag-info"><span><b><a href="mailto:${SITE_EMAIL}">${SITE_EMAIL}</a></b><span>Usually replies within two days</span></span></div>`;
   const renderBooksCard = () => '<div class="ag-info"><span><b>The Design of Everyday Things</b><span>Currently reading — also into Saga, Watchmen and Sandman</span></span></div>';
   const renderMusicCard = () => {
     const params = new URLSearchParams({
@@ -927,14 +934,13 @@
       text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him." },
     { k: ["shipped", "projects", "portfolio", "what have you built", "case stud", "worked on"],
       text: "Four recent ones — tap a card to open the full case study.", render: renderProjectsGrid },
-    { k: ["ledgerly", "finance app", "budgeting"],
-      text: "Ledgerly is a personal finance app. Pallav led research, redesigned onboarding and simplified the spending overview.", render: () => renderProjectCard("ledgerly") },
-    { k: ["wayfarer", "telehealth", "clinic"],
-      text: "Wayfarer Health is a booking and care-plan flow for a telehealth clinic, designed with patients and nurses in the room.", render: () => renderProjectCard("wayfarer") },
-    { k: ["parcelo", "logistics", "dispatch"],
-      text: "Parcelo is a dispatch dashboard for logistics teams, rebuilt around the dispatcher's real workflow.", render: () => renderProjectCard("parcelo") },
-    { k: ["lumen", "edtech", "course", "e-learning"],
-      text: "Lumen Learn is an online learning platform, tested across three rounds of usability sessions with real students.", render: () => renderProjectCard("lumen") },
+    // One answer per featured project, from js/projects.js. Extra words
+    // people might use for a project go in EXTRA_KEYWORDS.
+    ...PROJECTS.map((p) => ({
+      k: [p.id, p.name.toLowerCase(), ...(EXTRA_KEYWORDS[p.id] || [])],
+      text: `${p.name}: ${p.desc}`,
+      render: () => renderProjectCard(p.id)
+    })),
     { k: ["how do you work", "process", "approach", "sketch", "method"],
       text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.' },
     { k: ["worked", "experience", "companies", "career", "history", "resume", "cv"],
@@ -1358,7 +1364,7 @@
     };
     // Closing sound: plays however the panel closes (close button, the AI
     // button again, or Escape).
-    const closeSound = new Audio("images/closing.mp3");
+    const closeSound = new Audio("assets/audio/sound-effects/chat-close.mp3");
     const closeAsk = () => {
       if (!askOpen) return;
       askOpen = false;
@@ -1374,7 +1380,7 @@
       askTrigger.focus();
     };
     askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
-    const askSound = new Audio("images/ai-chat-open-scan-loud.wav");
+    const askSound = new Audio("assets/audio/sound-effects/chat-open.wav");
     askTriggers.forEach((t) => {
       t.addEventListener("click", () => {
         askTrigger = t; // focus returns here when the panel closes

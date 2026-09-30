@@ -1,8 +1,0 @@
-/* =========================================================
-   Home draft (home-draft.html only).
-   A working copy of the Home page for reshaping the project cards
-   ("Products I've worked on"). This file loads after style.css, so any
-   rule here overrides the shared one on the draft page only; the live
-   Home page never loads it. When the cards are ready, move these rules
-   into the Projects block of style.css and the markup into index.html.
-   ========================================================= */

@@ -319,7 +319,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   align-items: center;
   justify-content: center;
   min-width: 5.875rem;
-  height: 2.5rem;
+  height: 2.9rem;
   padding: 0 1.125rem;
   border: 1px solid transparent;
   border-radius: var(--radius-btn);
@@ -329,6 +329,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   transition: transform 0.4s var(--hero-ease), background-color 0.3s var(--ease-out), color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
 }
 .btn-primary { background: var(--fill); color: var(--fill-ink); }
+/* Hero "Download resume": the one blue call to action on the site. White
+   text in both themes; a slightly deeper blue on hover. */
+.hero-actions .btn-primary { --cta-blue: #1a6ae4; background: var(--cta-blue); color: #fff; }
+@media (hover: hover) and (pointer: fine) {
+  .hero-actions .btn-primary:hover { background: #1559c7; }
+}
+.hero-actions .btn-primary:focus-visible { outline: 2px solid var(--cta-blue); outline-offset: 3px; }
 .btn-secondary { background: var(--bg); color: var(--ink); border-color: var(--line); }
 /* Ask AI CTA: outlined, matched in shape/size to .btn-primary. Hover
    doesn't fill to black (that read as too heavy for a secondary action) —
@@ -344,10 +351,10 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   color: var(--ink);
   border-color: var(--line);
 }
-.nav-ai-ic { color: #7e57c2; transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
+.nav-ai-ic { color: #bf1363; transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
-  .btn.nav-ai:hover { background: color-mix(in srgb, #7e57c2 10%, var(--bg)); border-color: color-mix(in srgb, #7e57c2 45%, var(--line)); }
-  .btn.nav-ai:hover .nav-ai-ic { color: #6a44b0; transform: scale(1.12) rotate(90deg); }
+  .btn.nav-ai:hover { background: color-mix(in srgb, #bf1363 10%, var(--bg)); border-color: color-mix(in srgb, #bf1363 45%, var(--line)); }
+  .btn.nav-ai:hover .nav-ai-ic { color: #a0104f; transform: scale(1.12) rotate(90deg); }
 }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -530,7 +537,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   color: var(--ink-tag);
 }
 /* "Read case study": ink wipes in from the left, text turns light, the
-   arrow nudges up-right. --fill / --fill-ink are the site's ink pair, so it
+   arrow nudges right. --fill / --fill-ink are the site's ink pair, so it
    stays readable in dark theme too. */
 .proj-stack .project-link {
   position: relative;
@@ -560,11 +567,12 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   transition: transform 0.4s var(--ease-out);
 }
 .proj-stack .project-link span {
-  display: inline-block;
+  display: inline-flex;
   font-size: 1.125rem;
   color: #777;
   transition: transform 0.3s var(--ease-out), color 0.3s var(--ease-out);
 }
+.proj-stack .project-link span svg { width: 1em; height: 1em; }
 .proj-stack .project-link:focus-visible,
 .proj-stack .project-link:active { color: var(--fill-ink); }
 .proj-stack .project-link:focus-visible::before,
@@ -575,7 +583,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 @media (hover: hover) and (pointer: fine) {
   .proj-stack .project-link:hover { color: var(--fill-ink); }
   .proj-stack .project-link:hover::before { transform: scaleX(1); }
-  .proj-stack .project-link:hover span { color: var(--fill-ink); transform: translate(4px, -4px); }
+  .proj-stack .project-link:hover span { color: var(--fill-ink); transform: translateX(4px); }
 }
 
 /* Visual: the screenshot runs to the card's top, right and bottom edges.
@@ -867,6 +875,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   transition: color 0.2s ease;
 }
 .footer-links svg { width: 1rem; height: 1rem; }
+/* Icon files (assets/icons/social/) are drawn in the site's black: at 60%
+   they match the grey text colour, and turn full black on hover. Dark
+   theme flips them to light. */
+.footer-links img { display: block; width: 1rem; height: 1rem; opacity: 0.6; transition: opacity 0.2s ease; }
+.footer-links a:focus-visible img { opacity: 1; }
+@media (hover: hover) and (pointer: fine) { .footer-links a:hover img { opacity: 1; } }
+:root[data-theme="dark"] .footer-links img { filter: invert(1); }
 .footer-mail:focus-visible, .footer-links a:focus-visible { color: var(--ink); outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.1875rem; }
 
 /* Back to top: fixed to the window's right edge, shown only near the
@@ -2266,11 +2281,11 @@ body.ask-open .shell-scrollbar {
   cursor: pointer;
   transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s var(--ease-out);
 }
-.cs-ask-ic { display: inline-grid; color: #7e57c2; transition: transform 0.3s var(--ease-out); }
+.cs-ask-ic { display: inline-grid; color: #bf1363; transition: transform 0.3s var(--ease-out); }
 .cs-ask:active { transform: scale(0.97); }
 .cs-ask:focus-visible { outline: 2px solid var(--ink); outline-offset: 2.64px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-ask:hover { background: color-mix(in srgb, #7e57c2 10%, var(--bg)); border-color: color-mix(in srgb, #7e57c2 45%, var(--line)); }
+  .cs-ask:hover { background: color-mix(in srgb, #bf1363 10%, var(--bg)); border-color: color-mix(in srgb, #bf1363 45%, var(--line)); }
   .cs-ask:hover .cs-ask-ic { transform: scale(1.12) rotate(90deg); }
 }
 /* Below 1200px there's no room beside the content for the chapter list. */
@@ -2329,7 +2344,10 @@ body.ask-open .cs-side { display: none; }
 .cs-decisions { display: grid; gap: 0.75rem; margin-top: 1.25rem; }
 .cs-decision { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: 1.375rem; }
 .cs-crop { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-radius: 0.4375rem; background: var(--tint); }
-.cs-crop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.7); }
+.cs-crop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* With a `focus` in projects.js the image is a zoomed crop of that point;
+   without one (a real detail image) it shows in full. */
+.cs-crop.is-crop img { transform: scale(1.7); }
 .cs-decision-copy h3 { font-size: clamp(1.125rem, 2.4vw, 1.375rem); font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; }
 .cs-decision-copy p { max-width: 44ch; margin-top: 0.4375rem; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-soft); }
 .cs-decision:nth-child(even) .cs-crop { order: 2; }
@@ -2340,7 +2358,7 @@ body.ask-open .cs-side { display: none; }
 .cs-testimonial figcaption { display: flex; flex-direction: column; gap: 0.0625rem; margin-top: 0.75rem; font-size: 1rem; color: var(--ink-soft); }
 .cs-testimonial strong { font-weight: 600; color: var(--ink); }
 
-/* Detailed story blocks (projects with a `story` in case-data.js). Same
+/* Detailed story blocks (projects with a `story` in js/projects.js). Same
    type sizes as the standard chapters: headings 1.125rem / 500, text
    --fs-body, labels --fs-small; hairlines and the project tint for surfaces. */
 .cs-sub { margin-top: 2.25rem; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
@@ -2496,11 +2514,13 @@ body.ask-open .cs-side { display: none; }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .cs-cover-media img { animation: cs-drift-cover linear both; animation-timeline: view(); animation-range: exit -20% exit 100%; }
-    .cs-crop img { animation: cs-drift-crop linear both; animation-timeline: view(); animation-range: cover; }
+    .cs-crop img { animation: cs-drift-full linear both; animation-timeline: view(); animation-range: cover; }
+    .cs-crop.is-crop img { animation-name: cs-drift-crop; }
   }
 }
 @keyframes cs-drift-cover { from { transform: translateY(0) scale(1.06); } to { transform: translateY(8%) scale(1.06); } }
 @keyframes cs-drift-crop { from { transform: translateY(-5%) scale(1.7); } to { transform: translateY(5%) scale(1.7); } }
+@keyframes cs-drift-full { from { transform: translateY(-3%) scale(1.08); } to { transform: translateY(3%) scale(1.08); } }
 
 @media (max-width: 765px) {
   .cs-hero { padding-top: calc(var(--pad) + 3rem); }
