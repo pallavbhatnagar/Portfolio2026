@@ -1,4 +1,4 @@
-# Pallav Bhatnagar — portfolio
+# Pallav Bhatnagar — portfolio -
 
 A static website: plain HTML, CSS and JavaScript. No build step, no server.
 
