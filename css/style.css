@@ -424,7 +424,14 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 @media (max-width: 480px) {
   .btn { min-width: 0; flex: 1; padding: 0 0.75rem; }
   .hero-actions { width: 100%; }
-  .trail-lab.t2, .trail-lab.t3, .trail-lab.t4 { display: none; }
+  /* All four phase labels stay; to make room, "Done" shrinks to its check
+     mark in a small circle at the end of the line. */
+  .trail-done { font-size: 0; gap: 0; padding: 0.25rem; }
+  /* Labels keep a fixed gap from the line (at 52.6% of the drawing's
+     height), so they clear it however narrow the screen gets. */
+  .trail-lab.up { top: auto; bottom: calc(47.4% + 0.4375rem); }
+  .trail-lab.down { top: calc(52.6% + 0.4375rem); }
+  .trail-done svg { width: 0.625rem; height: 0.625rem; }
 }
 /* Shared keyframes (page sections and nav) */
 @keyframes pop { to { opacity: 1; transform: none; } }
