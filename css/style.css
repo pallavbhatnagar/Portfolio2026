@@ -1559,8 +1559,11 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 @media (prefers-reduced-motion: reduce) { .bm { overflow-x: auto; -webkit-mask-image: none; mask-image: none; } }
 /* The shelf is focusable (keyboard users can scroll it, and focus pauses
    it). Its fading mask would clip a focus ring, so the Books card shows it. */
-.bm:focus-visible { outline: none; }
-.off-books:has(.bm:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* Browsers without :has() (Firefox 115-120) keep the shelf's own outline. */
+@supports selector(:has(*)) {
+  .bm:focus-visible { outline: none; }
+  .off-books:has(.bm:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
+}
 @media (max-width: 900px) {
   .off-music { grid-template-columns: 1fr; gap: var(--space-3); padding: 1.125rem; }
 }
@@ -2163,17 +2166,26 @@ body.ask-open .shell-scrollbar {
   position: absolute;
   right: 12px;
   bottom: 11px;
-  display: grid;
-  place-items: center;
+  /* Flex centring plus no default button padding or line height: iPhone
+     Safari otherwise sets the arrow like a line of text, off-centre. */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 28px;
   height: 28px;
+  padding: 0;
   border: 0;
   border-radius: 50%;
+  font-size: 0;
+  line-height: 0;
+  -webkit-appearance: none;
+  appearance: none;
   background: #8a8a8a;
   color: #fff;
   cursor: pointer;
   transition: background-color 0.15s ease, transform 0.1s ease;
 }
+.ask-panel-send svg { display: block; flex: none; }
 .ask-panel-send:not(:disabled) { background: var(--ink); }
 .ask-panel-send:disabled { cursor: default; }
 .ask-panel-send:not(:disabled):active { transform: scale(0.94); }
