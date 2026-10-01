@@ -73,6 +73,6 @@
   // icon file.
   const socials = Array.isArray(site.socials) ? site.socials : [];
   document.querySelectorAll("[data-site-socials]").forEach((nav) => {
-    nav.innerHTML = socials.map((s) => `<a href="${esc(s.url || "#")}" target="_blank" rel="noopener" aria-label="${esc(s.name)}"><img src="${esc(s.icon)}" alt="" width="16" height="16"></a>`).join("");
+    nav.innerHTML = socials.map((s) => `<a href="${esc(s.url || "#")}" target="_blank" rel="noopener" aria-label="${esc(s.name)} (opens in a new tab)"><img src="${esc(s.icon)}" alt="" width="16" height="16"></a>`).join("");
   });
 })();

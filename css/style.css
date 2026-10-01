@@ -18,7 +18,7 @@
 :root {
   --bg: #ffffff;
   --ink: #0d0d0d;
-  --ink-soft: #6f6f6f;
+  --ink-soft: #666666; /* passes 4.5:1 on white and on every project tint */
   --ink-note: #555555;
   --line: #dcdcdc;
   --hairline: rgba(13, 13, 13, 0.1);
@@ -135,6 +135,11 @@
 .first-screen { display: flex; flex-direction: column; }
 
 html { font-size: 90%; }
+/* Focus never hidden (WCAG 2.4.11): when the keyboard moves focus, the
+   browser scrolls the item clear of the fixed nav, and on Works clear of the
+   sticky filter bar too. The chat panel's scroll area gets the same offset. */
+html, body.ask-open .shell-scroll { scroll-padding-top: 4.5rem; }
+html:has(.wk-filter-bar), body.ask-open:has(.wk-filter-bar) .shell-scroll { scroll-padding-top: 7.75rem; }
 body {
   margin: 0;
   background: var(--bg);
@@ -319,8 +324,11 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   align-items: center;
   justify-content: center;
   min-width: 5.875rem;
-  height: 2.9rem;
-  padding: 0 1.125rem;
+  /* A minimum, not a fixed height: at normal spacing it's exactly 2.9rem,
+     but if a reading tool adds letter or line spacing (WCAG 1.4.12) the
+     button grows instead of clipping its text. */
+  min-height: 2.9rem;
+  padding: 0.375rem 1.125rem;
   border: 1px solid transparent;
   border-radius: var(--radius-btn);
   font-size: 1rem;
@@ -417,11 +425,15 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .trail-line { stroke-width: 6; }
   .trail-ghost { stroke-width: 3; }
   .trail-node { r: 12px; stroke-width: 4.5; }
-  .hero-title { font-size: clamp(1.375rem, 7.4vw, 2.25rem); white-space: nowrap; }
+  /* Sized to fit one line; allowed to wrap only if a reading tool adds
+     letter spacing (WCAG 1.4.12), instead of running off the screen. */
+  .hero-title { font-size: clamp(1.375rem, 7.4vw, 2.25rem); }
   .hero-title .hl, .hero-title .hl > span { display: inline-block; }
 }
 @media (max-width: 480px) {
-  .btn { min-width: 0; flex: 1; padding: 0 0.75rem; }
+  /* Phones: the two hero buttons share a row, so with extra text spacing a
+     label wraps onto a second line rather than spilling out. */
+  .btn { min-width: 0; flex: 1; padding: 0.375rem 0.75rem; white-space: normal; text-align: center; }
   .hero-actions { width: 100%; }
   /* All four phase labels stay; to make room, "Done" shrinks to its check
      mark in a small circle at the end of the line. */
@@ -508,6 +520,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   border-radius: 0.5rem;
   background: var(--card);
 }
+/* The card holding keyboard focus comes to the front of the pile, so a
+   later card can never cover its focused link (WCAG 2.4.11). */
+.proj-stack .project:focus-within { z-index: 2; }
 .proj-stack .project-copy { display: flex; flex-direction: column; padding: 0.125rem; }
 .proj-stack .project-tag { font-size: 1rem; font-weight: 700; color: var(--ink-tag); }
 .proj-stack .project-title {
@@ -519,7 +534,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 }
 .proj-stack .project-desc { margin-top: 0.375rem; max-width: 45ch; font-size: var(--fs-body); line-height: 1.45; color: #444; }
 .proj-stack .metrics { display: flex; gap: 1.875rem; margin-top: auto; padding-top: 1.125rem; }
-.proj-stack .metrics dt { font-size: 1rem; color: #6a6a6a; }
+.proj-stack .metrics dt { font-size: 1rem; color: var(--ink-soft); }
 .proj-stack .metrics dd {
   margin-top: 0.125rem;
   font-size: 1.75rem;
@@ -857,12 +872,14 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   color: var(--ink-soft);
   transition: color 0.2s ease;
 }
-.footer-links { display: flex; align-items: center; gap: 1rem; }
+.footer-links { display: flex; align-items: center; gap: 0.75rem; margin-right: -0.125rem; }
 .footer-links a {
   display: grid;
   place-items: center;
-  width: 1.5rem;
-  height: 1.5rem;
+  /* 25px tap area (WCAG 2.5.8 asks for 24px); the gap shrank by the same
+     amount, so the icons sit exactly where they did. */
+  width: 1.75rem;
+  height: 1.75rem;
   color: var(--ink-soft);
   transition: color 0.2s ease;
 }
@@ -1189,13 +1206,16 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .tpanel.is-active .tvideo { pointer-events: auto; }
 .tpanel--video.is-active .tdp { opacity: 0; pointer-events: none; }
 .tvideo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.tctl { position: absolute; right: 0.3125rem; bottom: 0.25rem; display: flex; align-items: center; gap: 0.0625rem; opacity: 0.6; transition: opacity 0.3s var(--ease-out); }
+.tctl { position: absolute; right: 0.3125rem; bottom: 0.25rem; display: flex; align-items: center; gap: 0.375rem; opacity: 0.6; transition: opacity 0.3s var(--ease-out); }
 .tvideo:hover .tctl, .tvideo:focus-within .tctl { opacity: 1; }
 .tbtn {
   display: grid;
   place-items: center;
-  width: 1.375rem;
-  height: 1.375rem;
+  /* 25px tap area (WCAG 2.5.8); the negative margin keeps the icon and its
+     neighbours exactly where they were at 20px. */
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.1875rem;
   padding: 0;
   border: 0;
   background: none;
@@ -1224,8 +1244,11 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   position: relative;
   display: grid;
   place-items: center;
-  width: 1.125rem;
-  height: 1.125rem;
+  /* A 25px tap area around a 16px-looking button: the negative margin
+     keeps its neighbours where they were. */
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: -0.3125rem;
   padding: 0;
   border: 0;
   border-radius: 50%;
@@ -1243,7 +1266,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .copy-mail:active { transform: scale(0.92); }
 .copy-mail:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) { .copy-mail:hover { opacity: 1; background: color-mix(in srgb, var(--ink) 8%, transparent); } }
-.copy-note { font-size: var(--fs-small); font-weight: 400; color: #9a9aa2; opacity: 0; transform: translateX(-0.1875rem); transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out); }
+.copy-note { font-size: var(--fs-small); font-weight: 400; color: var(--ink-soft); opacity: 0; transform: translateX(-0.1875rem); transition: opacity 0.25s var(--ease-out), transform 0.25s var(--ease-out); }
 .copy-note.is-on { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .copy-mail svg, .copy-note { transition: none; } }
 
@@ -1349,7 +1372,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .im-copy { display: flex; flex-direction: column; align-items: flex-start; }
 .im-tag { display: inline-flex; align-items: center; gap: 0.3125rem; margin: 0 0 0.875rem; padding: 0.1875rem 0.5rem; border-radius: 0.3125rem; background: #f3f3f0; font-size: 0.875rem; font-weight: 500; color: var(--ink); }
 .im-tag svg { color: var(--mint-ink); }
-.im-lede { margin: 0.3125rem 0 0; font-size: var(--fs-lead); line-height: 1.5; color: #9a9a9a; }
+.im-lede { margin: 0.3125rem 0 0; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-soft); }
 .im-lede strong { font-weight: 500; color: var(--ink); }
 .im-link { position: relative; margin-top: 1rem; padding-bottom: 0.0625rem; font-size: var(--fs-body); font-weight: 500; color: var(--mint-ink); }
 .im-link::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px; background: currentColor; transform-origin: left center; transition: transform 0.45s var(--ease-out); }
@@ -1357,7 +1380,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .im-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 @media (hover: hover) and (pointer: fine) { .im-link:hover::after { transform: scaleX(0.4); } .im-link:hover span { transform: translate(3px, -3px); } }
 .im-foot { margin-top: auto; padding-top: var(--space-4); }
-.im-foot p { max-width: 36ch; margin: 0; font-size: var(--fs-body); line-height: 1.5; color: #9a9a9a; }
+.im-foot p { max-width: 36ch; margin: 0; font-size: var(--fs-body); line-height: 1.5; color: var(--ink-soft); }
 .im-foot strong { font-weight: 500; color: var(--ink); }
 .im-rating { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.875rem; }
 .im-rating-text { font-size: var(--fs-body); font-weight: 500; color: var(--ink); }
@@ -1524,7 +1547,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   /* books */
 
   .bm-track { animation: bm 46s linear infinite; }
-  .bm:hover .bm-track { animation-play-state: paused; }
+  .bm:hover .bm-track, .bm:focus-visible .bm-track { animation-play-state: paused; }
 }
 @keyframes wave { 0%, 100% { transform: scaleY(0.45); } 50% { transform: scaleY(1); } }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -1534,6 +1557,10 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 @keyframes bm { to { transform: translateX(-50%); } }
 
 @media (prefers-reduced-motion: reduce) { .bm { overflow-x: auto; -webkit-mask-image: none; mask-image: none; } }
+/* The shelf is focusable (keyboard users can scroll it, and focus pauses
+   it). Its fading mask would clip a focus ring, so the Books card shows it. */
+.bm:focus-visible { outline: none; }
+.off-books:has(.bm:focus-visible) { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (max-width: 900px) {
   .off-music { grid-template-columns: 1fr; gap: var(--space-3); padding: 1.125rem; }
 }
@@ -2131,7 +2158,7 @@ body.ask-open .shell-scrollbar {
   color: var(--ink);
   max-height: 122px;
 }
-.ask-panel-input::placeholder { color: #8f8f8f; }
+.ask-panel-input::placeholder { color: var(--ink-soft); }
 .ask-panel-send {
   position: absolute;
   right: 12px;
@@ -2151,6 +2178,11 @@ body.ask-open .shell-scrollbar {
 .ask-panel-send:disabled { cursor: default; }
 .ask-panel-send:not(:disabled):active { transform: scale(0.94); }
 .ask-panel-send:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* Dark theme: the typing box follows the theme (it stayed white, so typed
+   text was white on white), and the active send button's arrow turns dark
+   to stay visible on its now-light circle. */
+:root[data-theme="dark"] .ask-panel-form { background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
+:root[data-theme="dark"] .ask-panel-send:not(:disabled) { color: var(--bg); }
 
 @media (prefers-reduced-motion: reduce) {
   .ask-panel { transition: none; }
@@ -2250,10 +2282,10 @@ body.ask-open .shell-scrollbar {
 }
 .cs-side .cs-back { font-size: 1rem; }
 .cs-toc { display: flex; flex-direction: column; gap: 0.3125rem; margin: 1.625rem 0 0; padding: 0; list-style: none; }
-.cs-toc a { display: inline-block; padding: 0.0625rem 0; font-size: 1rem; font-weight: 500; color: var(--ink-soft); opacity: 0.7; transition: color 0.25s ease, opacity 0.25s ease; }
-.cs-toc a.is-active { color: var(--ink); opacity: 1; }
+.cs-toc a { display: inline-block; padding: 0.0625rem 0; font-size: 1rem; font-weight: 500; color: var(--ink-soft); transition: color 0.25s ease; }
+.cs-toc a.is-active { color: var(--ink); }
 .cs-toc a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.1875rem; }
-@media (hover: hover) and (pointer: fine) { .cs-toc a:hover { color: var(--ink); opacity: 1; } }
+@media (hover: hover) and (pointer: fine) { .cs-toc a:hover { color: var(--ink); } }
 .cs-gated .cs-toc { display: none; }
 
 /* "Ask AI about this project": opens the Talk to my Work chat. */
@@ -2530,4 +2562,53 @@ body.ask-open .cs-side { display: none; }
   .cs-next { margin-top: 3.75rem; padding: 1.375rem 1.125rem; }
   .cs-next-arrow { width: 2rem; height: 2rem; }
   .cs-gated .cs-gate { padding: 1.125rem; }
+}
+/* =========================================================
+   Accessibility preferences.
+   Everything below is invisible on the normal site: it only applies when a
+   visitor has turned on a contrast setting in their operating system.
+   ========================================================= */
+
+/* "Increase contrast" (macOS / iOS): darker greys, stronger lines, an edge
+   on the pastel cards and thicker focus rings, in both themes. */
+@media (prefers-contrast: more) {
+  :root { --ink-soft: #444444; --ink-note: #333333; --line: #8a8a8a; --hairline: rgba(13, 13, 13, 0.35); }
+  :root[data-theme="dark"] { --ink-soft: #cfcfcf; --ink-note: #dddddd; --line: #8a8a8a; --hairline: rgba(255, 255, 255, 0.4); }
+  .proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card {
+    box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.3);
+  }
+  :root[data-theme="dark"] :is(.proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card) {
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
+  }
+  .footer-links img, .copy-mail { opacity: 0.85; }
+  :focus-visible { outline-width: 3px !important; }
+}
+
+/* Windows contrast themes (forced colours): the browser removes background
+   colours and shadows, so shapes get a border in the visitor's own text
+   colour, and selected states get an outline or underline instead of a
+   colour. Canvas, CanvasText and Highlight are the visitor's system colours. */
+@media (forced-colors: active) {
+  .proj-stack .project, .wk-card, .cs-cover, .cs-insight, .cs-quad, .cs-side-card, .cs-testimonial, .cs-gate,
+  .im-card, .off-card, .tpanel, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv,
+  .btn, .cs-ask, .project-link, .wk-chip, .wk-badge, .cs-cover-tag, .shot-lock, .trail-done,
+  .cs-tags li, .cs-quad-items li, .cs-tools li {
+    border: 1px solid CanvasText;
+  }
+  /* Selected states. */
+  .wk-filter-thumb { display: none; }
+  .wk-seg[aria-pressed="true"], .wk-chip[aria-pressed="true"] { forced-color-adjust: none; background: Highlight; color: HighlightText; }
+  .cs-toc a.is-active, .vx-item.is-active .vx-trigger { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; }
+  .vx-bar i { forced-color-adjust: none; background: Highlight; }
+  .tpanel.is-active, .ab-slide[data-o="0"] { outline: 2px solid Highlight; outline-offset: 2px; }
+  /* Footer icons are black image files: full strength, and flipped to light
+     when the contrast theme has a dark background. */
+  .footer-links img, .copy-mail { opacity: 1 !important; filter: none !important; }
+  /* The hero line drawing, in the system text colour. */
+  .trail-line, .trail-ghost { stroke: CanvasText; }
+  .trail-node { fill: Canvas; stroke: CanvasText; }
+  .trail-dot { fill: CanvasText; }
+}
+@media (forced-colors: active) and (prefers-color-scheme: dark) {
+  .footer-links img { filter: invert(1) !important; }
 }

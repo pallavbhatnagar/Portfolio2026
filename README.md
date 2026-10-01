@@ -162,10 +162,17 @@ Then open the address it prints (for example http://localhost:8000).
 
 ## Publish on GitHub Pages
 1. Create a repository on GitHub and upload the **contents** of this folder
-   (so `index.html` is at the top level of the repository).
-2. In the repository: **Settings → Pages → Build and deployment**, choose
-   **Deploy from a branch**, branch `main`, folder `/ (root)`, and save.
-3. After a minute the site is live at `https://<username>.github.io/<repo>/`.
+   (so `index.html` is at the top level of the repository). Include the
+   hidden `.github` folder: it holds the publishing workflow.
+2. In the repository: **Settings → Pages → Build and deployment**, set
+   **Source** to **GitHub Actions**.
+3. Every push to `main` now publishes the site (see the **Actions** tab). The
+   first time, you can also run it by hand: Actions → "Deploy to GitHub
+   Pages" → **Run workflow**.
+4. After a minute the site is live at `https://<username>.github.io/<repo>/`.
+
+The workflow is `.github/workflows/deploy-pages.yml`. It uploads the site
+exactly as it is, with the permissions publishing needs.
 
 All paths in the site are relative, so it works from any repository name.
 
