@@ -2633,23 +2633,22 @@ body.ask-open .cs-side { display: none; }
    ========================================================= */
 /* No nav or footer: everything sits centred in the window. */
 .nf {
-  --nf-fs: clamp(1.75rem, 3.2vw, 2.25rem);
+  --nf-fs: clamp(1.625rem, 2.9vw, 2.025rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 44rem;
+  max-width: 39.625rem;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
   padding: 3rem var(--pad);
   text-align: center;
 }
-.nf-trail { display: flex; justify-content: flex-end; width: 100%; overflow: hidden; margin-bottom: 1.25rem; }
-/* Never narrower than 40rem, so on phones the knot and the 404 stay large and
-   the straight start is what gets cropped. */
-.nf-stage { position: relative; flex: none; width: max(100%, 40rem); }
+.nf-head { width: max-content; max-width: 100%; }
+.nf-trail { display: flex; justify-content: flex-end; width: 100%; overflow: hidden; margin-bottom: 1.125rem; }
+.nf-stage { position: relative; flex: none; width: 100%; }
 .nf-svg { display: block; width: 100%; height: auto; overflow: visible; }
 .nf-ghost { fill: none; stroke: var(--line); stroke-width: 1.8; stroke-dasharray: 2 8; stroke-linecap: round; vector-effect: non-scaling-stroke; }
 .nf-line { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
@@ -2657,20 +2656,22 @@ body.ask-open .cs-side { display: none; }
 .nf-dot { fill: var(--ink); }
 .nf-chip {
   position: absolute;
-  left: calc(88.6% + 0.875rem);
+  left: calc(82.9% + 0.75rem);
   top: 58.2%;
   transform: translateY(-50%);
   padding: 0.1875rem 0.625rem;
   border-radius: 999px;
   background: var(--rose-bg);
   color: var(--rose-ink);
-  font-size: 0.9375rem;
+  font-size: 0.84375rem;
   font-weight: 600;
   font-variant-numeric: tabular-nums;
 }
 .nf-title { font-size: var(--nf-fs); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
-.nf-lede { max-width: 46em; margin: 1rem auto 0; font-size: 1.0625rem; line-height: 1.5; color: var(--ink-soft); }
-.nf-actions { justify-content: center; margin-top: 1.75rem; }
+.nf-lede { max-width: 46em; margin: 0.875rem auto 0; font-size: 0.95625rem; line-height: 1.5; color: var(--ink-soft); }
+.nf-actions { justify-content: center; margin-top: 1.5625rem; }
+/* The buttons at 90% of the site size, to match the rest of this page. */
+.nf-actions .btn { min-height: 2.6rem; padding: 0.3125rem 1rem; font-size: 0.9rem; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* The line draws with the site's trail curve while the dot rides it; the
@@ -2685,9 +2686,17 @@ body.ask-open .cs-side { display: none; }
 @keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
 @media (max-width: 640px) {
   .nf-title { font-size: clamp(1.25rem, 7.1vw, 2.25rem); }
-  /* The cropped start of the line fades in from the left edge. */
+  /* Phones: the drawing never goes narrower than 40rem, so the knot and the
+     404 stay large; the straight start is cropped and fades in from the left. */
+  .nf-head { width: 100%; }
+  .nf-stage { width: max(100%, 40rem); margin-right: -2.75rem; }
   .nf-trail { -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%); }
   .nf-lede { font-size: 1.0625rem; }
+}
+/* Very narrow phones: the two buttons stack, each on one line. */
+@media (max-width: 359px) {
+  .nf-actions { flex-direction: column; }
+  .nf-actions .btn { flex: none; width: 100%; }
 }
 @media (forced-colors: active) {
   .nf-chip { border: 1px solid CanvasText; }
