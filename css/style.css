@@ -2631,16 +2631,22 @@ body.ask-open .cs-side { display: none; }
    shows the route it should have taken. One drawing moment on load; the
    text and buttons follow the hero's type and spacing.
    ========================================================= */
+/* No nav or footer: everything sits centred in the window. */
 .nf {
   --nf-fs: clamp(2.25rem, 5.56vw, 3.25rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   max-width: 60.125rem;
-  min-height: calc(100vh - 6rem);
-  min-height: calc(100dvh - 6rem);
+  min-height: 100vh;
+  min-height: 100dvh;
   margin: 0 auto;
-  padding: calc(var(--pad) + 7.5rem) var(--pad) 6rem;
+  padding: 3rem var(--pad);
+  text-align: center;
 }
-.nf-trail { display: flex; justify-content: flex-end; overflow: hidden; margin-bottom: 1.75rem; }
+.nf-trail { display: flex; justify-content: flex-end; width: 100%; overflow: hidden; margin-bottom: 1.75rem; }
 /* Never narrower than 40rem, so on phones the knot and the 404 stay large and
    the straight start is what gets cropped. */
 .nf-stage { position: relative; flex: none; width: max(100%, 40rem); }
@@ -2665,8 +2671,8 @@ body.ask-open .cs-side { display: none; }
 .nf-title { font-size: var(--nf-fs); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
 .nf-title span { display: block; }
 .nf-title span + span { font-weight: 300; }
-.nf-lede { max-width: 46em; margin-top: 1.5rem; font-size: 1.25rem; line-height: 1.5; color: var(--ink-soft); }
-.nf-actions { margin-top: 2.25rem; }
+.nf-lede { max-width: 46em; margin: 1.5rem auto 0; font-size: 1.25rem; line-height: 1.5; color: var(--ink-soft); }
+.nf-actions { justify-content: center; margin-top: 2.25rem; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* The line draws with the site's trail curve while the dot rides it; the
@@ -2681,7 +2687,6 @@ body.ask-open .cs-side { display: none; }
 @keyframes nf-chip-in { from { opacity: 0; transform: translateY(-50%) scale(0.9); } to { opacity: 1; transform: translateY(-50%); } }
 @keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
 @media (max-width: 640px) {
-  .nf { padding-top: calc(var(--pad) + 5rem); }
   .nf-title { font-size: clamp(2rem, 9.2vw, 2.25rem); }
   /* The cropped start of the line fades in from the left edge. */
   .nf-trail { -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%); }
