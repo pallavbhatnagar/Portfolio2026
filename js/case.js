@@ -156,14 +156,14 @@
   root.setAttribute("style", tint(p.tint));
   root.innerHTML = `
     <nav class="cs-side" aria-label="Case study">
-      <a class="cs-back-btn" href="works.html" aria-label="Back to all work">${backIcon}</a>
+      <a class="cs-back-btn" href="works" aria-label="Back to all work">${backIcon}</a>
       <ol class="cs-toc">
         ${chapters.map(([id, label]) => `<li><a href="#${id}">${label}</a></li>`).join("")}
       </ol>
     </nav>
 
     <header class="cs-hero">
-      <a class="cs-back-btn cs-back-hero cs-in" style="--d:0" href="works.html" aria-label="Back to all work">${backIcon}</a>
+      <a class="cs-back-btn cs-back-hero cs-in" style="--d:0" href="works" aria-label="Back to all work">${backIcon}</a>
       <div class="cs-hero-row">
         <div class="cs-hero-text">
           <p class="cs-kicker cs-in" style="--d:0"><span>${esc(p.category)}</span></p>
@@ -248,7 +248,7 @@
       </div>
     </div>
 
-    <a class="cs-next" href="case-study.html?p=${esc(next.slug)}" style="${tint(next.tint)}"${next.locked ? " data-locked" : ""} aria-label="Next project: ${esc(next.name)}${next.locked ? " (password protected)" : ""}">
+    <a class="cs-next" href="case-study?p=${esc(next.slug)}" style="${tint(next.tint)}"${next.locked ? " data-locked" : ""} aria-label="Next project: ${esc(next.name)}${next.locked ? " (password protected)" : ""}">
       <span class="cs-next-label">Next project</span>
       <span class="cs-next-name">${esc(next.name)}${next.locked ? `<span class="cs-next-lock" title="Password protected">${lockIcon}</span>` : ""}</span>
       <span class="cs-next-arrow">${arrow}</span>

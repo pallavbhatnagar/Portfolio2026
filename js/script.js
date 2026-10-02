@@ -909,7 +909,7 @@
     { co: "Klutch", role: "Junior Designer", years: "2018 — 2019", tint: "sand" },
   ];
 
-  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="case-study.html?p=${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
+  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="case-study?p=${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
     + `<div class="ag-card-top"><span class="ag-glyph glyph ${p.glyph}"></span><b>${p.name}</b></div>`
     + `<p>${p.desc}</p>`
     + `<span class="ag-card-metric"><b>${p.metric}</b>${p.metricLabel}</span></a>`;

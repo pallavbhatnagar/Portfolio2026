@@ -148,17 +148,21 @@ Lowercase, words separated by hyphens: `ledgerly-cover.jpg`,
 `Ledgerly-Cover.JPG` and `ledgerly-cover.jpg` are different files there.
 
 ## Run it locally
-Double-clicking `index.html` works for browsing. For everything to behave
-exactly as online (the case-study password needs a proper web address), run a
-small local server from this folder:
+The site uses clean addresses (`/`, `/works`, `/about`,
+`/case-study?p=ledgerly`) instead of `index.html`, `works.html` and so on.
+A web server turns those into the right files, as GitHub Pages does online,
+so **preview through a local server, not by double-clicking the HTML files**
+(double-clicked files open, but the links between pages won't).
+
+From this folder, run:
 
 ```bash
 npx serve .
-# or
-python -m http.server 8000
 ```
 
-Then open the address it prints (for example http://localhost:8000).
+Then open the address it prints (usually http://localhost:3000). It needs
+Node.js installed. Python's `http.server` won't work here: it doesn't handle
+clean addresses.
 
 ## Publish on GitHub Pages
 1. Create a repository on GitHub and upload the **contents** of this folder

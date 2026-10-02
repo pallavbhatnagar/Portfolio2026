@@ -10,7 +10,7 @@
    The order of this list is the Works page order and the "Next project" order.
 
    Fields
-   - slug       the name in the link (case-study.html?p=slug)
+   - slug       the name in the link (case-study?p=slug)
    - name, category, year
    - kind       "Case study" or "Exploration" (the Works filter uses this)
    - tint       mint | lilac | rose | sky | sand (the project's colour)
