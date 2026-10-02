@@ -11,8 +11,9 @@
 <link rel="manifest" href="/assets/favicon/site.webmanifest" />
 <meta name="msapplication-config" content="/assets/favicon/browserconfig.xml" />
 <meta name="theme-color" content="#ffffff" />
-<title>Works | Pallav Bhatnagar</title>
-<meta name="description" content="Selected work by Pallav Bhatnagar: case studies and explorations, with the problem, the process and the outcome." />
+<meta name="robots" content="noindex" />
+<title>Page not found | Pallav Bhatnagar</title>
+<meta name="description" content="This page doesn't exist. Head back to the home page or see all of Pallav Bhatnagar's work." />
 <link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
@@ -28,7 +29,7 @@
   <nav class="nav" aria-label="Primary">
     <a class="nav-home" href="/">Home</a>
     <ul class="nav-links">
-      <li><a href="/works" aria-current="page">Works</a></li>
+      <li><a href="/works">Works</a></li>
       <li><a href="/about">About me</a></li>
       <li>
         <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
@@ -45,32 +46,33 @@
 
 <div class="page">
 
-<main class="wk" id="main">
-
-  <!-- ============ INTRO ============ -->
-  <section class="wk-hero">
-    <p class="wk-count ab-r">Six products, 2021 to 2025</p>
-    <h1 class="wk-title ab-r">Selected work</h1>
-    <p class="wk-lede ab-r">Products I've redesigned or built from scratch, plus a few explorations. Each one starts with where people got stuck, and ends with something that moved.</p>
-  </section>
-
-  <!-- ============ FILTER: Case studies are shipped client work; Explorations are
-       self-initiated concepts. A card's group is set by data-cat on its <li>
-       ("case" or "explore"); the counts update themselves. ============ -->
-  <div class="wk-filter-bar">
-    <div class="wk-filter" role="group" aria-label="Filter work">
-      <span class="wk-filter-thumb" aria-hidden="true"></span>
-      <button class="wk-seg" type="button" data-filter="all" aria-pressed="true">All work <span class="wk-seg-n" data-count="all"></span></button>
-      <button class="wk-seg" type="button" data-filter="case" aria-pressed="false">Case studies <span class="wk-seg-n" data-count="case"></span></button>
-      <button class="wk-seg" type="button" data-filter="explore" aria-pressed="false">Explorations <span class="wk-seg-n" data-count="explore"></span></button>
+<!-- ============ 404: the home page's line, the other way round. There the
+     tangle straightens into a path; here a straight path loses its way and
+     knots up where the page should be, while a dashed line shows the route
+     it should have taken. GitHub Pages shows this page for any address that
+     doesn't exist. ============ -->
+<main class="nf" id="main">
+  <div class="nf-trail" aria-hidden="true">
+    <div class="nf-stage">
+      <svg class="nf-svg" viewBox="0 0 1000 220">
+        <path class="nf-ghost" d="M8 128 L 960 128" />
+        <path class="nf-line" id="nfPath" pathLength="1" d="M8 128 L 520 128 C 590 128, 620 70, 680 66 C 750 62, 760 168, 700 170 C 640 172, 640 54, 730 40 C 812 28, 860 128, 800 156 C 752 178, 722 112, 780 98 C 826 88, 850 126, 870 128" />
+        <circle class="nf-node" cx="200" cy="128" r="6" />
+        <circle class="nf-node" cx="380" cy="128" r="6" />
+        <circle class="nf-dot" r="7" cx="0" cy="0">
+          <animateMotion dur="2.6s" begin="0s" fill="freeze" calcMode="spline" keyTimes="0;1" keyPoints="0;1" keySplines="0.55 0 0.2 1"><mpath href="#nfPath" xlink:href="#nfPath" /></animateMotion>
+        </circle>
+      </svg>
+      <span class="nf-chip">404</span>
     </div>
   </div>
 
-  <!-- ============ WORK LIST: every project in js/projects.js ============ -->
-  <ol class="wk-list" aria-label="Selected projects" data-render>
-    <!-- The cards are built from js/projects.js, in the order of that file. -->
-  </ol>
-
+  <h1 class="nf-title"><span>This page took</span> <span>a wrong turn.</span></h1>
+  <p class="nf-lede">The link may be old or mistyped. These paths lead somewhere.</p>
+  <div class="hero-actions nf-actions">
+    <a class="btn btn-primary" href="/">Go to the home page</a>
+    <a class="btn btn-secondary" href="/works">See all work</a>
+  </div>
 </main>
 <span class="page-end" aria-hidden="true"></span>
 </div>
@@ -90,35 +92,14 @@
     </div>
   </div>
 </footer>
-<a class="to-top" href="#top" aria-label="Back to top">
-  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
-</a>
 </div>
 </div>
 
-<!-- ============ PASSWORD DIALOG for locked case studies. A project is locked
-     when its card has data-locked. The password is checked in script.js
-     (block 11c); see the note there on how to change it. ============ -->
-<dialog class="lock-dialog" id="lockDialog" aria-labelledby="lockTitle" aria-describedby="lockDesc">
-  <form class="lock-form" id="lockForm" novalidate>
-    <span class="lock-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span>
-    <h2 id="lockTitle">This case study is password protected</h2>
-    <p id="lockDesc">Enter the password to read this case study. Don't have one? Email <a href="mailto:hello@example.com">hello@example.com</a> and I'll share it.</p>
-    <label class="lock-label" for="lockInput">Password</label>
-    <input class="lock-input" id="lockInput" name="password" type="password" autocomplete="current-password" aria-describedby="lockError">
-    <p class="lock-error" id="lockError" role="alert"></p>
-    <div class="lock-actions">
-      <button class="btn btn-secondary" type="button" id="lockCancel">Cancel</button>
-      <button class="btn btn-primary" type="submit">Unlock</button>
-    </div>
-  </form>
-</dialog>
-
-<!-- Content: your details (js/content.js) and projects (js/projects.js). -->
+<!-- Reduced motion: no travelling dot; it rests at the end of the line. -->
+<script>(function(){if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){var d=document.querySelector(".nf-dot"),m=d&&d.querySelector("animateMotion");if(m)m.remove();if(d){d.setAttribute("cx","870");d.setAttribute("cy","128");}}})();</script>
 <script src="/js/content.js" defer></script>
 <script src="/js/projects.js" defer></script>
 <script src="/js/render.js" defer></script>
 <script src="/js/script.js" defer></script>
 </body>
 </html>
-

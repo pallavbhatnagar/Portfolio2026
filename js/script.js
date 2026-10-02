@@ -887,12 +887,13 @@
     .filter((p) => p.home)
     .sort((a, b) => (a.home.order || 0) - (b.home.order || 0))
     .map((p, i) => {
-      const o = (p.outcomes && p.outcomes[0]) || null;
+      // The card's first metric.
+      const [label, value] = (p.home.metrics && p.home.metrics[0]) || ["", ""];
       return {
         id: p.slug, name: p.name, tag: `${p.category} · ${p.year}`, glyph: `g${(i % 4) + 1}`, tint: p.tint,
         desc: p.home.text,
-        metric: o ? `${o.prefix || ""}${o.to}${o.suffix || ""}` : "",
-        metricLabel: o ? o.label : ""
+        metric: value,
+        metricLabel: label
       };
     });
   const EXTRA_KEYWORDS = {
@@ -909,7 +910,7 @@
     { co: "Klutch", role: "Junior Designer", years: "2018 — 2019", tint: "sand" },
   ];
 
-  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="case-study?p=${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
+  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="/work/${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
     + `<div class="ag-card-top"><span class="ag-glyph glyph ${p.glyph}"></span><b>${p.name}</b></div>`
     + `<p>${p.desc}</p>`
     + `<span class="ag-card-metric"><b>${p.metric}</b>${p.metricLabel}</span></a>`;
@@ -1364,7 +1365,7 @@
     };
     // Closing sound: plays however the panel closes (close button, the AI
     // button again, or Escape).
-    const closeSound = new Audio("assets/audio/sound-effects/chat-close.mp3");
+    const closeSound = new Audio("/assets/audio/sound-effects/chat-close.mp3");
     const closeAsk = () => {
       if (!askOpen) return;
       askOpen = false;
@@ -1380,7 +1381,7 @@
       askTrigger.focus();
     };
     askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
-    const askSound = new Audio("assets/audio/sound-effects/chat-open.wav");
+    const askSound = new Audio("/assets/audio/sound-effects/chat-open.wav");
     askTriggers.forEach((t) => {
       t.addEventListener("click", () => {
         askTrigger = t; // focus returns here when the panel closes

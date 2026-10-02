@@ -2207,7 +2207,7 @@ body.ask-open .shell-scrollbar {
 }
 
 /* =========================================================
-   Case study page (case-study.html, rendered by js/case.js).
+   Case study pages (work/<project>.html; behaviour in js/case.js).
    One quiet, reading-first layout for every project; the project's tint
    (--tint, --tint-panel, --tint-ink, set on .cs) carries its identity.
    The one bold element is the chapter spine: the site's "tangled line"
@@ -2623,4 +2623,73 @@ body.ask-open .cs-side { display: none; }
 }
 @media (forced-colors: active) and (prefers-color-scheme: dark) {
   .footer-links img { filter: invert(1) !important; }
+}
+
+/* =========================================================
+   404 page (404.html). The home page's line in reverse: a straight path
+   loses its way and knots up where the page should be, while a dashed line
+   shows the route it should have taken. One drawing moment on load; the
+   text and buttons follow the hero's type and spacing.
+   ========================================================= */
+.nf {
+  --nf-fs: clamp(2.25rem, 5.56vw, 3.25rem);
+  width: 100%;
+  max-width: 60.125rem;
+  min-height: calc(100vh - 6rem);
+  min-height: calc(100dvh - 6rem);
+  margin: 0 auto;
+  padding: calc(var(--pad) + 7.5rem) var(--pad) 6rem;
+}
+.nf-trail { display: flex; justify-content: flex-end; overflow: hidden; margin-bottom: 1.75rem; }
+/* Never narrower than 40rem, so on phones the knot and the 404 stay large and
+   the straight start is what gets cropped. */
+.nf-stage { position: relative; flex: none; width: max(100%, 40rem); }
+.nf-svg { display: block; width: 100%; height: auto; overflow: visible; }
+.nf-ghost { fill: none; stroke: var(--line); stroke-width: 1.8; stroke-dasharray: 2 8; stroke-linecap: round; vector-effect: non-scaling-stroke; }
+.nf-line { fill: none; stroke: var(--ink); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.nf-node { fill: var(--bg); stroke: var(--ink); stroke-width: 2.2; vector-effect: non-scaling-stroke; }
+.nf-dot { fill: var(--ink); }
+.nf-chip {
+  position: absolute;
+  left: calc(87% + 0.875rem);
+  top: 58.2%;
+  transform: translateY(-50%);
+  padding: 0.1875rem 0.625rem;
+  border-radius: 999px;
+  background: var(--rose-bg);
+  color: var(--rose-ink);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+.nf-title { font-size: var(--nf-fs); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
+.nf-title span { display: block; }
+.nf-title span + span { font-weight: 300; }
+.nf-lede { max-width: 46em; margin-top: 1.5rem; font-size: 1.25rem; line-height: 1.5; color: var(--ink-soft); }
+.nf-actions { margin-top: 2.25rem; }
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The line draws with the site's trail curve while the dot rides it; the
+     404 lands as the dot stops in the knot. */
+  .js .nf-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trail-draw 2.6s cubic-bezier(0.55, 0, 0.2, 1) forwards; }
+  .js .nf-chip { opacity: 0; animation: nf-chip-in 0.6s var(--ease-out) 2.45s forwards; }
+  .js .nf-title span, .js .nf-lede, .js .nf-actions { opacity: 0; animation: nf-rise 0.8s var(--ease-out) forwards; }
+  .js .nf-title span:nth-child(2) { animation-delay: 0.08s; }
+  .js .nf-lede { animation-delay: 0.16s; }
+  .js .nf-actions { animation-delay: 0.24s; }
+}
+@keyframes nf-chip-in { from { opacity: 0; transform: translateY(-50%) scale(0.9); } to { opacity: 1; transform: translateY(-50%); } }
+@keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
+@media (max-width: 640px) {
+  .nf { padding-top: calc(var(--pad) + 5rem); }
+  .nf-title { font-size: clamp(2rem, 9.2vw, 2.25rem); }
+  /* The cropped start of the line fades in from the left edge. */
+  .nf-trail { -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%); }
+  .nf-lede { font-size: 1.0625rem; }
+}
+@media (forced-colors: active) {
+  .nf-chip { border: 1px solid CanvasText; }
+  .nf-line, .nf-ghost { stroke: CanvasText; }
+  .nf-node { fill: Canvas; stroke: CanvasText; }
+  .nf-dot { fill: CanvasText; }
 }

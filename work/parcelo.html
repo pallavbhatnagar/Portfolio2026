@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/assets/favicon/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#0d0d0d" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml" />
+<meta name="theme-color" content="#ffffff" />
+<title>Parcelo | Pallav Bhatnagar</title>
+<meta name="description" content="Parcelo: A dispatch dashboard that shows late deliveries first, so teams act in seconds, not minutes." />
+<link rel="canonical" href="https://pallavbhatnagar.in/work/parcelo" />
+<!-- Link previews (LinkedIn, Slack, WhatsApp, X) -->
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Pallav Bhatnagar" />
+<meta property="og:title" content="Parcelo | Pallav Bhatnagar" />
+<meta property="og:description" content="A dispatch dashboard that shows late deliveries first, so teams act in seconds, not minutes." />
+<meta property="og:url" content="https://pallavbhatnagar.in/work/parcelo" />
+<meta property="og:image" content="https://pallavbhatnagar.in/assets/projects/parcelo/images/cover.jpg" />
+<meta property="og:image:alt" content="Parcelo dispatch dashboard on a laptop" />
+<meta name="twitter:card" content="summary_large_image" />
+<link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
+<script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<div class="app-row" id="appRow">
+<div class="site-shell" id="siteShell">
+
+<header class="site-header" id="top">
+  <nav class="nav" aria-label="Primary">
+    <a class="nav-home" href="/">Home</a>
+    <ul class="nav-links">
+      <li><a href="/works" aria-current="page">Works</a></li>
+      <li><a href="/about">About me</a></li>
+      <li>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true">
+            <circle class="sun-core" cx="12" cy="12" r="4"/>
+            <g class="sun-rays"><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M18.7 5.3l-1.6 1.6M6.9 17.1l-1.6 1.6"/></g>
+            <path class="moon" fill="currentColor" stroke="none" d="M20.2 14.7A8.5 8.5 0 1 1 9.3 3.8a7 7 0 0 0 10.9 10.9z"/>
+          </svg>
+        </button>
+      </li>
+    </ul>
+  </nav>
+</header>
+
+<div class="shell-scroll" id="shellScroll">
+<div class="scroll-sentinel" aria-hidden="true"></div>
+
+<div class="page">
+
+<!-- ============ CASE STUDY: Parcelo. The page's content is written below;
+     js/case.js adds the chapter list highlight, number count-ups, the chat's
+     answers and the password gate (data-locked on <main>). ============ -->
+<main class="cs" id="case" data-slug="parcelo" data-locked style="--tint: var(--rose-bg); --tint-panel: var(--rose-panel); --tint-ink: var(--ink)">
+    <nav class="cs-side" aria-label="Case study">
+      <a class="cs-back-btn" href="/works" aria-label="Back to all work"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></a>
+      <ol class="cs-toc">
+        <li><a href="#overview">Overview</a></li><li><a href="#problem">Problem</a></li><li><a href="#research">Research</a></li><li><a href="#process">Process</a></li><li><a href="#solution">Solution</a></li><li><a href="#results">Results</a></li><li><a href="#reflection">Reflection</a></li>
+      </ol>
+    </nav>
+
+    <header class="cs-hero">
+      <a class="cs-back-btn cs-back-hero cs-in" style="--d:0" href="/works" aria-label="Back to all work"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></a>
+      <div class="cs-hero-row">
+        <div class="cs-hero-text">
+          <p class="cs-kicker cs-in" style="--d:0"><span>B2B SaaS</span></p>
+          <h1 class="cs-title cs-in" style="--d:1">Parcelo</h1>
+          <p class="cs-headline cs-in" style="--d:2">A dispatch dashboard that shows late deliveries first, so teams act in seconds, not minutes.</p>
+        </div>
+        <div class="cs-in" style="--d:2"><button class="cs-ask" type="button" data-ask-trigger="" data-ask="Tell me about Parcelo." aria-haspopup="dialog" aria-controls="askPanel" aria-label="Ask AI about Parcelo"><span class="cs-ask-ic"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"></path></svg></span>Ask AI about this project</button></div>
+      </div>
+      
+      <section class="cs-context cs-in" style="--d:3" aria-label="Team, role and tools">
+        <div class="cs-ctx-col">
+          <div class="cs-ctx-block">
+            <h2 class="cs-ctx-h">The team</h2>
+            <ul class="cs-avatars"><li title="Nikhil Bose, researcher" style="--a-bg: var(--mint-bg); --a-ink: var(--mint-ink)"><span aria-hidden="true">NB</span><span class="sr-only">Nikhil Bose, researcher</span></li><li title="Sara Joseph, engineer" style="--a-bg: var(--lilac-bg); --a-ink: var(--lilac-ink)"><span aria-hidden="true">SJ</span><span class="sr-only">Sara Joseph, engineer</span></li><li title="Harsh Kulkarni, engineer" style="--a-bg: var(--rose-bg); --a-ink: var(--rose-ink)"><span aria-hidden="true">HK</span><span class="sr-only">Harsh Kulkarni, engineer</span></li></ul>
+            <p>A small team: one researcher and two engineers, working directly with the dispatch managers who use the dashboard every day.</p>
+          </div>
+          <div class="cs-ctx-block"><h2 class="cs-ctx-h">Tools used</h2><ul class="cs-tools"><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #f24e1e">F</span>Figma</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #9747ff">F</span>FigJam</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #ff3c00">H</span>Hotjar</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #1e61f0">A</span>Amplitude</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #5e6ad2">L</span>Linear</li></ul></div>
+        </div>
+        <div class="cs-ctx-col">
+          <div class="cs-ctx-block">
+            <h2 class="cs-ctx-h">My role</h2>
+            <p>As the <strong>Lead product designer</strong>, I started on the dispatch floor to map how the work really happens, then rebuilt the dashboard around the decisions dispatchers make most often.</p>
+            <ul class="cs-focus"><li>Contextual inquiry</li><li>Workflow mapping</li><li>Information architecture</li><li>Data-dense UI</li><li>Analytics review</li></ul>
+          </div>
+          <div class="cs-ctx-block">
+            <h2 class="cs-ctx-h">Timeline and platform</h2>
+            <p><strong>8 weeks, 2024</strong> on Desktop web</p>
+          </div>
+        </div>
+      </section>
+    </header>
+
+    <section class="cs-gate" aria-labelledby="cs-gate-title">
+      <span class="cs-gate-ic"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"></rect><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"></path></svg></span>
+      <h2 id="cs-gate-title">This case study is password protected</h2>
+      <p>The work is under a confidentiality agreement. Enter the password to read it, or email me and I'll share it.</p>
+      <button class="btn btn-primary" type="button" data-lock-open="">Enter password</button>
+    </section>
+
+    <div class="cs-locked-content">
+      <figure class="cs-cover">
+        <span class="cs-cover-tag">Case study</span>
+        <div class="cs-cover-media"><img src="/assets/projects/parcelo/images/cover.jpg" alt="Parcelo dispatch dashboard on a laptop" fetchpriority="high"></div>
+      </figure>
+
+      <section class="cs-outcomes ab-r" aria-label="Outcomes">
+        
+    <div class="cs-out">
+      <p class="cs-num" data-to="52" data-prefix="-" data-suffix="%">-52%</p>
+      <p class="cs-out-label">time to resolve a late delivery</p>
+    </div>
+    <div class="cs-out">
+      <p class="cs-num" data-to="29" data-prefix="+" data-suffix="%">+29%</p>
+      <p class="cs-out-label">weekly active dispatch teams</p>
+    </div>
+    <div class="cs-out">
+      <p class="cs-num" data-to="3" data-prefix="" data-suffix="s">3s</p>
+      <p class="cs-out-label">to spot the most urgent order</p>
+    </div>
+      </section>
+
+      <div class="cs-body">
+        <div class="cs-content">
+          
+          <section class="cs-ch" id="overview">
+            <h2 class="ab-r">Overview</h2>
+            <p class="cs-lead ab-r">Parcelo helps regional courier firms plan and track the day's deliveries. Dispatchers kept the dashboard open all day, yet still found problems through phone calls from angry customers.</p>
+          </section>
+
+          <section class="cs-ch" id="problem">
+            <h2 class="ab-r">The problem</h2>
+            <p class="ab-r">Every order looked equally important. A delivery running two hours late sat in the same grey row as one that was on time, sorted by order number.</p>
+            <blockquote class="cs-quote ab-r"><p>“By the time I see it on screen, the customer has already called me.”</p><cite>Dispatcher, Leeds depot</cite></blockquote>
+          </section>
+
+          <section class="cs-ch" id="research">
+            <h2 class="ab-r">What we learned</h2>
+            <div class="cs-insights">
+              <article class="cs-insight ab-r" style="--i:0"><h3>Dispatchers scan, they don't read</h3><p>Eye-tracking showed people sweeping the left edge of the table for anything unusual.</p></article><article class="cs-insight ab-r" style="--i:1"><h3>Late is a spectrum</h3><p>Ten minutes late and two hours late needed different actions, not the same red badge.</p></article><article class="cs-insight ab-r" style="--i:2"><h3>Fixes happen by phone</h3><p>Most problems ended in a call to a driver, but the number lived in another system.</p></article>
+            </div>
+          </section>
+
+          <section class="cs-ch" id="process">
+            <h2 class="ab-r">Process</h2>
+            <ol class="cs-steps">
+              <li class="cs-step ab-r" style="--i:0"><span class="cs-step-n">01</span><div><h3>Listen</h3><p>Sat with dispatchers through two full shifts, noting every interruption.</p></div></li><li class="cs-step ab-r" style="--i:1"><span class="cs-step-n">02</span><div><h3>Map</h3><p>Listed every action taken on a late order and how long each one took.</p></div></li><li class="cs-step ab-r" style="--i:2"><span class="cs-step-n">03</span><div><h3>Sketch</h3><p>Rebuilt the table around urgency, then tested three ways to show lateness.</p></div></li><li class="cs-step ab-r" style="--i:3"><span class="cs-step-n">04</span><div><h3>Test</h3><p>Timed dispatchers finding and fixing planted late orders.</p></div></li><li class="cs-step ab-r" style="--i:4"><span class="cs-step-n">05</span><div><h3>Ship</h3><p>Shipped behind a toggle so teams could switch back during the first week.</p></div></li>
+            </ol>
+          </section>
+
+          <section class="cs-ch" id="solution">
+            <h2 class="ab-r">Key decisions</h2>
+            <div class="cs-decisions">
+              
+                <article class="cs-decision ab-r">
+                  <div class="cs-crop is-crop"><img src="/assets/projects/parcelo/images/detail-01.jpg" alt="" loading="lazy" style="object-position: 35% 40%; transform-origin: 35% 40%"></div>
+                  <div class="cs-decision-copy"><h3>Sort by urgency, always</h3><p>The most at-risk orders sit at the top, and the list re-sorts itself as the day moves.</p></div>
+                </article>
+                <article class="cs-decision ab-r">
+                  <div class="cs-crop is-crop"><img src="/assets/projects/parcelo/images/detail-02.jpg" alt="" loading="lazy" style="object-position: 25% 60%; transform-origin: 25% 60%"></div>
+                  <div class="cs-decision-copy"><h3>Lateness you can read at a glance</h3><p>A slim bar on the row's left edge grows with delay, so a sweep of the eye finds trouble.</p></div>
+                </article>
+                <article class="cs-decision ab-r">
+                  <div class="cs-crop is-crop"><img src="/assets/projects/parcelo/images/detail-03.jpg" alt="" loading="lazy" style="object-position: 70% 50%; transform-origin: 70% 50%"></div>
+                  <div class="cs-decision-copy"><h3>Call the driver from the row</h3><p>The driver's number and last position open in place. No switching systems.</p></div>
+                </article>
+            </div>
+          </section>
+
+          <section class="cs-ch" id="results">
+            <h2 class="ab-r">Results</h2>
+            <p class="cs-lead ab-r">Teams resolved late deliveries in half the time and several depots dropped their separate spreadsheet for tracking problem orders.</p>
+            <figure class="cs-testimonial ab-r">
+              <blockquote><p>“Engineering finally knew what to build and why.”</p></blockquote>
+              <figcaption><strong>Daniel Okafor</strong>Engineering Manager, Parcelo</figcaption>
+            </figure>
+          </section>
+
+          <section class="cs-ch" id="reflection">
+            <h2 class="ab-r">Looking back</h2>
+            <p class="ab-r">We measured speed but not stress. I'd love to learn whether the calmer screen changed how the end of a shift feels.</p>
+          </section>
+        </div>
+      </div>
+    </div>
+
+    <a class="cs-next" href="/work/lumen" style="--tint: var(--sky-bg); --tint-panel: var(--sky-panel); --tint-ink: var(--ink)" aria-label="Next project: Lumen Learn">
+      <span class="cs-next-label">Next project</span>
+      <span class="cs-next-name">Lumen Learn</span>
+      <span class="cs-next-arrow"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8.5 7H17v8.5"></path></svg></span>
+    </a></main>
+<span class="page-end" aria-hidden="true"></span>
+</div>
+<footer class="site-footer" id="contact">
+  <div class="footer-inner">
+    <div class="footer-bar">
+      <div class="footer-mail-row">
+        <a class="footer-mail" href="mailto:hello@example.com">hello@example.com</a>
+        <button class="copy-mail" type="button" data-copy="hello@example.com" aria-label="Copy email address">
+          <svg class="i-copy" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2.5"/><path d="M5 15V7.5A2.5 2.5 0 017.5 5H15"/></svg>
+          <svg class="i-done" viewBox="3 3 18 18" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg>
+        </button>
+        <span class="copy-note" role="status" aria-live="polite"></span>
+      </div>
+      <!-- Social icons: built from js/content.js; icon files in assets/icons/social/ -->
+      <nav class="footer-links" aria-label="Social" data-site-socials></nav>
+    </div>
+  </div>
+</footer>
+</div>
+
+<div class="shell-scrollbar" id="shellScrollbar" aria-hidden="true"><div class="shell-scrollbar-thumb" id="shellScrollbarThumb"></div></div>
+<a class="to-top" href="#top" aria-label="Back to top">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+</a>
+</div>
+
+<!-- ============ TALK TO MY WORK PANEL (same as the home page). The case study's
+     "Ask AI about this project" buttons open it and ask about this project;
+     answers come from the case study content (js/case.js). ============ -->
+<aside class="ask-panel" id="askPanel" hidden aria-label="Talk to my Work">
+  <div class="ask-panel-inner">
+    <div class="ask-panel-head">
+      <button class="ask-panel-close" id="askPanelClose" type="button" aria-label="Close">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true"><rect x="1.5" y="2.5" width="13" height="11" rx="2.5" stroke="currentColor" stroke-width="1.3"/><path d="M10 2.5h2a2.5 2.5 0 0 1 2.5 2.5v6a2.5 2.5 0 0 1-2.5 2.5h-2v-11Z" fill="currentColor"/></svg>
+      </button>
+    </div>
+    <div class="ask-panel-scroll" id="askPanelScroll">
+      <p class="ask-panel-lede">Ask about this project, my process, or how to reach me.</p>
+      <div class="ask-panel-suggest" id="askPanelSuggest">
+        <button class="wk-chip" type="button" data-q="What was the problem?">What was the problem?</button>
+        <button class="wk-chip" type="button" data-q="What did you learn?">What did you learn?</button>
+        <button class="wk-chip" type="button" data-q="What were the results?">What were the results?</button>
+        <button class="wk-chip" type="button" data-q="What was your role?">What was your role?</button>
+      </div>
+      <div class="ask-panel-thread" id="askPanelThread" role="log" aria-live="polite" aria-label="Conversation"></div>
+    </div>
+    <form class="ask-panel-form" id="askPanelForm">
+      <label class="ag-form-label" for="askPanelInput">Ask a question</label>
+      <textarea class="ask-panel-input" id="askPanelInput" rows="2" autocomplete="off" placeholder="Ask something…"></textarea>
+      <button class="ask-panel-send" type="submit" aria-label="Send" disabled>
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none" aria-hidden="true"><path d="M7 11.5v-9M3 6l4-4 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </form>
+  </div>
+</aside>
+</div>
+
+<!-- ============ PASSWORD DIALOG for locked case studies. A project is locked
+     when its card has data-locked. The password is checked in script.js
+     (block 11c); see the note there on how to change it. ============ -->
+<dialog class="lock-dialog" id="lockDialog" aria-labelledby="lockTitle" aria-describedby="lockDesc">
+  <form class="lock-form" id="lockForm" novalidate>
+    <span class="lock-ic" aria-hidden="true"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg></span>
+    <h2 id="lockTitle">This case study is password protected</h2>
+    <p id="lockDesc">Enter the password to read this case study. Don't have one? Email <a href="mailto:hello@example.com">hello@example.com</a> and I'll share it.</p>
+    <label class="lock-label" for="lockInput">Password</label>
+    <input class="lock-input" id="lockInput" name="password" type="password" autocomplete="current-password" aria-describedby="lockError">
+    <p class="lock-error" id="lockError" role="alert"></p>
+    <div class="lock-actions">
+      <button class="btn btn-secondary" type="button" id="lockCancel">Cancel</button>
+      <button class="btn btn-primary" type="submit">Unlock</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
+<script src="/js/content.js" defer></script>
+<script src="/js/projects.js" defer></script>
+<script src="/js/case.js" defer></script>
+<script src="/js/render.js" defer></script>
+<script src="/js/script.js" defer></script>
+</body>
+</html>
+

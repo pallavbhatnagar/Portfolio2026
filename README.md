@@ -10,11 +10,11 @@ I want to change…                     Go to…
 My email, social links, resume link   js/content.js
 A footer social icon                  assets/icons/social/
 My resume (the PDF)                   assets/documents/resume/resume.pdf
-A project's name, text, numbers       js/projects.js
+A project's card (Home, Works)        js/projects.js
 A project's images                    assets/projects/<slug>/images/
 A project's videos                    assets/projects/<slug>/videos/
 Which projects are on the Home page   js/projects.js  (projects with "home")
-A case study's content                js/projects.js
+A case study's content                work/<slug>.html (its own page)
 About page photos                     assets/images/about/  (see its README)
 The testimonial video                 assets/videos/testimonials/meera-kapoor.mp4
 The chat open / close sounds          assets/audio/sound-effects/
@@ -32,7 +32,10 @@ new-portoflio/
 ├── index.html            Home
 ├── works.html            All projects
 ├── about.html            About
-├── case-study.html       One template for every case study (?p=slug)
+├── 404.html              Shown for any address that doesn't exist
+├── work/                 One page per case study, at /work/<slug>
+│   ├── ledgerly.html · wayfarer.html · parcelo.html
+│   └── lumen.html · wave.html · jda.html
 ├── README.md             This file
 │
 ├── css/
@@ -40,9 +43,9 @@ new-portoflio/
 │
 ├── js/
 │   ├── content.js        ✏️ Your details: email, socials, resume
-│   ├── projects.js       ✏️ Every project: cards and case studies
+│   ├── projects.js       ✏️ Every project's card on Home and Works
 │   ├── render.js         Builds the project cards from projects.js
-│   ├── case.js           Builds a case study page from projects.js
+│   ├── case.js           Case study behaviour: chapter list, count-ups, gate, chat
 │   └── script.js         Motion, chat, password locks, theme
 │
 └── assets/
@@ -69,7 +72,8 @@ new-portoflio/
     └── favicon/          Browser and app icons
 ```
 
-The ✏️ files are the only code files you should need to edit.
+The ✏️ files and the pages themselves (index, about, works, work/*) are
+what you edit.
 
 ## How to…
 
@@ -86,28 +90,36 @@ image over a file with the **same name** and it appears on the site:
 
 **One extra step for detail images.** While they're dummies, each decision
 shows a zoomed-in crop of the image. When you add a real detail image, open
-`js/projects.js`, find that decision and delete its `focus: "…"` part so the
-image shows in full. (Keep `focus` if you want the zoomed crop.)
+the project's page in `work/`, find that decision's image and change
+`<div class="cs-crop is-crop">` to `<div class="cs-crop">` and delete the
+`style="…"` on its `<img>`, so the image shows in full.
 
-### Change a project's name, description or numbers
-Open `js/projects.js` and find the project by its `slug`:
-- `home` → the Home page card (description and the two metrics)
-- `works` → the Works page card (description and the two lines under it)
-- everything else → the case study page
+### Change a project's text or numbers
+- **Its cards:** open `js/projects.js` and find the project by its `slug`.
+  `home` is the Home page card (description and the two metrics), `works`
+  the Works page card.
+- **Its case study:** open its page, `work/<slug>.html`, and edit the text
+  directly. Its `<title>` and the `description` / `og:` lines at the top
+  are what Google and link previews (LinkedIn, WhatsApp) show.
 
 ### Add a new project
-1. In `js/projects.js`, copy a whole project block `{ ... },` and paste it
-   where you want it to appear on the Works page.
-2. Give it a new `slug` (lowercase, hyphens, e.g. `new-app`) and update its text.
-3. Copy one project folder in `assets/projects/` (for example `ledgerly/`),
-   rename it to the new slug (`new-app/`), and replace its images. Then, in
-   the new project block, change every `assets/projects/ledgerly/` to
-   `assets/projects/new-app/`.
-4. To show it on the Home page, give it a `home` entry with an `order`
-   (1 to 4) and remove `home` from the project it replaces.
+1. **The page:** copy a case study page in `work/` (for example
+   `work/ledgerly.html`) as `work/new-app.html` (lowercase, hyphens). Replace
+   its text, its `<title>` and the description and `og:` lines at the top,
+   change `data-slug="ledgerly"` on `<main>` to `data-slug="new-app"`, and
+   every `/assets/projects/ledgerly/` to `/assets/projects/new-app/`.
+2. **The images:** copy `assets/projects/ledgerly/` as
+   `assets/projects/new-app/` and replace its images.
+3. **The cards:** in `js/projects.js`, copy a project block `{ ... },`, set
+   `slug: "new-app"` and update its text. Its place in the list is its place
+   on the Works page. To show it on the Home page, give it a `home` entry
+   with an `order` (1 to 4) and remove `home` from the project it replaces.
+4. **"Next project" links:** each case study ends with a link to the next
+   one. Point the page before it at `/work/new-app`, and the new page at the
+   one after.
 
-The Works card, the case study page (`case-study.html?p=new-app`) and the
-"Next project" link appear automatically.
+To lock a project behind the password, add `data-locked` to its `<main>`
+and set `locked: true` in `js/projects.js`.
 
 ### Add a project video
 Put it in `assets/projects/<slug>/videos/` (MP4, lowercase-with-hyphens
@@ -149,7 +161,7 @@ Lowercase, words separated by hyphens: `ledgerly-cover.jpg`,
 
 ## Run it locally
 The site uses clean addresses (`/`, `/works`, `/about`,
-`/case-study?p=ledgerly`) instead of `index.html`, `works.html` and so on.
+`/work/ledgerly`) instead of `index.html`, `works.html` and so on.
 A web server turns those into the right files, as GitHub Pages does online,
 so **preview through a local server, not by double-clicking the HTML files**
 (double-clicked files open, but the links between pages won't).
@@ -173,15 +185,15 @@ clean addresses.
 3. Every push to `main` now publishes the site (see the **Actions** tab). The
    first time, you can also run it by hand: Actions → "Deploy to GitHub
    Pages" → **Run workflow**.
-4. After a minute the site is live at `https://<username>.github.io/<repo>/`.
+4. After a minute the site is live at your custom domain, pallavbhatnagar.in.
 
 The workflow is `.github/workflows/deploy-pages.yml`. It uploads the site
 exactly as it is, with the permissions publishing needs.
 
-All paths in the site are relative, so it works from any repository name.
+Paths in the site start from the domain root (`/assets/…`, `/work/…`), so the
+site must be served from the root of a domain, as it is on pallavbhatnagar.in.
+At a `github.io/<repo>/` address the styles and images wouldn't load.
 
 ## Not in this folder, on purpose
-Unused files were moved to the sibling folder `new-portoflio-unused/`, so they
-aren't uploaded: the SF Pro and Gilroy fonts (their licences don't allow
-publishing them on a website), duplicate font folders, unused sounds, an old
-voice-chat page and design drafts.
+The SF Pro and Gilroy fonts were removed: their licences don't allow
+publishing them on a website. Only Manrope (free to use) is included.
