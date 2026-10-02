@@ -2633,20 +2633,20 @@ body.ask-open .cs-side { display: none; }
    ========================================================= */
 /* No nav or footer: everything sits centred in the window. */
 .nf {
-  --nf-fs: clamp(2.25rem, 5.56vw, 3.25rem);
+  --nf-fs: clamp(1.75rem, 3.2vw, 2.25rem);
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 60.125rem;
+  max-width: 44rem;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
   padding: 3rem var(--pad);
   text-align: center;
 }
-.nf-trail { display: flex; justify-content: flex-end; width: 100%; overflow: hidden; margin-bottom: 1.75rem; }
+.nf-trail { display: flex; justify-content: flex-end; width: 100%; overflow: hidden; margin-bottom: 1.25rem; }
 /* Never narrower than 40rem, so on phones the knot and the 404 stay large and
    the straight start is what gets cropped. */
 .nf-stage { position: relative; flex: none; width: max(100%, 40rem); }
@@ -2669,19 +2669,17 @@ body.ask-open .cs-side { display: none; }
   font-variant-numeric: tabular-nums;
 }
 .nf-title { font-size: var(--nf-fs); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
-.nf-title span + span { font-weight: 300; }
-.nf-lede { max-width: 46em; margin: 1.5rem auto 0; font-size: 1.25rem; line-height: 1.5; color: var(--ink-soft); }
-.nf-actions { justify-content: center; margin-top: 2.25rem; }
+.nf-lede { max-width: 46em; margin: 1rem auto 0; font-size: 1.0625rem; line-height: 1.5; color: var(--ink-soft); }
+.nf-actions { justify-content: center; margin-top: 1.75rem; }
 
 @media (prefers-reduced-motion: no-preference) {
   /* The line draws with the site's trail curve while the dot rides it; the
      404 lands as the dot stops in the knot. */
   .js .nf-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trail-draw 2.6s cubic-bezier(0.55, 0, 0.2, 1) forwards; }
   .js .nf-chip { opacity: 0; animation: nf-chip-in 0.6s var(--ease-out) 2.45s forwards; }
-  .js .nf-title span, .js .nf-lede, .js .nf-actions { opacity: 0; animation: nf-rise 0.8s var(--ease-out) forwards; }
-  .js .nf-title span:nth-child(2) { animation-delay: 0.08s; }
-  .js .nf-lede { animation-delay: 0.16s; }
-  .js .nf-actions { animation-delay: 0.24s; }
+  .js .nf-title, .js .nf-lede, .js .nf-actions { opacity: 0; animation: nf-rise 0.8s var(--ease-out) forwards; }
+  .js .nf-lede { animation-delay: 0.08s; }
+  .js .nf-actions { animation-delay: 0.16s; }
 }
 @keyframes nf-chip-in { from { opacity: 0; transform: translateY(-50%) scale(0.9); } to { opacity: 1; transform: translateY(-50%); } }
 @keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
