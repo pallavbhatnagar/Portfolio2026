@@ -2657,7 +2657,7 @@ body.ask-open .cs-side { display: none; }
 .nf-dot { fill: var(--ink); }
 .nf-chip {
   position: absolute;
-  left: calc(87% + 0.875rem);
+  left: calc(88.6% + 0.875rem);
   top: 58.2%;
   transform: translateY(-50%);
   padding: 0.1875rem 0.625rem;
@@ -2669,7 +2669,6 @@ body.ask-open .cs-side { display: none; }
   font-variant-numeric: tabular-nums;
 }
 .nf-title { font-size: var(--nf-fs); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
-.nf-title span { display: block; }
 .nf-title span + span { font-weight: 300; }
 .nf-lede { max-width: 46em; margin: 1.5rem auto 0; font-size: 1.25rem; line-height: 1.5; color: var(--ink-soft); }
 .nf-actions { justify-content: center; margin-top: 2.25rem; }
@@ -2687,7 +2686,7 @@ body.ask-open .cs-side { display: none; }
 @keyframes nf-chip-in { from { opacity: 0; transform: translateY(-50%) scale(0.9); } to { opacity: 1; transform: translateY(-50%); } }
 @keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
 @media (max-width: 640px) {
-  .nf-title { font-size: clamp(2rem, 9.2vw, 2.25rem); }
+  .nf-title { font-size: clamp(1.25rem, 7.1vw, 2.25rem); }
   /* The cropped start of the line fades in from the left edge. */
   .nf-trail { -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%); }
   .nf-lede { font-size: 1.0625rem; }
