@@ -449,37 +449,40 @@
       }, { threshold: 0.35 }).observe(vx);
     }
   }
-  // 11c) Locked case studies (home cards and Works cards). A card with data-locked shows a lock on
-  //      its image; its "Read the case study" link opens a password dialog
-  //      instead of navigating. The right password opens the link and is
-  //      remembered for the rest of the visit (sessionStorage).
-  //      The password is stored only as a SHA-256 hash. To change it, open
-  //      the site in a browser, run this in the console, and paste the result
-  //      into LOCK_HASH:
-  //        crypto.subtle.digest("SHA-256", new TextEncoder().encode("new password"))
-  //          .then((b) => console.log([...new Uint8Array(b)].map((x) => x.toString(16).padStart(2, "0")).join("")))
-  //      This keeps casual visitors out; it is not real security, since a
-  //      static site ships everything to the browser. Truly private work
-  //      needs a password check on a server.
-  const LOCK_HASH = "00ee1a7efa758037dc899212df9212bc2c8417f50cbf608a78119b8d5e741e45"; // "casestudy"
+  // 11c) Locked case studies (Home cards, Works cards and "Next project").
+  //      A locked link opens the password dialog instead of navigating; the
+  //      lock card on a locked case study's page opens it too.
+  //      The password is checked by the Cloudflare Worker (portfolio-auth) at
+  //      /api/unlock, against the PORTFOLIO_PASSWORD secret; it is never in
+  //      this site. A right password makes the Worker set a signed cookie
+  //      (ends when the browser closes, 2 hours at most), and the Worker then
+  //      serves the full locked pages instead of the placeholders in work/.
+  //      To change the password: Cloudflare -> Workers & Pages ->
+  //      portfolio-auth -> Settings -> Variables and secrets.
   const lockDialog = document.getElementById("lockDialog");
   if (lockDialog && typeof lockDialog.showModal === "function") {
     const lockForm = document.getElementById("lockForm");
     const lockInput = document.getElementById("lockInput");
     const lockError = document.getElementById("lockError");
+    const submitBtn = lockForm.querySelector("button[type=submit]");
+    // A note for this tab only, so locked links can skip the dialog once
+    // unlocked. The real check is the Worker's cookie; if that has expired,
+    // the page shows its lock card again (and case.js clears this note).
     const unlockedKey = "caseStudiesUnlocked";
     let pendingHref = "";
 
     const isUnlocked = () => {
       try { return sessionStorage.getItem(unlockedKey) === "1"; } catch (e) { return false; }
     };
-    const sha256 = async (text) => {
-      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(text));
-      return Array.from(new Uint8Array(buf)).map((x) => x.toString(16).padStart(2, "0")).join("");
-    };
     const setError = (msg) => {
       lockError.textContent = msg;
       lockInput.setAttribute("aria-invalid", msg ? "true" : "false");
+    };
+    const shake = () => {
+      lockInput.classList.remove("is-wrong");
+      void lockInput.offsetWidth;
+      lockInput.classList.add("is-wrong");
+      lockInput.select();
     };
 
     const askForPassword = (href) => {
@@ -497,7 +500,7 @@
         askForPassword(link.getAttribute("href"));
       });
     });
-    // The case study page's gate button: unlock in place, no navigation.
+    // The lock card on a locked case study: unlock, then reload this page.
     document.querySelectorAll("[data-lock-open]").forEach((btn) => {
       btn.addEventListener("click", () => askForPassword(""));
     });
@@ -510,18 +513,30 @@
       e.preventDefault();
       const value = lockInput.value;
       if (!value) { setError("Enter the password to continue."); lockInput.focus(); return; }
-      if (!(window.crypto && crypto.subtle)) { setError("Unlocking needs a secure (https) page. Email me for access."); return; }
-      if ((await sha256(value)) === LOCK_HASH) {
-        try { sessionStorage.setItem(unlockedKey, "1"); } catch (err) { /* private mode: unlock just this once */ }
+      if (submitBtn) submitBtn.disabled = true;
+      try {
+        const res = await fetch("/api/unlock", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ password: value })
+        });
+        if (res.status === 401) {
+          setError("That password didn't work. Check it and try again.");
+          shake();
+          return;
+        }
+        if (!res.ok) throw new Error("status " + res.status);
+        try { sessionStorage.setItem(unlockedKey, "1"); } catch (err) { /* private mode */ }
         lockDialog.close();
+        // Go to the locked case study, or reload this one so the Worker sends
+        // the full page.
         if (pendingHref) window.location.href = pendingHref;
-        else document.dispatchEvent(new CustomEvent("case-unlocked"));
-      } else {
-        setError("That password didn't work. Check it and try again.");
-        lockInput.classList.remove("is-wrong");
-        void lockInput.offsetWidth;
-        lockInput.classList.add("is-wrong");
-        lockInput.select();
+        else window.location.reload();
+      } catch (err) {
+        setError("Couldn't check the password just now. Try again in a moment.");
+      } finally {
+        if (submitBtn) submitBtn.disabled = false;
       }
     });
     lockInput.addEventListener("input", () => { if (lockError.textContent) setError(""); });

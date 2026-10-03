@@ -18,9 +18,15 @@
   const slug = root.dataset.slug || "";
 
   // ---------- Password gate ----------
-  let unlocked = false;
-  try { unlocked = sessionStorage.getItem("caseStudiesUnlocked") === "1"; } catch (e) { /* private mode */ }
-  if (root.hasAttribute("data-locked") && !unlocked) document.body.classList.add("cs-gated");
+  // A locked project's page in this repository is only a placeholder (hero
+  // and password card); after the password, the Cloudflare Worker serves the
+  // full page, which has no data-locked. So data-locked means "show the gate".
+  // The tab's "unlocked" note is cleared too: reaching the placeholder means
+  // the unlock has expired.
+  if (root.hasAttribute("data-locked")) {
+    document.body.classList.add("cs-gated");
+    try { sessionStorage.removeItem("caseStudiesUnlocked"); } catch (e) { /* private mode */ }
+  }
 
   // ---------- Outcome numbers count up once in view ----------
   const countUp = (el) => {
@@ -155,10 +161,4 @@
     const items = outcomes();
     return { text: `${esc(name)}: ${esc(text(root.querySelector(".cs-headline")))} ${esc(chapterText("overview"))}`, render: items.length ? () => list(items) : undefined };
   };
-
-  // ---------- Unlocking from the gate ----------
-  document.addEventListener("case-unlocked", () => {
-    document.body.classList.remove("cs-gated");
-    render();
-  });
 })();

@@ -57,9 +57,9 @@
 
 <div class="page">
 
-<!-- ============ CASE STUDY: Wayfarer Health. The page's content is written below;
-     js/case.js adds the chapter list highlight, number count-ups, the chat's
-     answers and the password gate (data-locked on <main>). ============ -->
+<!-- ============ CASE STUDY: Wayfarer Health. LOCKED PLACEHOLDER: the hero and the
+     password card only. After the password, the Cloudflare Worker
+     (portfolio-auth) serves the full page instead of this one. ============ -->
 <main class="cs" id="case" data-slug="wayfarer" data-locked style="--tint: var(--lilac-bg); --tint-panel: var(--lilac-panel); --tint-ink: var(--ink)">
     <nav class="cs-side" aria-label="Case study">
       <a class="cs-back-btn" href="/works" aria-label="Back to all work"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></a>
@@ -78,28 +78,6 @@
         </div>
         <div class="cs-in" style="--d:2"><button class="cs-ask" type="button" data-ask-trigger="" data-ask="Tell me about Wayfarer Health." aria-haspopup="dialog" aria-controls="askPanel" aria-label="Ask AI about Wayfarer Health"><span class="cs-ask-ic"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"></path></svg></span>Ask AI about this project</button></div>
       </div>
-      
-      <section class="cs-context cs-in" style="--d:3" aria-label="Team, role and tools">
-        <div class="cs-ctx-col">
-          <div class="cs-ctx-block">
-            <h2 class="cs-ctx-h">The team</h2>
-            <ul class="cs-avatars"><li title="Daniel Okafor, researcher" style="--a-bg: var(--mint-bg); --a-ink: var(--mint-ink)"><span aria-hidden="true">DO</span><span class="sr-only">Daniel Okafor, researcher</span></li><li title="Leena Shah, researcher" style="--a-bg: var(--lilac-bg); --a-ink: var(--lilac-ink)"><span aria-hidden="true">LS</span><span class="sr-only">Leena Shah, researcher</span></li><li title="Priya Rao, nurse" style="--a-bg: var(--rose-bg); --a-ink: var(--rose-ink)"><span aria-hidden="true">PR</span><span class="sr-only">Priya Rao, nurse</span></li><li class="cs-avatar-more" title="5 more"><span aria-hidden="true">+5</span><span class="sr-only">and 5 more</span></li></ul>
-            <p>Two researchers, four engineers and two nurses from the clinic, who joined every design review. I reported to the clinic's product lead.</p>
-          </div>
-          <div class="cs-ctx-block"><h2 class="cs-ctx-h">Tools used</h2><ul class="cs-tools"><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #f24e1e">F</span>Figma</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #ffd02f; --tool-ink: #1d1d1f">M</span>Miro</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #2c2c54">L</span>Lookback</li><li><span class="cs-tool-ic" aria-hidden="true" style="--tool: #0052cc">J</span>Jira</li></ul></div>
-        </div>
-        <div class="cs-ctx-col">
-          <div class="cs-ctx-block">
-            <h2 class="cs-ctx-h">My role</h2>
-            <p>As the <strong>Senior UX designer</strong>, I designed the new booking and care-plan flow, from the first co-design sessions with patients and nurses to tested, accessible screens the engineers could build.</p>
-            <ul class="cs-focus"><li>Co-design workshops</li><li>Conversation design</li><li>Accessibility</li><li>Usability testing</li><li>Design system updates</li></ul>
-          </div>
-          <div class="cs-ctx-block">
-            <h2 class="cs-ctx-h">Timeline and platform</h2>
-            <p><strong>14 weeks, 2024</strong> on Web and mobile web</p>
-          </div>
-        </div>
-      </section>
     </header>
 
     <section class="cs-gate" aria-labelledby="cs-gate-title">
@@ -109,91 +87,8 @@
       <button class="btn btn-primary" type="button" data-lock-open="">Enter password</button>
     </section>
 
-    <div class="cs-locked-content">
-      <figure class="cs-cover">
-        <span class="cs-cover-tag">Case study</span>
-        <div class="cs-cover-media"><img src="/assets/projects/wayfarer/images/cover.jpg" alt="Wayfarer Health booking screen on a phone" fetchpriority="high"></div>
-      </figure>
-
-      <section class="cs-outcomes ab-r" aria-label="Outcomes">
-        
-    <div class="cs-out">
-      <p class="cs-num" data-to="81" data-prefix="" data-suffix="%">81%</p>
-      <p class="cs-out-label">of started bookings now completed</p>
-    </div>
-    <div class="cs-out">
-      <p class="cs-num" data-to="44" data-prefix="-" data-suffix="%">-44%</p>
-      <p class="cs-out-label">support calls about booking</p>
-    </div>
-    <div class="cs-out">
-      <p class="cs-num" data-to="4" data-prefix="" data-suffix="">4</p>
-      <p class="cs-out-label">form fields, down from eleven</p>
-    </div>
-      </section>
-
-      <div class="cs-body">
-        <div class="cs-content">
-          
-          <section class="cs-ch" id="overview">
-            <h2 class="ab-r">Overview</h2>
-            <p class="cs-lead ab-r">Wayfarer is a telehealth clinic serving patients across three time zones. Booking a first appointment took an eleven-field form, and nearly half of the people who started it gave up.</p>
-          </section>
-
-          <section class="cs-ch" id="problem">
-            <h2 class="ab-r">The problem</h2>
-            <p class="ab-r">The form asked medical questions before the patient knew whether they'd even get a slot. Nurses then re-asked most of the same questions on the call, so the effort felt wasted twice.</p>
-            <blockquote class="cs-quote ab-r"><p>“I just wanted to know if someone could see me this week.”</p><cite>Patient, usability session</cite></blockquote>
-          </section>
-
-          <section class="cs-ch" id="research">
-            <h2 class="ab-r">What we learned</h2>
-            <div class="cs-insights">
-              <article class="cs-insight ab-r" style="--i:0"><h3>Availability first</h3><p>Patients decided whether to continue based on the next open slot, not on anything else we showed.</p></article><article class="cs-insight ab-r" style="--i:1"><h3>Nurses already had a script</h3><p>The questions that mattered came in a natural order on calls. The form ignored it.</p></article><article class="cs-insight ab-r" style="--i:2"><h3>Trust comes from people</h3><p>Seeing the name and photo of the nurse made patients more willing to share details.</p></article>
-            </div>
-          </section>
-
-          <section class="cs-ch" id="process">
-            <h2 class="ab-r">Process</h2>
-            <ol class="cs-steps">
-              <li class="cs-step ab-r" style="--i:0"><span class="cs-step-n">01</span><div><h3>Listen</h3><p>Shadowed twenty booking calls and interviewed patients who had abandoned the form.</p></div></li><li class="cs-step ab-r" style="--i:1"><span class="cs-step-n">02</span><div><h3>Map</h3><p>Mapped the form against the nurses' call script to find every duplicate question.</p></div></li><li class="cs-step ab-r" style="--i:2"><span class="cs-step-n">03</span><div><h3>Sketch</h3><p>Co-designed a guided conversation with two nurses over three workshops.</p></div></li><li class="cs-step ab-r" style="--i:3"><span class="cs-step-n">04</span><div><h3>Test</h3><p>Tested with patients over 60 and patients booking for a child.</p></div></li><li class="cs-step ab-r" style="--i:4"><span class="cs-step-n">05</span><div><h3>Ship</h3><p>Launched in one region first, with nurses reviewing every booking for two weeks.</p></div></li>
-            </ol>
-          </section>
-
-          <section class="cs-ch" id="solution">
-            <h2 class="ab-r">Key decisions</h2>
-            <div class="cs-decisions">
-              
-                <article class="cs-decision ab-r">
-                  <div class="cs-crop is-crop"><img src="/assets/projects/wayfarer/images/detail-01.jpg" alt="" loading="lazy" style="object-position: 50% 30%; transform-origin: 50% 30%"></div>
-                  <div class="cs-decision-copy"><h3>Show the next open slot first</h3><p>The flow opens with real availability. Patients pick a time before being asked anything personal.</p></div>
-                </article>
-                <article class="cs-decision ab-r">
-                  <div class="cs-crop is-crop"><img src="/assets/projects/wayfarer/images/detail-02.jpg" alt="" loading="lazy" style="object-position: 50% 55%; transform-origin: 50% 55%"></div>
-                  <div class="cs-decision-copy"><h3>Questions in the nurse's order</h3><p>Four questions, asked one at a time in the same order a nurse would ask them. The rest moved to the call.</p></div>
-                </article>
-                <article class="cs-decision ab-r">
-                  <div class="cs-crop is-crop"><img src="/assets/projects/wayfarer/images/detail-03.jpg" alt="" loading="lazy" style="object-position: 50% 75%; transform-origin: 50% 75%"></div>
-                  <div class="cs-decision-copy"><h3>Meet your nurse before the call</h3><p>The confirmation shows who you'll speak to, with a photo and a line about them.</p></div>
-                </article>
-            </div>
-          </section>
-
-          <section class="cs-ch" id="results">
-            <h2 class="ab-r">Results</h2>
-            <p class="cs-lead ab-r">Completed bookings rose sharply in the first region, and nurses reported shorter calls because the answers they needed were already in the record.</p>
-            <figure class="cs-testimonial ab-r">
-              <blockquote><p>“Every critique made the work sharper and the team kinder.”</p></blockquote>
-              <figcaption><strong>Hannah Lindqvist</strong>Design Lead, Wayfarer Health</figcaption>
-            </figure>
-          </section>
-
-          <section class="cs-ch" id="reflection">
-            <h2 class="ab-r">Looking back</h2>
-            <p class="ab-r">Accessibility testing came late. Next time I'd put a screen-reader user in the first round, not the last.</p>
-          </section>
-        </div>
-      </div>
-    </div>
+    <!-- The case study itself is served by the Cloudflare Worker after the
+         password; it is not in this repository. -->
 
     <a class="cs-next" href="/work/parcelo" style="--tint: var(--rose-bg); --tint-panel: var(--rose-panel); --tint-ink: var(--ink)" data-locked="" aria-label="Next project: Parcelo (password protected)">
       <span class="cs-next-label">Next project</span>

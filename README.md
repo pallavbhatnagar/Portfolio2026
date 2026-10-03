@@ -133,6 +133,22 @@ Save it over `assets/videos/testimonials/meera-kapoor.mp4` (MP4, H.264).
 Save your PDF over `assets/documents/resume/resume.pdf`.
 **The file there now is a placeholder: replace it before publishing.**
 
+### Locked case studies (Wayfarer Health, Parcelo)
+Their real pages are **not** in this folder. `work/wayfarer.html` and
+`work/parcelo.html` here are placeholders (the hero and the password card).
+The full pages live in Cloudflare KV, and the Cloudflare Worker
+`portfolio-auth` serves them after the right password. The Worker's code and
+the full pages are in `../portfolio-auth/`, next to this folder, never on
+GitHub.
+- **Change the password:** Cloudflare → Workers & Pages → portfolio-auth →
+  Settings → Variables and secrets → `PORTFOLIO_PASSWORD`.
+- **Edit a locked case study:** edit `../portfolio-auth/locked-pages/<slug>.html`,
+  then Cloudflare → Storage & Databases → KV → portfolio-locked → the entry
+  with that name → paste the new contents and save.
+- **Never commit the full pages to GitHub.** Only the placeholders belong here.
+- **Previewing locally:** `npx serve .` has no Worker, so the password dialog
+  says it couldn't check the password. Test unlocking on the live site.
+
 ### Update your email or social links
 Edit `js/content.js`. The footer, the copy-email button, the password dialog
 and the chat all update.
