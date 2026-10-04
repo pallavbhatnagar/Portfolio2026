@@ -2205,6 +2205,28 @@ body.ask-open .shell-scrollbar {
   .ask-panel { position: fixed; inset: 0 0 0 auto; z-index: 60; }
   body.ask-open .site-shell { margin: 0; height: auto; border-radius: 0; overflow: hidden; }
 }
+/* Tablets (iPad portrait and landscape): side by side would squeeze the page
+   into a phone-width column that still gets tablet layouts, so the chat
+   floats over the page as a drawer instead. The page keeps its full layout
+   underneath, dimmed; tapping the dimmed area closes the chat (script.js).
+   Laptops and desktops (1300px and up) keep the side-by-side panel. */
+@media (min-width: 641px) and (max-width: 1299px) {
+  :root { --ask-panel-w: 400px; }
+  .ask-panel { position: fixed; inset: 0 0 0 auto; z-index: 60; box-shadow: -0.75rem 0 2.5rem rgba(13, 13, 13, 0.14); }
+  body.ask-open { overflow: hidden; }
+  body.ask-open .site-shell { margin: 0; height: auto; border-radius: 0; overflow: visible; }
+  body.ask-open .shell-scroll { position: static; overflow: visible; }
+  body.ask-open .site-header { position: fixed; }
+  body.ask-open .shell-scrollbar { display: none; }
+  body.ask-open .to-top { right: 1.125rem; bottom: 1.125rem; }
+  .app-row::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(13, 13, 13, 0.36); opacity: 0; pointer-events: none; transition: opacity 0.4s var(--ease-out); }
+  body.ask-open .app-row::after { opacity: 1; pointer-events: auto; }
+}
+@media (min-width: 641px) and (max-width: 1299px) and (orientation: landscape) { :root { --ask-panel-w: 440px; } }
+@supports selector(:has(*)) {
+  @media (min-width: 641px) and (max-width: 1299px) { html:has(body.ask-open) { overflow: hidden; } }
+}
+@media (prefers-reduced-motion: reduce) { .app-row::after { transition: none; } }
 
 /* =========================================================
    Case study pages (work/<project>.html; behaviour in js/case.js).

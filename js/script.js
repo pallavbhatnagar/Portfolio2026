@@ -38,6 +38,10 @@
   const shellScroll = document.getElementById("shellScroll");
   const shellScrollbar = document.getElementById("shellScrollbar");
   const shellScrollbarThumb = document.getElementById("shellScrollbarThumb");
+  // True only while the page scrolls inside .shell-scroll (chat open side by
+  // side). On tablets the chat is a drawer and the window keeps scrolling.
+  const inShellScroll = () => !!shellScroll && document.body.classList.contains("ask-open")
+    && getComputedStyle(shellScroll).position === "absolute";
   if (shellScroll && shellScrollbar && shellScrollbarThumb) {
     let hideTimer;
     const updateThumb = () => {
@@ -67,7 +71,7 @@
     const EDGE = 20;
     let hoverEl = null;
     window.addEventListener("mousemove", (e) => {
-      const shellOpen = document.body.classList.contains("ask-open");
+      const shellOpen = inShellScroll();
       const target = shellOpen ? shellScrollbar : document.documentElement;
       if (!target) return;
       const rightEdge = shellOpen && shellScroll ? shellScroll.getBoundingClientRect().right : window.innerWidth;
@@ -284,7 +288,7 @@
       if (footer) {
         footer.style.paddingBottom = "";
         if (!active) return;
-        const inShell = shellScroll && document.body.classList.contains("ask-open");
+        const inShell = inShellScroll();
         const scroller = inShell ? shellScroll : document.scrollingElement;
         const viewTop = inShell ? shellScroll.getBoundingClientRect().top : 0;
         const viewH = inShell ? shellScroll.clientHeight : window.innerHeight;
@@ -1393,7 +1397,7 @@
       const finish = () => { askPanel.hidden = true; };
       if (reduce.matches) finish();
       else askPanel.addEventListener("transitionend", finish, { once: true });
-      askTrigger.focus();
+      askTrigger.focus({ preventScroll: true });
     };
     askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
     const askSound = new Audio("/assets/audio/sound-effects/chat-open.wav");
@@ -1408,6 +1412,10 @@
       });
     });
     if (askClose) askClose.addEventListener("click", closeAsk);
+    // Tablets: the chat is a drawer over a dimmed page (the dim layer is
+    // #appRow's ::after, so a tap on it lands on #appRow itself). Tap to close.
+    const appRow = document.getElementById("appRow");
+    if (appRow) appRow.addEventListener("click", (e) => { if (e.target === appRow && askOpen) closeAsk(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && askOpen) closeAsk(); });
   }
 
