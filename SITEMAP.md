@@ -67,13 +67,25 @@ In order, top to bottom:
 2. **Numbers.** 8+ years, 40+ products and features shipped, 200+ usability
    sessions.
 3. **How I got here.** A short career story.
-4. **At a glance.** Based in, Currently, Focus, Experience, Education,
+4. **Where I've been.** Four jobs on the site's tangled-to-straight line
+   (a vertical timeline on phones), ending on "Now".
+5. **At a glance.** Based in, Currently, Focus, Experience, Education,
    Languages.
-5. **Who you'd be working with.** Working style: Where I start, How I
+6. **What I believe about design.** Five principles; each row links to the part of the case
+   study that shows it, and hovering a row fades the others back.
+7. **Who you'd be working with.** Working style: Where I start, How I
    collaborate, After handoff.
-6. **Off the clock.** Music (composes electronic music as "Avasa", with a
-   SoundCloud player) and Books (a scrolling shelf of book covers).
-7. **Footer.**
+8. **Now.** Building, Learning, Exploring, Listening (with a music video
+   link), and the date it was last updated.
+9. **Outside the brief.** Music (composes for films as a hobby, with a
+   SoundCloud player) and Books and comics (a slow marquee of covers that
+   pauses on hover).
+10. **Questions people ask.** Answers that slide open one at a time, and a
+    Talk to me button that opens the chat panel.
+
+A small pixel golden retriever (js/pixel-dog.js) runs along the gaps
+between sections now and then; clicking him plays a bark and shows a heart.
+11. **Footer.**
 
 ## Case study: `/work/<slug>`
 

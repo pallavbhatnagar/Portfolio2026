@@ -1370,12 +1370,36 @@
 
     let askOpen = false;
     askPanel.inert = true;
+    // Side by side, opening or closing moves the page into (or out of) its
+    // own scroller and narrows or widens it, which would jump it to the top.
+    // This keeps the pressed button at the same height on screen while the
+    // panel slides. Call it before the change, then call what it returns.
+    const holdInPlace = (el) => {
+      if (!el || !el.isConnected) return () => {};
+      const top = el.getBoundingClientRect().top;
+      return () => {
+        const until = performance.now() + 650;
+        const step = () => {
+          const scroller = inShellScroll() ? shellScroll : document.scrollingElement;
+          const delta = el.getBoundingClientRect().top - top;
+          if (Math.abs(delta) > 0.5) {
+            scroller.style.scrollBehavior = "auto";
+            scroller.scrollTop += delta;
+            scroller.style.scrollBehavior = "";
+          }
+          if (performance.now() < until) requestAnimationFrame(step);
+        };
+        step();
+      };
+    };
     const openAsk = () => {
       if (askOpen) return;
       askOpen = true;
+      const hold = holdInPlace(askTrigger);
       askPanel.hidden = false;
       askPanel.inert = false;
       document.body.classList.add("ask-open");
+      hold();
       void askPanel.offsetWidth;
       askPanel.classList.add("is-open");
       askTriggers.forEach((t) => t.setAttribute("aria-expanded", "true"));
@@ -1390,9 +1414,11 @@
       askOpen = false;
       closeSound.currentTime = 0;
       closeSound.play().catch(() => {});
+      const hold = holdInPlace(askTrigger);
       askPanel.classList.remove("is-open");
       askPanel.inert = true;
       document.body.classList.remove("ask-open");
+      hold();
       askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
       const finish = () => { askPanel.hidden = true; };
       if (reduce.matches) finish();
@@ -1418,6 +1444,98 @@
     if (appRow) appRow.addEventListener("click", (e) => { if (e.target === appRow && askOpen) closeAsk(); });
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && askOpen) closeAsk(); });
   }
+
+  // 23a) About: "Where I've been". When it scrolls into view, the line draws
+  //      from tangled to straight in one smooth ease-in-out (2.4s), and each
+  //      stop and its job appear the moment the line reaches them; then the
+  //      "now" ring starts to pulse. On phones (no line) the jobs appear one
+  //      after another. With reduced motion or no scripts, all is shown.
+  const abPath = document.querySelector(".ab-path");
+  if (abPath && !reduce.matches && "IntersectionObserver" in window) {
+    const svg = abPath.querySelector(".path-line");
+    const line = abPath.querySelector(".pl-main");
+    const nodes = Array.from(abPath.querySelectorAll(".pl-node"));
+    const ring = abPath.querySelector(".pl-ring");
+    const next = abPath.querySelector(".pl-next");
+    const jobs = Array.from(abPath.querySelectorAll(".path-grid li"));
+    const lit = (el) => { if (el) el.classList.add("is-lit"); };
+    const finish = () => {
+      abPath.classList.add("is-done");
+      abPath.classList.remove("is-armed");
+      if (line) line.style.strokeDashoffset = "";
+    };
+    abPath.classList.add("is-armed");
+    const run = () => {
+      if (!svg || !line || getComputedStyle(svg).display === "none") {
+        jobs.forEach((li, i) => setTimeout(() => lit(li), 140 * i));
+        setTimeout(finish, 140 * jobs.length + 700);
+        return;
+      }
+      // How far along the line (0 to 1) each stop sits: the first sample at
+      // or past its x, walking the line in order (the tangle doubles back,
+      // so x alone isn't enough).
+      const total = line.getTotalLength();
+      const samples = [];
+      for (let i = 0; i <= 400; i++) samples.push(line.getPointAtLength((total * i) / 400).x);
+      const at = nodes.map((n) => {
+        const cx = Number(n.getAttribute("cx"));
+        const i = samples.findIndex((sx) => sx >= cx - 0.5);
+        return i < 0 ? 1 : i / 400;
+      });
+      const dur = 2400, t0 = performance.now();
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+      const frame = (now) => {
+        const t = Math.min(1, (now - t0) / dur), p = ease(t);
+        line.style.strokeDashoffset = String(1 - p);
+        at.forEach((f, i) => {
+          if (p >= f - 0.003) { lit(nodes[i]); lit(jobs[i]); if (i === nodes.length - 1) lit(ring); }
+        });
+        if (t < 1) requestAnimationFrame(frame);
+        else { lit(next); setTimeout(finish, 900); }
+      };
+      requestAnimationFrame(frame);
+    };
+    const pathIo = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) { pathIo.disconnect(); run(); }
+    }, { threshold: 0.4 });
+    pathIo.observe(abPath);
+  }
+
+  // 23c) About: "Questions people ask". One answer open at a time; each
+  //      one slides open and shut (height and opacity: 280ms open, 200ms
+  //      closed, strong ease-out), and a quick second click reverses it
+  //      from where it is. Instant with reduced motion. Without scripts the
+  //      answers still open and close on their own.
+  const faqItems = Array.from(document.querySelectorAll(".faq-list details"));
+  const faqSlide = (d, open) => {
+    const body = d.querySelector(".faq-a");
+    if (!body || reduce.matches || !body.animate) {
+      d.open = open; d.classList.remove("is-closing"); return;
+    }
+    const fromH = d.open ? body.getBoundingClientRect().height : 0;
+    const fromO = d.open ? getComputedStyle(body).opacity : "0";
+    if (d._slide) d._slide.cancel();
+    d.open = true;
+    d.classList.toggle("is-closing", !open);
+    const toH = open ? body.scrollHeight : 0;
+    const anim = body.animate(
+      [{ height: fromH + "px", opacity: fromO }, { height: toH + "px", opacity: open ? 1 : 0 }],
+      { duration: open ? 280 : 200, easing: "cubic-bezier(0.23, 1, 0.32, 1)" }
+    );
+    d._slide = anim;
+    anim.onfinish = () => {
+      d._slide = null;
+      if (!open) { d.open = false; d.classList.remove("is-closing"); }
+    };
+  };
+  faqItems.forEach((d) => {
+    d.querySelector("summary").addEventListener("click", (e) => {
+      e.preventDefault();
+      const opening = !d.open || d.classList.contains("is-closing");
+      if (opening) faqItems.forEach((o) => { if (o !== d && o.open && !o.classList.contains("is-closing")) faqSlide(o, false); });
+      faqSlide(d, opening);
+    });
+  });
 
   // 24) Theme toggle: flips data-theme on <html> between light and dark and
   //     remembers the choice. The initial theme is decided by an inline
