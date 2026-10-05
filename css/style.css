@@ -1,7 +1,6 @@
-/* Manrope, one family, weights only for hierarchy. Seven static weights ship
-   in assets/fonts/ (200 extra-light to 800 extra-bold). Regular and Medium
+/* Manrope, one family, weights only for hierarchy. Six static weights ship
+   in assets/fonts/ (300 light to 800 extra-bold). Regular and Medium
    are preloaded in each page's <head>. */
-@font-face { font-family: "Manrope"; src: url("../assets/fonts/Manrope-ExtraLight.ttf") format("truetype"); font-weight: 200; font-style: normal; font-display: swap; }
 @font-face { font-family: "Manrope"; src: url("../assets/fonts/Manrope-Light.ttf") format("truetype"); font-weight: 300; font-style: normal; font-display: swap; }
 @font-face { font-family: "Manrope"; src: url("../assets/fonts/Manrope-Regular.ttf") format("truetype"); font-weight: 400; font-style: normal; font-display: swap; }
 @font-face { font-family: "Manrope"; src: url("../assets/fonts/Manrope-Medium.ttf") format("truetype"); font-weight: 500; font-style: normal; font-display: swap; }
@@ -19,11 +18,8 @@
   --bg: #ffffff;
   --ink: #0d0d0d;
   --ink-soft: #666666; /* passes 4.5:1 on white and on every project tint */
-  --ink-note: #555555;
   --line: #dcdcdc;
   --hairline: rgba(13, 13, 13, 0.1);
-  --pill-bg: #e7f7e7;
-  --pill-ink: #2f9e44;
   --dot: #2b7a3b;
   --surface: #f6f6f3;
   --surface-2: #ffffff;
@@ -32,7 +28,6 @@
   --fade: #d6d6d6;
   --radius-btn: 0.375rem;
   --font: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-  --font-display: var(--font);
   --font-mono: var(--font);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --pad: clamp(0.75rem, 4vw, 2.125rem);
@@ -42,15 +37,14 @@
   --lilac-bg: #ece8f0; --lilac-panel: #e3dded; --lilac-ink: #5b2a7a;
   --rose-bg: #f0e9e6;  --rose-panel: #eadfdc;  --rose-ink: #6b2a1b;
   --sky-bg: #e6eeef;   --sky-panel: #dde6e8;   --sky-ink: #1b3d55;
-  --sand-bg: #efefe8;  --sand-panel: #e8e6da;  --sand-ink: #4a4a1b;  /* Type scale. SF or Inter for text, the system mono for small labels. Headings are 800/700 with tight tracking,
-     the same voice as the hero headline; body copy is regular weight. */
-  --fs-display: clamp(1.75rem, 5.47vw, 3rem);
+  --sand-bg: #efefe8;  --sand-panel: #e8e6da;  --sand-ink: #4a4a1b;
+  /* Type scale: headings at medium weight with tight tracking, the same
+     voice as the hero headline; body copy at regular weight. */
   --fs-h2: clamp(1.625rem, 3.94vw, 2rem);
   --fs-h3: clamp(1.25rem, 3.1vw, 1.75rem);
   --fs-lead: 1rem;
   --fs-body: 1rem;
   --fs-small: 0.875rem;
-  --track-display: -0.022em;
   --track-heading: -0.018em;
 
   /* Spacing scale (taken from the hero rhythm) */
@@ -59,7 +53,6 @@
   --space-3: 1.125rem;
   --space-4: 1.375rem;
   --space-5: 2.125rem;
-  --space-6: 3.125rem;
   --space-section: 3.625rem;
   color-scheme: light;
 }
@@ -76,7 +69,6 @@
   --bg: #141414;
   --ink: #f2f1ee;
   --ink-soft: #9a9a9a;
-  --ink-note: #b0b0b0;
   --line: #333333;
   --hairline: rgba(255, 255, 255, 0.12);
   --surface: #1c1c1f;
@@ -90,11 +82,11 @@
   --sky-bg: #1a2428;   --sky-panel: #202e33;   --sky-ink: #8fc4dd;
   --sand-bg: #29271c;  --sand-panel: #332f22;  --sand-ink: #d9c876;
 }
-:root[data-theme="dark"] .project { --card: var(--mint-bg); --panel: var(--mint-panel); --ink-tag: var(--mint-ink); }
-:root[data-theme="dark"] .project[data-theme="lilac"] { --card: var(--lilac-bg); --panel: var(--lilac-panel); --ink-tag: var(--lilac-ink); }
-:root[data-theme="dark"] .project[data-theme="rose"]  { --card: var(--rose-bg);  --panel: var(--rose-panel);  --ink-tag: var(--rose-ink); }
-:root[data-theme="dark"] .project[data-theme="sky"]   { --card: var(--sky-bg);   --panel: var(--sky-panel);   --ink-tag: var(--sky-ink); }
-:root[data-theme="dark"] .project[data-theme="sand"]  { --card: var(--sand-bg);  --panel: var(--sand-panel);  --ink-tag: var(--sand-ink); }
+:root[data-theme="dark"] .project { --card: var(--mint-bg); --ink-tag: var(--mint-ink); }
+:root[data-theme="dark"] .project[data-theme="lilac"] { --card: var(--lilac-bg); --ink-tag: var(--lilac-ink); }
+:root[data-theme="dark"] .project[data-theme="rose"]  { --card: var(--rose-bg);   --ink-tag: var(--rose-ink); }
+:root[data-theme="dark"] .project[data-theme="sky"]   { --card: var(--sky-bg);     --ink-tag: var(--sky-ink); }
+:root[data-theme="dark"] .project[data-theme="sand"]  { --card: var(--sand-bg);   --ink-tag: var(--sand-ink); }
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
@@ -438,7 +430,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .trail-done svg { width: 0.625rem; height: 0.625rem; }
 }
 /* Shared keyframes (page sections and nav) */
-@keyframes pop { to { opacity: 1; transform: none; } }
 @keyframes rise { to { opacity: 1; transform: none; } }
 
 /* =========================================================
@@ -494,12 +485,12 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    is pulled up by the last card's margin plus this padding instead. */
 .projects + .value { margin-top: calc(var(--space-section) - 3.625rem); }
 .project {
-  --card: var(--mint-bg); --panel: var(--mint-panel); --ink-tag: var(--mint-ink);
+  --card: var(--mint-bg); --ink-tag: var(--mint-ink);
 }
-.project[data-theme="lilac"] { --card: var(--lilac-bg); --panel: var(--lilac-panel); --ink-tag: var(--lilac-ink); }
-.project[data-theme="rose"]  { --card: var(--rose-bg);  --panel: var(--rose-panel);  --ink-tag: var(--rose-ink); }
-.project[data-theme="sky"]   { --card: var(--sky-bg);   --panel: var(--sky-panel);   --ink-tag: var(--sky-ink); }
-.project[data-theme="sand"]  { --card: var(--sand-bg);  --panel: var(--sand-panel);  --ink-tag: var(--sand-ink); }
+.project[data-theme="lilac"] { --card: var(--lilac-bg); --ink-tag: var(--lilac-ink); }
+.project[data-theme="rose"]  { --card: var(--rose-bg);   --ink-tag: var(--rose-ink); }
+.project[data-theme="sky"]   { --card: var(--sky-bg);     --ink-tag: var(--sky-ink); }
+.project[data-theme="sand"]  { --card: var(--sand-bg);   --ink-tag: var(--sand-ink); }
 .proj-stack .project {
   --strip: 3.5rem;
   position: sticky;
@@ -1282,7 +1273,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-num { margin: 0; font-size: 2rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--ink); }
 .ab-cap { margin: 0.25rem auto 0; max-width: 20ch; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-soft); }
 
-.ab-story, .ab-glance { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; content-visibility: auto; contain-intrinsic-size: auto 18.625rem; }
+.ab-story, .ab-glance { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
 .ab-story .ab-h2 { position: sticky; top: 4.625rem; }
 .ab-story-body p { max-width: 52ch; margin: 0; font-size: var(--fs-lead); line-height: 1.6; color: var(--ink-soft); }
 .ab-story-body p + p { margin-top: 0.875rem; }
@@ -1313,7 +1304,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 /* Who you'd be working with: copy on the left, three habit cards on the
    right (one wide, two below), same card language as the projects. The
    doodles draw when the cards scroll in. Transform, opacity and stroke only. */
-.ab-impact { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-5); align-items: stretch; content-visibility: auto; contain-intrinsic-size: auto 24.75rem; }
+.ab-impact { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-5); align-items: stretch; }
 .im-copy { display: flex; flex-direction: column; align-items: flex-start; }
 .im-tag { display: inline-flex; align-items: center; gap: 0.3125rem; margin: 0 0 0.875rem; padding: 0.1875rem 0.5rem; border-radius: 0.3125rem; background: #f3f3f0; font-size: 0.875rem; font-weight: 500; color: var(--ink); }
 .im-tag svg { color: var(--mint-ink); }
@@ -1403,7 +1394,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    plays. Books and comics: a slow marquee. Transform, opacity and colour
    only; off or static for reduced motion.
    ========================================================= */
-.ab-off { content-visibility: auto; contain-intrinsic-size: auto 34.125rem; }
 .ab-off-head p { max-width: none; margin-top: 0.3125rem; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
 .off-grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; margin-top: var(--space-4); }
 .off-card { position: relative; display: flex; flex-direction: column; overflow: hidden; padding: 1.125rem 1.125rem 1.25rem; border-radius: 0.5rem; background: #f5f5f2; }
@@ -2446,8 +2436,8 @@ body.ask-open .cs-side { display: none; }
 /* "Increase contrast" (macOS / iOS): darker greys, stronger lines, an edge
    on the pastel cards and thicker focus rings, in both themes. */
 @media (prefers-contrast: more) {
-  :root { --ink-soft: #444444; --ink-note: #333333; --line: #8a8a8a; --hairline: rgba(13, 13, 13, 0.35); }
-  :root[data-theme="dark"] { --ink-soft: #cfcfcf; --ink-note: #dddddd; --line: #8a8a8a; --hairline: rgba(255, 255, 255, 0.4); }
+  :root { --ink-soft: #444444; --line: #8a8a8a; --hairline: rgba(13, 13, 13, 0.35); }
+  :root[data-theme="dark"] { --ink-soft: #cfcfcf; --line: #8a8a8a; --hairline: rgba(255, 255, 255, 0.4); }
   .proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card {
     box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.3);
   }

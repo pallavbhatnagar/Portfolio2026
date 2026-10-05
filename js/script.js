@@ -12,10 +12,9 @@
     }).observe(sentinel);
   }
 
-  // 1a) Sound effects (assets/audio/sound-effects/). Played through Web
-  //     Audio, decoded ahead of time, so they start the instant they're
-  //     asked for (a plain <audio> element starts late, which cut the click
-  //     off before a link changed page). The silent lead-in and tail that
+  // 1a) Sound effects (assets/audio/sound-effects/), used by the chat
+  //     panel. Played through Web Audio, decoded ahead of time, so they start
+  //     the instant they're asked for, and the silent lead-in and tail that
   //     MP3 files carry are skipped. play(name, volume) plays at the file's
   //     own volume unless a lower one (0 to 1) is given, and returns how
   //     long the sound lasts, in ms.
@@ -30,7 +29,12 @@
       if (!loads[name]) {
         loads[name] = fetch(base + name)
           .then((r) => r.arrayBuffer())
-          .then((data) => new Promise((ok, fail) => getCtx().decodeAudioData(data, ok, fail)))
+          .then((data) => new Promise((ok, fail) => {
+            // Callback form for older Safari; newer browsers also return a
+            // promise, which would report a failed decode a second time.
+            const p = getCtx().decodeAudioData(data, ok, fail);
+            if (p && p.catch) p.catch(() => {});
+          }))
           .then((buf) => {
             // Where the sound actually starts and ends.
             const d = buf.getChannelData(0);
@@ -67,40 +71,6 @@
     };
     return { load, play };
   })();
-
-  // 1b) Click sound (nav-click.mp3), played very quietly (CLICK_VOLUME), for
-  //     the top nav (Home, Works, About me, the theme toggle), the footer
-  //     (email, copy button, social icons), the Home project cards and the
-  //     Download resume button. It plays on press, not release, and a link
-  //     to another page on this site waits until the click has sounded
-  //     (about a fifth of a second) before the next page loads. The email
-  //     link, social icons (new tab), the resume download and Ctrl/Cmd/Shift
-  //     or middle clicks go straight through.
-  const CLICK_VOLUME = 0.3;
-  const clickAreas = document.querySelectorAll(".site-header .nav, .site-footer, #projStack, [data-site-resume]");
-  if (clickAreas.length) {
-    sfx.load("nav-click.mp3");
-    let soundUntil = 0;
-    const click = () => { soundUntil = performance.now() + sfx.play("nav-click.mp3", CLICK_VOLUME); };
-    clickAreas.forEach((area) => {
-      // Mouse and touch: sound on press.
-      area.addEventListener("pointerdown", (e) => {
-        if (e.button === 0 && e.target.closest("a, button")) click();
-      });
-      area.addEventListener("click", (e) => {
-        const item = e.target.closest("a, button");
-        if (!item) return;
-        // Keyboard (Enter or Space) has no press: sound now.
-        if (performance.now() > soundUntil + 400) click();
-        if (item.tagName !== "A" || item.hasAttribute("download") || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
-        const href = item.getAttribute("href");
-        if (!href || !href.startsWith("/") || href.startsWith("//") || item.target === "_blank") return;
-        e.preventDefault();
-        const wait = Math.min(260, Math.max(0, soundUntil - performance.now()));
-        setTimeout(() => { window.location.href = item.href; }, wait);
-      });
-    });
-  }
 
   // 2) Sleek auto-hide scrollbars: a thin, near-invisible thumb that fades
   //    in only while a container is actively scrolling (CSS has no

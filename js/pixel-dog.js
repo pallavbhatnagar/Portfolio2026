@@ -256,7 +256,6 @@
   };
   const SPRITES = {};
   for (const [name, list] of Object.entries(POSES)) SPRITES[name] = list.map(render);
-  window.__pixelDog = { SPRITES, W, H }; // used by the preview sheet only
 
   // ---------- on the page ----------
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;

@@ -159,7 +159,7 @@ both projects.
     ├── images/about/             About page photos (optional)
     ├── icons/social/             linkedin.svg, behance.svg, dribbble.svg
     ├── videos/testimonials/      meera-kapoor.mp4
-    ├── audio/sound-effects/      chat-open.mp3, chat-close.mp3, nav-click.mp3, puppy.mp3
+    ├── audio/sound-effects/      chat-open.mp3, chat-close.mp3, puppy.mp3
     ├── documents/resume/         resume.pdf
     ├── fonts/                    Manrope
     └── favicon/                  Browser and app icons
