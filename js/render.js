@@ -14,7 +14,6 @@
 
   const lockIcon = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>';
   const lockBadge = `<span class="shot-lock" title="Password protected">${lockIcon}<span class="sr-only">Password protected</span></span>`;
-  const arrowIcon = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
   const link = (p) => `/work/${encodeURIComponent(p.slug)}`;
   const thumb = (p) => p.thumbnail || p.image;
   const thumbAlt = (p) => p.thumbAlt || p.alt || p.name;
@@ -33,7 +32,7 @@
         <dl class="metrics">
           ${(p.home.metrics || []).map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("\n          ")}
         </dl>
-        <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}">Read case study <span aria-hidden="true">${arrowIcon}</span></a>
+        <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}"></a>
       </div>
       <div class="project-panel"><div class="project-shot">${p.locked ? lockBadge : ""}<img src="${esc(thumb(p))}" alt="${esc(thumbAlt(p))}" loading="lazy"></div></div>
     </article>`).join("\n"));

@@ -12,6 +12,90 @@
     }).observe(sentinel);
   }
 
+  // 1a) Sound effects (assets/audio/sound-effects/). Played through Web
+  //     Audio, decoded ahead of time, so they start the instant they're
+  //     asked for (a plain <audio> element starts late, which cut the click
+  //     off before a link changed page). The silent lead-in and tail that
+  //     MP3 files carry are skipped. Volume is the file's own. play()
+  //     returns how long the sound lasts, in ms.
+  const sfx = (() => {
+    const base = "/assets/audio/sound-effects/";
+    const AC = window.AudioContext || window.webkitAudioContext;
+    let ctx = null;
+    const loads = {};
+    const getCtx = () => { if (!ctx && AC) ctx = new AC(); return ctx; };
+    const load = (name) => {
+      if (!AC) return Promise.resolve(null);
+      if (!loads[name]) {
+        loads[name] = fetch(base + name)
+          .then((r) => r.arrayBuffer())
+          .then((data) => new Promise((ok, fail) => getCtx().decodeAudioData(data, ok, fail)))
+          .then((buf) => {
+            // Where the sound actually starts and ends.
+            const d = buf.getChannelData(0);
+            let s = 0, e = d.length - 1;
+            while (s < e && Math.abs(d[s]) < 0.01) s++;
+            while (e > s && Math.abs(d[e]) < 0.01) e--;
+            const sr = buf.sampleRate;
+            return { buf, start: Math.max(0, s / sr - 0.005), dur: (e - s) / sr + 0.01 };
+          })
+          .catch(() => null);
+        loads[name].then((v) => { loads[name].ready = v; });
+      }
+      return loads[name];
+    };
+    const play = (name) => {
+      const c = getCtx();
+      const clip = loads[name] && loads[name].ready;
+      if (c && clip) {
+        if (c.state === "suspended") c.resume();
+        const src = c.createBufferSource();
+        src.buffer = clip.buf;
+        src.connect(c.destination);
+        src.start(0, clip.start, clip.dur);
+        return clip.dur * 1000;
+      }
+      // Not decoded yet (or no Web Audio): the plain way.
+      const a = new Audio(base + name);
+      a.play().catch(() => {});
+      load(name);
+      return 200;
+    };
+    return { load, play };
+  })();
+
+  // 1b) Click sound (nav-click.mp3) for the top nav (Home, Works, About me,
+  //     the theme toggle), the footer (email, copy button, social icons) and
+  //     the Home project cards. It plays on press, not release, and a link
+  //     to another page on this site waits until the click has sounded
+  //     (about a fifth of a second) before the next page loads. The email
+  //     link, social icons (new tab) and Ctrl/Cmd/Shift or middle clicks go
+  //     straight through.
+  const clickAreas = document.querySelectorAll(".site-header .nav, .site-footer, #projStack");
+  if (clickAreas.length) {
+    sfx.load("nav-click.mp3");
+    let soundUntil = 0;
+    const click = () => { soundUntil = performance.now() + sfx.play("nav-click.mp3"); };
+    clickAreas.forEach((area) => {
+      // Mouse and touch: sound on press.
+      area.addEventListener("pointerdown", (e) => {
+        if (e.button === 0 && e.target.closest("a, button")) click();
+      });
+      area.addEventListener("click", (e) => {
+        const item = e.target.closest("a, button");
+        if (!item) return;
+        // Keyboard (Enter or Space) has no press: sound now.
+        if (performance.now() > soundUntil + 400) click();
+        if (item.tagName !== "A" || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+        const href = item.getAttribute("href");
+        if (!href || !href.startsWith("/") || href.startsWith("//") || item.target === "_blank") return;
+        e.preventDefault();
+        const wait = Math.min(260, Math.max(0, soundUntil - performance.now()));
+        setTimeout(() => { window.location.href = item.href; }, wait);
+      });
+    });
+  }
+
   // 2) Sleek auto-hide scrollbars: a thin, near-invisible thumb that fades
   //    in only while a container is actively scrolling (CSS has no
   //    "is-scrolling" state, so a scroll listener toggles the class and a
@@ -208,7 +292,7 @@
   //     runs, which would shift elements the observer already judged "not on
   //     screen yet" and leave them stuck hidden; once fonts settle, any block
   //     still waiting is re-checked against final layout.
-  const revealSelector = ".ab-r, .ab-facts, .im-grid, .off-grid, .wk-list, .tstrip, .value-list, .xp-list, .proj-head";
+  const revealSelector = ".ab-r, .ab-facts, .im-grid, .off-grid, .wk-list, .tstrip, .proj-head";
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -340,6 +424,51 @@
         if (head.offsetHeight !== lastH) { lastH = head.offsetHeight; refresh(); }
       }).observe(head);
     }
+  }
+
+  // 11d) Home project cards: with a mouse, a tooltip follows the pointer
+  //      over a card and says where a click goes ("Read case study", or
+  //      "Unlock case study" for a locked one). It takes the card's own
+  //      colours (its dark tag colour as the fill, its tint as the text), so
+  //      they flip with the theme. Pops in with a short scale and fade.
+  const tipStack = document.getElementById("projStack");
+  if (tipStack && canHover) {
+    const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>';
+    const lock = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    const tip = document.createElement("div");
+    tip.className = "proj-tip";
+    tip.setAttribute("aria-hidden", "true");
+    tip.innerHTML = '<span class="proj-tip-in"></span>';
+    document.body.appendChild(tip);
+    const inner = tip.firstChild;
+    let raf = 0, px = 0, py = 0, current = null;
+    const move = () => { raf = 0; tip.style.transform = `translate(${px + 14}px, ${py + 18}px)`; };
+    const show = (card) => {
+      if (current === card) return;
+      current = card;
+      const cs = getComputedStyle(card);
+      tip.style.setProperty("--tip-bg", cs.getPropertyValue("--ink-tag").trim());
+      tip.style.setProperty("--tip-ink", cs.getPropertyValue("--card").trim());
+      inner.innerHTML = card.hasAttribute("data-locked") ? `${lock}Unlock case study` : `Read case study${arrow}`;
+      tip.classList.add("is-on");
+    };
+    const hide = () => { current = null; tip.classList.remove("is-on"); };
+    tipStack.addEventListener("pointermove", (e) => {
+      if (e.pointerType !== "mouse") return;
+      const card = e.target.closest(".project");
+      if (!card) { hide(); return; }
+      px = e.clientX; py = e.clientY;
+      if (!raf) raf = requestAnimationFrame(move);
+      show(card);
+    });
+    tipStack.addEventListener("pointerleave", hide);
+    window.addEventListener("scroll", () => {
+      // The pile moves under a still pointer: re-check which card is there.
+      if (!current) return;
+      const el = document.elementFromPoint(px, py);
+      const card = el && el.closest("#projStack .project");
+      if (card) show(card); else hide();
+    }, { passive: true });
   }
 
   // 11b) What I bring: a list of skills and one detail card. The list is a
@@ -581,41 +710,7 @@
     });
   }
 
-  // 12b) Experience: when a row opens (hover, focus or tap) its metric numbers
-  //      count up from zero. Throttled so a passing pointer doesn't replay it;
-  //      skipped for reduced motion (the final numbers are already in place).
-  if (!reduce.matches) {
-    const runs = new WeakMap();
-    const countRow = (row) => {
-      const now = performance.now();
-      if (now - (runs.get(row) || 0) < 1600) return;
-      runs.set(row, now);
-      row.querySelectorAll(".xm-v").forEach((el, i) => {
-        const to = parseFloat(el.dataset.to);
-        if (Number.isNaN(to)) return;
-        const pre = el.dataset.pre || "";
-        const suf = el.dataset.suf || "";
-        const delay = 220 + i * 100;
-        const dur = 900;
-        const t0 = now + delay;
-        el.textContent = `${pre}0${suf}`;
-        const tick = (t) => {
-          const k = Math.min(1, Math.max(0, (t - t0) / dur));
-          const e = 1 - Math.pow(1 - k, 3);
-          el.textContent = `${pre}${Math.round(to * e)}${suf}`;
-          if (k < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      });
-    };
-    document.querySelectorAll(".xp-row").forEach((row) => {
-      row.addEventListener("pointerenter", () => countRow(row));
-      row.addEventListener("focus", () => countRow(row));
-      row.addEventListener("click", () => countRow(row));
-    });
-  }
-
-  // 14) About page: the four numbers count up once when they scroll into view.
+  // 14) About page: the three numbers count up once when they scroll into view.
   const abStats = document.querySelector(".ab-stats");
   if (abStats && !reduce.matches && "IntersectionObserver" in window) {
     const nums = abStats.querySelectorAll(".ab-num");
@@ -894,22 +989,22 @@
     }
   }
 
-  // 21) Ask AI data: shared between the full-page voice chat (agent.html)
-  //     and the in-page nav panel on every other page, so a project, work-
-  //     history or contact answer renders the exact same real content —
-  //     never a redirect — wherever someone asks. Swap match() for a live
-  //     model later and every consumer keeps working unchanged.
+  // 21) Chat answers for the "Talk to my Work" panel (block 23): scripted
+  //     topics, each a short reply plus an optional rich card (projects,
+  //     work history, contact, music, books). A case study answers its own
+  //     questions first (window.pageAnswer in case.js). Swap match() for a
+  //     live model later and the panel keeps working unchanged.
   // Project cards come from js/projects.js (the Home page's featured
   // projects, in the same order), and the contact email from js/content.js.
   const SITE_EMAIL = (window.SITE && window.SITE.email) || "hello@example.com";
   const PROJECTS = (window.CASE_STUDIES || [])
     .filter((p) => p.home)
     .sort((a, b) => (a.home.order || 0) - (b.home.order || 0))
-    .map((p, i) => {
+    .map((p) => {
       // The card's first metric.
       const [label, value] = (p.home.metrics && p.home.metrics[0]) || ["", ""];
       return {
-        id: p.slug, name: p.name, tag: `${p.category} · ${p.year}`, glyph: `g${(i % 4) + 1}`, tint: p.tint,
+        id: p.slug, name: p.name, tint: p.tint,
         desc: p.home.text,
         metric: value,
         metricLabel: label
@@ -921,16 +1016,17 @@
     parcelo: ["logistics", "dispatch"],
     lumen: ["edtech", "course", "e-learning"]
   };
+  // Work history, newest first. Keep it in step with "Where I've been" on
+  // the About page.
   const EXPERIENCE = [
-    { co: "Akash", role: "Senior UX Designer", years: "2023 — Now", tint: "mint" },
-    { co: "Sellium", role: "Product Designer", years: "2021 — 2023", tint: "lilac" },
-    { co: "Findrs", role: "UX Designer", years: "2020 — 2021", tint: "rose" },
-    { co: "Metalend", role: "UX Designer", years: "2019 — 2020", tint: "sky" },
-    { co: "Klutch", role: "Junior Designer", years: "2018 — 2019", tint: "sand" },
+    { co: "Akash", role: "Senior UX designer", years: "2023 – now", tint: "mint" },
+    { co: "Wave", role: "Product designer", years: "2020 – 2023", tint: "lilac" },
+    { co: "Pixelcraft", role: "UI designer", years: "2018 – 2020", tint: "rose" },
+    { co: "Studio Nine", role: "Design intern", years: "2017", tint: "sky" }
   ];
 
   const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="/work/${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
-    + `<div class="ag-card-top"><span class="ag-glyph glyph ${p.glyph}"></span><b>${p.name}</b></div>`
+    + `<div class="ag-card-top"><b>${p.name}</b></div>`
     + `<p>${p.desc}</p>`
     + `<span class="ag-card-metric"><b>${p.metric}</b>${p.metricLabel}</span></a>`;
   const renderProjectsGrid = () => `<div class="ag-cards">${PROJECTS.map((p) => projectCardHtml(p, false)).join("")}</div>`;
@@ -946,12 +1042,10 @@
       url: "https://api.soundcloud.com/playlists/1589234278", auto_play: "false", hide_related: "true",
       show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
     });
-    return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Avasa on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.4375rem;display:block" allow="autoplay"></iframe>`;
+    return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Sketches and scores on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.4375rem;display:block" allow="autoplay"></iframe>`;
   };
 
   const topics = [
-    { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],
-      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him." },
     { k: ["shipped", "projects", "portfolio", "what have you built", "case stud", "worked on"],
       text: "Four recent ones — tap a card to open the full case study.", render: renderProjectsGrid },
     // One answer per featured project, from js/projects.js. Extra words
@@ -964,315 +1058,32 @@
     { k: ["how do you work", "process", "approach", "sketch", "method"],
       text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.' },
     { k: ["worked", "experience", "companies", "career", "history", "resume", "cv"],
-      text: "Eight years across five product teams:", render: renderExperience },
+      text: "Eight years across four teams, from a design internship to senior UX:", render: renderExperience },
     { k: ["freelance", "hire", "available", "open to work", "full-time", "contract"],
       text: "Open to full-time roles and selected freelance projects — he usually replies within two days.", render: renderContactCard },
     { k: ["contact", "email", "reach", "get in touch", "talk to"],
       text: "Here's the best way in:", render: renderContactCard },
-    { k: ["music", "avasa", "soundcloud", "compose", "song", "track"],
-      text: "He composes electronic music as Avasa — cinematic, textured, built for late-night focus:", render: renderMusicCard },
+    { k: ["music", "soundcloud", "compose", "song", "track", "film score"],
+      text: "Away from the desk he composes for films as a hobby, and experiments with sound: synths, strings and found noises.", render: renderMusicCard },
     { k: ["book", "reading", "comic"],
       text: "Currently reading The Design of Everyday Things, and a regular comics reader.", render: renderBooksCard },
     { k: ["outside work", "hobby", "hobbies", "free time", "off the clock"],
-      text: "Music, comics and books, mostly:", render: () => renderMusicCard() + renderBooksCard() },
+      text: "Film scores, comics and books, mostly:", render: () => renderMusicCard() + renderBooksCard() },
+    // Greetings and "who are you" last, so a specific topic wins ("tell me
+    // about your music" is about music, not about you).
+    { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],
+      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him." },
   ];
   const fallback = { text: "I don't have a scripted answer for that one yet. Try a question about a project, how Pallav works, or reach him directly:", render: renderContactCard };
 
-  const stripHtml = (html) => { const d = document.createElement("div"); d.innerHTML = html; return d.textContent || ""; };
   const match = (text) => {
     const q = ` ${text.toLowerCase()} `;
     return topics.find((topic) => topic.k.some((k) => q.includes(k))) || fallback;
   };
 
-  // 22) Ask AI, full page (agent.html): voice-first chat. Recognition and
-  //     speech both run on the browser's own, free Web Speech API — no key,
-  //     no server, nothing leaves the device.
-  const agentLog = document.getElementById("agentLog");
-  const agentForm = document.getElementById("agentForm");
-  if (agentLog && agentForm) {
-    const agentScroll = document.getElementById("agentScroll");
-    const agentInput = document.getElementById("agentInput");
-    const agentSuggest = document.getElementById("agentSuggest");
-    const agentSend = agentForm.querySelector(".ag-send");
-    const agentMic = document.getElementById("agentMic");
-    const agentStatus = document.getElementById("agentStatus");
-    const agentMute = document.getElementById("agentMute");
-    const scrollLog = () => { if (agentScroll) agentScroll.scrollTop = agentScroll.scrollHeight; };
-
-    // --- Speaking: the built-in speech synthesiser reads the short reply
-    //     aloud, unless muted — rich cards render visually but aren't read
-    //     out word for word. Cancelling any reply already in progress means
-    //     a fast tap through the suggestion chips never queues up voices.
-    const synth = window.speechSynthesis;
-    let muted = false;
-    let recognizing = false;
-    const setStatus = (text) => { agentStatus.textContent = text; };
-    const speak = (html, onDone) => {
-      if (!synth || muted) { if (onDone) onDone(); return; }
-      synth.cancel();
-      const utter = new SpeechSynthesisUtterance(stripHtml(html));
-      utter.rate = 1;
-      utter.onstart = () => setStatus("Speaking…");
-      utter.onend = () => { setStatus(recognizing ? "Listening…" : "Tap to ask"); if (onDone) onDone(); };
-      utter.onerror = () => { setStatus(recognizing ? "Listening…" : "Tap to ask"); if (onDone) onDone(); };
-      synth.speak(utter);
-    };
-    if (agentMute) {
-      if (!synth) {
-        agentMute.hidden = true;
-      } else {
-        agentMute.addEventListener("click", () => {
-          muted = !muted;
-          agentMute.setAttribute("aria-pressed", String(muted));
-          agentMute.setAttribute("aria-label", muted ? "Unmute spoken replies" : "Mute spoken replies");
-          if (muted) synth.cancel();
-        });
-      }
-    }
-    const addMessage = (role, content) => {
-      const turn = document.createElement("div");
-      turn.className = `ag-turn from-${role}`;
-      if (role === "agent") {
-        const who = document.createElement("span");
-        who.className = "ag-who";
-        who.textContent = "Guide";
-        turn.appendChild(who);
-        const body = document.createElement("div");
-        body.className = "ag-content";
-        const text = typeof content === "string" ? content : content.text;
-        const extra = typeof content === "object" && content.render ? content.render() : "";
-        body.innerHTML = `<p>${text}</p>${extra}`;
-        turn.appendChild(body);
-      } else {
-        const bubble = document.createElement("div");
-        bubble.className = "ag-bubble";
-        bubble.textContent = content;
-        turn.appendChild(bubble);
-      }
-      agentLog.appendChild(turn);
-      scrollLog();
-      return turn;
-    };
-    const addTyping = () => {
-      const turn = document.createElement("div");
-      turn.className = "ag-turn from-agent ag-typing";
-      turn.innerHTML = '<span class="ag-who">Guide</span><div class="ag-content" aria-hidden="true"><i></i><i></i><i></i></div>';
-      agentLog.appendChild(turn);
-      scrollLog();
-      return turn;
-    };
-
-    // --- Voice mode: a full-screen takeover with one orb that stands in for
-    //     the mic. It reuses the same recognition object and the same
-    //     match()/render() pipeline as the thread, so opening or closing it
-    //     never loses anything — the thread underneath is always the record.
-    const agentVoice = document.getElementById("agentVoice");
-    const agentVoiceClose = document.getElementById("agentVoiceClose");
-    const agentOrbCore = document.getElementById("agentOrbCore");
-    const agentVoiceStatus = document.getElementById("agentVoiceStatus");
-    const agentVoiceCaption = document.getElementById("agentVoiceCaption");
-    const agentVoiceAnswer = document.getElementById("agentVoiceAnswer");
-    const agentVoiceAgain = document.getElementById("agentVoiceAgain");
-    let voiceOpen = false;
-
-    const setVoiceState = (state) => {
-      if (!agentVoice) return;
-      agentVoice.dataset.state = state;
-      if (state === "listening") {
-        agentVoiceStatus.textContent = "Listening…";
-        agentVoiceCaption.textContent = "";
-        agentVoiceAnswer.innerHTML = "";
-        agentVoiceAgain.hidden = true;
-      } else if (state === "thinking") {
-        agentVoiceStatus.textContent = "Thinking…";
-        agentVoiceCaption.textContent = "";
-      } else if (state === "speaking") {
-        agentVoiceStatus.textContent = "Speaking…";
-      } else if (state === "done") {
-        agentVoiceStatus.textContent = "Tap to ask another";
-        agentVoiceAgain.hidden = false;
-      }
-    };
-    const renderVoiceAnswer = (reply) => {
-      if (!agentVoiceAnswer) return;
-      const extra = reply.render ? reply.render() : "";
-      agentVoiceAnswer.innerHTML = `<p>${reply.text}</p>${extra}`;
-    };
-
-    // Mic level: the orb's core scales with real input while listening, via
-    // an AnalyserNode on a getUserMedia stream kept open only for the
-    // duration of that one listen. Skipped entirely under reduced motion —
-    // there's nothing to smooth into if the orb never moves.
-    let micStream = null, audioCtx = null, analyser = null, levelRaf = null;
-    const startLevel = () => {
-      if (reduce.matches || !agentOrbCore || !navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) return;
-      navigator.mediaDevices.getUserMedia({ audio: true }).then((stream) => {
-        if (!recognizing) { stream.getTracks().forEach((t) => t.stop()); return; }
-        micStream = stream;
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        analyser = audioCtx.createAnalyser();
-        analyser.fftSize = 256;
-        audioCtx.createMediaStreamSource(stream).connect(analyser);
-        const data = new Uint8Array(analyser.frequencyBinCount);
-        const tick = () => {
-          if (!analyser) return;
-          analyser.getByteFrequencyData(data);
-          const avg = data.reduce((a, b) => a + b, 0) / data.length / 255;
-          if (agentVoice.dataset.state === "listening") agentOrbCore.style.transform = `scale(${(1 + avg * 0.5).toFixed(3)})`;
-          levelRaf = requestAnimationFrame(tick);
-        };
-        tick();
-      }).catch(() => { /* rings alone still show listening state */ });
-    };
-    const stopLevel = () => {
-      if (levelRaf) cancelAnimationFrame(levelRaf);
-      levelRaf = null;
-      if (micStream) { micStream.getTracks().forEach((t) => t.stop()); micStream = null; }
-      if (audioCtx) { audioCtx.close(); audioCtx = null; }
-      analyser = null;
-      if (agentOrbCore) agentOrbCore.style.transform = "";
-    };
-
-    const openVoice = () => {
-      if (!agentVoice || voiceOpen) return;
-      voiceOpen = true;
-      agentVoice.hidden = false;
-      requestAnimationFrame(() => agentVoice.classList.add("is-open"));
-      setVoiceState("listening");
-    };
-    const closeVoice = () => {
-      if (!agentVoice || !voiceOpen) return;
-      voiceOpen = false;
-      agentVoice.classList.remove("is-open");
-      if (recognizing && recognition) recognition.stop();
-      if (synth) synth.cancel();
-      const finish = () => { agentVoice.hidden = true; };
-      if (reduce.matches) finish();
-      else agentVoice.addEventListener("transitionend", finish, { once: true });
-    };
-    if (agentVoiceClose) agentVoiceClose.addEventListener("click", closeVoice);
-    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && voiceOpen) closeVoice(); });
-    if (agentVoiceAgain) {
-      agentVoiceAgain.addEventListener("click", () => {
-        if (!recognition || busy) return;
-        if (synth) synth.cancel();
-        setVoiceState("listening");
-        try { recognition.start(); } catch (err) { /* already running */ }
-      });
-    }
-
-    let busy = false;
-    const ask = (text, viaVoice) => {
-      const clean = text.trim();
-      if (!clean || busy) return;
-      busy = true;
-      agentSend.disabled = true;
-      if (agentMic) agentMic.disabled = true;
-      addMessage("user", clean);
-      agentInput.value = "";
-      const typing = addTyping();
-      if (voiceOpen) setVoiceState("thinking");
-      const delay = reduce.matches ? 100 : 650 + Math.random() * 500;
-      setTimeout(() => {
-        typing.remove();
-        const reply = (typeof window.pageAnswer === "function" && window.pageAnswer(clean)) || match(clean);
-        addMessage("agent", reply);
-        agentSend.disabled = false;
-        if (agentMic) agentMic.disabled = !SR;
-        busy = false;
-        if (voiceOpen) { setVoiceState("speaking"); renderVoiceAnswer(reply); }
-        speak(reply.text, () => { if (voiceOpen) setVoiceState("done"); });
-        if (!viaVoice) agentInput.focus();
-      }, delay);
-    };
-
-    agentForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      ask(agentInput.value, false);
-    });
-    if (agentSuggest) {
-      agentSuggest.addEventListener("click", (e) => {
-        const chip = e.target.closest(".wk-chip");
-        if (chip) ask(chip.dataset.q || chip.textContent, false);
-      });
-    }
-
-    // --- Listening: one utterance at a time (continuous: false), with the
-    //     interim words shown live in the status line so it's clear the mic
-    //     heard you. Ends the turn on the first final result.
-    const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-    let recognition = null;
-    if (agentMic) {
-      if (!SR) {
-        agentMic.disabled = true;
-        agentMic.setAttribute("aria-label", "Voice input isn't supported in this browser");
-        setStatus("Voice isn’t supported here — type below");
-      } else {
-        recognition = new SR();
-        recognition.lang = navigator.language || "en-US";
-        recognition.interimResults = true;
-        recognition.maxAlternatives = 1;
-        recognition.continuous = false;
-
-        recognition.onstart = () => {
-          recognizing = true;
-          agentMic.setAttribute("aria-pressed", "true");
-          setStatus("Listening…");
-          if (voiceOpen) setVoiceState("listening");
-          startLevel();
-        };
-        recognition.onresult = (e) => {
-          let finalText = "";
-          let interim = "";
-          for (let i = e.resultIndex; i < e.results.length; i++) {
-            const t = e.results[i][0].transcript;
-            if (e.results[i].isFinal) finalText += t;
-            else interim += t;
-          }
-          if (finalText) {
-            recognition.stop();
-            ask(finalText, true);
-          } else if (interim) {
-            setStatus(interim);
-            if (voiceOpen) agentVoiceCaption.textContent = interim;
-          }
-        };
-        recognition.onerror = (e) => {
-          recognizing = false;
-          agentMic.setAttribute("aria-pressed", "false");
-          stopLevel();
-          let msg = "Tap to ask";
-          if (e.error === "not-allowed" || e.error === "service-not-allowed") {
-            msg = "Microphone access is blocked — type below";
-          } else if (e.error === "no-speech") {
-            msg = "Didn’t catch that — tap to try again";
-          }
-          setStatus(msg);
-          if (voiceOpen) agentVoiceStatus.textContent = msg;
-        };
-        recognition.onend = () => {
-          recognizing = false;
-          agentMic.setAttribute("aria-pressed", "false");
-          stopLevel();
-          if (agentStatus.textContent === "Listening…") setStatus("Tap to ask");
-        };
-
-        agentMic.addEventListener("click", () => {
-          if (busy) return;
-          if (recognizing) { recognition.stop(); return; }
-          if (synth) synth.cancel();
-          openVoice();
-          try { recognition.start(); } catch (err) { /* already running */ }
-        });
-      }
-    }
-
-  }
-
-  // 23) Ask AI panel: on every page except agent.html, the nav's "Ask AI"
-  //     button opens an in-page side panel instead of navigating away —
-  //     text only, no mic, reusing the exact same topics/render pipeline as
-  //     the full-page chat above. Opening it also pulls the whole page back
+  // 23) Ask AI panel ("Talk to my Work"): a side panel on Home, About and
+  //     the case studies, answering from the topics above. Opening it on a
+  //     desktop also pulls the whole page back
   //     into a rounded card and slides it left (a class on <body>, picked
   //     up by .site-shell in CSS), so the panel reads as part of the same
   //     surface rather than a dialog stacked on top of it.
@@ -1392,10 +1203,41 @@
         step();
       };
     };
+    // Tablets and phones: the chat covers the page (a drawer, or full
+    // screen), so the page behind is pinned where it is: <body> is fixed at
+    // the current scroll offset and put back exactly on close. This is the
+    // dependable way to stop the page scrolling behind a panel on iPad and
+    // iPhone Safari, where overflow: hidden on the page doesn't hold it.
+    const coverMq = window.matchMedia("(max-width: 1299px)");
+    let pinnedY = null;
+    const pinPage = () => {
+      if (!coverMq.matches || pinnedY !== null) return;
+      pinnedY = window.scrollY;
+      const s = document.body.style;
+      s.position = "fixed";
+      s.top = `-${pinnedY}px`;
+      s.left = "0";
+      s.right = "0";
+      s.width = "100%";
+    };
+    const unpinPage = () => {
+      if (pinnedY === null) return;
+      const y = pinnedY;
+      pinnedY = null;
+      const s = document.body.style;
+      s.position = s.top = s.left = s.right = s.width = "";
+      const root = document.documentElement;
+      root.style.scrollBehavior = "auto";
+      window.scrollTo(0, y);
+      root.style.scrollBehavior = "";
+    };
     const openAsk = () => {
       if (askOpen) return;
       askOpen = true;
-      const hold = holdInPlace(askTrigger);
+      // Side by side (desktop), the page keeps the pressed button in place;
+      // covered (tablet, phone), the page is pinned instead.
+      const hold = coverMq.matches ? () => {} : holdInPlace(askTrigger);
+      pinPage();
       askPanel.hidden = false;
       askPanel.inert = false;
       document.body.classList.add("ask-open");
@@ -1408,16 +1250,17 @@
     };
     // Closing sound: plays however the panel closes (close button, the AI
     // button again, or Escape).
-    const closeSound = new Audio("/assets/audio/sound-effects/chat-close.mp3");
+    sfx.load("chat-open.mp3");
+    sfx.load("chat-close.mp3");
     const closeAsk = () => {
       if (!askOpen) return;
       askOpen = false;
-      closeSound.currentTime = 0;
-      closeSound.play().catch(() => {});
-      const hold = holdInPlace(askTrigger);
+      sfx.play("chat-close.mp3");
+      const hold = pinnedY !== null ? () => {} : holdInPlace(askTrigger);
       askPanel.classList.remove("is-open");
       askPanel.inert = true;
       document.body.classList.remove("ask-open");
+      unpinPage();
       hold();
       askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
       const finish = () => { askPanel.hidden = true; };
@@ -1426,13 +1269,11 @@
       askTrigger.focus({ preventScroll: true });
     };
     askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
-    const askSound = new Audio("/assets/audio/sound-effects/chat-open.wav");
     askTriggers.forEach((t) => {
       t.addEventListener("click", () => {
         askTrigger = t; // focus returns here when the panel closes
         if (askOpen) { closeAsk(); return; } // closeAsk plays the closing sound
-        askSound.currentTime = 0;
-        askSound.play().catch(() => {});
+        sfx.play("chat-open.mp3");
         openAsk();
         if (t.dataset.ask && !askThread.children.length) askAsk(t.dataset.ask);
       });
