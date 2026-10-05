@@ -67,12 +67,9 @@
 /* =========================================================
    Dark theme: the same tokens, dark values, applied when <html> carries
    data-theme="dark" (set by the nav toggle in script.js, before paint, and
-   remembered per device). Two families of colour deliberately never flip:
-   the browser-mockup "screens" (.browser, .wk-visual, .glyph) stay light,
-   the way a real screenshot would; and the sections built dark from the
-   start — the footer, the testimonial photos, the music player — stay
-   exactly as they are, since they already read as night regardless of the
-   page around them.
+   remembered per device). A few things deliberately never flip:
+   screenshots stay on white (.wk-visual, .project-shot), the way a real
+   screenshot would, and the music player was built dark from the start.
    ========================================================= */
 :root[data-theme="dark"] {
   color-scheme: dark;
@@ -106,15 +103,12 @@
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
 :root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
 :root[data-theme="dark"] .tdp { background: #2c2c30; }
-:root[data-theme="dark"] .xp-tags li { background: rgba(255, 255, 255, 0.06); }
-:root[data-theme="dark"] .ab-line-ghost { stroke: rgba(255, 255, 255, 0.22); }
 :root[data-theme="dark"] .im-tag { background: var(--surface); }
 :root[data-theme="dark"] .im-avatars svg { border-color: var(--surface-2); background: var(--surface-2); }
 :root[data-theme="dark"] .off-card { background: var(--surface); }
 :root[data-theme="dark"] .off-books { background: var(--surface); }
 :root[data-theme="dark"] .project-link { border-color: rgba(255, 255, 255, 0.1); }
 :root[data-theme="dark"] .wk-meta { border-top-color: rgba(255, 255, 255, 0.12); }
-:root[data-theme="dark"] .ag-form { box-shadow: 0 0.375rem 1rem rgba(0, 0, 0, 0.4); }
 :root[data-theme="dark"] .ag-card-metric { border-top-color: rgba(255, 255, 255, 0.12); }
 :root[data-theme="dark"] .ag-info { background: var(--surface-2); }
 :root[data-theme="dark"] .project-desc,
@@ -126,7 +120,7 @@
    not a blanket transition on every element. */
 @media (prefers-reduced-motion: no-preference) {
   body, .nav::before, .project, .tpanel, .to-top, .im-tag,
-  .off-card, .off-books, .wk-card, .ag-form, .ag-info, .theme-toggle {
+  .off-card, .off-books, .wk-card, .ag-info, .theme-toggle {
     transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out), border-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
   }
 }
@@ -979,29 +973,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .tpanel.is-active { flex-grow: 7; }
 .tpanel:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
-.tpic, .tsvg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.tsvg {
-  filter: grayscale(1) contrast(1.05);
-  transform: scale(1.04);
-  transition: filter 0.6s var(--ease-out), transform 0.9s var(--ease-out);
-}
-.tpanel:focus-visible .tsvg { filter: none; transform: none; }
-@media (hover: hover) and (pointer: fine) {
-  .tpanel:hover .tsvg { filter: none; transform: none; }
-}
-@media (hover: none) {
-  .tpanel.is-active .tsvg { filter: none; transform: none; }
-}
-
-.tshade {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, rgba(13, 13, 13, 0.7), rgba(13, 13, 13, 0) 58%);
-  opacity: 0.55;
-  transition: opacity 0.5s var(--ease-out);
-}
-.tpanel.is-active .tshade { opacity: 1; }
-
 .tside {
   position: absolute;
   left: 50%;
@@ -1111,7 +1082,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    left, above the quote. left + transform animate on a tiny element inside a
    contained panel, so the cost stays local. */
 .tpanel--mono { background: #ececec; }
-.tpanel--mono .tshade { display: none; }
 .tpanel--mono .tside,
 .tpanel--mono .tbody,
 .tpanel--mono .tname strong { color: var(--ink); }
@@ -1168,11 +1138,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    System mono: only for small, label-like text (categories, captions, footer
    line). Text stays in the main face; numbers use tabular figures for steady widths.
    ========================================================= */
-.footer-copy,
 .value-meta dt {
   font-family: var(--font-mono);
 }
-.footer-copy { font-size: 0.875rem; letter-spacing: 0.05em; }
 .value-meta dt { font-size: 0.875rem; letter-spacing: 0.01em; }
 .value-num { font-variant-numeric: tabular-nums; }
 
@@ -1290,10 +1258,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-title { font-size: clamp(2.25rem, 5.56vw, 3.25rem); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
 .ab-title .hl, .ab-title .hl > span { display: block; }
 .ab-title .hl:last-child { font-weight: 300; }
-.ab-line { display: block; width: min(100%, 11.125rem); height: auto; margin: 0.875rem auto 0; overflow: visible; }
-.ab-line path { fill: none; stroke-linecap: round; stroke-linejoin: round; }
-.ab-line-ghost { stroke: rgba(13, 13, 13, 0.22); stroke-width: 1.6; stroke-dasharray: 2 7; }
-.ab-line-draw { stroke: var(--ink); stroke-width: 2.6; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .ab-lede { max-width: 58ch; margin: 2rem auto 0; font-size: clamp(1rem, 2.49vw, 1.375rem); font-weight: 400; line-height: 1.5; color: var(--ink); }
 
 /* Centred carousel: the middle photo is largest and the others step down in
@@ -1367,9 +1331,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-facts dt { font-size: var(--fs-small); color: var(--ink-soft); }
 .ab-facts dd { margin: 0.1875rem 0 0; font-size: var(--fs-lead); font-weight: 500; line-height: 1.4; }
 
-/* Impact: copy on the left, three stat cards on the right (one wide, two
-   below), same card language as the projects. Numbers count up and the
-   sparkline draws when it scrolls in. Transform, opacity and stroke only. */
+/* Who you'd be working with: copy on the left, three habit cards on the
+   right (one wide, two below), same card language as the projects. The
+   doodles draw when the cards scroll in. Transform, opacity and stroke only. */
 .ab-impact { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-5); align-items: stretch; content-visibility: auto; contain-intrinsic-size: auto 24.75rem; }
 .im-copy { display: flex; flex-direction: column; align-items: flex-start; }
 .im-tag { display: inline-flex; align-items: center; gap: 0.3125rem; margin: 0 0 0.875rem; padding: 0.1875rem 0.5rem; border-radius: 0.3125rem; background: #f3f3f0; font-size: 0.875rem; font-weight: 500; color: var(--ink); }
@@ -1402,8 +1366,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .im-wide { grid-column: 1 / -1; }
 .im-label { display: flex; align-items: center; gap: 0.3125rem; margin: 0; font-size: 0.875rem; font-weight: 500; color: color-mix(in srgb, var(--tone) 80%, var(--ink-soft)); }
 .im-label svg { display: none; }
-.im-num { margin: auto 0 0; font-size: clamp(2rem, 4.42vw, 2.5rem); font-weight: 500; letter-spacing: var(--track-display); line-height: 1; font-variant-numeric: tabular-nums; color: var(--ink); }
-.im-wide .im-num { font-size: clamp(2.25rem, 5.46vw, 3rem); }
 .im-cap { margin: 0.5rem 0 0; max-width: 30ch; font-size: var(--fs-body); line-height: 1.4; color: color-mix(in srgb, var(--ink) 68%, transparent); }
 .im-big { margin: auto 0 0; padding-top: 1rem; font-size: clamp(1rem, 2vw, 1.125rem); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.2; color: var(--ink); }
 .im-wide .im-big { font-size: clamp(1.125rem, 2.6vw, 1.375rem); }
@@ -1411,18 +1373,12 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .im-doodle { position: absolute; top: 0.875rem; right: 0.875rem; width: 3.375rem; height: auto; overflow: visible; color: var(--tone); opacity: 0.55; }
 .im-wide .im-doodle { width: 7.5rem; }
 .im-doodle .dd { stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
-.im-doodle .tw { transform-box: fill-box; transform-origin: center; }
 
 @media (prefers-reduced-motion: no-preference) {
   .js .im-grid:not(.is-in) .dd { stroke-dashoffset: 1; }
   .im-doodle .dd { transition: stroke-dashoffset 1.6s cubic-bezier(0.32, 0.72, 0, 1) 0.5s; }
   .im-doodle .dd2 { transition-delay: 1.5s; }
-  .js .im-grid:not(.is-in) .tw { opacity: 0; transform: scale(0.2) rotate(-30deg); }
-  .im-doodle .tw { transition: opacity 0.5s var(--ease-out) 0.6s, transform 0.7s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s; }
-  .im-grid.is-in .tw1 { animation: twinkle 3.4s ease-in-out 1.5s infinite; }
-  .im-grid.is-in .tw2 { animation: twinkle 2.6s ease-in-out 2s infinite; }
 }
-@keyframes twinkle { 0%, 100% { transform: scale(1) rotate(0deg); } 50% { transform: scale(1.18) rotate(12deg); } }
 /* Hover: the card lifts with a soft shadow (the two small ones tilt away from
    each other), its drawing tips and brightens, and the lines redraw. */
 .im-doodle { transform-origin: 100% 0; transition: transform 0.5s var(--ease-out), opacity 0.3s ease; }
@@ -1440,10 +1396,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .im-card { transition: opacity 0.8s var(--ease-out), transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
   .im-card:nth-child(2) { transition-delay: 0.12s, 0s, 0s; }
   .im-card:nth-child(3) { transition-delay: 0.24s, 0s, 0s; }
-  .js .im-grid:not(.is-in) .im-spark-line { stroke-dashoffset: 1; }
-  .im-spark-line { transition: stroke-dashoffset 1.6s cubic-bezier(0.32, 0.72, 0, 1) 0.4s; }
-  .js .im-grid:not(.is-in) .im-spark-dot { opacity: 0; }
-  .im-spark-dot { transition: opacity 0.4s var(--ease-out) 1.7s; }
 }
 @media (max-width: 900px) {
   .ab-impact { grid-template-columns: 1fr; gap: var(--space-4); }
@@ -1451,13 +1403,11 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .im-grid { min-height: 0; grid-template-rows: none; }
   .im-card { min-height: 9.25rem; }
 }
-@media (max-width: 560px) { .im-grid { grid-template-columns: 1fr; } .im-spark { width: 5rem; } }
+@media (max-width: 560px) { .im-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: no-preference) {
-  .ab-line-draw { stroke-dashoffset: 1; animation: ab-draw 1.5s cubic-bezier(0.32, 0.72, 0, 1) 0.25s forwards; }
   .js .ab-r:not(.is-in) { opacity: 0; transform: translateY(0.75rem); }
   .ab-r { transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
 }
-@keyframes ab-draw { to { stroke-dashoffset: 0; } }
 
 @media (max-width: 900px) {
   .ab-hero { padding-top: calc(var(--pad) + 4.375rem); }
@@ -1469,11 +1419,10 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 
 
 /* =========================================================
-   Off the clock, three worlds, each full width. Music: a dark player card whose
+   Outside the brief: two full-width cards. Music: a dark player card whose
    disc, waveform and equaliser react to the real SoundCloud playlist once it
-   plays. Comics: a four-panel issue with halftone, sound effects and a slam-in
-   on scroll, plus a pull list. Books: a slow marquee. Transform, opacity and
-   colour only; off or static for reduced motion.
+   plays. Books and comics: a slow marquee. Transform, opacity and colour
+   only; off or static for reduced motion.
    ========================================================= */
 .ab-off { content-visibility: auto; contain-intrinsic-size: auto 34.125rem; }
 .ab-off-head p { max-width: none; margin-top: 0.3125rem; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
@@ -1876,82 +1825,15 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .wk-seg-n { display: none; }
 }
 
-/* Nav: "Ask AI" is a small filled pill, not a plain text link, so it reads as
-   an action rather than another page in the row. It's a <button> on every
-   page except agent.html (where it's still a plain link into that page). */
-.nav-links .nav-ai {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem;
-  border: 0;
-  border-radius: 999px;
-  background: var(--fill);
-  color: var(--fill-ink);
-  font-family: inherit;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  cursor: pointer;
-  transition: background-color 0.2s ease, opacity 0.2s ease;
-}
 .nav-ai-ic { flex-shrink: 0; }
-.nav-links .nav-ai:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (hover: hover) and (pointer: fine) {
-  .nav-links .nav-ai:hover { opacity: 1; background: color-mix(in srgb, var(--fill) 82%, var(--bg)); }
-}
-@media (max-width: 900px) {
-  .nav-links .nav-ai span { display: none; }
-}
 
 /* =========================================================
-   Ask AI: a full-screen app, not a boxed widget dropped onto the page — a
-   top bar, one scrolling conversation column, a composer pinned to the
-   bottom of the viewport, the same shape as a dedicated chat product. Voice
-   stays the primary control (the mic is the largest, leftmost thing in the
-   composer pill); typing sits right beside it. Recognition and speech both
-   run on the browser's free, built-in Web Speech API — no key, nothing
-   leaves the device. Replies that have real content (projects, work
-   history, music, books, contact) render as cards built from the data in
-   script.js, not a sentence pointing elsewhere. Motion: pulse rings while
-   listening, a three-dot "typing" beat before a reply, each turn rising in
-   — all transform/opacity only and skipped for reduced motion.
+   Chat messages, shared by the "Talk to my Work" panel: your turns sit in a
+   compact pill on the right; the guide's turns carry no bubble, so rich
+   cards (projects, work history, contact) get the full width. Each turn
+   rises in, with a three-dot "typing" beat before a reply; transform and
+   opacity only, skipped for reduced motion.
    ========================================================= */
-.ag-body { height: 100vh; height: 100dvh; overflow: hidden; }
-.ag-topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 10; display: flex; align-items: center; justify-content: space-between; padding: 0.875rem var(--pad); }
-.ag-back {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.1875rem;
-  padding: 0.3125rem 0.5rem 0.3125rem 0.4375rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--bg);
-  color: var(--ink);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  box-shadow: 0 0.1875rem 0.625rem rgba(13, 13, 13, 0.05);
-  transition: border-color 0.2s ease, background-color 0.3s var(--ease-out), color 0.3s var(--ease-out);
-}
-.ag-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (hover: hover) and (pointer: fine) { .ag-back:hover { border-color: var(--ink); } }
-.ag { display: flex; flex-direction: column; height: 100vh; height: 100dvh; padding-top: calc(var(--pad) + 2.125rem); }
-.ag-col { max-width: 28.5rem; margin: 0 auto; padding: 0 var(--pad); }
-
-.ag-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; scroll-behavior: smooth; }
-.ag-scroll .ag-col { padding-bottom: var(--space-4); }
-
-.ag-welcome { padding: var(--space-2) 0 var(--space-3); }
-.ag-count { display: inline-flex; align-items: center; gap: 0.3125rem; margin: 0; font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); }
-.ag-count::before { content: ""; width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--mint-ink); }
-.ag-title { margin: 0.375rem 0 0; font-size: clamp(1.375rem, 3.4vw, 1.5rem); font-weight: 500; letter-spacing: -0.022em; line-height: 1.1; }
-.ag-welcome .ag-suggest { margin-top: var(--space-2); }
-
-.ag-suggest { display: flex; flex-wrap: wrap; gap: 0.3125rem; }
-
-/* Conversation: your turns sit in a compact pill on the right; the
-   assistant's turns carry no bubble at all, so rich cards get the full
-   width of the column, the way they would anywhere else on the site. */
-.ag-thread:not(:empty) { padding-top: var(--space-4); border-top: 1px solid var(--hairline); }
 .ag-turn { display: flex; flex-direction: column; gap: 0.3125rem; margin-top: var(--space-4); }
 .ag-turn:first-child { margin-top: 0; }
 .ag-turn.from-user { align-items: flex-end; }
@@ -1965,12 +1847,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ag-typing .ag-content { display: flex; align-items: center; gap: 0.1875rem; height: 1rem; }
 .ag-typing i { width: 0.25rem; height: 0.25rem; border-radius: 50%; background: var(--ink-soft); }
 
-/* Rich inline content: project cards, work history, contact and the rest,
-   built from the same tints and shapes used across the site. */
 .ag-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.5rem; }
 .ag-card { display: block; padding: 0.75rem 0.875rem; border-radius: 0.5rem; background: var(--tint); color: inherit; text-decoration: none; }
-.ag-card-top { display: flex; align-items: center; gap: 0.3125rem; }
-.ag-glyph { width: 0.875rem; height: 0.875rem; }
 .ag-card-top b { font-size: 1rem; font-weight: 500; letter-spacing: var(--track-heading); }
 .ag-card p { margin: 0.3125rem 0 0; font-size: 0.875rem; line-height: 1.4; color: #444; }
 .ag-card-metric { display: block; margin-top: 0.4375rem; padding-top: 0.375rem; border-top: 1px solid rgba(13, 13, 13, 0.1); font-size: 0.875rem; color: var(--tint-ink); }
@@ -1988,143 +1866,17 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ag-info { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.5rem 0.75rem; border-radius: 0.4375rem; background: #f5f5f2; }
 .ag-info b { display: block; font-size: 1rem; font-weight: 500; }
 .ag-info span { display: block; font-size: 0.875rem; color: var(--ink-soft); }
-
-/* Composer: pinned to the bottom of the viewport as one rounded pill, mic
-   and send riding inside it. The mic is the larger of the two. */
-.ag-composer { position: relative; flex-shrink: 0; padding-bottom: var(--space-2); background: var(--bg); }
-.ag-fade { position: absolute; left: 0; right: 0; bottom: 100%; height: 1.5rem; background: linear-gradient(to top, var(--bg), transparent); pointer-events: none; }
-.ag-status-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.3125rem; }
-.ag-status { margin: 0; font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); min-height: 1.2em; }
-.ag-mute { flex-shrink: 0; display: grid; place-items: center; width: 1.25rem; height: 1.25rem; border: 1px solid var(--line); border-radius: 50%; background: #fff; color: var(--ink-soft); cursor: pointer; transition: color 0.2s ease, border-color 0.2s ease; }
-.ag-mute[aria-pressed="true"] .i-vol, .ag-mute .i-mute { display: none; }
-.ag-mute[aria-pressed="true"] .i-mute { display: block; }
-.ag-mute:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (hover: hover) and (pointer: fine) { .ag-mute:hover { color: var(--ink); border-color: var(--ink); } }
-
-.ag-form { display: flex; align-items: center; gap: 0.3125rem; padding: 0.3125rem 0.3125rem 0.3125rem 0.375rem; border: 1px solid var(--line); border-radius: 1.125rem; background: var(--bg); box-shadow: 0 0.375rem 1rem rgba(13, 13, 13, 0.06); }
-.ag-mic { position: relative; flex-shrink: 0; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border: 0; border-radius: 50%; background: var(--fill); color: var(--fill-ink); cursor: pointer; transition: transform 0.2s var(--ease-out), background-color 0.3s var(--ease-out); }
-.ag-mic:active { transform: scale(0.94); }
-.ag-mic:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.ag-mic[disabled] { background: var(--line); color: var(--ink-soft); cursor: default; }
-.ag-mic-ring { position: absolute; inset: 0; border-radius: 50%; border: 1.5px solid var(--mint-ink); opacity: 0; }
-.ag-mic[aria-pressed="true"] { background: var(--mint-ink); }
-@media (hover: hover) and (pointer: fine) { .ag-mic:not([disabled]):hover { background: color-mix(in srgb, var(--fill) 85%, var(--bg)); } }
 .ag-form-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
-.ag-input { flex: 1; min-width: 0; padding: 0.3125rem 0.125rem; border: 0; background: none; font-family: inherit; font-size: var(--fs-body); color: var(--ink); }
-.ag-input::placeholder { color: var(--ink-soft); }
-.ag-input:focus { outline: none; }
-.ag-send { flex-shrink: 0; display: grid; place-items: center; width: 1.375rem; height: 1.375rem; border: 0; border-radius: 50%; background: var(--fill); color: var(--fill-ink); cursor: pointer; transition: transform 0.2s var(--ease-out), background-color 0.2s var(--ease-out); }
-.ag-send:active { transform: scale(0.92); }
-.ag-send:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.ag-send:disabled { background: var(--line); color: var(--ink-soft); cursor: default; }
-@media (hover: hover) and (pointer: fine) { .ag-send:not(:disabled):hover { background: color-mix(in srgb, var(--fill) 82%, var(--bg)); } }
-
-/* Voice mode: a full-screen takeover, not a modal box, so it reads as a
-   continuation of the same app rather than a dialog on top of it. The orb
-   reuses .ag-mic-ring (same rings, same ag-pulse keyframe as the composer's
-   mic) so voice mode and the composer read as the same control at two
-   sizes. Shown/hidden with a transition rather than a keyframe so a fast
-   tap to close mid-open retargets instead of restarting. */
-.ag-voice {
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-2);
-  padding: var(--pad);
-  background: var(--bg);
-  opacity: 0;
-  transform: scale(0.97);
-  transition: opacity 0.32s var(--ease-out), transform 0.32s var(--ease-out);
-}
-.ag-voice[hidden] { display: none; }
-.ag-voice.is-open { opacity: 1; transform: none; }
-
-.ag-voice-close {
-  position: absolute;
-  top: 0.875rem;
-  right: var(--pad);
-  display: grid;
-  place-items: center;
-  width: 1.625rem;
-  height: 1.625rem;
-  border: 1px solid var(--line);
-  border-radius: 50%;
-  background: var(--bg);
-  color: var(--ink);
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-.ag-voice-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (hover: hover) and (pointer: fine) { .ag-voice-close:hover { border-color: var(--ink); } }
-
-.ag-orb { position: relative; display: grid; place-items: center; width: 6.875rem; height: 6.875rem; flex-shrink: 0; }
-.ag-orb-core { width: 4.375rem; height: 4.375rem; border-radius: 50%; background: var(--fill); }
-.ag-voice[data-state="listening"] .ag-orb-core { background: var(--mint-ink); }
-.ag-voice:not([data-state="listening"]) .ag-mic-ring { display: none; }
-
-.ag-voice-status { margin: 0; font-size: var(--fs-body); font-weight: 500; color: var(--ink); min-height: 1.4em; }
-.ag-voice-caption { max-width: 34ch; min-height: 1.3em; margin: 0; font-size: var(--fs-small); color: var(--ink-soft); text-align: center; }
-
-.ag-voice-answer { max-width: 18.625rem; width: 100%; max-height: 36vh; overflow-y: auto; text-align: left; }
-.ag-voice-answer:empty { display: none; }
-
-.ag-voice-again[hidden] { display: none; }
-.ag-voice-again {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.3125rem;
-  padding: 0.375rem 0.625rem 0.375rem 0.5rem;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: var(--bg);
-  color: var(--ink);
-  font-family: inherit;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
-}
-.ag-voice-again:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-@media (hover: hover) and (pointer: fine) { .ag-voice-again:hover { border-color: var(--ink); } }
-
-@media (max-width: 600px) {
-  .ag-orb { width: 5.625rem; height: 5.625rem; }
-  .ag-orb-core { width: 3.5rem; height: 3.5rem; }
-}
 
 @media (prefers-reduced-motion: no-preference) {
   .ag-turn { animation: ag-in 0.4s var(--ease-out) both; }
   .ag-typing i { animation: ag-bounce 1s ease-in-out infinite; }
   .ag-typing i:nth-child(2) { animation-delay: 0.15s; }
   .ag-typing i:nth-child(3) { animation-delay: 0.3s; }
-  .ag-mic[aria-pressed="true"] .ag-mic-ring,
-  .ag-voice[data-state="listening"] .ag-mic-ring { animation: ag-pulse 1.8s ease-out infinite; }
-  .ag-mic-ring.r2 { animation-delay: 0.5s !important; }
-  .ag-orb-core { transition: transform 0.12s var(--ease-out); }
-  .ag-voice[data-state="thinking"] .ag-orb-core { animation: ag-breathe 1.6s ease-in-out infinite; }
-  .ag-voice[data-state="speaking"] .ag-orb-core { animation: ag-speak 0.7s ease-in-out infinite; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ag-voice { transition: opacity 0.2s ease; transform: none; }
 }
 @keyframes ag-in { from { opacity: 0; transform: translateY(0.375rem); } }
-@keyframes ag-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
-@keyframes ag-speak { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.12); } }
 @keyframes ag-bounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.5; } 30% { transform: translateY(-0.1875rem); opacity: 1; } }
-@keyframes ag-pulse { from { transform: scale(1); opacity: 0.6; } to { transform: scale(1.6); opacity: 0; } }
-
-@media (max-width: 700px) {
-  .ag { padding-top: calc(var(--pad) + 2rem); }
-  .ag-back span { display: none; }
-  .ag-cards { grid-template-columns: 1fr 1fr; }
-}
-@media (max-width: 460px) {
-  .ag-cards { grid-template-columns: 1fr; }
-}
+@media (max-width: 460px) { .ag-cards { grid-template-columns: 1fr; } }
 
 /* =========================================================
    Ask AI panel: a real flex sibling of .site-shell, not an overlay —
@@ -2141,9 +1893,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    a new inner wrapper, .shell-scroll, takes overflow-y:auto and holds the
    sentinel, .page and .site-footer (now a plain static element, not fixed
    at all), while .site-header switches to position:absolute against
-   .site-shell (which stays put). Reuses .ag-content/.ag-card/.ag-turn/etc
-   wholesale — the exact same message and rich-card styling the full-page
-   chat uses.
+   .site-shell (which stays put). Messages use the shared .ag-* styles above.
    ========================================================= */
 :root { --ask-panel-w: 400px; --ask-gap: 10px; --ask-radius: 24px; --chat-bg: #f8f8f8; }
 :root[data-theme="dark"] { --chat-bg: var(--surface); }
@@ -2266,11 +2016,10 @@ body.ask-open .shell-scrollbar {
 .ask-panel-suggest { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin-top: 14px; }
 /* Suggested questions: rounded squares, not pills (the Works filters keep
    their pill shape). */
-.ask-panel-suggest .wk-chip, .ag-suggest .wk-chip { border-radius: 8px; }
+.ask-panel-suggest .wk-chip { border-radius: 8px; }
 /* On hover only the text darkens; the border stays its resting grey. */
 @media (hover: hover) and (pointer: fine) {
-  .ask-panel-suggest .wk-chip:not([aria-pressed="true"]):hover,
-  .ag-suggest .wk-chip:not([aria-pressed="true"]):hover { border-color: var(--line); color: var(--ink); }
+  .ask-panel-suggest .wk-chip:not([aria-pressed="true"]):hover { border-color: var(--line); color: var(--ink); }
 }
 .ask-panel-thread:not(:empty) { display: flex; flex-direction: column; gap: 14px; margin-top: 14px; }
 
@@ -2343,24 +2092,22 @@ body.ask-open .shell-scrollbar {
 /* Tablets (iPad portrait and landscape): side by side would squeeze the page
    into a phone-width column that still gets tablet layouts, so the chat
    floats over the page as a drawer instead. The page keeps its full layout
-   underneath, dimmed; tapping the dimmed area closes the chat (script.js).
+   underneath, dimmed, and pinned in place while the chat is open (script.js
+   fixes <body> at its scroll offset; overflow: hidden doesn't hold on iPad
+   Safari). Tapping the dimmed area closes the chat.
    Laptops and desktops (1300px and up) keep the side-by-side panel. */
 @media (min-width: 641px) and (max-width: 1299px) {
   :root { --ask-panel-w: 400px; }
   .ask-panel { position: fixed; inset: 0 0 0 auto; z-index: 60; box-shadow: -0.75rem 0 2.5rem rgba(13, 13, 13, 0.14); }
-  body.ask-open { overflow: hidden; }
   body.ask-open .site-shell { margin: 0; height: auto; border-radius: 0; overflow: visible; }
   body.ask-open .shell-scroll { position: static; overflow: visible; }
   body.ask-open .site-header { position: fixed; }
   body.ask-open .shell-scrollbar { display: none; }
   body.ask-open .to-top { right: 1.125rem; bottom: 1.125rem; }
-  .app-row::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(13, 13, 13, 0.36); opacity: 0; pointer-events: none; transition: opacity 0.4s var(--ease-out); }
+  .app-row::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(13, 13, 13, 0.36); opacity: 0; pointer-events: none; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.4s var(--ease-out); }
   body.ask-open .app-row::after { opacity: 1; pointer-events: auto; }
 }
 @media (min-width: 641px) and (max-width: 1299px) and (orientation: landscape) { :root { --ask-panel-w: 440px; } }
-@supports selector(:has(*)) {
-  @media (min-width: 641px) and (max-width: 1299px) { html:has(body.ask-open) { overflow: hidden; } }
-}
 @media (prefers-reduced-motion: reduce) { .app-row::after { transition: none; } }
 
 /* =========================================================
@@ -2371,35 +2118,15 @@ body.ask-open .shell-scrollbar {
    running down beside the story, drawn as you read.
    ========================================================= */
 .cs { --ease-io: cubic-bezier(0.77, 0, 0.175, 1); max-width: 60.125rem; margin: 0 auto; padding: 0 var(--pad) 4.25rem; }
-.cs-noscript { padding: calc(var(--pad) + 4.625rem) 0; font-size: 1rem; }
 
 /* Hero */
 .cs-hero { padding-top: calc(var(--pad) + 5.125rem); }
-.cs-back { display: inline-flex; align-items: center; gap: 0.125rem; margin-left: -0.125rem; font-size: 1rem; font-weight: 500; color: var(--ink-soft); transition: color 0.2s ease; }
-.cs-back svg { transition: transform 0.25s var(--ease-out); }
-.cs-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 2.24px; border-radius: 0.125rem; }
-@media (hover: hover) and (pointer: fine) {
-  .cs-back:hover { color: var(--ink); }
-  .cs-back:hover svg { transform: translateX(-2.24px); }
-}
 .cs-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.875rem; font-size: 1rem; font-weight: 500; color: var(--ink-soft); }
 /* The case study / exploration tag sits on the cover's top-right corner. */
 .cs-cover-tag { position: absolute; top: 0.875rem; left: 0.875rem; z-index: 1; padding: 0.25rem 0.5rem; border-radius: 879.12px; background: rgba(255, 255, 255, 0.92); color: #0d0d0d; font-size: 1rem; font-weight: 500; box-shadow: 0 0.1875rem 0.5rem rgba(13, 13, 13, 0.12); }
 /* A calm, modest title: the work carries the page, not the heading. */
 .cs-title { margin-top: 0.3125rem; font-size: clamp(1.5rem, 2.8vw, 1.875rem); font-weight: 500; letter-spacing: -0.022em; line-height: 1.1; }
 .cs-headline { max-width: 56ch; margin-top: 0.5rem; font-size: 1.125rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); }
-.cs-meta {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--space-3);
-  margin-top: 1.625rem;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--hairline);
-}
-/* Type follows the About page's scale (headings --fs-h2, body --fs-lead,
-   captions --fs-body, labels 0.5rem). */
-.cs-meta dt { font-size: 0.875rem; color: var(--ink-soft); }
-.cs-meta dd { margin: 0.1875rem 0 0; font-size: var(--fs-lead); font-weight: 500; line-height: 1.4; color: var(--ink); }
 /* Team, role, timeline and tools: two columns under the heading. Written in
    the first person so it reads like the designer explaining the project, not
    a spec sheet: who was on the team, what Pallav owned, how long it took and
@@ -2449,7 +2176,6 @@ body.ask-open .shell-scrollbar {
   flex-direction: column;
   align-items: flex-start;
 }
-.cs-side .cs-back { font-size: 1rem; }
 .cs-toc { display: flex; flex-direction: column; gap: 0.3125rem; margin: 1.625rem 0 0; padding: 0; list-style: none; }
 .cs-toc a { display: inline-block; padding: 0.0625rem 0; font-size: 1rem; font-weight: 500; color: var(--ink-soft); transition: color 0.25s ease; }
 .cs-toc a.is-active { color: var(--ink); }
@@ -2538,8 +2264,9 @@ body.ask-open .cs-side { display: none; }
 .cs-decision { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr); align-items: center; gap: 1.375rem; }
 .cs-crop { position: relative; overflow: hidden; aspect-ratio: 4 / 3; border-radius: 0.4375rem; background: var(--tint); }
 .cs-crop img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-/* With a `focus` in projects.js the image is a zoomed crop of that point;
-   without one (a real detail image) it shows in full. */
+/* While the detail images are dummies, .is-crop zooms into one point of the
+   picture (set by the img's object-position); remove .is-crop and the
+   style for a real detail image, and it shows in full. */
 .cs-crop.is-crop img { transform: scale(1.7); }
 .cs-decision-copy h3 { font-size: clamp(1.125rem, 2.4vw, 1.375rem); font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; }
 .cs-decision-copy p { max-width: 44ch; margin-top: 0.4375rem; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-soft); }
@@ -2551,7 +2278,7 @@ body.ask-open .cs-side { display: none; }
 .cs-testimonial figcaption { display: flex; flex-direction: column; gap: 0.0625rem; margin-top: 0.75rem; font-size: 1rem; color: var(--ink-soft); }
 .cs-testimonial strong { font-weight: 600; color: var(--ink); }
 
-/* Detailed story blocks (projects with a `story` in js/projects.js). Same
+/* Detailed story blocks (the Wave 2.0 case study). Same
    type sizes as the standard chapters: headings 1.125rem / 500, text
    --fs-body, labels --fs-small; hairlines and the project tint for surfaces. */
 .cs-sub { margin-top: 2.25rem; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.3; }
@@ -2717,7 +2444,6 @@ body.ask-open .cs-side { display: none; }
 
 @media (max-width: 765px) {
   .cs-hero { padding-top: calc(var(--pad) + 3rem); }
-  .cs-meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .cs-cover { aspect-ratio: 4 / 3; margin-top: 1.625rem; }
   .cs-outcomes { grid-template-columns: 1fr; }
   .cs-outcomes { gap: 1.25rem; }
