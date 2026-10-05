@@ -36,7 +36,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Ledgerly mobile screens",
     home: {
       order: 1,
-      text: "A personal finance app that makes budgeting feel calm, backed by research-led onboarding.",
+      text: "New users quit before the app could help them. The cause: an onboarding that asked for everything first.",
       metrics: [
         [
           "Task success",
@@ -69,7 +69,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Wayfarer Health mobile screen",
     home: {
       order: 2,
-      text: "Booking and care-plan flow for a telehealth clinic, designed with patients and nurses in the room.",
+      text: "Patients gave up on an eleven-field booking form. It became one short, guided conversation.",
       metrics: [
         [
           "Booking completion",
@@ -102,7 +102,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Parcelo dashboard on a laptop",
     home: {
       order: 3,
-      text: "A dispatch dashboard redesign so logistics teams can spot late deliveries and act in seconds.",
+      text: "Late deliveries were hiding in a dashboard that showed everything. Now they surface in seconds.",
       metrics: [
         [
           "Time to resolve",
@@ -135,7 +135,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Lumen Learn onboarding screen",
     home: {
       order: 4,
-      text: "Onboarding and lessons for an online learning platform, tested across three usability rounds.",
+      text: "Students stalled on the very first screen. The fix was quieter: fewer choices, more lessons finished.",
       metrics: [
         [
           "Course completion",
