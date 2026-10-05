@@ -17,7 +17,7 @@ Which projects are on the Home page   js/projects.js  (projects with "home")
 A case study's content                work/<slug>.html (its own page)
 About page photos                     assets/images/about/  (see its README)
 The testimonial video                 assets/videos/testimonials/meera-kapoor.mp4
-The chat open / close sounds          assets/audio/sound-effects/
+Sounds: chat, nav click, dog bark     assets/audio/sound-effects/
 Fonts                                 assets/fonts/
 Favicon and app icons                 assets/favicon/
 Hero headline, About story, other     the page's own HTML file (index.html,
@@ -172,7 +172,7 @@ path.
 
 ## File naming
 Lowercase, words separated by hyphens: `ledgerly-cover.jpg`,
-`wave-detail-01.jpg`, `chat-open.wav`. GitHub Pages is case-sensitive, so
+`wave-detail-01.jpg`, `chat-open.mp3`. GitHub Pages is case-sensitive, so
 `Ledgerly-Cover.JPG` and `ledgerly-cover.jpg` are different files there.
 
 ## Run it locally
