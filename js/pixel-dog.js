@@ -10,8 +10,8 @@
      poses match. Colours are in PAL.
    - Where he goes: the gap above any section on screen (never on its
      text) or above the footer; sometimes he peeks over the top of the Now
-     card or the "Where I start" card instead. He visits every 16 to 32 seconds, and if you scroll away he
-     leaves and turns up near where you are next time.
+     card or the "Where I start" card instead. He visits every 11 to 22
+     seconds, and if you scroll away he leaves until his next visit.
    - Reduced motion: he doesn't move; he sits above the last section and
      still shows a heart when clicked.
    - Decorative: hidden from screen readers.
@@ -278,7 +278,7 @@
     setTimeout(() => b.remove(), ms);
   };
   // Click or tap: a little bark (assets/audio/sound-effects) and a heart.
-  const bark = new Audio("/assets/audio/sound-effects/baby_puppy.mp3");
+  const bark = new Audio("/assets/audio/sound-effects/puppy.mp3");
   bark.preload = "none";
   const heart = () => {
     bubble("pxdog-heart", 1100);
@@ -309,13 +309,17 @@
   const place = () => { el.style.transform = `translate(${x}px, ${y - jumpY}px) scaleX(${face})`; };
 
   if (reduce) {
-    const lastSection = perches().pop();
+    // Reduced motion: he sits still above the last section, re-measured
+    // whenever the page settles or resizes (fonts and images move it).
+    const lastSection = Array.from(host.querySelectorAll(":scope > section")).pop();
     if (!lastSection) return;
     el.classList.add("is-on");
     draw(SPRITES.front[0]);
-    const s = span(lastSection);
-    x = s.right - 8; y = perchY(lastSection);
-    place();
+    const settle = () => { const s = span(lastSection); x = s.right - 8; y = perchY(lastSection); place(); };
+    settle();
+    window.addEventListener("load", settle);
+    window.addEventListener("resize", settle);
+    if ("ResizeObserver" in window) new ResizeObserver(settle).observe(host);
     el.addEventListener("click", heart);
     return;
   }
@@ -399,7 +403,7 @@
     // Scrolled away from him? Leave, and come back near the reader soon.
     const pt = perch.getBoundingClientRect().top;
     lostFor = pt < -innerHeight * 0.15 || pt > innerHeight * 1.1 ? lostFor + dt : 0;
-    if (lostFor > 700) return stop(rand(16000, 32000));
+    if (lostFor > 700) return stop(rand(11000, 22000));
 
     if (step.run !== undefined || step.sniff !== undefined) {
       const running = step.run !== undefined;
@@ -439,7 +443,7 @@
       el.style.clipPath = `inset(0 0 ${Math.max(0, d.height - show * k)}px 0)`;
       if (age >= up + step.ms + down) step = null;
     } else if (step.end) {
-      return stop(rand(16000, 32000));
+      return stop(rand(11000, 22000));
     }
     place();
     requestAnimationFrame(tick);
@@ -455,5 +459,5 @@
   });
   document.addEventListener("visibilitychange", () => { if (!document.hidden && !busy) later(2000); });
 
-  later(4500);
+  later(3500);
 })();

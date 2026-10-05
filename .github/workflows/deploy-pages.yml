@@ -16,10 +16,11 @@ permissions:
   pages: write
   id-token: write
 
-# One deployment at a time; a newer push replaces a waiting one.
+# One deployment at a time; a newer push cancels one still running, so the
+# latest version always wins.
 concurrency:
   group: pages
-  cancel-in-progress: false
+  cancel-in-progress: true
 
 jobs:
   deploy:

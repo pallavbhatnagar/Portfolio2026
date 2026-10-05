@@ -71,8 +71,9 @@ In order, top to bottom:
    (a vertical timeline on phones), ending on "Now".
 5. **At a glance.** Based in, Currently, Focus, Experience, Education,
    Languages.
-6. **What I believe about design.** Five principles; each row links to the part of the case
-   study that shows it, and hovering a row fades the others back.
+6. **What I believe about design.** Five principles; each row links to the
+   part of the case study that shows it, and hovering a row fades the others
+   back.
 7. **Who you'd be working with.** Working style: Where I start, How I
    collaborate, After handoff.
 8. **Now.** Building, Learning, Exploring, Listening (with a music video
@@ -80,12 +81,15 @@ In order, top to bottom:
 9. **Outside the brief.** Music (composes for films as a hobby, with a
    SoundCloud player) and Books and comics (a slow marquee of covers that
    pauses on hover).
-10. **Questions people ask.** Answers that slide open one at a time, and a
-    Talk to me button that opens the chat panel.
-
-A small pixel golden retriever (js/pixel-dog.js) runs along the gaps
-between sections now and then; clicking him plays a bark and shows a heart.
+10. **Questions people ask.** Five answers that slide open one at a time,
+    then "Didn't find your question?" with an **Ask me anything** button that
+    opens the chat panel.
 11. **Footer.**
+
+A small pixel golden retriever (js/pixel-dog.js) visits now and then: he runs
+along the gap above a section, or peeks over the top of the Now or "Where I
+start" card. Clicking him plays a bark and shows a heart. With reduced motion
+he sits still above the last section.
 
 ## Case study: `/work/<slug>`
 
@@ -122,10 +126,12 @@ both projects.
 
 ## Site-wide features
 
-- **Talk to my Work (chat panel).** A side panel opened from the Home hero
-  button or a case study's "Ask AI" button. It answers questions about the
-  projects, process, experience and contact details from the site's own
-  content (scripted answers, not a live AI). It plays a sound on open and close.
+- **Talk to my Work (chat panel).** Opened from the Home hero button, About's
+  "Ask me anything" or a case study's "Ask AI" button. On a desktop it sits
+  beside the page; on tablets it slides over the page as a drawer (the page
+  behind is dimmed and held still); on phones it fills the screen. It answers
+  questions about the projects, process, experience and contact details from
+  the site's own content (scripted answers, not a live AI). It plays a sound on open and close.
 - **Light and dark theme.** Follows the visitor's system setting until they
   use the toggle, then remembers their choice.
 - **Accessibility.** Respects reduced motion, Windows high-contrast themes and
@@ -153,7 +159,7 @@ both projects.
     ├── images/about/             About page photos (optional)
     ├── icons/social/             linkedin.svg, behance.svg, dribbble.svg
     ├── videos/testimonials/      meera-kapoor.mp4
-    ├── audio/sound-effects/      chat-open.wav, chat-close.mp3
+    ├── audio/sound-effects/      chat-open.mp3, chat-close.mp3, nav-click.mp3, puppy.mp3
     ├── documents/resume/         resume.pdf
     ├── fonts/                    Manrope
     └── favicon/                  Browser and app icons
