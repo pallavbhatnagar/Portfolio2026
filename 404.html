@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="icon" href="/assets/favicon/favicon.ico" sizes="any" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png" />
+<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#0d0d0d" />
+<link rel="manifest" href="/assets/favicon/site.webmanifest" />
+<meta name="msapplication-config" content="/assets/favicon/browserconfig.xml" />
+<meta name="theme-color" content="#ffffff" />
+<meta name="robots" content="noindex" />
+<title>Page not found | Pallav Bhatnagar</title>
+<meta name="description" content="This page doesn't exist. Head back to the home page or see all of Pallav Bhatnagar's work." />
+<link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
+<script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
+<link rel="stylesheet" href="/css/style.css" />
+</head>
+<body>
+
+<!-- ============ 404: the home page's line, the other way round. There the
+     tangle straightens into a path; here a straight path loses its way and
+     knots up where the page should be, while a dashed line shows the route
+     it should have taken. GitHub Pages shows this page for any address that
+     doesn't exist. ============ -->
+<main class="nf" id="main">
+  <!-- The drawing spans the heading's width, so the line starts above the text. -->
+  <div class="nf-head">
+    <div class="nf-trail" aria-hidden="true">
+      <div class="nf-stage">
+        <svg class="nf-svg" viewBox="8 0 1040 220">
+          <path class="nf-ghost" d="M8 128 L 960 128" />
+          <path class="nf-line" id="nfPath" pathLength="1" d="M8 128 L 520 128 C 590 128, 620 70, 680 66 C 750 62, 760 168, 700 170 C 640 172, 640 54, 730 40 C 812 28, 860 128, 800 156 C 752 178, 722 112, 780 98 C 826 88, 850 126, 870 128" />
+          <circle class="nf-node" cx="200" cy="128" r="8" />
+          <circle class="nf-node" cx="380" cy="128" r="8" />
+          <circle class="nf-dot" r="10" cx="0" cy="0">
+            <animateMotion dur="2.6s" begin="0s" fill="freeze" calcMode="spline" keyTimes="0;1" keyPoints="0;1" keySplines="0.55 0 0.2 1"><mpath href="#nfPath" xlink:href="#nfPath" /></animateMotion>
+          </circle>
+        </svg>
+        <span class="nf-chip">404</span>
+      </div>
+    </div>
+  
+    <h1 class="nf-title">This page took a wrong turn.</h1>
+  </div>
+  <p class="nf-lede">The link may be old or mistyped. These paths lead somewhere.</p>
+  <div class="hero-actions nf-actions">
+    <a class="btn btn-primary" href="/">Go to the home page</a>
+    <a class="btn btn-secondary" href="/works">See all work</a>
+  </div>
+</main>
+
+<!-- Reduced motion: no travelling dot; it rests at the end of the line. -->
+<script>(function(){if(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches){var d=document.querySelector(".nf-dot"),m=d&&d.querySelector("animateMotion");if(m)m.remove();if(d){d.setAttribute("cx","870");d.setAttribute("cy","128");}}})();</script>
+</body>
+</html>
