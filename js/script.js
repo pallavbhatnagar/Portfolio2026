@@ -930,6 +930,16 @@
       });
     }
 
+    // The chosen filter lives in the address (/works?filter=case), so going
+    // back to Works from a case study, a refresh or a shared link shows the
+    // same view. Restored here before anything is drawn, with no animation.
+    const startKey = new URLSearchParams(location.search).get("filter");
+    const startSeg = segs.find((b) => b.dataset.filter === startKey);
+    if (startSeg && startKey !== "all") {
+      segs.forEach((b) => b.setAttribute("aria-pressed", String(b === startSeg)));
+      wkItems.forEach((it) => { it.hidden = it.dataset.cat !== startKey; });
+    }
+
     const placeThumb = () => {
       const on = segs.find((b) => b.getAttribute("aria-pressed") === "true");
       if (!on || !thumb) return;
@@ -988,6 +998,8 @@
         segs.forEach((b) => b.setAttribute("aria-pressed", String(b === seg)));
         placeThumb();
         applyFilter(seg.dataset.filter);
+        const key = seg.dataset.filter;
+        try { history.replaceState(history.state, "", key === "all" ? location.pathname + location.hash : `?filter=${encodeURIComponent(key)}${location.hash}`); } catch (e) { /* file:// or sandboxed */ }
       });
     });
 

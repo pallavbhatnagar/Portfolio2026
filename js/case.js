@@ -28,6 +28,35 @@
     try { sessionStorage.removeItem("caseStudiesUnlocked"); } catch (e) { /* private mode */ }
   }
 
+  // ---------- Breadcrumb: back to Works ----------
+  // Coming from the Works page, step back in history instead of reloading
+  // it, so its filter and scroll position are just as they were. From
+  // anywhere else (Home, a shared link), the link simply opens /works.
+  const smartBack = (link) => link.addEventListener("click", (e) => {
+    if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    let from = null;
+    try { from = document.referrer ? new URL(document.referrer) : null; } catch (err) { from = null; }
+    const fromWorks = from && from.origin === location.origin && /^\/works(\.html)?\/?$/.test(from.pathname);
+    if (fromWorks && history.length > 1) { e.preventDefault(); history.back(); }
+  });
+
+  // ---------- Chapter rail: reading progress (desktop) ----------
+  // A thin line beside the chapter list fills as you read the case study.
+  const railBar = root.querySelector(".cs-rail-progress span");
+  if (railBar) {
+    const body = root.querySelector(".cs-body") || root;
+    const track = () => {
+      const r = body.getBoundingClientRect();
+      const k = Math.min(1, Math.max(0, (innerHeight * 0.4 - r.top) / Math.max(1, r.height - innerHeight * 0.4)));
+      railBar.style.transform = `scaleY(${k})`;
+    };
+    addEventListener("scroll", track, { passive: true });
+    addEventListener("resize", track);
+    track();
+  }
+
+  document.querySelectorAll("[data-back]").forEach(smartBack);
+
   // ---------- Outcome numbers count up once in view ----------
   const countUp = (el) => {
     const to = Number(el.dataset.to);
