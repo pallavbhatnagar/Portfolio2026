@@ -110,7 +110,7 @@
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
-:root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.6); border-color: rgba(255, 255, 255, 0.08); }
+:root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.74); border-color: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
 :root[data-theme="dark"] .tpanel--mono { background: var(--tp); }
@@ -242,7 +242,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   position: absolute;
   inset: -0.4375rem var(--pad);
   border-radius: 0.625rem;
-  background: rgba(255, 255, 255, 0.68);
+  background: rgba(255, 255, 255, 0.8);
   -webkit-backdrop-filter: blur(1.5px);
   backdrop-filter: blur(1.5px);
   border: 1px solid rgba(13, 13, 13, 0.07);
@@ -882,11 +882,11 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   color: var(--ink-soft);
   transition: color 0.2s ease;
 }
-.footer-links svg { width: 1rem; height: 1rem; }
+.footer-links svg { width: 1.25rem; height: 1.25rem; }
 /* Icon files (assets/icons/social/) are drawn in the site's black: at 60%
    they match the grey text colour, and turn full black on hover. Dark
    theme flips them to light. */
-.footer-links img { display: block; width: 1rem; height: 1rem; opacity: 0.6; transition: opacity 0.2s ease; }
+.footer-links img { display: block; width: 1.25rem; height: 1.25rem; opacity: 0.6; transition: opacity 0.2s ease; }
 .footer-links a:focus-visible img { opacity: 1; }
 @media (hover: hover) and (pointer: fine) { .footer-links a:hover img { opacity: 1; } }
 :root[data-theme="dark"] .footer-links img { filter: invert(1); }
@@ -1187,9 +1187,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   place-items: center;
   /* 25px tap area (WCAG 2.5.8); the negative margin keeps the icon and its
      neighbours exactly where they were at 20px. */
-  width: 1.75rem;
-  height: 1.75rem;
-  margin: -0.1875rem;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin: -0.25rem;
   padding: 0;
   border: 0;
   background: none;
@@ -1198,19 +1198,15 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   filter: drop-shadow(0 0 3px rgba(0, 0, 0, 0.55));
   transition: transform 0.2s var(--ease-out);
 }
-.tbtn svg { width: 0.75rem; height: 0.75rem; }
+.tbtn svg { width: 1.0625rem; height: 1.0625rem; }
 .tbtn:active { transform: scale(0.9); }
 .tbtn:focus-visible { outline: 1px solid #fff; outline-offset: 1px; border-radius: 0.1875rem; }
 @media (hover: hover) and (pointer: fine) { .tbtn:hover { transform: scale(1.15); } }
 .tplay .i-pause, .tmute .i-mute { display: none; }
-.tpanel--video.is-playing .tplay .i-play { display: none; }
-.tpanel--video.is-playing .tplay .i-pause { display: block; }
 .tmute[aria-pressed="true"] .i-vol { display: none; }
 .tmute[aria-pressed="true"] .i-mute { display: block; }
-.tvol { display: flex; align-items: center; gap: 0.25rem; }
-.tvol-range { width: 0; opacity: 0; margin: 0; height: 0.625rem; accent-color: #fff; outline-color: #fff; cursor: pointer; transition: width 0.35s var(--ease-out), opacity 0.25s var(--ease-out); }
-.tvol:hover .tvol-range, .tvol:focus-within .tvol-range { width: 2.25rem; opacity: 1; }
-@media (hover: none) { .tvol-range { display: none; } }
+.tpanel--video.is-playing .tplay .i-play { display: none; }
+.tpanel--video.is-playing .tplay .i-pause { display: block; }
 @media (max-width: 900px) { .tpanel--video.is-active { flex-basis: 21.125rem; } }
 
 /* Copy email: a thin two-sheet icon that swaps to a check for a moment. */
@@ -1232,7 +1228,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   cursor: pointer;
   transition: opacity 0.25s var(--ease-out), background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
 }
-.copy-mail svg { grid-area: 1 / 1; width: 0.625rem; height: 0.625rem; transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out); }
+.copy-mail svg { grid-area: 1 / 1; width: 0.8125rem; height: 0.8125rem; transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out); }
 .copy-mail .i-done { opacity: 0; transform: scale(0.6); }
 .copy-mail.is-copied { opacity: 1; }
 .copy-mail.is-copied .i-copy { opacity: 0; transform: scale(0.6); }
@@ -1574,7 +1570,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .path-co { margin: 0.375rem 0 0; font-size: 1.125rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.2; }
 .path-role { margin: 0.125rem 0 0; font-size: var(--fs-small); color: var(--ink-soft); }
 .path-p { max-width: 30ch; margin: 0.625rem 0 0; font-size: var(--fs-body); line-height: 1.5; color: color-mix(in srgb, var(--ink) 72%, transparent); }
-.path-now { display: inline-block; margin-left: 0.25rem; padding: 0 0.375rem; border-radius: 999px; background: var(--mint-bg); color: var(--mint-ink); font-size: 0.75rem; line-height: 1.5; }
+/* Same style as the hero's Done chip: caps, bold, slightly square. */
+.path-now { display: inline-block; margin-left: 0.25rem; padding: 0.125rem 0.4375rem; border-radius: 0.3125rem; background: var(--mint-bg); color: var(--mint-ink); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.08em; line-height: 1.4; text-transform: uppercase; }
 /* The line draws from tangled to straight (script.js, 23a); each stop and
    its job appear as the line reaches them, then "now" starts to pulse. */
 .pl-node, .pl-ring { transform-box: fill-box; transform-origin: center; }

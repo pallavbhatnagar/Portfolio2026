@@ -209,6 +209,21 @@
     const vPanel = strip.querySelector(".tpanel--video");
     const vid = vPanel?.querySelector("video");
     let userPaused = false;
+    let stripSeen = false; // the video loads and plays only once the strip is on screen
+    // Sound on by default. Browsers refuse to start a video with sound before
+    // the visitor has interacted with the page; then it plays muted and the
+    // sound comes on at the first tap, click or key press.
+    const playVideo = () => {
+      if (!vid || !stripSeen || userPaused || reduce.matches) return;
+      if (vid.preload === "none") { vid.preload = "auto"; vid.load(); }
+      vid.muted = false;
+      vid.play().catch(() => {
+        vid.muted = true;
+        vid.play().catch(() => {});
+        const unmute = () => { vid.muted = false; };
+        ["pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unmute, { once: true, capture: true }));
+      });
+    };
     const open = (panel) => {
       panels9.forEach((p) => {
         const on = p === panel;
@@ -216,43 +231,49 @@
         p.querySelector(".tbody")?.setAttribute("aria-hidden", String(!on));
       });
       if (vid) {
-        if (panel === vPanel && !userPaused && !reduce.matches) vid.play().catch(() => {});
+        if (panel === vPanel) playVideo();
         else vid.pause();
       }
     };
+    if (vid && "IntersectionObserver" in window) {
+      new IntersectionObserver(([entry]) => {
+        stripSeen = entry.isIntersecting;
+        if (stripSeen && vPanel.classList.contains("is-active")) playVideo();
+        else if (!stripSeen) vid.pause();
+      }, { threshold: 0.5 }).observe(vPanel);
+    }
     // The panel marked data-default (the video) is the resting state: it is
     // open on load and reopens when the pointer leaves the strip.
     const restPanel = strip.querySelector(".tpanel[data-default]") || panels9[0];
     strip.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") open(restPanel); });
 
-    // Video controls: play or pause, mute, volume.
+    // Video controls: play or pause, mute or unmute.
     if (vid) {
       const playBtn = vPanel.querySelector(".tplay");
       const muteBtn = vPanel.querySelector(".tmute");
-      const range = vPanel.querySelector(".tvol-range");
+      let userMuted = false; // a visitor's own choice wins over sound-on-by-default
+      const syncMute = () => {
+        muteBtn.setAttribute("aria-pressed", String(vid.muted));
+        muteBtn.setAttribute("aria-label", vid.muted ? "Unmute" : "Mute");
+      };
+      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); vid.muted = !vid.muted; userMuted = vid.muted; });
+      vid.addEventListener("volumechange", syncMute);
+      vid.addEventListener("play", () => { if (userMuted) vid.muted = true; });
+      syncMute();
       const syncPlay = () => {
         const playing = !vid.paused && !vid.ended;
         vPanel.classList.toggle("is-playing", playing);
         playBtn.setAttribute("aria-label", playing ? "Pause video" : "Play video");
       };
-      const syncMute = () => {
-        muteBtn.setAttribute("aria-pressed", String(vid.muted));
-        muteBtn.setAttribute("aria-label", vid.muted ? "Unmute" : "Mute");
-      };
       playBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         userPaused = !vid.paused;
-        if (vid.paused) vid.play().catch(() => {}); else vid.pause();
+        if (vid.paused) { vid.muted = false; vid.play().catch(() => {}); } else vid.pause();
       });
-      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); vid.muted = !vid.muted; });
-      range.addEventListener("input", () => { vid.volume = Number(range.value); vid.muted = vid.volume === 0; });
-      vid.volume = Number(range.value);
       vid.addEventListener("play", syncPlay);
       vid.addEventListener("pause", syncPlay);
       vid.addEventListener("ended", syncPlay);
-      vid.addEventListener("volumechange", () => { syncMute(); if (!vid.muted) range.value = String(vid.volume); });
       syncPlay();
-      syncMute();
     }
     panels9.forEach((p) => {
       p.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") open(p); });
@@ -706,6 +727,13 @@
     }, { threshold: 0.4 });
     io2.observe(abStats);
   }
+
+  // 14b) About "Now": stamp it with the current month, so it never reads stale.
+  document.querySelectorAll("[data-now-month]").forEach((t) => {
+    const d = new Date();
+    t.textContent = d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
+    t.setAttribute("datetime", `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
+  });
 
   // 15) About carousel: an endless loop. Each slide gets data-o (its offset
   //     from the centre, -4..4); CSS turns that into size and position.
