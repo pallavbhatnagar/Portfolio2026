@@ -16,7 +16,7 @@ Works are built by JavaScript from one data file, js/projects.js.
 ├── /about                 About           about.html
 ├── (any missing address)  Page not found  404.html
 └── /work/<slug>           Case study      work/<slug>.html (one page per project)
-    ├── /work/ledgerly         Ledgerly         Fintech · 2025         case study
+    ├── /work/wealthbasket     WealthBasket     Fintech · 2021         case study (locked)
     ├── /work/wayfarer         Wayfarer Health  Healthcare · 2024      case study · password protected
     ├── /work/parcelo          Parcelo          B2B SaaS · 2024        case study · password protected
     ├── /work/lumen            Lumen Learn      EdTech · 2023          case study
@@ -39,7 +39,7 @@ In order, top to bottom:
    through four labelled steps: Insight, Framing, Interaction, Validation, then
    "Done".
 2. **Products I've worked on.** Four featured project cards that stack on top
-   of each other while scrolling (desktop only): Ledgerly, Wayfarer Health,
+   of each other while scrolling (desktop only): WealthBasket, Wayfarer Health,
    Parcelo, Lumen Learn. Each card has a category, name, two-line description,
    two metrics, a "Read case study" link and a screenshot. Locked projects show
    a lock badge.
@@ -101,7 +101,7 @@ headline, an "Ask AI about this project" button, then **The team** (avatars
 and a sentence), **My role** (a sentence and focus-area tags), **Timeline and
 platform**, **Tools used**, a cover image and three outcome numbers.
 
-**Standard chapters** (Ledgerly, Wayfarer Health, Parcelo, Lumen Learn, JDA
+**Standard chapters** (WealthBasket, Wayfarer Health, Parcelo, Lumen Learn, JDA
 Infra): Overview → The problem (with a research quote) → What we learned
 (three insights) → Process (five numbered steps) → Key decisions (three, each
 with an image) → Results (with a client testimonial) → Looking back.
@@ -142,7 +142,7 @@ both projects.
 ```text
 /
 ├── index.html · works.html · about.html · 404.html
-├── work/                     ledgerly · wayfarer · parcelo · lumen · wave · jda (.html)
+├── work/                     wealthbasket · wayfarer · parcelo · lumen · wave · jda (.html)
 ├── README.md                 How to edit and publish the site
 ├── SITEMAP.md                This file
 ├── .github/workflows/deploy-pages.yml   Publishes to GitHub Pages on every push

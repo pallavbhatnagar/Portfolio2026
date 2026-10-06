@@ -6,7 +6,7 @@
    Numbers and text are SAMPLE DATA: replace with your real work.
 
    To add a project:
-   1. Copy a case study page in work/ (for example work/ledgerly.html), name
+   1. Copy a case study page in work/ (for example work/wealthbasket.html), name
       it after the new slug and replace its content.
    2. Put its images in assets/projects/<slug>/images/.
    3. Copy one { ... } block below and update it.
@@ -24,35 +24,35 @@
    ========================================================= */
 window.CASE_STUDIES = [
   {
-    // Case study: work/ledgerly.html
-    slug: "ledgerly",
-    name: "Ledgerly",
+    // Case study: work/wealthbasket.html (Paytm Money)
+    slug: "wealthbasket",
+    name: "WealthBasket",
     kind: "Case study",
     category: "Fintech",
-    year: "2025",
+    year: "2021",
     tint: "mint",
-    locked: false,
-    thumbnail: "/assets/projects/ledgerly/images/thumbnail.jpg",
-    thumbAlt: "Ledgerly mobile screens",
+    locked: true,
+    thumbnail: "/assets/projects/wealthbasket/images/thumbnail.jpg",
+    thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
       order: 1,
-      text: "New users quit before the app could help them. The cause: an onboarding that asked for everything first.",
+      text: "Investing in a basket means trusting stocks you didn't pick. The app had to show its working before it asked for money.",
       metrics: [
         [
-          "Task success",
-          "92%"
+          "Core journeys",
+          "4"
         ],
         [
-          "Onboarding drop-off",
-          "-38%"
+          "Scoping workshop",
+          "3 days"
         ]
       ]
     },
     works: {
-      text: "A personal finance app that makes budgeting feel calm. I led research, redesigned onboarding and simplified the spending overview so new users see where their money goes within a minute.",
+      text: "WealthBasket lets anyone on Paytm Money invest in expert-built portfolios of stocks and ETFs. I helped scope it with the client and designed the core journeys, from a guided first run to a monthly SIP.",
       meta: [
-        "Lead product designer",
-        "10 weeks · with 1 researcher, 3 engineers"
+        "Product designer",
+        "About 12 months · agency team, for Paytm Money"
       ]
     }
   },

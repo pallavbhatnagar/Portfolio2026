@@ -107,6 +107,29 @@
   };
   const tools = () => Array.from(root.querySelectorAll(".cs-tools li")).map((li) => text(li.lastChild));
 
+  // Flows: rows of screens that scroll sideways. The buttons move one frame
+  // at a time; the count and the buttons' disabled state follow the scroll.
+  root.querySelectorAll(".cs-flow").forEach((flow) => {
+    const track = flow.querySelector(".cs-flow-track");
+    const frames = Array.from(track.children);
+    const count = flow.querySelector(".cs-flow-count");
+    const [prev, next] = flow.querySelectorAll(".cs-flow-btn");
+    const step = () => (frames[1] ? frames[1].offsetLeft - frames[0].offsetLeft : track.clientWidth);
+    const sync = () => {
+      const i = Math.round(track.scrollLeft / step());
+      if (count) count.textContent = `${Math.min(frames.length, i + 1)} of ${frames.length}`;
+      prev.disabled = track.scrollLeft < 4;
+      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
+    };
+    [prev, next].forEach((b) => b.addEventListener("click", () => track.scrollBy({ left: Number(b.dataset.dir) * step() })));
+    track.addEventListener("scroll", sync, { passive: true });
+    // Re-check when the row changes size: on resize, as images load, and when
+    // a locked page is unlocked (the row is hidden until then).
+    if ("ResizeObserver" in window) new ResizeObserver(sync).observe(track);
+    else window.addEventListener("resize", sync);
+    sync();
+  });
+
   window.pageAnswer = (q) => {
     const t = q.toLowerCase();
     const lower = name.toLowerCase();

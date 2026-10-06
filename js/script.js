@@ -1029,7 +1029,7 @@
       };
     });
   const EXTRA_KEYWORDS = {
-    ledgerly: ["finance app", "budgeting"],
+    wealthbasket: ["paytm", "paytm money", "investing", "portfolio", "sip", "stocks"],
     wayfarer: ["telehealth", "clinic"],
     parcelo: ["logistics", "dispatch"],
     lumen: ["edtech", "course", "e-learning"]

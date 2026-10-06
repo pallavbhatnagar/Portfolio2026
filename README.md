@@ -34,7 +34,7 @@ new-portoflio/
 ├── about.html            About
 ├── 404.html              Shown for any address that doesn't exist
 ├── work/                 One page per case study, at /work/<slug>
-│   ├── ledgerly.html · wayfarer.html · parcelo.html
+│   ├── wealthbasket.html · wayfarer.html · parcelo.html
 │   └── lumen.html · wave.html · jda.html
 ├── README.md             This file
 │
@@ -50,7 +50,7 @@ new-portoflio/
 │
 └── assets/
     ├── projects/         One folder per project (slug = the name in its link)
-    │   ├── ledgerly/
+    │   ├── wealthbasket/
     │   │   ├── images/   cover · thumbnail · detail-01 · detail-02 · detail-03
     │   │   └── videos/   the project's videos
     │   ├── wayfarer/     (same inside)
@@ -104,11 +104,11 @@ the project's page in `work/`, find that decision's image and change
 
 ### Add a new project
 1. **The page:** copy a case study page in `work/` (for example
-   `work/ledgerly.html`) as `work/new-app.html` (lowercase, hyphens). Replace
+   `work/wealthbasket.html`) as `work/new-app.html` (lowercase, hyphens). Replace
    its text, its `<title>` and the description and `og:` lines at the top,
-   change `data-slug="ledgerly"` on `<main>` to `data-slug="new-app"`, and
-   every `/assets/projects/ledgerly/` to `/assets/projects/new-app/`.
-2. **The images:** copy `assets/projects/ledgerly/` as
+   change `data-slug="wealthbasket"` on `<main>` to `data-slug="new-app"`, and
+   every `/assets/projects/wealthbasket/` to `/assets/projects/new-app/`.
+2. **The images:** copy `assets/projects/wealthbasket/` as
    `assets/projects/new-app/` and replace its images.
 3. **The cards:** in `js/projects.js`, copy a project block `{ ... },`, set
    `slug: "new-app"` and update its text. Its place in the list is its place
@@ -171,13 +171,13 @@ The site has no profile photo yet. When you add one, save it as
 path.
 
 ## File naming
-Lowercase, words separated by hyphens: `ledgerly-cover.jpg`,
+Lowercase, words separated by hyphens: `wealthbasket-cover.jpg`,
 `wave-detail-01.jpg`, `chat-open.mp3`. GitHub Pages is case-sensitive, so
-`Ledgerly-Cover.JPG` and `ledgerly-cover.jpg` are different files there.
+`WealthBasket-Cover.JPG` and `wealthbasket-cover.jpg` are different files there.
 
 ## Run it locally
 The site uses clean addresses (`/`, `/works`, `/about`,
-`/work/ledgerly`) instead of `index.html`, `works.html` and so on.
+`/work/wealthbasket`) instead of `index.html`, `works.html` and so on.
 A web server turns those into the right files, as GitHub Pages does online,
 so **preview through a local server, not by double-clicking the HTML files**
 (double-clicked files open, but the links between pages won't).
