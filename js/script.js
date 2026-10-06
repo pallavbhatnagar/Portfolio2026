@@ -1014,7 +1014,7 @@
   //     live model later and the panel keeps working unchanged.
   // Project cards come from js/projects.js (the Home page's featured
   // projects, in the same order), and the contact email from js/content.js.
-  const SITE_EMAIL = (window.SITE && window.SITE.email) || "hello@example.com";
+  const SITE_EMAIL = (window.SITE && window.SITE.email) || "bhatnagarpallav@outlook.com";
   const PROJECTS = (window.CASE_STUDIES || [])
     .filter((p) => p.home)
     .sort((a, b) => (a.home.order || 0) - (b.home.order || 0))

@@ -37,19 +37,20 @@
      Primary: Purposium blue (#3965FA) is the only strong colour. It marks
      the AI sparkle and other AI touches. The call to action (Download
      resume) is dark grey (#202020); navy (#1B1B39) supports both.
-     Secondary hues (green, yellow, coral, teal) appear only as very light card tints
+     Secondary hues (green, coral, teal) and navy appear only as very light card tints
      (8% of the hue on white), never as fills, so they don't compete with the
      blue. Each family: a card tint (-bg), a slightly deeper panel and a deep
      ink for tags and numbers (6:1 or more on its tint). Family names are
-     historical: mint is green, lilac yellow, rose coral, sky pale blue, sand
+     historical: mint is green, lilac navy grey, rose coral, sky pale blue, sand
      teal. */
   --c-blue: #3965fa;
   --c-navy: #1b1b39;
   --mint-bg: #f6faf0;  --mint-panel: #f0f8e6;  --mint-ink: #215452;
-  --lilac-bg: #fff8e7; --lilac-panel: #fff4db; --lilac-ink: #6b4a00;
+  --lilac-bg: #efeff1; --lilac-panel: #e4e4e7; --lilac-ink: #1b1b39;
   --rose-bg: #fff3f0;  --rose-panel: #ffece7;  --rose-ink: #6f3432;
   --sky-bg: #f7f9ff;   --sky-panel: #f2f6ff;   --sky-ink: #1b1b39;
   --sand-bg: #edf1f1;  --sand-panel: #e2e9e9;  --sand-ink: #215452;
+  --blue-bg: #e9effe;  --blue-ink: #2a47c8; /* Soft Blue (#99B7FC) at 22%: a testimonial tint */
   --cta-bg: #202020;
   --cta-ink: #ffffff;
   --ai-accent: var(--c-blue);
@@ -96,10 +97,11 @@
   /* Dark: about 12% of each hue on the dark ground; inks are the hue
      lifted toward white (7.5:1 or more on their tint). */
   --mint-bg: #222919;  --mint-panel: #28321b;  --mint-ink: #c3e88f;
-  --lilac-bg: #2c271d; --lilac-panel: #352e20; --lilac-ink: #ffd16b;
+  --lilac-bg: #272b34; --lilac-panel: #2c313e; --lilac-ink: #c9d2fd;
   --rose-bg: #301f1a;  --rose-panel: #3c231d;  --rose-ink: #ffb39e;
   --sky-bg: #242830;   --sky-panel: #2b303b;   --sky-ink: #c9d7fd;
   --sand-bg: #161c1b;  --sand-panel: #161f1f;  --sand-ink: #8fc9c4;
+  --blue-bg: #191f34;  --blue-ink: #99b7fc;
   --cta-bg: #f2f1ee;
   --cta-ink: #202020;
   --ai-accent: #5f86fb; /* Purposium blue 60% + Soft Blue 40%: brighter on the dark ground */

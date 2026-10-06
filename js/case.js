@@ -154,7 +154,7 @@
     const hit = topics.find(([re]) => re.test(bare));
     if (!hit && !aboutThis) return null;
     if (document.body.classList.contains("cs-gated")) {
-      return { text: `The ${esc(name)} case study is password protected. Unlock it on this page, or email ${esc((window.SITE && window.SITE.email) || "hello@example.com")} and Pallav will share it.` };
+      return { text: `The ${esc(name)} case study is password protected. Unlock it on this page, or email ${esc((window.SITE && window.SITE.email) || "bhatnagarpallav@outlook.com")} and Pallav will share it.` };
     }
     const answer = hit && hit[1]();
     if (answer) return answer;

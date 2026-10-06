@@ -13,7 +13,7 @@ window.SITE = {
   role: "UX builder",
 
   // Shown in the footer, the password dialog and the chat.
-  email: "hello@example.com",
+  email: "bhatnagarpallav@outlook.com",
 
   // The file behind the "Download resume" button. Replace the PDF in
   // assets/documents/resume/ and keep the same name, or change this path.
