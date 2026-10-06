@@ -34,8 +34,8 @@
   --pad: clamp(0.75rem, 4vw, 2.125rem);
   /* Colour: one blue, quiet tints.
      Primary: Purposium blue (#3965FA) is the only strong colour. It marks
-     what's actionable or important: the call to action, the AI sparkle,
-     result numbers. Navy (#1B1B39) and dark grey support it.
+     the AI sparkle and other AI touches. The call to action (Download
+     resume) is dark grey (#202020); navy (#1B1B39) supports both.
      Secondary hues (green, coral, teal) appear only as very light card tints
      (8% of the hue on white), never as fills, so they don't compete with the
      blue. Each family: a card tint (-bg), a slightly deeper panel and a deep
@@ -49,9 +49,9 @@
   --rose-bg: #fff3f0;  --rose-panel: #ffece7;  --rose-ink: #6f3432;
   --sky-bg: #f7f9ff;   --sky-panel: #f2f6ff;   --sky-ink: #1b1b39;
   --sand-bg: #edf1f1;  --sand-panel: #e2e9e9;  --sand-ink: #215452;
-  --cta-bg: var(--c-blue);
+  --cta-bg: #202020;
   --cta-ink: #ffffff;
-  --ai-accent: var(--c-navy);
+  --ai-accent: var(--c-blue);
   /* Type scale: headings at medium weight with tight tracking, the same
      voice as the hero headline; body copy at regular weight. */
   --fs-h2: clamp(1.625rem, 3.94vw, 2rem);
@@ -98,7 +98,8 @@
   --rose-bg: #301f1a;  --rose-panel: #3c231d;  --rose-ink: #ffb39e;
   --sky-bg: #242830;   --sky-panel: #2b303b;   --sky-ink: #c9d7fd;
   --sand-bg: #161c1b;  --sand-panel: #161f1f;  --sand-ink: #8fc9c4;
-  --cta-bg: var(--c-blue);
+  --cta-bg: #f2f1ee;
+  --cta-ink: #202020;
   --ai-accent: #99b7fc;
 }
 :root[data-theme="dark"] .project { --card: var(--mint-bg); --ink-tag: var(--mint-ink); }
