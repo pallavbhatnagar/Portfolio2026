@@ -1437,38 +1437,34 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .off-p { margin: 0.4375rem 0 0; max-width: 44ch; font-size: var(--fs-body); line-height: 1.5; color: color-mix(in srgb, var(--ink) 68%, transparent); }
 .off-p strong { font-weight: 500; color: var(--ink); }
 
-/* Music: built only from the palette. Navy (#1B1B39) ground, a Purposium
-   blue (#3965FA) glow, Soft Blue (#99B7FC) accents, Pale Blue (#E9EBFF) at
-   low opacity for quiet text and lines; the record is Dark Gray (#202020).
-   The card stays navy in both themes. */
+/* Music */
 /* The copy fills the card's height: title and description at the top, the
    play status, genres and links pushed to the bottom (margin-top: auto). */
 .om-copy { display: flex; flex-direction: column; align-items: flex-start; align-self: stretch; }
 /* Music: copy starts in the top-left corner, like the Books card. */
-.off-music { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-4); align-items: start; padding: 1.125rem 1.125rem 1.25rem; background: #1b1b39; color: #fff; }
-:root[data-theme="dark"] .off-music { background: #1b1b39; }
-.off-music .off-tag { color: #99b7fc; }
-.off-music .off-p { margin-bottom: 1rem; color: rgba(233, 235, 255, 0.72); }
-.om-now { display: inline-flex; align-items: center; gap: 0.4375rem; margin: auto 0 0; padding: 0.3125rem 0.5rem 0.3125rem 0.5rem; border-radius: 999px; background: rgba(233, 235, 255, 0.08); font-size: 0.875rem; font-weight: 500; color: rgba(233, 235, 255, 0.88); }
+.off-music { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-4); align-items: start; padding: 1.125rem 1.125rem 1.25rem; background: #0f0f10; color: #fff; }
+.off-music .off-tag { color: #9be7b8; }
+.off-music .off-p { margin-bottom: 1rem; color: rgba(255, 255, 255, 0.62); }
+.om-now { display: inline-flex; align-items: center; gap: 0.4375rem; margin: auto 0 0; padding: 0.3125rem 0.5rem 0.3125rem 0.5rem; border-radius: 999px; background: rgba(255, 255, 255, 0.07); font-size: 0.875rem; font-weight: 500; color: rgba(255, 255, 255, 0.85); }
 .eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 0.625rem; }
-.eq i { display: block; width: 3px; height: 100%; border-radius: 2px; background: #99b7fc; transform-origin: bottom; transform: scaleY(0.3); }
+.eq i { display: block; width: 3px; height: 100%; border-radius: 2px; background: #9be7b8; transform-origin: bottom; transform: scaleY(0.3); }
 .om-genres { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0.875rem 0 0; padding: 0; list-style: none; }
-.om-genres li { padding: 0.1875rem 0.4375rem; border: 1px solid rgba(233, 235, 255, 0.2); border-radius: 0.25rem; font-size: 0.875rem; font-weight: 500; color: rgba(233, 235, 255, 0.78); }
-.om-player { min-height: 17.375rem; overflow: hidden; border-radius: 0.375rem; background: color-mix(in srgb, #1b1b39 90%, #3965fa); }
+.om-genres li { padding: 0.1875rem 0.4375rem; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 0.25rem; font-size: 0.875rem; font-weight: 500; color: rgba(255, 255, 255, 0.72); }
+.om-player { min-height: 17.375rem; overflow: hidden; border-radius: 0.375rem; background: #17181a; }
 .om-player iframe { display: block; width: 100%; height: 17.375rem; border: 0; }
-.om-facade { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: 1rem; row-gap: 1rem; align-items: center; min-height: 17.375rem; padding: 1.125rem 1.125rem 1.125rem; background: radial-gradient(110% 90% at 0% 0%, rgba(57, 101, 250, 0.3), transparent 62%); }
-.om-disc { grid-row: 1; width: 6.875rem; height: 6.875rem; border-radius: 50%; box-shadow: 0 0.875rem 1.875rem rgba(14, 14, 32, 0.55), 0 0 0 1px rgba(233, 235, 255, 0.08); }
+.om-facade { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: 1rem; row-gap: 1rem; align-items: center; min-height: 17.375rem; padding: 1.125rem 1.125rem 1.125rem; background: radial-gradient(110% 90% at 0% 0%, rgba(155, 231, 184, 0.15), transparent 62%); }
+.om-disc { grid-row: 1; width: 6.875rem; height: 6.875rem; border-radius: 50%; box-shadow: 0 0.875rem 1.875rem rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06); }
 .om-disc svg { display: block; width: 100%; height: 100%; }
-.om-kind { margin: 0; font-size: 0.875rem; font-weight: 500; color: #99b7fc; }
+.om-kind { margin: 0; font-size: 0.875rem; font-weight: 500; color: #9be7b8; }
 .om-title { margin: 0.1875rem 0 0; font-size: 1.625rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.05; }
-.om-sub { margin: 0.25rem 0 0; font-size: 1rem; color: rgba(233, 235, 255, 0.66); }
+.om-sub { margin: 0.25rem 0 0; font-size: 1rem; color: rgba(255, 255, 255, 0.5); }
 .om-wave { grid-column: 1 / -1; display: flex; align-items: center; gap: 3px; height: 3.75rem; }
-.om-wave i { flex: 1; height: var(--h); min-width: 2px; border-radius: 2px; background: rgba(233, 235, 255, 0.22); transform-origin: center; }
-.om-wave i:nth-child(-n + 16) { background: #99b7fc; }
-.om-play { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: 0.5rem; justify-self: start; padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem; border: 0; border-radius: 999px; background: #fff; color: #1b1b39; font-family: inherit; font-size: var(--fs-body); font-weight: 500; cursor: pointer; transition: transform 0.3s var(--ease-out); }
-.om-ic { position: relative; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #99b7fc; }
-.om-ic::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #99b7fc; opacity: 0; }
-.om-play:focus-visible { outline: 2px solid #99b7fc; outline-offset: 3px; }
+.om-wave i { flex: 1; height: var(--h); min-width: 2px; border-radius: 2px; background: rgba(255, 255, 255, 0.24); transform-origin: center; }
+.om-wave i:nth-child(-n + 16) { background: #9be7b8; }
+.om-play { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: 0.5rem; justify-self: start; padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem; border: 0; border-radius: 999px; background: #fff; color: #0f0f10; font-family: inherit; font-size: var(--fs-body); font-weight: 500; cursor: pointer; transition: transform 0.3s var(--ease-out); }
+.om-ic { position: relative; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #9be7b8; }
+.om-ic::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #9be7b8; opacity: 0; }
+.om-play:focus-visible { outline: 2px solid #9be7b8; outline-offset: 3px; }
 .om-play:active { transform: scale(0.97); }
 @media (hover: hover) and (pointer: fine) { .om-play:hover { transform: translateY(-2px); } }
 .is-playing .eq i { transform: scaleY(1); }

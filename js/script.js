@@ -858,7 +858,7 @@
       const src = (omPlayer.dataset.scSrc || "").trim();
       const params = new URLSearchParams({
         url: src, auto_play: "true", hide_related: "true", show_comments: "false",
-        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#99b7fc",
+        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
       });
       const frame = document.createElement("iframe");
       frame.src = `https://w.soundcloud.com/player/?${params.toString()}`;
@@ -1034,7 +1034,7 @@
   const renderMusicCard = () => {
     const params = new URLSearchParams({
       url: "https://api.soundcloud.com/playlists/1589234278", auto_play: "false", hide_related: "true",
-      show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#99b7fc",
+      show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
     });
     return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Sketches and scores on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.4375rem;display:block" allow="autoplay"></iframe>`;
   };
