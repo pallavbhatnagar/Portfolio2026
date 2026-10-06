@@ -130,6 +130,33 @@
     sync();
   });
 
+  // Vimeo films: a still image with a play button. The button appears only
+  // if Vimeo says the film can be embedded (public, or allowed on this
+  // domain); clicking swaps the still for Vimeo's player, already playing.
+  root.querySelectorAll("[data-vimeo]").forEach((box) => {
+    const id = box.dataset.vimeo;
+    const title = box.dataset.vimeoTitle || "Video";
+    const btn = box.querySelector(".cs-play");
+    if (!btn || !window.fetch) return;
+    btn.setAttribute("aria-label", `Play video: ${title}`);
+    fetch(`https://vimeo.com/api/oembed.json?url=${encodeURIComponent("https://vimeo.com/" + id)}`)
+      .then((r) => (r.ok ? r.json() : null))
+      .then((info) => { if (info) btn.hidden = false; })
+      .catch(() => {});
+    btn.addEventListener("click", () => {
+      const frame = document.createElement("iframe");
+      frame.className = "cs-play-frame";
+      frame.src = `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1&title=0&byline=0&portrait=0`;
+      frame.title = title;
+      frame.allow = "autoplay; fullscreen; picture-in-picture";
+      frame.allowFullscreen = true;
+      box.classList.add("is-playing");
+      box.appendChild(frame);
+      btn.remove();
+      frame.focus();
+    });
+  });
+
   window.pageAnswer = (q) => {
     const t = q.toLowerCase();
     const lower = name.toLowerCase();

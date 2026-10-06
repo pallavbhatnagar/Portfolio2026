@@ -552,11 +552,15 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   line-height: 1.08;
 }
 .proj-stack .project-desc { margin-top: 0.375rem; max-width: 45ch; font-size: var(--fs-body); line-height: 1.45; color: #444; }
-.proj-stack .metrics { display: flex; gap: 1.875rem; margin-top: auto; padding-top: 1.125rem; }
-.proj-stack .metrics dt { font-size: 1rem; color: var(--ink-soft); }
+/* Metrics: the number first, its label under it, a hairline between the
+   two (dt stays first in the markup; flex puts it underneath). */
+.proj-stack .metrics { display: flex; gap: 1.75rem; margin-top: auto; padding-top: 1.125rem; }
+.proj-stack .metrics > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
+.proj-stack .metrics > div + div { padding-left: 1.75rem; border-left: 1px solid color-mix(in srgb, var(--ink-tag) 22%, transparent); }
+.proj-stack .metrics dt { max-width: 16ch; margin-top: 0.25rem; font-size: 0.9375rem; line-height: 1.35; color: var(--ink-soft); }
 .proj-stack .metrics dd {
-  margin-top: 0.125rem;
-  font-size: 1.75rem;
+  margin-top: 0;
+  font-size: 2rem;
   font-weight: 700;
   letter-spacing: var(--track-heading);
   line-height: 1.1;
@@ -2380,6 +2384,16 @@ body.ask-open .cs-side { display: none; }
 .cs-figure.is-photo .cs-figure-media { padding: 0; }
 .cs-figure.is-photo .cs-figure-media img { aspect-ratio: 16 / 9; object-fit: cover; border-radius: 0; }
 .cs-figure figcaption { max-width: 62ch; margin-top: 0.625rem; font-size: var(--fs-small); line-height: 1.5; color: var(--ink-soft); }
+
+/* Play button over a still (Vimeo films), and the player that replaces it. */
+.cs-figure-media[data-vimeo] { position: relative; } /* the cover's media box is already positioned */
+.cs-play { position: absolute; left: 50%; top: 50%; z-index: 2; display: grid; place-items: center; width: 4rem; height: 4rem; padding: 0 0 0 0.1875rem; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.94); color: #0d0d0d; box-shadow: 0 0.5rem 1.5rem rgba(13, 13, 13, 0.25); cursor: pointer; transform: translate(-50%, -50%); transition: transform 0.2s var(--ease-out); }
+.cs-play[hidden] { display: none; }
+.cs-play:focus-visible { outline: 3px solid #fff; outline-offset: 3px; box-shadow: 0 0 0 6px #0d0d0d; }
+.cs-play:active { transform: translate(-50%, -50%) scale(0.95); }
+@media (hover: hover) and (pointer: fine) { .cs-play:hover { transform: translate(-50%, -50%) scale(1.06); } }
+.cs-play-frame { position: absolute; inset: 0; z-index: 3; width: 100%; height: 100%; border: 0; background: #000; }
+@media (prefers-reduced-motion: reduce) { .cs-play { transition: none; } }
 
 /* Flow: one journey's screens in a row that scrolls sideways and snaps to
    each frame, with the next frame peeking in so it reads as a sequence.

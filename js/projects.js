@@ -31,7 +31,7 @@ window.CASE_STUDIES = [
     category: "Fintech",
     year: "2021",
     tint: "mint",
-    locked: true,
+    locked: false,
     thumbnail: "/assets/projects/wealthbasket/images/thumbnail.jpg",
     thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
@@ -39,12 +39,12 @@ window.CASE_STUDIES = [
       text: "Investing in a basket means trusting stocks you didn't pick. The app had to show its working before it asked for money.",
       metrics: [
         [
-          "Core journeys",
-          "4"
+          "Screens designed",
+          "30+"
         ],
         [
-          "Scoping workshop",
-          "3 days"
+          "Platforms: iOS, Android and web",
+          "3"
         ]
       ]
     },

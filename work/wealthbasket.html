@@ -26,7 +26,7 @@
 <link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261023" />
+<link rel="stylesheet" href="/css/style.css?v=20261025" />
 </head>
 <body>
 
@@ -60,7 +60,7 @@
 <!-- ============ CASE STUDY: WealthBasket (Paytm Money). The page's content is written below;
      js/case.js adds the chapter list highlight, number count-ups, the chat's
      answers. ============ -->
-<main class="cs" id="case" data-slug="wealthbasket" data-locked style="--tint: var(--mint-bg); --tint-panel: var(--mint-panel); --tint-ink: var(--ink)">
+<main class="cs" id="case" data-slug="wealthbasket" style="--tint: var(--mint-bg); --tint-panel: var(--mint-panel); --tint-ink: var(--ink)">
     <nav class="cs-side" aria-label="Case study">
       <a class="cs-back-btn" href="/works" aria-label="Back to all work"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></a>
       <ol class="cs-toc">
@@ -112,12 +112,10 @@
     <div class="cs-locked-content">
       <figure class="cs-cover" style="aspect-ratio: 1140 / 713">
         <span class="cs-cover-tag" style="top: auto; bottom: 0.875rem">Case study</span>
-        <!-- Video: the original introduction film was on Vimeo and is no longer
-             available. To play your own copy here, put it in
-             assets/projects/wealthbasket/videos/introduction.mp4 and replace the
-             <img> below with:
-             <video src="/assets/projects/wealthbasket/videos/introduction.mp4" poster="/assets/projects/wealthbasket/images/cover.jpg" controls playsinline preload="none"></video> -->
-        <div class="cs-cover-media"><img src="/assets/projects/wealthbasket/images/cover.jpg" alt="WealthBasket on Paytm Money: a phone showing the WealthBasket logo, with the line: finding and investing in curated stock portfolios becomes a cakewalk" fetchpriority="high"></div>
+        <!-- Video: plays the Vimeo film (605510281) from a play button, once the
+             video is public or allows embedding on this site (case.js checks;
+             until then the still image shows with no button). -->
+        <div class="cs-cover-media" data-vimeo="605510281" data-vimeo-title="WealthBasket introduction"><img src="/assets/projects/wealthbasket/images/cover.jpg" alt="WealthBasket on Paytm Money: a phone showing the WealthBasket logo, with the line: finding and investing in curated stock portfolios becomes a cakewalk" fetchpriority="high"><button class="cs-play" type="button" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
       </figure>
 
       <section class="cs-outcomes ab-r" aria-label="Outcomes">
@@ -130,8 +128,8 @@
           <p class="cs-out-label">core journeys designed, from first launch to a monthly SIP</p>
         </div>
         <div class="cs-out">
-          <p class="cs-num" data-to="2" data-prefix="" data-suffix="">2</p>
-          <p class="cs-out-label">kinds of investor designed for: first-time and everyday</p>
+          <p class="cs-num" data-to="30" data-prefix="" data-suffix="+">30+</p>
+          <p class="cs-out-label">screens designed across iOS, Android and the web</p>
         </div>
       </section>
 
@@ -302,14 +300,10 @@
             <h2 class="ab-r">Looking back</h2>
             <p class="cs-lead ab-r">As an early fintech enthusiast, this was a chance to learn investing products first-hand. I'm grateful for it, and there are things I'd do differently now.</p>
             <div class="cs-insights cs-cards" style="--cols:3"><article class="cs-insight ab-r" style="--i:0"><h3>Investing is cultural</h3><p>The client taught me how differently people approach high and low investment, and it still shapes how I design fintech products.</p></article><article class="cs-insight ab-r" style="--i:1"><h3>Agree how to measure, early</h3><p>The project's scale and the stakeholders' priorities didn't line up for post-launch testing. Next time I'd agree success measures before the build starts.</p></article><article class="cs-insight ab-r" style="--i:2"><h3>Process is a skill too</h3><p>With what I know now, I'd bring testing earlier and keep the scope tighter. That's what the project was for: learning.</p></article></div>
-            <!-- Video: the original campaign film was on Vimeo and is no longer
-                 available. To play your own copy, put it in
-                 assets/projects/wealthbasket/videos/campaign.mp4 and replace the
-                 <img> below with:
-                 <video src="/assets/projects/wealthbasket/videos/campaign.mp4" poster="/assets/projects/wealthbasket/images/campaign.jpg" controls playsinline preload="none"></video> -->
+            <!-- Video: plays the Vimeo film (605509955) once it is available; see the cover. -->
             
       <figure class="cs-figure is-photo ab-r">
-        <div class="cs-figure-media"><img src="/assets/projects/wealthbasket/images/campaign.jpg" alt="Paytm Money's WealthBasket campaign artwork: an illustrated investment expert surrounded by money bags" loading="lazy" width="1140" height="713"></div>
+        <div class="cs-figure-media" data-vimeo="605509955" data-vimeo-title="Paytm Money WealthBasket campaign film"><img src="/assets/projects/wealthbasket/images/campaign.jpg" alt="Paytm Money's WealthBasket campaign artwork: an illustrated investment expert surrounded by money bags" loading="lazy" width="1140" height="713"><button class="cs-play" type="button" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
         <figcaption>Paytm Money's launch artwork for WealthBasket.</figcaption>
       </figure>
             <p class="cs-note ab-r">Some details are left out because the work is confidential. My role was to help frame the product's long-term direction, run the research and make sure the design held up. If you'd like to know more, email me and we can talk it through on a call.</p>
@@ -399,11 +393,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
-<script src="/js/content.js?v=20261023" defer></script>
-<script src="/js/projects.js?v=20261023" defer></script>
-<script src="/js/case.js?v=20261023" defer></script>
-<script src="/js/render.js?v=20261023" defer></script>
-<script src="/js/script.js?v=20261023" defer></script>
+<script src="/js/content.js?v=20261025" defer></script>
+<script src="/js/projects.js?v=20261025" defer></script>
+<script src="/js/case.js?v=20261025" defer></script>
+<script src="/js/render.js?v=20261025" defer></script>
+<script src="/js/script.js?v=20261025" defer></script>
 </body>
 </html>
 
