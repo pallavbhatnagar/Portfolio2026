@@ -421,6 +421,7 @@
     const move = () => { raf = 0; tip.style.transform = `translate(${px + 14}px, ${py + 18}px)`; };
     const show = (card) => {
       if (current === card) return;
+      if (!current) { cancelAnimationFrame(raf); move(); }
       current = card;
       const cs = getComputedStyle(card);
       tip.style.setProperty("--tip-bg", cs.getPropertyValue("--ink-tag").trim());
@@ -708,8 +709,9 @@
 
   // 15) About carousel: an endless loop. Each slide gets data-o (its offset
   //     from the centre, -4..4); CSS turns that into size and position.
-  //     Every 2.8s the next slide glides in. Pauses on hover/focus, when the
-  //     tab or carousel is off screen, and never auto-plays for reduced motion.
+  //     Every 2s the next slide glides in. Keeps running under the mouse;
+  //     pauses for keyboard focus, when the tab or carousel is off screen, and
+  //     never auto-plays for reduced motion.
   const car = document.querySelector(".ab-carousel");
   if (car) {
     const slides = Array.from(car.querySelectorAll(".ab-slide"));
@@ -731,16 +733,14 @@
     const stop = () => { clearInterval(timer); timer = null; };
     const start = () => {
       if (reduce.matches || timer || !inView || document.hidden) return;
-      timer = setInterval(() => go(cur + 1), 2800);
+      timer = setInterval(() => go(cur + 1), 2000);
     };
     slides.forEach((s, i) => s.addEventListener("click", () => { go(i); stop(); start(); }));
     car.addEventListener("keydown", (e) => {
       if (e.key === "ArrowRight") { e.preventDefault(); go(cur + 1); }
       if (e.key === "ArrowLeft") { e.preventDefault(); go(cur - 1); }
     });
-    car.addEventListener("pointerenter", stop);
-    car.addEventListener("pointerleave", start);
-    car.addEventListener("focusin", stop);
+    car.addEventListener("focusin", () => { if (car.matches(":focus-visible")) stop(); });
     car.addEventListener("focusout", start);
     document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
     if ("IntersectionObserver" in window) {

@@ -26,18 +26,32 @@
   --fill: var(--ink);
   --fill-ink: #ffffff;
   --fade: #d6d6d6;
+  --control-edge: #8f8f8f; /* 3.3:1 on white: outlines of form fields */
   --radius-btn: 0.375rem;
   --font: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font);
   --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
   --pad: clamp(0.75rem, 4vw, 2.125rem);
-  /* Palette: the original soft hues. Colour lives only in the project cards
-     (card, deeper panel, dark text); everything else stays neutral. */
-  --mint-bg: #e8efe7;  --mint-panel: #dde8dc;  --mint-ink: #1b6b12;
-  --lilac-bg: #ece8f0; --lilac-panel: #e3dded; --lilac-ink: #5b2a7a;
-  --rose-bg: #f0e9e6;  --rose-panel: #eadfdc;  --rose-ink: #6b2a1b;
-  --sky-bg: #e6eeef;   --sky-panel: #dde6e8;   --sky-ink: #1b3d55;
-  --sand-bg: #efefe8;  --sand-panel: #e8e6da;  --sand-ink: #4a4a1b;
+  /* Colour: one blue, quiet tints.
+     Primary: Purposium blue (#3965FA) is the only strong colour. It marks
+     what's actionable or important: the call to action, the AI sparkle,
+     result numbers. Navy (#1B1B39) and dark grey support it.
+     Secondary hues (green, coral, teal) appear only as very light card tints
+     (8% of the hue on white), never as fills, so they don't compete with the
+     blue. Each family: a card tint (-bg), a slightly deeper panel and a deep
+     ink for tags and numbers (6:1 or more on its tint). Family names are
+     historical: mint is green, lilac blue, rose coral, sky pale blue, sand
+     teal. */
+  --c-blue: #3965fa;
+  --c-navy: #1b1b39;
+  --mint-bg: #f6faf0;  --mint-panel: #f0f8e6;  --mint-ink: #215452;
+  --lilac-bg: #eff3ff; --lilac-panel: #e5ebfe; --lilac-ink: #2a47c8;
+  --rose-bg: #fff3f0;  --rose-panel: #ffece7;  --rose-ink: #6f3432;
+  --sky-bg: #f7f9ff;   --sky-panel: #f2f6ff;   --sky-ink: #1b1b39;
+  --sand-bg: #edf1f1;  --sand-panel: #e2e9e9;  --sand-ink: #215452;
+  --cta-bg: var(--c-blue);
+  --cta-ink: #ffffff;
+  --ai-accent: var(--c-navy);
   /* Type scale: headings at medium weight with tight tracking, the same
      voice as the hero headline; body copy at regular weight. */
   --fs-h2: clamp(1.625rem, 3.94vw, 2rem);
@@ -76,11 +90,16 @@
   --fill: #f2f1ee;
   --fill-ink: #0d0d0d;
   --fade: #3a3a3a;
-  --mint-bg: #1b2a1d;  --mint-panel: #223423;  --mint-ink: #7fd992;
-  --lilac-bg: #241f2c; --lilac-panel: #2c2536; --lilac-ink: #c3a0e8;
-  --rose-bg: #2a201d;  --rose-panel: #332622;  --rose-ink: #e3a58f;
-  --sky-bg: #1a2428;   --sky-panel: #202e33;   --sky-ink: #8fc4dd;
-  --sand-bg: #29271c;  --sand-panel: #332f22;  --sand-ink: #d9c876;
+  --control-edge: #6b6b6b; /* 3.4:1 on the dark ground */
+  /* Dark: about 12% of each hue on the dark ground; inks are the hue
+     lifted toward white (7.5:1 or more on their tint). */
+  --mint-bg: #222919;  --mint-panel: #28321b;  --mint-ink: #c3e88f;
+  --lilac-bg: #181e30; --lilac-panel: #1a223b; --lilac-ink: #99b7fc;
+  --rose-bg: #301f1a;  --rose-panel: #3c231d;  --rose-ink: #ffb39e;
+  --sky-bg: #242830;   --sky-panel: #2b303b;   --sky-ink: #c9d7fd;
+  --sand-bg: #161c1b;  --sand-panel: #161f1f;  --sand-ink: #8fc9c4;
+  --cta-bg: var(--c-blue);
+  --ai-accent: #99b7fc;
 }
 :root[data-theme="dark"] .project { --card: var(--mint-bg); --ink-tag: var(--mint-ink); }
 :root[data-theme="dark"] .project[data-theme="lilac"] { --card: var(--lilac-bg); --ink-tag: var(--lilac-ink); }
@@ -93,7 +112,8 @@
 :root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.6); border-color: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
-:root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
+:root[data-theme="dark"] .tpanel--mono { background: var(--tp); }
+:root[data-theme="dark"] .tpanel--mono.is-active { background: var(--tint); }
 :root[data-theme="dark"] .tdp { background: #2c2c30; }
 :root[data-theme="dark"] .im-tag { background: var(--surface); }
 :root[data-theme="dark"] .im-avatars svg { border-color: var(--surface-2); background: var(--surface-2); }
@@ -336,11 +356,18 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   color: var(--ink);
   border-color: var(--line);
 }
-.nav-ai-ic { color: #bf1363; transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
+.nav-ai-ic { color: var(--ai-accent); transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
-  .btn.nav-ai:hover { background: color-mix(in srgb, #bf1363 10%, var(--bg)); border-color: color-mix(in srgb, #bf1363 45%, var(--line)); }
-  .btn.nav-ai:hover .nav-ai-ic { color: #a0104f; transform: scale(1.12) rotate(90deg); }
+  .btn.nav-ai:hover { background: color-mix(in srgb, var(--ai-accent) 8%, var(--bg)); border-color: color-mix(in srgb, var(--ai-accent) 45%, var(--line)); }
+  .btn.nav-ai:hover .nav-ai-ic { transform: scale(1.12) rotate(90deg); }
 }
+/* Download resume: the call to action, in the CTA blue with a white label.
+   Hover deepens the blue a little. */
+.btn-primary[data-site-resume] { background: var(--cta-bg); color: var(--cta-ink); font-weight: 600; }
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary[data-site-resume]:hover { background: color-mix(in srgb, var(--cta-bg) 86%, #000); }
+}
+@media (forced-colors: active) { .btn-primary[data-site-resume] { background: ButtonFace; color: ButtonText; } }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
@@ -355,7 +382,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .trail-line { fill: none; stroke: url(#trailGrad); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .trail-dot { fill: var(--ink); }
 .trail-node { fill: var(--bg); stroke: var(--ink); stroke-width: 2.2; }
-.trail-lab { position: absolute; font-size: 1rem; font-weight: 500; color: var(--ink-soft); white-space: nowrap; }
+/* Phase labels and the Done capsule: small caps-style labels, widely
+   tracked so the capitals breathe. */
+.trail-lab { position: absolute; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
 .trail-lab { left: var(--x); transform: translateX(-50%); }
 .trail-lab.up { top: 28%; }
 .trail-lab.down { top: 64%; }
@@ -366,12 +395,14 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.1875rem 0.5rem 0.1875rem 0.4375rem;
-  border-radius: 999px;
+  padding: 0.25rem 0.5rem 0.25rem 0.4375rem;
+  border-radius: 0.3125rem;
   background: var(--mint-bg);
   color: var(--mint-ink);
-  font-size: 1rem;
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -397,7 +428,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .br-d { display: none; }
   .hero { --hero-top: calc(var(--pad) + 7.125rem); }
   .trail { position: relative; top: auto; left: auto; right: auto; transform: none; margin-top: 1.125rem; }
-  .trail-lab, .trail-done { font-size: 0.75rem; }
+  .trail-lab, .trail-done { font-size: 0.6875rem; }
 }
 /* Phones: the line drawing comes first, then the headline on one line,
    the intro and the buttons. */
@@ -552,7 +583,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   opacity: 0;
   transform: scale(0.9);
   transform-origin: 0 0;
-  transition: opacity 0.15s var(--ease-out), transform 0.18s var(--ease-out);
+  transition: opacity 0.1s var(--ease-out), transform 0.12s var(--ease-out);
 }
 .proj-tip-in svg { width: 0.875rem; height: 0.875rem; flex: none; }
 .proj-tip.is-on .proj-tip-in { opacity: 1; transform: none; }
@@ -782,6 +813,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .value-meta dd { margin: 0.1875rem 0 0; font-size: var(--fs-body); line-height: 1.45; color: var(--ink); }
 .value-stat { display: flex; align-items: baseline; gap: var(--space-1); margin-top: var(--space-4); }
 .value-num { font-size: 1.625rem; font-weight: 800; letter-spacing: var(--track-heading); line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+/* Result numbers in the palette's dark grey; dark mode uses the ink. */
+.vx-panel .value-num { color: #202020; }
+:root[data-theme="dark"] .vx-panel .value-num { color: var(--ink); }
 .value-cap { font-size: var(--fs-body); color: var(--ink-soft); }
 @media (prefers-reduced-motion: no-preference) {
   .vx-panel.is-on { animation: value-in 0.45s var(--ease-out) both; }
@@ -1051,7 +1085,12 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    sits centred at the top of the tile; when the panel opens it glides to the
    left, above the quote. left + transform animate on a tiny element inside a
    contained panel, so the cost stays local. */
-.tpanel--mono { background: #ececec; }
+/* Each testimonial sits on its own tint all the time (not only on hover);
+   the open panel and hover deepen it a touch. */
+.tpanel--mono { --tp: color-mix(in srgb, var(--tint) 50%, var(--bg)); background: var(--tp); }
+.tpanel--mono .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+:root[data-theme="dark"] .tpanel--mono .tdp { background: rgba(0, 0, 0, 0.25); }
+.tpanel--mono.is-active { background: var(--tint); }
 .tpanel--mono .tside,
 .tpanel--mono .tbody,
 .tpanel--mono .tname strong { color: var(--ink); }
@@ -1076,17 +1115,14 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 }
 .tdp img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); transition: filter 0.5s var(--ease-out); }
 .tpanel.is-active .tdp { left: 1.25rem; transform: none; }
-.tpanel--mono:focus-visible { background: var(--tint); }
-.tpanel--mono:focus-visible .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+
 .tpanel:focus-visible .tdp img { filter: none; }
 @media (hover: hover) and (pointer: fine) {
-  .tpanel--mono:hover { background: var(--tint); }
-  .tpanel--mono:hover .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+  .tpanel--mono:hover, :root[data-theme="dark"] .tpanel--mono:hover { background: var(--tint); }
   .tpanel:hover .tdp img { filter: none; }
 }
 @media (hover: none) {
-  .tpanel--mono.is-active { background: var(--tint); }
-  .tpanel--mono.is-active .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+
   .tpanel.is-active .tdp img { filter: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
@@ -1144,8 +1180,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .tpanel.is-active .tvideo { pointer-events: auto; }
 .tpanel--video.is-active .tdp { opacity: 0; pointer-events: none; }
 .tvideo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.tctl { position: absolute; right: 0.3125rem; bottom: 0.25rem; display: flex; align-items: center; gap: 0.375rem; opacity: 0.6; transition: opacity 0.3s var(--ease-out); }
-.tvideo:hover .tctl, .tvideo:focus-within .tctl { opacity: 1; }
+.tctl { position: absolute; right: 0.375rem; bottom: 0.375rem; display: flex; align-items: center; gap: 0.375rem; padding: 0.1875rem 0.4375rem; border-radius: 999px; background: rgba(13, 13, 13, 0.62); }
 .tbtn {
   display: grid;
   place-items: center;
@@ -1172,7 +1207,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .tmute[aria-pressed="true"] .i-vol { display: none; }
 .tmute[aria-pressed="true"] .i-mute { display: block; }
 .tvol { display: flex; align-items: center; gap: 0.25rem; }
-.tvol-range { width: 0; opacity: 0; margin: 0; height: 0.625rem; accent-color: #fff; cursor: pointer; transition: width 0.35s var(--ease-out), opacity 0.25s var(--ease-out); }
+.tvol-range { width: 0; opacity: 0; margin: 0; height: 0.625rem; accent-color: #fff; outline-color: #fff; cursor: pointer; transition: width 0.35s var(--ease-out), opacity 0.25s var(--ease-out); }
 .tvol:hover .tvol-range, .tvol:focus-within .tvol-range { width: 2.25rem; opacity: 1; }
 @media (hover: none) { .tvol-range { display: none; } }
 @media (max-width: 900px) { .tpanel--video.is-active { flex-basis: 21.125rem; } }
@@ -1254,9 +1289,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   opacity: var(--a);
   cursor: pointer;
   transform: translate(-50%, -50%) translateX(calc(var(--x) * 1cqw)) scale(var(--s));
-  transition: transform 0.65s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.45s var(--ease-out);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.35s var(--ease-out);
 }
-.ab-slide svg { width: 46%; height: 46%; color: var(--tone); opacity: 0.6; }
+.ab-slide svg { width: 46%; height: 46%; color: var(--tone); }
 .ab-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ab-slide[data-o="0"]  { --x: 0;     --s: 1;    --a: 1;   --z: 5; }
 .ab-slide[data-o="1"]  { --x: 19.6;  --s: 0.72; --a: 1;   --z: 4; }
@@ -1277,9 +1312,10 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-story .ab-h2 { position: sticky; top: 4.625rem; }
 .ab-story-body p { max-width: 52ch; margin: 0; font-size: var(--fs-lead); line-height: 1.6; color: var(--ink-soft); }
 .ab-story-body p + p { margin-top: 0.875rem; }
-/* Scroll highlight: each word moves from pale grey to ink as its paragraph
-   passes through the reading zone (script.js sets --k per word). */
-.ab-story-body .w { color: color-mix(in srgb, var(--ink) calc(var(--k, 1) * 100%), var(--fade)); }
+/* Scroll highlight: each word moves from the secondary grey to ink as its
+   paragraph passes through the reading zone (script.js sets --k per word).
+   The grey start keeps unread text at 4.5:1 or more. */
+.ab-story-body .w { color: color-mix(in srgb, var(--ink) calc(var(--k, 1) * 100%), var(--ink-soft)); }
 
 .ab-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-4); margin: 0; }
 .ab-facts > div { position: relative; padding: 0.75rem 0; }
@@ -1478,8 +1514,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .bm-track { display: flex; gap: 0.5rem; width: max-content; padding: 0.625rem 0 0.875rem; }
 .bcv { position: relative; display: flex; flex-direction: column; justify-content: flex-end; flex-shrink: 0; overflow: hidden; width: 6.5rem; height: 9.375rem; border-radius: 0.25rem; background: var(--t); box-shadow: 0 0.625rem 1.125rem rgba(13, 13, 13, 0.12), 0 0 0 1px rgba(13, 13, 13, 0.05); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
 .bcv img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; background: var(--t); }
-.bcv-meta { position: relative; z-index: 1; padding: 1.375rem 0.5rem 0.5rem; background: linear-gradient(to top, rgba(13, 13, 13, 0.82), rgba(13, 13, 13, 0) 75%); }
-.bcv-a { display: block; font-size: 0.4375rem; font-weight: 500; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.75); }
+.bcv-meta { position: relative; z-index: 1; padding: 1.5rem 0.5rem 0.5rem; background: linear-gradient(to top, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.78) 56%, rgba(13, 13, 13, 0.36) 80%, rgba(13, 13, 13, 0)); padding-top: 2.25rem; }
+.bcv-a { display: block; font-size: 0.5rem; font-weight: 500; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.88); }
 .bcv-t { display: block; margin-top: 0.0625rem; font-size: 0.625rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.15; color: #fff; }
 .bcv-tag { position: absolute; z-index: 2; top: 0.4375rem; right: 0.4375rem; padding: 0.125rem 0.3125rem; border-radius: 0.1875rem; background: var(--fill); color: var(--fill-ink); font-size: 0.4375rem; font-weight: 500; }
 @media (hover: hover) and (pointer: fine) { .bcv:hover { transform: translateY(-0.4375rem) scale(1.04); box-shadow: 0 1rem 1.625rem rgba(13, 13, 13, 0.2), 0 0 0 1px rgba(13, 13, 13, 0.06); } }
@@ -1519,8 +1555,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 /* =========================================================
    About: Where I've been, What I believe, Now, Questions people ask.
    ========================================================= */
-.ab { --accent: #bf1363; }
-:root[data-theme="dark"] .ab { --accent: #f07aa8; }
+.ab { --accent: var(--lilac-ink); }
 .ab-sub { margin: 0.3125rem 0 0; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
 
 /* Where I've been: the home page's line, tangled at the start and straight
@@ -1560,14 +1595,14 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .pr-list { margin: var(--space-4) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline); }
 .pr-list li { border-bottom: 1px solid var(--hairline); }
 .pr-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; padding: 1.125rem 0; color: inherit; text-decoration: none; }
-.pr-q { max-width: 32ch; font-size: clamp(1.25rem, 2.6vw, 1.75rem); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.2; color: var(--ink); transition: color 0.25s ease; }
+.pr-q { max-width: 36ch; font-size: clamp(1.125rem, 2vw, 1.4375rem); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.2; color: var(--ink); transition: color 0.25s ease; }
 .pr-link { display: inline-flex; align-items: center; gap: 0.4375rem; flex: none; font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); white-space: nowrap; transition: color 0.2s ease; }
 .pr-link::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--k); }
 .pr-link svg { opacity: 0; transform: translate(-4px, 4px); transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out); }
 .pr-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 .pr-row:focus-visible .pr-link, .pr-row:focus-visible .pr-link svg { color: var(--ink); opacity: 1; transform: none; }
 @media (hover: hover) and (pointer: fine) {
-  .pr-list:hover li:not(:hover) .pr-q { color: color-mix(in srgb, var(--ink) 28%, var(--bg)); }
+  .pr-list:hover li:not(:hover) .pr-q { color: var(--ink-soft); }
   .pr-row:hover .pr-link { color: var(--ink); }
   .pr-row:hover .pr-link svg { opacity: 1; transform: none; }
 }
@@ -1646,8 +1681,10 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 /* Filter: a segmented control that stays within reach under the nav while
    the list scrolls. The dark thumb slides to the chosen option (script.js
    20 sets its position and width). */
+:root[data-theme="dark"] .wk-filter { --fill: #f2f1ee; }
 .wk-filter-bar { position: sticky; top: 4.375rem; z-index: 5; margin-top: var(--space-5); }
 .wk-filter {
+  --fill: #202020;
   position: relative;
   display: inline-flex;
   padding: 0.1875rem;
@@ -1686,7 +1723,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   cursor: pointer;
   transition: color 0.25s ease;
 }
-.wk-seg-n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; opacity: 0.6; }
+.wk-seg-n { font-size: var(--fs-small); font-variant-numeric: tabular-nums; }
 .wk-seg[aria-pressed="true"] { color: var(--fill-ink); }
 /* Without script the pressed option still reads as selected. */
 .wk-filter:not(.is-ready) .wk-seg[aria-pressed="true"] { background: var(--fill); }
@@ -1999,7 +2036,7 @@ body.ask-open .shell-scrollbar {
   background: #fff;
   border-radius: 16px;
   padding: 14px 18px 47px;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+  box-shadow: inset 0 0 0 1px var(--control-edge), 0 1px 2px rgba(0, 0, 0, 0.03);
 }
 .ask-panel-input {
   display: block;
@@ -2046,7 +2083,7 @@ body.ask-open .shell-scrollbar {
 /* Dark theme: the typing box follows the theme (it stayed white, so typed
    text was white on white), and the active send button's arrow turns dark
    to stay visible on its now-light circle. */
-:root[data-theme="dark"] .ask-panel-form { background: var(--bg); box-shadow: inset 0 0 0 1px var(--line); }
+:root[data-theme="dark"] .ask-panel-form { background: var(--bg); box-shadow: inset 0 0 0 1px var(--control-edge); }
 :root[data-theme="dark"] .ask-panel-send:not(:disabled) { color: var(--bg); }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2169,11 +2206,11 @@ body.ask-open .shell-scrollbar {
   cursor: pointer;
   transition: background-color 0.25s ease, border-color 0.25s ease, transform 0.15s var(--ease-out);
 }
-.cs-ask-ic { display: inline-grid; color: #bf1363; transition: transform 0.3s var(--ease-out); }
+.cs-ask-ic { display: inline-grid; color: var(--ai-accent); transition: transform 0.3s var(--ease-out); }
 .cs-ask:active { transform: scale(0.97); }
 .cs-ask:focus-visible { outline: 2px solid var(--ink); outline-offset: 2.64px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-ask:hover { background: color-mix(in srgb, #bf1363 10%, var(--bg)); border-color: color-mix(in srgb, #bf1363 45%, var(--line)); }
+  .cs-ask:hover { background: color-mix(in srgb, var(--ai-accent) 8%, var(--bg)); border-color: color-mix(in srgb, var(--ai-accent) 45%, var(--line)); }
   .cs-ask:hover .cs-ask-ic { transform: scale(1.12) rotate(90deg); }
 }
 /* Below 1200px there's no room beside the content for the chapter list. */
