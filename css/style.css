@@ -115,8 +115,7 @@
 :root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.74); border-color: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
-:root[data-theme="dark"] .tpanel--mono { background: var(--tp); }
-:root[data-theme="dark"] .tpanel--mono.is-active { background: var(--tint); }
+:root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
 :root[data-theme="dark"] .tdp { background: #2c2c30; }
 :root[data-theme="dark"] .im-tag { background: var(--surface); }
 :root[data-theme="dark"] .im-avatars svg { border-color: var(--surface-2); background: var(--surface-2); }
@@ -1090,10 +1089,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    contained panel, so the cost stays local. */
 /* Each testimonial sits on its own tint all the time (not only on hover);
    the open panel and hover deepen it a touch. */
-.tpanel--mono { --tp: color-mix(in srgb, var(--tint) 50%, var(--bg)); background: var(--tp); }
-.tpanel--mono .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
-:root[data-theme="dark"] .tpanel--mono .tdp { background: rgba(0, 0, 0, 0.25); }
-.tpanel--mono.is-active { background: var(--tint); }
+/* Testimonials are plain grey (palette Light Gray) and show their colour
+   only when pointed at or focused; on touch screens, while open. */
+.tpanel--mono { background: #ededed; }
 .tpanel--mono .tside,
 .tpanel--mono .tbody,
 .tpanel--mono .tname strong { color: var(--ink); }
@@ -1118,14 +1116,20 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 }
 .tdp img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); transition: filter 0.5s var(--ease-out); }
 .tpanel.is-active .tdp { left: 1.25rem; transform: none; }
-
+.tpanel--mono:focus-visible, :root[data-theme="dark"] .tpanel--mono:focus-visible { background: var(--tint); }
+.tpanel--mono:focus-visible .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+:root[data-theme="dark"] .tpanel--mono:focus-visible .tdp { background: rgba(0, 0, 0, 0.25); }
 .tpanel:focus-visible .tdp img { filter: none; }
 @media (hover: hover) and (pointer: fine) {
   .tpanel--mono:hover, :root[data-theme="dark"] .tpanel--mono:hover { background: var(--tint); }
+  .tpanel--mono:hover .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+  :root[data-theme="dark"] .tpanel--mono:hover .tdp { background: rgba(0, 0, 0, 0.25); }
   .tpanel:hover .tdp img { filter: none; }
 }
 @media (hover: none) {
-
+  .tpanel--mono.is-active, :root[data-theme="dark"] .tpanel--mono.is-active { background: var(--tint); }
+  .tpanel--mono.is-active .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
+  :root[data-theme="dark"] .tpanel--mono.is-active .tdp { background: rgba(0, 0, 0, 0.25); }
   .tpanel.is-active .tdp img { filter: none; }
 }
 @media (prefers-reduced-motion: no-preference) {
