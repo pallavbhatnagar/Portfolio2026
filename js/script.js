@@ -210,19 +210,11 @@
     const vid = vPanel?.querySelector("video");
     let userPaused = false;
     let stripSeen = false; // the video loads and plays only once the strip is on screen
-    // Sound on by default. Browsers refuse to start a video with sound before
-    // the visitor has interacted with the page; then it plays muted and the
-    // sound comes on at the first tap, click or key press.
+    // Plays muted; the visitor turns the sound on with the mute button.
     const playVideo = () => {
       if (!vid || !stripSeen || userPaused || reduce.matches) return;
       if (vid.preload === "none") { vid.preload = "auto"; vid.load(); }
-      vid.muted = false;
-      vid.play().catch(() => {
-        vid.muted = true;
-        vid.play().catch(() => {});
-        const unmute = () => { vid.muted = false; };
-        ["pointerdown", "keydown"].forEach((t) => window.addEventListener(t, unmute, { once: true, capture: true }));
-      });
+      vid.play().catch(() => {});
     };
     const open = (panel) => {
       panels9.forEach((p) => {
@@ -251,14 +243,12 @@
     if (vid) {
       const playBtn = vPanel.querySelector(".tplay");
       const muteBtn = vPanel.querySelector(".tmute");
-      let userMuted = false; // a visitor's own choice wins over sound-on-by-default
       const syncMute = () => {
         muteBtn.setAttribute("aria-pressed", String(vid.muted));
         muteBtn.setAttribute("aria-label", vid.muted ? "Unmute" : "Mute");
       };
-      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); vid.muted = !vid.muted; userMuted = vid.muted; });
+      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); vid.muted = !vid.muted; });
       vid.addEventListener("volumechange", syncMute);
-      vid.addEventListener("play", () => { if (userMuted) vid.muted = true; });
       syncMute();
       const syncPlay = () => {
         const playing = !vid.paused && !vid.ended;
@@ -268,7 +258,7 @@
       playBtn.addEventListener("click", (e) => {
         e.stopPropagation();
         userPaused = !vid.paused;
-        if (vid.paused) { vid.muted = false; vid.play().catch(() => {}); } else vid.pause();
+        if (vid.paused) vid.play().catch(() => {}); else vid.pause();
       });
       vid.addEventListener("play", syncPlay);
       vid.addEventListener("pause", syncPlay);
@@ -868,7 +858,7 @@
       const src = (omPlayer.dataset.scSrc || "").trim();
       const params = new URLSearchParams({
         url: src, auto_play: "true", hide_related: "true", show_comments: "false",
-        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
+        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#99b7fc",
       });
       const frame = document.createElement("iframe");
       frame.src = `https://w.soundcloud.com/player/?${params.toString()}`;
@@ -1044,7 +1034,7 @@
   const renderMusicCard = () => {
     const params = new URLSearchParams({
       url: "https://api.soundcloud.com/playlists/1589234278", auto_play: "false", hide_related: "true",
-      show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
+      show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#99b7fc",
     });
     return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Sketches and scores on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.4375rem;display:block" allow="autoplay"></iframe>`;
   };
