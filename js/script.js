@@ -71,6 +71,7 @@
     };
     return { load, play };
   })();
+  window.siteSfx = sfx; // shared with pixel-dog.js (the dog's bark)
 
   // 2) Sleek auto-hide scrollbars: a thin, near-invisible thumb that fades
   //    in only while a container is actively scrolling (CSS has no
@@ -725,6 +726,29 @@
     t.setAttribute("datetime", `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   });
 
+  // 15b) About books: "Right now" changes every two weeks. Each two-week
+  //      period since 5 Jan 2026 picks a book from the shelf (stepping by 7
+  //      through the list, so it jumps around and every book comes up before
+  //      any repeats), and everyone sees the same one. The pick gets the
+  //      "Reading" tag on the shelf.
+  const shelf = document.querySelector(".bm-track");
+  const readingEl = document.querySelector("[data-reading]");
+  if (shelf && readingEl) {
+    const covers = Array.from(shelf.querySelectorAll(".bcv[data-book]"));
+    const n = covers.length / 2;
+    const period = Math.floor((Date.now() - Date.UTC(2026, 0, 5)) / (14 * 864e5));
+    const pick = (((period * 7 + 3) % n) + n) % n;
+    covers.forEach((cv) => {
+      const on = Number(cv.dataset.book) === pick;
+      cv.classList.toggle("is-reading", on);
+      const tag = cv.querySelector(".bcv-tag");
+      if (on && !tag) cv.insertAdjacentHTML("beforeend", '<span class="bcv-tag">Reading</span>');
+      if (!on && tag) tag.remove();
+    });
+    const title = covers.find((cv) => Number(cv.dataset.book) === pick)?.querySelector(".bcv-t")?.textContent;
+    if (title) readingEl.textContent = title + ".";
+  }
+
   // 15) About carousel: an endless loop. Each slide gets data-o (its offset
   //     from the centre, -4..4); CSS turns that into size and position.
   //     Every 2s the next slide glides in. Keeps running under the mouse;
@@ -858,7 +882,7 @@
       const src = (omPlayer.dataset.scSrc || "").trim();
       const params = new URLSearchParams({
         url: src, auto_play: "true", hide_related: "true", show_comments: "false",
-        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
+        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#b6e37b",
       });
       const frame = document.createElement("iframe");
       frame.src = `https://w.soundcloud.com/player/?${params.toString()}`;
@@ -1034,7 +1058,7 @@
   const renderMusicCard = () => {
     const params = new URLSearchParams({
       url: "https://api.soundcloud.com/playlists/1589234278", auto_play: "false", hide_related: "true",
-      show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#9be7b8",
+      show_comments: "false", show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#b6e37b",
     });
     return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Sketches and scores on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.4375rem;display:block" allow="autoplay"></iframe>`;
   };

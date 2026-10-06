@@ -277,12 +277,17 @@
     setTimeout(() => b.remove(), ms);
   };
   // Click or tap: a little bark (assets/audio/sound-effects) and a heart.
-  const bark = new Audio("/assets/audio/sound-effects/puppy.mp3");
-  bark.preload = "none";
-  const heart = () => {
+  // The bark goes through the site's sound player (script.js), which fetches
+  // and decodes it ahead of time and skips the MP3's silent start, and it
+  // plays on pointer down rather than on release, so it lands with the tap.
+  // Keyboard presses (click with no pointer) bark on the click itself.
+  const sfx = window.siteSfx;
+  if (sfx) sfx.load("puppy.mp3");
+  const barkNow = () => { if (sfx) sfx.play("puppy.mp3"); };
+  el.addEventListener("pointerdown", barkNow);
+  const heart = (e) => {
     bubble("pxdog-heart", 1100);
-    bark.currentTime = 0;
-    bark.play().catch(() => {});
+    if (e && e.detail === 0) barkNow();
   };
 
   // Where he can stand: the gap above each section (never on its text),
@@ -351,7 +356,7 @@
       x = rand(left + 16, Math.max(left + 16, right - 16));
       face = Math.random() < 0.5 ? 1 : -1;
       el.style.clipPath = "inset(0 0 100% 0)";
-      steps = [{ peek: true, ms: rand(1800, 2600) }, { end: true }];
+      steps = [{ peek: true, ms: rand(2400, 3400) }, { end: true }];
       step = null; busy = true; lostFor = 0;
       requestAnimationFrame(tick);
       return;
@@ -430,16 +435,24 @@
     } else if (step.peek) {
       // Rise from behind the card (only what is above its edge shows),
       // look at you and wag, then sink back. Strong ease-out both ways.
+      // Pointing at him keeps him up; a tap makes him pop up a little
+      // higher (and wag faster) before settling.
       const d = size(), top = perch.getBoundingClientRect().top - hostBox().top;
-      const show = d.height * 0.62, up = 380, down = 320;
+      const show = d.height * 0.66, up = 380, down = 320;
       const out = (t) => 1 - Math.pow(1 - t, 3);
+      if (hovered && age > up) step.ms = Math.max(step.ms, age - up + 400);
       let k = 1;
       if (age < up) k = out(age / up);
       else if (age > up + step.ms) k = 1 - out(Math.min(1, (age - up - step.ms) / down));
-      if (frameT >= 300) { frameT = 0; frameI = (frameI + 1) % SPRITES.front.length; }
+      const sinceTap = step.tapAt ? now - step.tapAt : Infinity;
+      const pop = sinceTap < 460 ? Math.sin((sinceTap / 460) * Math.PI) * d.height * 0.2 : 0;
+      if (frameT >= (sinceTap < 1200 ? 140 : 300)) { frameT = 0; frameI = (frameI + 1) % SPRITES.front.length; }
       draw(SPRITES.front[frameI]);
-      y = top - show * k;
-      el.style.clipPath = `inset(0 0 ${Math.max(0, d.height - show * k)}px 0)`;
+      const shown = show * k + pop;
+      y = top - shown;
+      // Only what is above the card's edge shows. The clip reaches past his
+      // top and sides so the heart above his head isn't cut off.
+      el.style.clipPath = `inset(-3rem -1.5rem ${Math.max(0, d.height - shown)}px -1.5rem)`;
       if (age >= up + step.ms + down) step = null;
     } else if (step.end) {
       return stop(rand(11000, 22000));
@@ -448,10 +461,21 @@
     requestAnimationFrame(tick);
   }
 
-  // Click or tap: a hop, a bark and a heart. Asleep, he wakes and looks at you.
-  el.addEventListener("click", () => {
-    heart();
-    if (!step || step.hop || step.peek) return;
+  let hovered = false;
+  el.addEventListener("pointerenter", () => { hovered = true; });
+  el.addEventListener("pointerleave", () => { hovered = false; });
+
+  // Click or tap: a hop, a bark and a heart. Asleep, he wakes and looks at
+  // you. Peeking, he pops up and stays a while longer.
+  el.addEventListener("click", (e) => {
+    heart(e);
+    if (step && step.peek) {
+      const age = performance.now() - t0;
+      step.ms = Math.max(step.ms, age - 380 + 1600);
+      step.tapAt = performance.now();
+      return;
+    }
+    if (!step || step.hop) return;
     if (step.pose === "nap") { step = { pose: "front", ms: 1400, every: 300 }; t0 = performance.now(); frameI = 0; return; }
     steps.unshift({ hop: true }, step);
     step = null;
