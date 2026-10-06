@@ -726,12 +726,27 @@
     t.setAttribute("datetime", `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   });
 
-  // 15b) About books: "Right now" changes every two weeks. Each two-week
+  // 15b) About books: a random order on every visit, and "Right now"
+  //      changes every two weeks. Each two-week
   //      period since 5 Jan 2026 picks a book from the shelf (stepping by 7
   //      through the list, so it jumps around and every book comes up before
   //      any repeats), and everyone sees the same one. The pick gets the
   //      "Reading" tag on the shelf.
   const shelf = document.querySelector(".bm-track");
+  // The shelf is in a random order on every visit. It holds the books twice
+  // (the second set loops the scroll), so both sets get the same order.
+  if (shelf) {
+    const all = Array.from(shelf.querySelectorAll(".bcv[data-book]"));
+    const half = all.length / 2;
+    const order = Array.from({ length: half }, (_, i) => i);
+    for (let i = order.length - 1; i > 0; i--) {
+      const k = Math.floor(Math.random() * (i + 1));
+      [order[i], order[k]] = [order[k], order[i]];
+    }
+    const frag = document.createDocumentFragment();
+    [0, 1].forEach((set) => order.forEach((i) => frag.appendChild(all[set * half + i])));
+    shelf.appendChild(frag);
+  }
   const readingEl = document.querySelector("[data-reading]");
   if (shelf && readingEl) {
     const covers = Array.from(shelf.querySelectorAll(".bcv[data-book]"));

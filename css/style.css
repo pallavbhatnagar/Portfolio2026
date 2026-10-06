@@ -114,7 +114,7 @@
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
-:root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.74); border-color: rgba(255, 255, 255, 0.08); }
+:root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.84); border-color: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.08); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
 :root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
@@ -1525,8 +1525,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .bk-edit { position: relative; display: inline-block; }
 .bk-old { position: relative; color: var(--ink-soft); }
 .bk-strike { position: absolute; left: -3%; top: 40%; width: 106%; height: 0.5em; overflow: visible; }
-.bk-edit { --edit: #ac4c3b; } /* palette red (#FF6D47) 42% + palette brown (#6F3432): 4.6:1 on the light card */
-:root[data-theme="dark"] .bk-edit { --edit: #ff6d47; }
+.bk-edit { --edit: #cc1f1a; } /* bright red: 4.75:1 on the light books card */
+:root[data-theme="dark"] .bk-edit { --edit: #ff3b30; } /* bright red: 4.6:1 on the dark card */
 .bk-strike path { fill: none; stroke: var(--edit); stroke-width: 2.5; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .bk-new { position: absolute; left: 50%; bottom: 82%; font-size: 0.72em; font-weight: 600; letter-spacing: 0; white-space: nowrap; color: var(--edit); transform: translateX(-50%) rotate(-6deg); }
 .bm { position: relative; margin: 0.875rem -1.125rem -0.25rem; padding-top: 0.625rem; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
@@ -1539,8 +1539,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .bcv-tag { position: absolute; z-index: 2; top: 0.4375rem; right: 0.4375rem; padding: 0.125rem 0.375rem; border-radius: 0.1875rem; background: var(--fill); color: var(--fill-ink); font-size: 0.625rem; font-weight: 500; }
 @media (hover: hover) and (pointer: fine) { .bcv:hover { transform: translateY(-0.4375rem) scale(1.04); box-shadow: 0 1rem 1.625rem rgba(13, 13, 13, 0.2), 0 0 0 1px rgba(13, 13, 13, 0.06); } }
 @media (prefers-reduced-motion: no-preference) {
-  .bm-track { animation: bm 133s linear infinite; }
-  .bm:hover .bm-track, .bm:focus-visible .bm-track { animation-play-state: paused; }
+  .bm-track { animation: bm 120s linear infinite; }
+  .bm:focus-visible .bm-track { animation-play-state: paused; } /* keyboard focus pauses it; hover does not */
   .js .off-grid:not(.is-in) .bk-strike path { stroke-dashoffset: 1; }
   .bk-strike path { transition: stroke-dashoffset 0.6s cubic-bezier(0.32, 0.72, 0, 1) 0.9s; }
   .js .off-grid:not(.is-in) .bk-new { opacity: 0; transform: translateX(-50%) translateY(0.25em) rotate(-6deg) scale(0.9); }
@@ -2196,7 +2196,7 @@ body.ask-open .shell-scrollbar {
    list. Always there; the chapter you're reading is highlighted (script). */
 .cs-side {
   position: fixed;
-  top: calc(var(--pad) + 5.125rem);
+  top: calc(var(--pad) + 4.09rem); /* "On this page" sits on the title's baseline */
   left: clamp(1.5rem, 3vw, 3rem);
   z-index: 5;
   display: flex;
@@ -2244,33 +2244,26 @@ body.ask-open .shell-scrollbar {
    (case.js). The category is plain text. */
 .cs-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.625rem; font-size: 1rem; font-weight: 500; color: var(--ink-soft); }
 .cs-crumb-back { display: inline-flex; align-items: center; gap: 0.375rem; margin: -0.3125rem -0.375rem; padding: 0.3125rem 0.375rem; border-radius: 0.3125rem; color: var(--ink); transition: background-color 0.2s ease; }
-.cs-crumb-back svg { flex: none; transition: transform 0.25s var(--ease-out); }
+.cs-crumb-back svg { flex: none; }
 .cs-crumb-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
 @media (hover: hover) and (pointer: fine) {
   .cs-crumb-back:hover { background: var(--surface); }
-  .cs-crumb-back:hover svg { transform: translateX(-2px); }
 }
 .cs-crumb-sep { color: var(--ink-dim); }
-@media (prefers-reduced-motion: reduce) { .cs-crumb-back svg { transition: none; } }
 .cs-crumbs { margin-bottom: 0.25rem; }
 
-/* Chapter rail (desktop, wide windows): "Back" to Works, the project's
-   name, then the chapters with a thin line beside them that fills as you
-   read (case.js). Where the rail is hidden (narrower windows, chat open)
+/* Chapter rail (desktop, wide windows): Back (an arrow in a circle; it
+   goes back to the previous page, case.js), "On this page", then the
+   chapters. Where the rail is hidden (narrower windows, chat open)
    the breadcrumb above the title is the way back instead. */
-.cs-rail-back { display: inline-flex; align-items: center; gap: 0.375rem; margin: -0.3125rem -0.375rem; padding: 0.3125rem 0.375rem; border-radius: 0.3125rem; font-size: 1rem; font-weight: 500; color: var(--ink); transition: background-color 0.2s ease; }
-.cs-rail-back svg { flex: none; transition: transform 0.25s var(--ease-out); }
-.cs-rail-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.cs-rail-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
+.cs-rail-back svg { flex: none; }
+.cs-rail-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-rail-back:hover { background: var(--surface); }
-  .cs-rail-back:hover svg { transform: translateX(-2px); }
+  .cs-rail-back:hover { background: var(--surface); border-color: var(--ink); }
 }
 .cs-rail-name { max-width: 11rem; margin: 1.25rem 0 0.625rem; font-size: var(--fs-small); line-height: 1.35; color: var(--ink-soft); }
-.cs-rail-chapters { position: relative; padding-left: 0.875rem; }
-.cs-rail-progress { position: absolute; top: 0; bottom: 0; left: 0; width: 2px; border-radius: 2px; background: var(--hairline); }
-.cs-rail-progress span { position: absolute; inset: 0; border-radius: 2px; background: var(--ink); transform: scaleY(0); transform-origin: top; }
-.cs-gated .cs-rail-chapters, .cs-gated .cs-rail-name { display: none; }
-@media (prefers-reduced-motion: reduce) { .cs-rail-back svg { transition: none; } }
+.cs-gated .cs-rail-name { display: none; }
 /* With the rail showing, the breadcrumb keeps just the category. */
 @media (min-width: 1201px) {
   body:not(.ask-open) .cs-crumb-back, body:not(.ask-open) .cs-crumb-sep { display: none; }

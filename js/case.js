@@ -36,24 +36,15 @@
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
     let from = null;
     try { from = document.referrer ? new URL(document.referrer) : null; } catch (err) { from = null; }
-    const fromWorks = from && from.origin === location.origin && /^\/works(\.html)?\/?$/.test(from.pathname);
-    if (fromWorks && history.length > 1) { e.preventDefault(); history.back(); }
+    const sameSite = from && from.origin === location.origin;
+    const fromWorks = sameSite && /^\/works(\.html)?\/?$/.test(from.pathname);
+    // data-back="history" (the rail's Back): back to wherever you came from
+    // on this site. Otherwise (the breadcrumb's Works): back only if that
+    // was the Works page. Either way, with nothing to go back to (a shared
+    // link, a new tab), the link opens /works.
+    const goBack = link.dataset.back === "history" ? sameSite : fromWorks;
+    if (goBack && history.length > 1) { e.preventDefault(); history.back(); }
   });
-
-  // ---------- Chapter rail: reading progress (desktop) ----------
-  // A thin line beside the chapter list fills as you read the case study.
-  const railBar = root.querySelector(".cs-rail-progress span");
-  if (railBar) {
-    const body = root.querySelector(".cs-body") || root;
-    const track = () => {
-      const r = body.getBoundingClientRect();
-      const k = Math.min(1, Math.max(0, (innerHeight * 0.4 - r.top) / Math.max(1, r.height - innerHeight * 0.4)));
-      railBar.style.transform = `scaleY(${k})`;
-    };
-    addEventListener("scroll", track, { passive: true });
-    addEventListener("resize", track);
-    track();
-  }
 
   document.querySelectorAll("[data-back]").forEach(smartBack);
 
