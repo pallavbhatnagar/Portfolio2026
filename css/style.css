@@ -392,6 +392,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .trail-line { fill: none; stroke: url(#trailGrad); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .trail-dot { fill: var(--ink); }
 
+/* About: looping animations pause while their section is off screen (script.js). */
+.is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
 /* Off screen, the drawing pauses (script.js) so it costs nothing while you read. */
 .trail.is-paused, .trail.is-paused * { animation-play-state: paused !important; }
 .trail-node { fill: var(--bg); stroke: var(--ink); stroke-width: 2.2; }
@@ -1089,13 +1091,12 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 6.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
 .edge-blur.is-off, body.ask-open .edge-blur { opacity: 0; }
 .edge-blur i { position: absolute; inset: 0; }
-.edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(0.5px); backdrop-filter: blur(0.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 33%, transparent 50%); mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 33%, transparent 50%); }
-.edge-blur i:nth-child(2) { -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); -webkit-mask-image: linear-gradient(to bottom, transparent 16%, #000 33%, #000 50%, transparent 66%); mask-image: linear-gradient(to bottom, transparent 16%, #000 33%, #000 50%, transparent 66%); }
-.edge-blur i:nth-child(3) { -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); -webkit-mask-image: linear-gradient(to bottom, transparent 33%, #000 50%, #000 66%, transparent 83%); mask-image: linear-gradient(to bottom, transparent 33%, #000 50%, #000 66%, transparent 83%); }
-.edge-blur i:nth-child(4) { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to bottom, transparent 50%, #000 66%, #000 83%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 50%, #000 66%, #000 83%, transparent 100%); }
-.edge-blur i:nth-child(5) { -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); -webkit-mask-image: linear-gradient(to bottom, transparent 66%, #000 83%); mask-image: linear-gradient(to bottom, transparent 66%, #000 83%); }
-.edge-blur i:nth-child(6) { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); -webkit-mask-image: linear-gradient(to bottom, transparent 80%, #000 100%); mask-image: linear-gradient(to bottom, transparent 80%, #000 100%); }
-@media (max-width: 640px) { .edge-blur { height: 4.5rem; } .edge-blur i:nth-child(6) { display: none; } }
+/* Three layers (sharp to soft): each blurs a little more and covers a lower
+   band, so the ramp reads smooth at a third of the cost of six. */
+.edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 55%, transparent 80%); mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 55%, transparent 80%); }
+.edge-blur i:nth-child(2) { -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); -webkit-mask-image: linear-gradient(to bottom, transparent 30%, #000 60%, #000 80%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 30%, #000 60%, #000 80%, transparent 100%); }
+.edge-blur i:nth-child(3) { -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); -webkit-mask-image: linear-gradient(to bottom, transparent 60%, #000 100%); mask-image: linear-gradient(to bottom, transparent 60%, #000 100%); }
+@media (max-width: 640px) { .edge-blur { height: 4.5rem; } }
 @media print { .edge-blur { display: none; } }
 
 /* Ambient music: a speaker beside the theme switch. Muted (with an x) by

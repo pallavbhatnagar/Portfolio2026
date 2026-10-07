@@ -453,7 +453,7 @@
     const edge = document.createElement("div");
     edge.className = "edge-blur";
     edge.setAttribute("aria-hidden", "true");
-    edge.innerHTML = "<i></i><i></i><i></i><i></i><i></i><i></i>";
+    edge.innerHTML = "<i></i><i></i><i></i>";
     document.body.appendChild(edge);
     const foot = document.querySelector(".site-footer");
     if (foot && "IntersectionObserver" in window) {
@@ -950,6 +950,18 @@
     t.textContent = d.toLocaleDateString("en-GB", { month: "long", year: "numeric" });
     t.setAttribute("datetime", `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   });
+
+  // 15a) About: the looping animations (the career path's pulsing ring, the
+  //      playlist card's vinyl and waveform, the book shelf) pause while
+  //      their section is off screen, so they cost nothing while you read
+  //      elsewhere. CSS: .is-offscreen.
+  const loops = document.querySelectorAll(".ab-path, .off-music, .off-books");
+  if (loops.length && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((en) => en.target.classList.toggle("is-offscreen", !en.isIntersecting));
+    }, { rootMargin: "100px 0px" });
+    loops.forEach((el) => io.observe(el));
+  }
 
   // 15b) About books: a random order on every visit, and "Right now"
   //      changes every two weeks. Each two-week

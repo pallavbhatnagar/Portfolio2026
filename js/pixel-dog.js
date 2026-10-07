@@ -312,6 +312,28 @@
   let x = 0, y = 0, face = 1, jumpY = 0, perch = null;
   const place = () => { el.style.transform = `translate(${x}px, ${y - jumpY}px) scaleX(${face})`; };
 
+  // While he moves, where things are is read once and kept: re-read only
+  // after the page scrolls or changes size (or he picks a new spot), never
+  // on a quiet frame. Reading layout every frame kept the browser busy.
+  let m = null, stale = true;
+  const measure = () => {
+    if (!stale && m) return m;
+    const hb = hostBox(), pb = perch.getBoundingClientRect();
+    const d = { width: el.offsetWidth, height: el.offsetHeight };
+    m = {
+      d, perchTop: pb.top,
+      perchOff: pb.top - hb.top, // his perch, relative to the page column
+      left: Math.max(pb.left, hb.left) - hb.left,
+      right: Math.min(pb.right, hb.right) - hb.left - d.width
+    };
+    stale = false;
+    return m;
+  };
+  const markStale = () => { stale = true; };
+  document.addEventListener("scroll", markStale, { capture: true, passive: true });
+  window.addEventListener("resize", markStale);
+  if ("ResizeObserver" in window) new ResizeObserver(markStale).observe(host);
+
   if (reduce) {
     // Reduced motion: he sits still above the last section, re-measured
     // whenever the page settles or resizes (fonts and images move it).
@@ -357,7 +379,7 @@
       face = Math.random() < 0.5 ? 1 : -1;
       el.style.clipPath = "inset(0 0 100% 0)";
       steps = [{ peek: true, ms: rand(2400, 3400) }, { end: true }];
-      step = null; busy = true; lostFor = 0;
+      step = null; busy = true; lostFor = 0; stale = true;
       requestAnimationFrame(tick);
       return;
     }
@@ -372,7 +394,7 @@
     face = fromLeft ? 1 : -1;
     steps = [{ run: rand(left + (right - left) * 0.15, left + (right - left) * 0.85) }, { idle: rand(400, 700) }, ...things()];
     steps.push({ runOff: true }, { end: true });
-    step = null; busy = true; lostFor = 0;
+    step = null; busy = true; lostFor = 0; stale = true;
     place();
     requestAnimationFrame(tick);
   }
@@ -382,7 +404,7 @@
 
   // Fill in a step's target from where he is now.
   function begin(s) {
-    const { left, right } = span(perch), d = size();
+    const { left, right, d } = measure();
     const clamp = (v) => Math.max(left, Math.min(right, v));
     if (s.sniffBy) s.sniff = clamp(x + face * s.sniffBy);
     if (s.trot !== undefined) s.run = clamp(x + s.trot);
@@ -403,9 +425,10 @@
     const dt = Math.min(64, now - last); last = now;
     const age = now - t0;
     frameT += dt;
-    if (!step.peek) y = perchY(perch); // follows the page if it shifts
+    const mm = measure();
+    if (!step.peek) y = mm.perchOff - mm.d.height + 2; // follows the page if it shifts
     // Scrolled away from him? Leave, and come back near the reader soon.
-    const pt = perch.getBoundingClientRect().top;
+    const pt = mm.perchTop;
     lostFor = pt < -innerHeight * 0.15 || pt > innerHeight * 1.1 ? lostFor + dt : 0;
     if (lostFor > 700) return stop(rand(11000, 22000));
 
@@ -437,7 +460,7 @@
       // look at you and wag, then sink back. Strong ease-out both ways.
       // Pointing at him keeps him up; a tap makes him pop up a little
       // higher (and wag faster) before settling.
-      const d = size(), top = perch.getBoundingClientRect().top - hostBox().top;
+      const d = mm.d, top = mm.perchOff;
       const show = d.height * 0.66, up = 380, down = 320;
       const out = (t) => 1 - Math.pow(1 - t, 3);
       if (hovered && age > up) step.ms = Math.max(step.ms, age - up + 400);
