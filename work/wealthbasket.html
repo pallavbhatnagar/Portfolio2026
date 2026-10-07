@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<style>@view-transition { navigation: auto; }</style>
 <link rel="icon" href="/assets/favicon/favicon.ico" sizes="any" />
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png" />
 <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon/favicon-16x16.png" />
@@ -27,8 +26,7 @@
 <link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
-<script>/* Page transitions: the clicked project's image grows into its case study cover (and back). Only that one image is named, only during the transition. */(function(){if(!document.startViewTransition)return;var slugOf=function(u){try{var m=new URL(u,location.href).pathname.match(/^\/work\/([a-z0-9-]+?)(?:\.html)?\/?$/);return m&&m[1];}catch(e){return null;}};var reduce=function(){return matchMedia("(prefers-reduced-motion: reduce)").matches;};var here=slugOf(location.href);var mark=function(slug,vt,arriving){if(!slug||!vt||reduce())return;var el=document.querySelector('[data-vt="'+slug+'"]');if(!el)return;el.style.viewTransitionName="cover-"+slug;if(arriving&&here)document.documentElement.classList.add("vt-arrive");var clear=function(){el.style.viewTransitionName="";document.documentElement.classList.remove("vt-arrive");};vt.finished.then(clear,clear);};addEventListener("pageswap",function(e){if(!e.viewTransition||!e.activation||!e.activation.entry)return;mark(here||slugOf(e.activation.entry.url),e.viewTransition,false);});addEventListener("pagereveal",function(e){if(!e.viewTransition)return;var from=window.navigation&&navigation.activation&&navigation.activation.from;mark(here||(from&&slugOf(from.url)),e.viewTransition,true);});})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261076" />
+<link rel="stylesheet" href="/css/style.css?v=20261083" />
 </head>
 <body>
 
@@ -113,7 +111,7 @@
     </section>
 
     <div class="cs-locked-content">
-      <figure class="cs-cover" data-vt="wealthbasket" style="aspect-ratio: 1140 / 713">
+      <figure class="cs-cover" style="aspect-ratio: 1140 / 713">
         <span class="cs-cover-tag" style="top: auto; bottom: 0.875rem">Case study</span>
         <!-- Video: plays the Vimeo film (605510281) from a play button, once the
              video is public or allows embedding on this site (case.js checks;
@@ -396,11 +394,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
-<script src="/js/content.js?v=20261076" defer></script>
-<script src="/js/projects.js?v=20261076" defer></script>
-<script src="/js/case.js?v=20261076" defer></script>
-<script src="/js/render.js?v=20261076" defer></script>
-<script src="/js/script.js?v=20261076" defer></script>
+<script src="/js/content.js?v=20261083" defer></script>
+<script src="/js/projects.js?v=20261083" defer></script>
+<script src="/js/case.js?v=20261083" defer></script>
+<script src="/js/render.js?v=20261083" defer></script>
+<script src="/js/script.js?v=20261083" defer></script>
 </body>
 </html>
 

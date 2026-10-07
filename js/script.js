@@ -446,38 +446,6 @@
     }
   }
 
-  // 11e) Project cards (Home and Works): the hover shade follows the pointer.
-  //      The shade is its own layer, added on the first hover and only moved
-  //      with transform once per frame, so it never repaints the card (CSS:
-  //      .card-shade). Mouse only; with reduced motion it sits in the middle.
-  if (canHover) {
-    // Sizes are measured when the pointer enters a card (and again after a
-    // scroll, since the Home cards are sticky), never during a move: reading
-    // layout right after a write would force a full recalculation each time.
-    let shadeCard = null, shade = null, box = null, half = null, sx = 0, sy = 0, shadeRaf = 0, stale = true;
-    const place = () => { shadeRaf = 0; if (shade) shade.style.transform = `translate3d(${sx - half.w}px, ${sy - half.h}px, 0)`; };
-    window.addEventListener("scroll", () => { stale = true; }, { passive: true });
-    document.addEventListener("pointermove", (e) => {
-      if (e.pointerType !== "mouse") return;
-      const card = e.target.closest && e.target.closest(".proj-stack .project, .wk-card");
-      if (!card) { shadeCard = null; return; }
-      if (card !== shadeCard) {
-        shadeCard = card;
-        shade = card.querySelector(":scope > .card-shade-clip > .card-shade");
-        if (!shade) {
-          card.insertAdjacentHTML("afterbegin", '<span class="card-shade-clip" aria-hidden="true"><span class="card-shade"></span></span>');
-          shade = card.querySelector(":scope > .card-shade-clip > .card-shade");
-        }
-        half = { w: shade.offsetWidth / 2, h: shade.offsetHeight / 2 };
-        stale = true;
-      }
-      if (stale) { box = card.getBoundingClientRect(); stale = false; }
-      sx = reduce.matches ? box.width / 2 : e.clientX - box.left;
-      sy = reduce.matches ? box.height / 2 : e.clientY - box.top;
-      if (!shadeRaf) shadeRaf = requestAnimationFrame(place);
-    }, { passive: true });
-  }
-
   // 11h) Bottom edge: content softens into a blur where the screen ends
   //      (CSS .edge-blur). Hidden once the footer is in view, so the end of
   //      the page is always crisp.

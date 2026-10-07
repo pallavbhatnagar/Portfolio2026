@@ -123,7 +123,7 @@
 :root[data-theme="dark"] .im-tag { background: var(--surface); }
 :root[data-theme="dark"] .im-avatars svg { border-color: var(--surface-2); background: var(--surface-2); }
 :root[data-theme="dark"] .off-card { background: var(--surface); }
-:root[data-theme="dark"] .off-books { background: var(--surface); }
+:root[data-theme="dark"] .off-books { background: #1b2321; }
 :root[data-theme="dark"] .wk-meta { border-top-color: rgba(255, 255, 255, 0.12); }
 :root[data-theme="dark"] .ag-card-metric { border-top-color: rgba(255, 255, 255, 0.12); }
 :root[data-theme="dark"] .ag-info { background: var(--surface-2); }
@@ -377,24 +377,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .btn-primary[data-site-resume]:hover { background: color-mix(in srgb, var(--cta-bg) 86%, #000); }
 }
 @media (forced-colors: active) { .btn-primary[data-site-resume] { background: ButtonFace; color: ButtonText; } }
-/* Project cards (Home and Works): on hover, a slightly deeper shade of the
-   card's own colour gathers where the pointer is and follows it. The shade
-   is its own layer, drawn once and only moved with transform (script.js), so
-   following the pointer costs no repaints. In light mode the card's grey text
-   deepens a step so it keeps 4.5:1 over the shade; in dark mode the shade is
-   toward black, which only adds contrast. Mouse only; with reduced motion it
-   sits in the middle and just fades in. */
-.proj-stack .project { isolation: isolate; --card-deep: color-mix(in srgb, var(--card) 90%, var(--ink-tag)); }
-.wk-card { position: relative; isolation: isolate; --card-deep: color-mix(in srgb, var(--tint) 90%, var(--tint-ink)); }
-:root[data-theme="dark"] .proj-stack .project { --card-deep: color-mix(in srgb, var(--card) 80%, #000); }
-:root[data-theme="dark"] .wk-card { --card-deep: color-mix(in srgb, var(--tint) 80%, #000); }
-.card-shade-clip { position: absolute; inset: 0; z-index: -1; overflow: hidden; border-radius: inherit; pointer-events: none; }
-.card-shade { position: absolute; top: 0; left: 0; width: 70%; height: 220%; border-radius: 50%; background: radial-gradient(closest-side, var(--card-deep), transparent); opacity: 0; transition: opacity 0.25s ease; will-change: transform; }
-@media (hover: hover) and (pointer: fine) {
-  .proj-stack .project:hover .card-shade, .wk-card:hover .card-shade { opacity: 1; }
-  :root:not([data-theme="dark"]) :is(.proj-stack .project, .wk-card):hover { --ink-soft: #555555; }
-}
-@media (forced-colors: active) { .card-shade-clip { display: none; } }
+.wk-card { position: relative; }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
@@ -408,31 +391,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .trail-ghost { fill: none; stroke: url(#ghostGrad); stroke-width: 1.8; stroke-dasharray: 2 8; stroke-linecap: round; }
 .trail-line { fill: none; stroke: url(#trailGrad); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .trail-dot { fill: var(--ink); }
-/* Page transitions (View Transitions, in the browsers that have them; the
-   rest simply load the page). The old page lifts away and the new one rises
-   in; the nav stays still. Opening a project, its image grows into the case
-   study's cover, and going back it shrinks into the card (the head script
-   names that one image). Reduced motion: a short crossfade, nothing moves. */
-/* The opt-in itself (@view-transition) is inline in each page's <head>, so the
-   browser sees it before this file arrives. */
-.site-header { view-transition-name: site-header; }
-::view-transition-group(site-header) { animation: none; }
-::view-transition-old(site-header), ::view-transition-new(site-header) { animation-duration: 0.2s; }
-::view-transition-old(root) { animation: vt-out 0.22s var(--ease-out) both; }
-::view-transition-new(root) { animation: vt-in 0.5s var(--ease-out) 0.06s both; }
-@keyframes vt-out { to { opacity: 0; transform: translateY(-0.75rem) scale(0.99); } }
-@keyframes vt-in { from { opacity: 0; transform: translateY(1.75rem); } }
-[data-vt] { view-transition-class: cover; }
-::view-transition-group(.cover) { animation-duration: 0.45s; animation-timing-function: var(--ease-io); overflow: hidden; border-radius: 0.5rem; }
-::view-transition-old(.cover), ::view-transition-new(.cover) { height: 100%; object-fit: cover; animation-duration: 0.45s; animation-timing-function: var(--ease-io); }
-/* Arriving by the morph, the cover skips its own wipe-in: the morph is its entrance. */
-.vt-arrive .cs-cover, .vt-arrive .cs-cover-media { animation: none !important; }
-@media (prefers-reduced-motion: reduce) {
-  ::view-transition-old(root) { animation: vt-fade-out 0.15s ease both; }
-  ::view-transition-new(root) { animation: vt-fade-in 0.15s ease both; }
-  @keyframes vt-fade-out { to { opacity: 0; } }
-  @keyframes vt-fade-in { from { opacity: 0; } }
-}
 
 /* Off screen, the drawing pauses (script.js) so it costs nothing while you read. */
 .trail.is-paused, .trail.is-paused * { animation-play-state: paused !important; }
@@ -1573,7 +1531,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .om-copy { display: flex; flex-direction: column; align-items: flex-start; align-self: stretch; }
 /* Music: copy starts in the top-left corner, like the Books card. */
 .off-music { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-4); align-items: start; padding: 1.125rem 1.125rem 1.25rem; background: #202020; color: #fff; }
-:root[data-theme="dark"] .off-music { background: #202020; }
+/* A soft lime glow sits behind the player, so its glass has something to frost. */
+.off-music, :root[data-theme="dark"] .off-music { background: radial-gradient(42% 60% at 78% 32%, rgba(182, 227, 123, 0.1), transparent 70%), radial-gradient(30% 45% at 62% 88%, rgba(182, 227, 123, 0.04), transparent 70%), #202020; }
 .off-music .off-tag { color: #b6e37b; }
 .off-music .off-p { margin-bottom: 1rem; color: rgba(255, 255, 255, 0.62); }
 .om-now { display: inline-flex; align-items: center; gap: 0.4375rem; margin: auto 0 0; padding: 0.3125rem 0.5rem 0.3125rem 0.5rem; border-radius: 999px; background: rgba(255, 255, 255, 0.07); font-size: 0.875rem; font-weight: 500; color: rgba(255, 255, 255, 0.85); }
@@ -1581,9 +1540,11 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .eq i { display: block; width: 3px; height: 100%; border-radius: 2px; background: #b6e37b; transform-origin: bottom; transform: scaleY(0.3); }
 .om-genres { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0.875rem 0 0; padding: 0; list-style: none; }
 .om-genres li { padding: 0.1875rem 0.4375rem; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 0.25rem; font-size: 0.875rem; font-weight: 500; color: rgba(255, 255, 255, 0.72); }
-.om-player { min-height: 17.375rem; overflow: hidden; border-radius: 0.375rem; background: #2a2a2a; }
+/* The player is a dark frosted-glass card: a light translucent tint over
+   the glow, blurred, with a bright top edge. */
+.om-player { min-height: 17.375rem; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 0.375rem; background: rgba(255, 255, 255, 0.06); -webkit-backdrop-filter: blur(24px) saturate(160%); backdrop-filter: blur(24px) saturate(160%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 1rem 2rem -1.25rem rgba(0, 0, 0, 0.6); }
 .om-player iframe { display: block; width: 100%; height: 17.375rem; border: 0; }
-.om-facade { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: 1rem; row-gap: 1rem; align-items: center; min-height: 17.375rem; padding: 1.125rem 1.125rem 1.125rem; background: radial-gradient(110% 90% at 0% 0%, rgba(182, 227, 123, 0.14), transparent 62%); }
+.om-facade { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: 1rem; row-gap: 1rem; align-items: center; min-height: 17.375rem; padding: 1.125rem 1.125rem 1.125rem; background: radial-gradient(110% 90% at 0% 0%, rgba(182, 227, 123, 0.07), transparent 62%); }
 .om-disc { grid-row: 1; width: 6.875rem; height: 6.875rem; border-radius: 50%; box-shadow: 0 0.875rem 1.875rem rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06); }
 .om-disc svg { display: block; width: 100%; height: 100%; }
 .om-kind { margin: 0; font-size: 0.875rem; font-weight: 500; color: #b6e37b; }
@@ -1629,7 +1590,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 /* Books and comics: a slow marquee of covers (pauses on hover and focus).
    The heading has an "edit": one word is struck through and its
    replacement is written above it, in the sparkle colour. */
-.off-books { background: #ededed; } /* palette Light Gray */
+.off-books { background: #e1e9e6; } /* a dull sage-teal, near the sand family */
 .off-books .off-tag { color: var(--sand-ink); }
 .off-books .off-h { margin-top: 1.125rem; }
 .off-books .off-p { max-width: none; }
@@ -1638,7 +1599,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .bk-edit { position: relative; display: inline-block; }
 .bk-old { position: relative; color: var(--ink-soft); }
 .bk-strike { position: absolute; left: -3%; top: 40%; width: 106%; height: 0.5em; overflow: visible; }
-.bk-edit { --edit: #cc1f1a; } /* bright red: 4.75:1 on the light books card */
+.bk-edit { --edit: #c41c17; } /* bright red: 4.8:1 on the sage books card */
 :root[data-theme="dark"] .bk-edit { --edit: #ff3b30; } /* bright red: 4.6:1 on the dark card */
 .bk-strike path { fill: none; stroke: var(--edit); stroke-width: 2.5; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .bk-new { position: absolute; left: 50%; bottom: 82%; font-size: 0.72em; font-weight: 600; letter-spacing: 0; white-space: nowrap; color: var(--edit); transform: translateX(-50%) rotate(-6deg); }
