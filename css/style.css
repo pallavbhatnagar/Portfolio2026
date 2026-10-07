@@ -50,6 +50,7 @@
   --rose-bg: #fff3f0;  --rose-panel: #ffece7;  --rose-ink: #6f3432;
   --sky-bg: #f7f9ff;   --sky-panel: #f2f6ff;   --sky-ink: #1b1b39;
   --sand-bg: #edf1f1;  --sand-panel: #e2e9e9;  --sand-ink: #215452;
+  --lime-bg: #effbdd;  --lime-ink: #2f5a12; /* pale lime (#E0FFB7) softened on white */
   --blue-bg: #e9effe;  --blue-ink: #2a47c8; /* Soft Blue (#99B7FC) at 22%: a testimonial tint */
   --cta-bg: #202020;
   --cta-ink: #ffffff;
@@ -101,6 +102,7 @@
   --rose-bg: #301f1a;  --rose-panel: #3c231d;  --rose-ink: #ffb39e;
   --sky-bg: #242830;   --sky-panel: #2b303b;   --sky-ink: #c9d7fd;
   --sand-bg: #161c1b;  --sand-panel: #161f1f;  --sand-ink: #8fc9c4;
+  --lime-bg: #1d2617;  --lime-ink: #b6e37b;
   --blue-bg: #191f34;  --blue-ink: #99b7fc;
   --cta-bg: #f2f1ee;
   --cta-ink: #202020;
@@ -114,8 +116,7 @@
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
-:root[data-theme="dark"] .nav::before { background: rgba(20, 20, 20, 0.84); border-color: rgba(255, 255, 255, 0.08); }
-:root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.08); }
+:root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
 :root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
 :root[data-theme="dark"] .tdp { background: #2c2c30; }
@@ -245,10 +246,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   position: absolute;
   inset: -0.4375rem var(--pad);
   border-radius: 0.625rem;
+  /* Frosted glass: a translucent tint, a soft blur with a little extra
+     saturation, and a bright hairline on top where light catches it. */
   background: rgba(255, 255, 255, 0.8);
-  -webkit-backdrop-filter: blur(1.5px);
-  backdrop-filter: blur(1.5px);
+  -webkit-backdrop-filter: blur(40px) saturate(170%);
+  backdrop-filter: blur(40px) saturate(170%);
   border: 1px solid rgba(13, 13, 13, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.18);
   opacity: 0;
   transition: opacity 0.3s var(--ease-out);
   pointer-events: none;
@@ -256,7 +260,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 }
 .site-header[data-scrolled="true"] .nav::before { opacity: 1; }
 @media (prefers-reduced-transparency: reduce) {
-  .nav::before { background: var(--bg); -webkit-backdrop-filter: none; backdrop-filter: none; }
+  .nav::before { background: rgba(255, 255, 255, 0.9); }
+  :root[data-theme="dark"] .nav::before { background: rgba(24, 24, 26, 0.9); }
 }
 
 /* Home follows the same rule as the other nav links: grey at rest, full ink
@@ -372,6 +377,24 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .btn-primary[data-site-resume]:hover { background: color-mix(in srgb, var(--cta-bg) 86%, #000); }
 }
 @media (forced-colors: active) { .btn-primary[data-site-resume] { background: ButtonFace; color: ButtonText; } }
+/* Project cards (Home and Works): on hover, a slightly deeper shade of the
+   card's own colour gathers where the pointer is and follows it. The shade
+   is its own layer, drawn once and only moved with transform (script.js), so
+   following the pointer costs no repaints. In light mode the card's grey text
+   deepens a step so it keeps 4.5:1 over the shade; in dark mode the shade is
+   toward black, which only adds contrast. Mouse only; with reduced motion it
+   sits in the middle and just fades in. */
+.proj-stack .project { isolation: isolate; --card-deep: color-mix(in srgb, var(--card) 90%, var(--ink-tag)); }
+.wk-card { position: relative; isolation: isolate; --card-deep: color-mix(in srgb, var(--tint) 90%, var(--tint-ink)); }
+:root[data-theme="dark"] .proj-stack .project { --card-deep: color-mix(in srgb, var(--card) 80%, #000); }
+:root[data-theme="dark"] .wk-card { --card-deep: color-mix(in srgb, var(--tint) 80%, #000); }
+.card-shade-clip { position: absolute; inset: 0; z-index: -1; overflow: hidden; border-radius: inherit; pointer-events: none; }
+.card-shade { position: absolute; top: 0; left: 0; width: 70%; height: 220%; border-radius: 50%; background: radial-gradient(closest-side, var(--card-deep), transparent); opacity: 0; transition: opacity 0.25s ease; will-change: transform; }
+@media (hover: hover) and (pointer: fine) {
+  .proj-stack .project:hover .card-shade, .wk-card:hover .card-shade { opacity: 1; }
+  :root:not([data-theme="dark"]) :is(.proj-stack .project, .wk-card):hover { --ink-soft: #555555; }
+}
+@media (forced-colors: active) { .card-shade-clip { display: none; } }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
@@ -385,6 +408,34 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .trail-ghost { fill: none; stroke: url(#ghostGrad); stroke-width: 1.8; stroke-dasharray: 2 8; stroke-linecap: round; }
 .trail-line { fill: none; stroke: url(#trailGrad); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .trail-dot { fill: var(--ink); }
+/* Page transitions (View Transitions, in the browsers that have them; the
+   rest simply load the page). The old page lifts away and the new one rises
+   in; the nav stays still. Opening a project, its image grows into the case
+   study's cover, and going back it shrinks into the card (the head script
+   names that one image). Reduced motion: a short crossfade, nothing moves. */
+/* The opt-in itself (@view-transition) is inline in each page's <head>, so the
+   browser sees it before this file arrives. */
+.site-header { view-transition-name: site-header; }
+::view-transition-group(site-header) { animation: none; }
+::view-transition-old(site-header), ::view-transition-new(site-header) { animation-duration: 0.2s; }
+::view-transition-old(root) { animation: vt-out 0.22s var(--ease-out) both; }
+::view-transition-new(root) { animation: vt-in 0.5s var(--ease-out) 0.06s both; }
+@keyframes vt-out { to { opacity: 0; transform: translateY(-0.75rem) scale(0.99); } }
+@keyframes vt-in { from { opacity: 0; transform: translateY(1.75rem); } }
+[data-vt] { view-transition-class: cover; }
+::view-transition-group(.cover) { animation-duration: 0.45s; animation-timing-function: var(--ease-io); overflow: hidden; border-radius: 0.5rem; }
+::view-transition-old(.cover), ::view-transition-new(.cover) { height: 100%; object-fit: cover; animation-duration: 0.45s; animation-timing-function: var(--ease-io); }
+/* Arriving by the morph, the cover skips its own wipe-in: the morph is its entrance. */
+.vt-arrive .cs-cover, .vt-arrive .cs-cover-media { animation: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root) { animation: vt-fade-out 0.15s ease both; }
+  ::view-transition-new(root) { animation: vt-fade-in 0.15s ease both; }
+  @keyframes vt-fade-out { to { opacity: 0; } }
+  @keyframes vt-fade-in { from { opacity: 0; } }
+}
+
+/* Off screen, the drawing pauses (script.js) so it costs nothing while you read. */
+.trail.is-paused, .trail.is-paused * { animation-play-state: paused !important; }
 .trail-node { fill: var(--bg); stroke: var(--ink); stroke-width: 2.2; }
 /* Phase labels and the Done capsule: small caps-style labels, widely
    tracked so the capitals breathe. */
@@ -628,9 +679,16 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.92);
   color: #0d0d0d;
-  box-shadow: 0 0.1875rem 0.625rem rgba(13, 13, 13, 0.15);
+}
+/* Tags on project images (Case study, the lock, the cover tag): light
+   frosted glass over the screenshot, with a bright edge. The tint stays
+   strong enough that the dark label reads over any image. */
+.shot-lock, .wk-badge, .cs-cover-tag {
+  background: rgba(255, 255, 255, 0.62);
+  -webkit-backdrop-filter: blur(14px) saturate(170%);
+  backdrop-filter: blur(14px) saturate(170%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 0.25rem 0.75rem rgba(13, 13, 13, 0.12);
 }
 .sr-only {
   position: absolute;
@@ -681,14 +739,25 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 @media (prefers-reduced-motion: no-preference) {
   .lock-dialog[open] { animation: lock-in 0.22s var(--ease-out); }
   .lock-dialog[open]::backdrop { animation: fade-in-bd 0.2s ease; }
-  .lock-input.is-wrong { animation: lock-nudge 0.3s var(--ease-out); }
+  /* Wrong password: the box shakes side to side, like a head saying no,
+     settling quickly. Transform only, so it stays smooth. */
+  .lock-input.is-wrong { animation: lock-shake 0.4s ease-in-out; }
 }
 @media (prefers-reduced-motion: reduce) {
   .lock-dialog[open] { animation: fade-in-bd 0.2s ease; }
+  /* No movement: the red edge glows once instead. */
+  .lock-input.is-wrong { animation: lock-glow 0.5s ease; }
 }
 @keyframes lock-in { from { opacity: 0; transform: scale(0.96) translateY(0.3125rem); } }
 @keyframes fade-in-bd { from { opacity: 0; } }
-@keyframes lock-nudge { 25% { transform: translateX(-0.25rem); } 60% { transform: translateX(0.1875rem); } }
+@keyframes lock-shake {
+  15% { transform: translateX(-0.4375rem); }
+  30% { transform: translateX(0.375rem); }
+  45% { transform: translateX(-0.25rem); }
+  60% { transform: translateX(0.1875rem); }
+  75% { transform: translateX(-0.0625rem); }
+}
+@keyframes lock-glow { 40% { box-shadow: 0 0 0 0.1875rem rgba(192, 57, 43, 0.28); } }
 
 /* One entrance for the heading text. The cards get no entrance; the
    stacking is their motion. */
@@ -913,7 +982,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   width: 2.125rem;
   height: 2.125rem;
   border-radius: 50%;
-  background: #0d0d0d;
+  background: #202020; /* palette Dark Gray */
   color: #fff;
   box-shadow: none;
   opacity: 0;
@@ -1054,6 +1123,46 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 
 /* Theme toggle: a quiet sun. On hover the rays turn a quarter and the core
    swells slightly. Transform only, off for reduced motion. */
+/* Bottom edge: content blurs away progressively as it reaches the bottom
+   of the screen, sharp to soft, with no bar, tint or line (a progressive
+   blur). Six stacked layers, each blurring more and covering a lower band,
+   read as one smooth ramp. It sits under the floating buttons, ignores the
+   pointer, and fades out when the footer comes into view. */
+.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 5.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
+.edge-blur.is-off, body.ask-open .edge-blur { opacity: 0; }
+.edge-blur i { position: absolute; inset: 0; }
+.edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(0.5px); backdrop-filter: blur(0.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 33%, transparent 50%); mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 33%, transparent 50%); }
+.edge-blur i:nth-child(2) { -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); -webkit-mask-image: linear-gradient(to bottom, transparent 16%, #000 33%, #000 50%, transparent 66%); mask-image: linear-gradient(to bottom, transparent 16%, #000 33%, #000 50%, transparent 66%); }
+.edge-blur i:nth-child(3) { -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); -webkit-mask-image: linear-gradient(to bottom, transparent 33%, #000 50%, #000 66%, transparent 83%); mask-image: linear-gradient(to bottom, transparent 33%, #000 50%, #000 66%, transparent 83%); }
+.edge-blur i:nth-child(4) { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to bottom, transparent 50%, #000 66%, #000 83%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 50%, #000 66%, #000 83%, transparent 100%); }
+.edge-blur i:nth-child(5) { -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); -webkit-mask-image: linear-gradient(to bottom, transparent 66%, #000 83%); mask-image: linear-gradient(to bottom, transparent 66%, #000 83%); }
+.edge-blur i:nth-child(6) { -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px); -webkit-mask-image: linear-gradient(to bottom, transparent 80%, #000 100%); mask-image: linear-gradient(to bottom, transparent 80%, #000 100%); }
+@media (max-width: 640px) { .edge-blur { height: 4.5rem; } .edge-blur i:nth-child(6) { display: none; } }
+@media print { .edge-blur { display: none; } }
+
+/* Ambient music: a speaker beside the theme switch. Muted (with an x) by
+   default; playing, it shows sound waves that breathe slowly (script.js). */
+.sound-toggle { display: grid; place-items: center; width: 1.625rem; height: 1.625rem; margin-left: 0.125rem; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft); cursor: pointer; transition: background-color 0.25s var(--ease-out), color 0.2s ease, transform 0.2s var(--ease-out); }
+.sound-toggle:focus-visible, .theme-toggle:focus-visible { color: var(--ink); }
+.sound-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+.sound-toggle:active { transform: scale(0.92); }
+.sound-toggle[hidden] { display: none; }
+/* Waiting for a click to resume (the browser held the sound on this page):
+   the speaker shows, gently pulsing. */
+.sound-toggle.is-held .snd-on { opacity: 1; }
+.sound-toggle.is-held .snd-off { opacity: 0; }
+@media (prefers-reduced-motion: no-preference) { .sound-toggle.is-held svg { animation: snd-wait 1.6s ease-in-out infinite; } }
+@keyframes snd-wait { 50% { opacity: 0.35; } }
+.sound-toggle svg { width: 1.0625rem; height: 1.0625rem; }
+.sound-toggle .snd-on, .sound-toggle .snd-off { transition: opacity 0.2s var(--ease-out); }
+.sound-toggle .snd-on { opacity: 0; }
+.sound-toggle[aria-pressed="true"] .snd-on { opacity: 1; }
+.sound-toggle[aria-pressed="true"] .snd-off { opacity: 0; }
+/* Music and theme sit together as one small group of controls. */
+.nav-ctrls { display: flex; align-items: center; gap: 0.125rem; }
+/* Like the nav links: soft grey, black only on hover (or keyboard focus). */
+@media (hover: hover) and (pointer: fine) { .sound-toggle:hover { background: rgba(13, 13, 13, 0.06); color: var(--ink); } }
+:root[data-theme="dark"] .sound-toggle:hover { background: rgba(255, 255, 255, 0.08); }
 .theme-toggle {
   display: grid;
   place-items: center;
@@ -1064,14 +1173,14 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   border: 0;
   border-radius: 50%;
   background: transparent;
-  color: var(--ink);
+  color: var(--ink-soft);
   cursor: pointer;
-  transition: background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
+  transition: color 0.2s ease, background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
 }
-.theme-toggle svg { width: 0.875rem; height: 0.875rem; overflow: visible; }
+.theme-toggle svg { width: 1.0625rem; height: 1.0625rem; overflow: visible; }
 .sun-rays,
 .sun-core,
-.moon { transform-box: view-box; transform-origin: 12px 12px; }
+.moon { transform-box: view-box; transform-origin: 128px 128px; }
 .moon { opacity: 0; transform: scale(0.5) rotate(-30deg); }
 :root[data-theme="dark"] .sun-rays,
 :root[data-theme="dark"] .sun-core { opacity: 0; transform: scale(0.5) rotate(20deg); }
@@ -1083,7 +1192,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .moon { transition: transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out); }
 }
 @media (hover: hover) and (pointer: fine) {
-  .theme-toggle:hover { background: rgba(13, 13, 13, 0.06); }
+  .theme-toggle:hover { background: rgba(13, 13, 13, 0.06); color: var(--ink); }
+  :root[data-theme="dark"] .theme-toggle:hover { background: rgba(255, 255, 255, 0.08); }
   .theme-toggle:hover .sun-rays { transform: rotate(90deg); }
   .theme-toggle:hover .sun-core { transform: scale(1.12); }
   :root[data-theme="dark"] .theme-toggle:hover .moon { transform: rotate(-18deg); }
@@ -1217,6 +1327,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .tplay .i-pause, .tmute .i-mute { display: none; }
 .tmute[aria-pressed="true"] .i-vol { display: none; }
 .tmute[aria-pressed="true"] .i-mute { display: block; }
+.tpanel--video.is-active video { cursor: pointer; }
 .tpanel--video.is-playing .tplay .i-play { display: none; }
 .tpanel--video.is-playing .tplay .i-pause { display: block; }
 @media (max-width: 900px) { .tpanel--video.is-active { flex-basis: 21.125rem; } }
@@ -1240,7 +1351,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   cursor: pointer;
   transition: opacity 0.25s var(--ease-out), background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
 }
-.copy-mail svg { grid-area: 1 / 1; width: 0.8125rem; height: 0.8125rem; transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out); }
+.copy-mail svg { grid-area: 1 / 1; width: 0.9375rem; height: 0.9375rem; transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out); }
 .copy-mail .i-done { opacity: 0; transform: scale(0.6); }
 .copy-mail.is-copied { opacity: 1; }
 .copy-mail.is-copied .i-copy { opacity: 0; transform: scale(0.6); }
@@ -1289,26 +1400,30 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   z-index: var(--z);
   display: grid;
   place-items: center;
-  width: 22cqw;
-  aspect-ratio: 4 / 5;
+  /* Each slide is drawn wide and cropped at the sides to a 4:5 card; the
+     one in the centre drops the crop, so it widens as it arrives. */
+  width: 28cqw;
+  height: 27.5cqw;
   margin: 0;
   overflow: hidden;
   border-radius: 0.25rem;
   background: var(--tint);
   opacity: var(--a);
   cursor: pointer;
+  clip-path: inset(0 10.72% round 0.25rem);
   transform: translate(-50%, -50%) translateX(calc(var(--x) * 1cqw)) scale(var(--s));
-  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.35s var(--ease-out);
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1), clip-path 0.5s cubic-bezier(0.32, 0.72, 0, 1), opacity 0.35s var(--ease-out);
 }
+.ab-slide[data-o="0"] { clip-path: inset(0 0 round 0.25rem); }
 .ab-slide svg { width: 46%; height: 46%; color: var(--tone); }
 .ab-slide img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 .ab-slide[data-o="0"]  { --x: 0;     --s: 1;    --a: 1;   --z: 5; }
-.ab-slide[data-o="1"]  { --x: 19.6;  --s: 0.72; --a: 1;   --z: 4; }
-.ab-slide[data-o="-1"] { --x: -19.6; --s: 0.72; --a: 1;   --z: 4; }
-.ab-slide[data-o="2"]  { --x: 33.7;  --s: 0.5;  --a: 1;   --z: 3; }
-.ab-slide[data-o="-2"] { --x: -33.7; --s: 0.5;  --a: 1;   --z: 3; }
-.ab-slide[data-o="3"]  { --x: 43.2;  --s: 0.3; --a: 0.9; --z: 2; }
-.ab-slide[data-o="-3"] { --x: -43.2; --s: 0.3; --a: 0.9; --z: 2; }
+.ab-slide[data-o="1"]  { --x: 22.6;  --s: 0.72; --a: 1;   --z: 4; }
+.ab-slide[data-o="-1"] { --x: -22.6; --s: 0.72; --a: 1;   --z: 4; }
+.ab-slide[data-o="2"]  { --x: 36.2;  --s: 0.5;  --a: 1;   --z: 3; }
+.ab-slide[data-o="-2"] { --x: -36.2; --s: 0.5;  --a: 1;   --z: 3; }
+.ab-slide[data-o="3"]  { --x: 45.5;  --s: 0.3; --a: 0.9; --z: 2; }
+.ab-slide[data-o="-3"] { --x: -45.5; --s: 0.3; --a: 0.9; --z: 2; }
 .ab-slide[data-o="4"]  { --x: 55;    --s: 0.2;  --a: 0;   --z: 1; pointer-events: none; }
 .ab-slide[data-o="-4"] { --x: -55;   --s: 0.2;  --a: 0;   --z: 1; pointer-events: none; }
 @media (prefers-reduced-motion: reduce) { .ab-slide { transition: none; } }
@@ -1383,7 +1498,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .im-avatars i:first-child { margin-left: 0; }
 
 .im-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-rows: 1.1fr 1fr; gap: 0.625rem; min-height: 21.125rem; }
-.im-card { position: relative; display: flex; flex-direction: column; padding: 1.125rem 1.25rem 1.25rem; border-radius: 0.5rem; background: color-mix(in srgb, var(--tint) 55%, var(--bg)); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
+.im-card { position: relative; display: flex; flex-direction: column; padding: 1.125rem 1.25rem 1.25rem; border-radius: 0.5rem; background: var(--tint); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
 .im-wide { grid-column: 1 / -1; }
 .im-label { display: flex; align-items: center; gap: 0.3125rem; margin: 0; font-size: 0.875rem; font-weight: 500; color: color-mix(in srgb, var(--tone) 80%, var(--ink-soft)); }
 .im-label svg { display: none; }
@@ -1711,10 +1826,13 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   padding: 0.1875rem;
   border: 1px solid var(--hairline);
   border-radius: 999px;
-  background: color-mix(in srgb, var(--bg) 88%, transparent);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
+  /* Frosted glass, like the nav. */
+  background: rgba(255, 255, 255, 0.8);
+  -webkit-backdrop-filter: blur(40px) saturate(170%);
+  backdrop-filter: blur(40px) saturate(170%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.2);
 }
+:root[data-theme="dark"] .wk-filter { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 .wk-filter-thumb {
   position: absolute;
   top: 0.1875rem;
@@ -1802,11 +1920,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .wk-badge {
   padding: 0.25rem 0.5rem;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.92);
   color: #0d0d0d;
   font-size: var(--fs-small);
   font-weight: 500;
-  box-shadow: 0 0.1875rem 0.625rem rgba(13, 13, 13, 0.12);
 }
 .wk-media { position: absolute; inset: 0; }
 .wk-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
@@ -2148,9 +2264,8 @@ body.ask-open .shell-scrollbar {
 
 /* Hero */
 .cs-hero { padding-top: calc(var(--pad) + 5.125rem); }
-.cs-kicker { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.875rem; font-size: 1rem; font-weight: 500; color: var(--ink-soft); }
 /* The case study / exploration tag sits on the cover's top-right corner. */
-.cs-cover-tag { position: absolute; top: 0.875rem; left: 0.875rem; z-index: 1; padding: 0.25rem 0.5rem; border-radius: 879.12px; background: rgba(255, 255, 255, 0.92); color: #0d0d0d; font-size: 1rem; font-weight: 500; box-shadow: 0 0.1875rem 0.5rem rgba(13, 13, 13, 0.12); }
+.cs-cover-tag { position: absolute; top: 0.875rem; left: 0.875rem; z-index: 1; padding: 0.25rem 0.5rem; border-radius: 879.12px; color: #0d0d0d; font-size: 1rem; font-weight: 500; }
 /* A calm, modest title: the work carries the page, not the heading. */
 .cs-title { margin-top: 0.3125rem; font-size: clamp(1.5rem, 2.8vw, 1.875rem); font-weight: 500; letter-spacing: -0.022em; line-height: 1.1; }
 .cs-headline { max-width: 56ch; margin-top: 0.5rem; font-size: 1.125rem; font-weight: 400; line-height: 1.55; color: var(--ink-soft); }
@@ -2261,11 +2376,13 @@ body.ask-open .shell-scrollbar {
    goes back to the previous page, case.js), "On this page", then the
    chapters. Where the rail is hidden (narrower windows, chat open)
    the breadcrumb above the title is the way back instead. */
-.cs-rail-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--line); border-radius: 50%; color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
+/* Frosted glass, like the nav. */
+.cs-rail-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(40px) saturate(170%); backdrop-filter: blur(40px) saturate(170%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
+:root[data-theme="dark"] .cs-rail-back { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 .cs-rail-back svg { flex: none; }
 .cs-rail-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-rail-back:hover { background: var(--surface); border-color: var(--ink); }
+  .cs-rail-back:hover { border-color: var(--ink); }
 }
 .cs-rail-name { max-width: 11rem; margin: 1.25rem 0 0.625rem; font-size: var(--fs-small); line-height: 1.35; color: var(--ink-soft); }
 .cs-gated .cs-rail-name { display: none; }

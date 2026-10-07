@@ -166,7 +166,7 @@
     btn.addEventListener("click", () => {
       const frame = document.createElement("iframe");
       frame.className = "cs-play-frame";
-      frame.src = `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1&title=0&byline=0&portrait=0`;
+      frame.src = `https://player.vimeo.com/video/${id}?autoplay=1&dnt=1&title=0&byline=0&portrait=0&api=1`;
       frame.title = title;
       frame.allow = "autoplay; fullscreen; picture-in-picture";
       frame.allowFullscreen = true;
@@ -174,6 +174,9 @@
       box.appendChild(frame);
       btn.remove();
       frame.focus();
+      // It starts playing right away, so the ambient music steps aside now
+      // (script.js); the player's own pause and play events follow.
+      document.dispatchEvent(new CustomEvent("ambient:media", { detail: { id: frame, playing: true } }));
     });
   });
 

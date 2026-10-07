@@ -149,8 +149,8 @@
   }
 
   // 3) Hero desire path. The line draws (CSS) while the dot follows it (SVG
-  //    motion), then the whole thing replays every few seconds. Reduced
-  //    motion: the finished line, no dot travel, no replay.
+  //    motion) once, then rests at Done; it replays when scrolled back to.
+  //    Reduced motion: the finished line, no dot travel, no replay.
   const trail = document.querySelector(".trail");
   const trailSvg = document.querySelector(".trail-svg");
   if (trail && trailSvg) {
@@ -171,16 +171,38 @@
       dot.setAttribute("cx", "990");
       dot.setAttribute("cy", "100");
     } else {
-      const cycle = 11000; // ~5.3s of motion, then a rest
+      // It plays once when the page opens, then rests on the finished
+      // drawing (at Done). It plays again only when the visitor comes back
+      // to it: scrolls away and back, or returns to the page with Back.
+      // The dot's SVG motion keeps the browser redrawing while its clock
+      // runs, so the clock is paused as soon as each run is done.
+      const runTime = 5400;
+      let restTimer = 0, away = false;
+      const rest = () => { clearTimeout(restTimer); restTimer = setTimeout(() => trailSvg.pauseAnimations(), Math.max(0, runTime - trailSvg.getCurrentTime() * 1000)); };
       const replay = () => {
-        if (document.hidden) return;
-        trail.classList.remove("is-run");
+        trail.classList.remove("is-run", "is-paused");
         void trail.offsetWidth;
         trail.classList.add("is-run");
         trailSvg.setCurrentTime(0);
         trailSvg.unpauseAnimations();
+        rest();
       };
-      setInterval(replay, cycle);
+      rest(); // the first run, which starts with the page
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(([en]) => {
+          if (!en.isIntersecting) {
+            // Gone from the screen: stop where it is; it starts over on return.
+            away = true;
+            clearTimeout(restTimer);
+            trailSvg.pauseAnimations();
+            trail.classList.add("is-paused");
+          } else if (away && en.intersectionRatio >= 0.35) {
+            away = false;
+            replay();
+          }
+        }, { threshold: [0, 0.35] }).observe(trail);
+      }
+      addEventListener("pageshow", (e) => { if (e.persisted) replay(); });
     }
   }
   // 6) Back-to-top button appears only while the footer is on screen
@@ -248,7 +270,17 @@
         muteBtn.setAttribute("aria-pressed", String(vid.muted));
         muteBtn.setAttribute("aria-label", vid.muted ? "Unmute" : "Mute");
       };
-      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); vid.muted = !vid.muted; });
+      // Turning the sound on starts the video from the beginning the first
+      // time (so the whole testimonial is heard), and plays it if paused.
+      let heard = false;
+      const soundOn = () => {
+        vid.muted = false;
+        if (!heard) { heard = true; vid.currentTime = 0; }
+        if (vid.paused) { userPaused = false; vid.play().catch(() => {}); }
+      };
+      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); if (vid.muted) soundOn(); else vid.muted = true; });
+      // Clicking the silent video itself turns the sound on too.
+      vid.addEventListener("click", () => { if (vPanel.classList.contains("is-active") && vid.muted) soundOn(); });
       vid.addEventListener("volumechange", syncMute);
       syncMute();
       const syncPlay = () => {
@@ -412,6 +444,228 @@
         if (head.offsetHeight !== lastH) { lastH = head.offsetHeight; refresh(); }
       }).observe(head);
     }
+  }
+
+  // 11e) Project cards (Home and Works): the hover shade follows the pointer.
+  //      The shade is its own layer, added on the first hover and only moved
+  //      with transform once per frame, so it never repaints the card (CSS:
+  //      .card-shade). Mouse only; with reduced motion it sits in the middle.
+  if (canHover) {
+    // Sizes are measured when the pointer enters a card (and again after a
+    // scroll, since the Home cards are sticky), never during a move: reading
+    // layout right after a write would force a full recalculation each time.
+    let shadeCard = null, shade = null, box = null, half = null, sx = 0, sy = 0, shadeRaf = 0, stale = true;
+    const place = () => { shadeRaf = 0; if (shade) shade.style.transform = `translate3d(${sx - half.w}px, ${sy - half.h}px, 0)`; };
+    window.addEventListener("scroll", () => { stale = true; }, { passive: true });
+    document.addEventListener("pointermove", (e) => {
+      if (e.pointerType !== "mouse") return;
+      const card = e.target.closest && e.target.closest(".proj-stack .project, .wk-card");
+      if (!card) { shadeCard = null; return; }
+      if (card !== shadeCard) {
+        shadeCard = card;
+        shade = card.querySelector(":scope > .card-shade-clip > .card-shade");
+        if (!shade) {
+          card.insertAdjacentHTML("afterbegin", '<span class="card-shade-clip" aria-hidden="true"><span class="card-shade"></span></span>');
+          shade = card.querySelector(":scope > .card-shade-clip > .card-shade");
+        }
+        half = { w: shade.offsetWidth / 2, h: shade.offsetHeight / 2 };
+        stale = true;
+      }
+      if (stale) { box = card.getBoundingClientRect(); stale = false; }
+      sx = reduce.matches ? box.width / 2 : e.clientX - box.left;
+      sy = reduce.matches ? box.height / 2 : e.clientY - box.top;
+      if (!shadeRaf) shadeRaf = requestAnimationFrame(place);
+    }, { passive: true });
+  }
+
+  // 11h) Bottom edge: content softens into a blur where the screen ends
+  //      (CSS .edge-blur). Hidden once the footer is in view, so the end of
+  //      the page is always crisp.
+  if (!document.querySelector(".edge-blur")) {
+    const edge = document.createElement("div");
+    edge.className = "edge-blur";
+    edge.setAttribute("aria-hidden", "true");
+    edge.innerHTML = "<i></i><i></i><i></i><i></i><i></i><i></i>";
+    document.body.appendChild(edge);
+    const foot = document.querySelector(".site-footer");
+    if (foot && "IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => edge.classList.toggle("is-off", en.isIntersecting)).observe(foot);
+    }
+  }
+
+  // 11g) Ambient music (assets/audio/ambient/). Off by default; the speaker
+  //      in the nav fades it in and out. Once it's on, it keeps playing from
+  //      the same spot as you move between pages in this tab, until muted.
+  //      A browser may hold sound on a new page until you interact with it;
+  //      then it resumes on your next click, tap or key. If the file isn't
+  //      there, the button stays hidden.
+  const soundBtn = document.querySelector(".sound-toggle");
+  if (soundBtn) {
+    const src = (window.SITE && window.SITE.ambient) || "/assets/audio/ambient/ambient.wav";
+    const VOL = 0.35;
+    const KEY = "ambient";
+    const store = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* private mode */ } } };
+    let audio = null, fadeRaf = 0, on = false;
+    const setUi = (playing) => {
+      on = playing;
+      soundBtn.setAttribute("aria-pressed", String(playing));
+      const label = playing ? "Mute ambient music" : "Play ambient music";
+      soundBtn.setAttribute("aria-label", label);
+      soundBtn.title = label;
+    };
+    // iPhone and iPad Safari ignore a page's volume setting (only the
+    // hardware buttons change it), so there the level goes through Web Audio
+    // instead; everywhere else it's the player's own volume.
+    let gain = null, actx = null;
+    const getVol = () => (gain ? gain.gain.value : audio.volume);
+    const setVol = (v) => { v = Math.min(1, Math.max(0, v)); if (gain) gain.gain.value = v; else audio.volume = v; };
+    const fade = (to, ms, done) => {
+      cancelAnimationFrame(fadeRaf);
+      const from = getVol(), t0 = performance.now();
+      const step = (t) => {
+        const k = Math.min(1, (t - t0) / ms);
+        setVol(from + (to - from) * k);
+        if (k < 1) fadeRaf = requestAnimationFrame(step); else if (done) done();
+      };
+      fadeRaf = requestAnimationFrame(step);
+    };
+    const ensure = () => {
+      if (audio) return audio;
+      audio = new Audio(src);
+      audio.loop = true;
+      audio.preload = "auto";
+      audio.volume = 0;
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (audio.volume !== 0 && AC) {
+        try {
+          actx = new AC();
+          gain = actx.createGain();
+          gain.gain.value = 0;
+          actx.createMediaElementSource(audio).connect(gain).connect(actx.destination);
+        } catch (e) { gain = null; }
+      }
+      // Pick up where the music would be by now: the saved spot plus the
+      // time the page change took, so it carries on rather than restarting.
+      const at = parseFloat(store.get(KEY + "-at"));
+      const left = parseFloat(store.get(KEY + "-left"));
+      if (at > 0) audio.addEventListener("loadedmetadata", () => {
+        const gap = left > 0 ? (Date.now() - left) / 1000 : 0;
+        audio.currentTime = (at + gap) % (audio.duration || at + gap + 1);
+      }, { once: true });
+      addEventListener("pagehide", () => { if (on) { store.set(KEY + "-at", String(audio.currentTime)); store.set(KEY + "-left", String(Date.now())); } });
+      return audio;
+    };
+    // A first play fades in gently; carrying on from the last page is quick.
+    const play = (resuming) => { ensure(); if (actx && actx.state === "suspended") actx.resume().catch(() => {}); return audio.play().then(() => { setUi(true); soundBtn.classList.remove("is-held"); store.set(KEY, "on"); fade(VOL, resuming ? 300 : 1200); return true; }, () => false); };
+    const stop = () => { setUi(false); store.set(KEY, "off"); store.set(KEY + "-at", "0"); fade(0, 500, () => audio.pause()); };
+    // Remember "on" the moment it's asked for, so leaving the page while the
+    // track is still starting doesn't lose it.
+    soundBtn.addEventListener("click", () => { if (on) stop(); else { store.set(KEY, "on"); play(false); } });
+    // A browser may refuse to start sound on a freshly loaded page until the
+    // visitor interacts with it. Then the button shows it's waiting, and the
+    // music picks up at the first click, tap or key press anywhere (scrolling
+    // doesn't count as an interaction in browsers).
+    const hold = () => {
+      setUi(false);
+      soundBtn.classList.add("is-held");
+      soundBtn.setAttribute("aria-label", "Resume ambient music");
+      soundBtn.title = "Resume ambient music";
+      const resume = (e) => {
+        if (store.get(KEY) !== "on" || on) return;
+        if (e.target.closest && e.target.closest(".sound-toggle")) return;
+        play(true).then((ok) => { if (ok) off(); });
+      };
+      const types = ["pointerdown", "click", "keydown", "touchend"];
+      const off = () => types.forEach((t) => removeEventListener(t, resume, true));
+      types.forEach((t) => addEventListener(t, resume, true));
+    };
+    if (store.get(KEY) === "on") {
+      // It was playing on the last page: start straight away (the track is
+      // known to exist), without waiting for anything else.
+      soundBtn.hidden = false;
+      // Try now; if the browser holds it, try once more as the page settles
+      // (it sometimes allows it a moment later), then wait for a click.
+      play(true).then((ok) => {
+        if (ok) return;
+        setTimeout(() => { if (!on) play(true).then((ok2) => { if (!ok2) hold(); }); }, 250);
+      });
+    } else {
+      // Show the button only if there's a track to play.
+      fetch(src, { method: "HEAD" }).then((r) => { if (r.ok) soundBtn.hidden = false; }).catch(() => {});
+    }
+    // Coming back with the Back button (page restored from memory).
+    addEventListener("pageshow", (e) => { if (e.persisted && store.get(KEY) === "on" && (!audio || audio.paused)) play(true).then((ok) => { if (!ok) hold(); }); });
+
+    // Step aside for other sound. While a video (or the SoundCloud player)
+    // plays with sound, the music fades out; when it's paused, ends or is
+    // muted, the music fades back in. Only if the music was on, and the
+    // visitor didn't change it in between.
+    const loud = new Set();
+    let stepped = false;
+    const quiet = () => {
+      if (!loud.size || !on) return;
+      stepped = true;
+      setUi(false);
+      soundBtn.setAttribute("aria-label", "Ambient music paused while media plays");
+      soundBtn.title = "Ambient music paused while media plays";
+      fade(0, 400, () => { if (!on) audio.pause(); });
+    };
+    // Wait a moment before coming back, so a quick pause-and-play (or a
+    // player hiccup) doesn't make the music flicker in and out.
+    let backTimer = 0;
+    const back = () => {
+      clearTimeout(backTimer);
+      backTimer = setTimeout(() => {
+        if (loud.size || !stepped) return;
+        stepped = false;
+        if (store.get(KEY) === "on" && !on) play(false);
+      }, 700);
+    };
+    soundBtn.addEventListener("click", () => { stepped = false; }, true);
+    const mark = (id, playing) => {
+      if (playing) { loud.add(id); quiet(); } else if (loud.delete(id)) back();
+    };
+    // Other parts of the site report their players with this event.
+    document.addEventListener("ambient:media", (e) => mark(e.detail.id, e.detail.playing));
+    // Videos and audio on the page (media events don't bubble, so listen in
+    // the capture phase). The music's own player isn't in the page.
+    const check = (e) => {
+      const m = e.target;
+      if (!(m instanceof HTMLMediaElement)) return;
+      mark(m, !m.paused && !m.ended && !m.muted && m.volume > 0);
+    };
+    ["play", "playing", "pause", "ended", "volumechange", "emptied"].forEach((t) => document.addEventListener(t, check, true));
+    // Embedded players (Vimeo films, SoundCloud) say what they're doing by
+    // message. Ask each one for its play and pause events once it's ready.
+    const embed = (src) => (src || "").startsWith("https://player.vimeo.com/") ? "vimeo" : (src || "").startsWith("https://w.soundcloud.com/") ? "sc" : "";
+    const frameOf = (win) => [...document.querySelectorAll("iframe")].find((f) => f.contentWindow === win);
+    const listen = (f) => {
+      const kind = embed(f.src);
+      if (!kind || !f.contentWindow) return;
+      const origin = new URL(f.src).origin;
+      const evs = kind === "vimeo" ? ["play", "pause", "ended", "volumechange"] : ["play", "pause", "finish"];
+      // Vimeo takes the message as an object, SoundCloud as JSON text.
+      evs.forEach((v) => {
+        const msg = { method: "addEventListener", value: v };
+        f.contentWindow.postMessage(kind === "vimeo" ? msg : JSON.stringify(msg), origin);
+      });
+    };
+    addEventListener("message", (e) => {
+      if (e.origin !== "https://player.vimeo.com" && e.origin !== "https://w.soundcloud.com") return;
+      const f = frameOf(e.source);
+      if (!f) return;
+      let d = e.data;
+      if (typeof d === "string") { try { d = JSON.parse(d); } catch (err) { return; } }
+      if (!d || typeof d !== "object") return;
+      const ev = d.event || d.method;
+      if (ev === "ready") listen(f);
+      else if (ev === "play" || ev === "playing") mark(f, true);
+      else if (ev === "pause" || ev === "ended" || ev === "finish" || ev === "error") mark(f, false);
+      else if (ev === "volumechange" && d.data && typeof d.data.volume === "number") mark(f, d.data.volume > 0);
+    });
+    // A film that's removed (or a chat answer that's cleared) stops counting.
+    new MutationObserver(() => loud.forEach((x) => { if (x.isConnected === false) { loud.delete(x); back(); } }))
+      .observe(document.body, { childList: true, subtree: true });
   }
 
   // 11d) Home project cards: with a mouse, a tooltip follows the pointer
@@ -634,7 +888,7 @@
     lockForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const value = lockInput.value;
-      if (!value) { setError("Enter the password to continue."); lockInput.focus(); return; }
+      if (!value) { setError("Enter the password to continue."); shake(); lockInput.focus(); return; }
       if (submitBtn) submitBtn.disabled = true;
       try {
         const res = await fetch("/api/unlock", {
@@ -644,7 +898,9 @@
           body: JSON.stringify({ password: value })
         });
         if (res.status === 401) {
-          setError("That password didn't work. Check it and try again.");
+          // Clear first, so a repeat of the same message is read out again.
+          setError("");
+          requestAnimationFrame(() => setError("That password didn't work. Check it and try again."));
           shake();
           return;
         }
@@ -657,6 +913,7 @@
         else window.location.reload();
       } catch (err) {
         setError("Couldn't check the password just now. Try again in a moment.");
+        shake();
       } finally {
         if (submitBtn) submitBtn.disabled = false;
       }
