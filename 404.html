@@ -19,7 +19,7 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Page transitions: the clicked project's image grows into its case study cover (and back). Only that one image is named, only during the transition. */(function(){if(!document.startViewTransition)return;var slugOf=function(u){try{var m=new URL(u,location.href).pathname.match(/^\/work\/([a-z0-9-]+?)(?:\.html)?\/?$/);return m&&m[1];}catch(e){return null;}};var reduce=function(){return matchMedia("(prefers-reduced-motion: reduce)").matches;};var here=slugOf(location.href);var mark=function(slug,vt,arriving){if(!slug||!vt||reduce())return;var el=document.querySelector('[data-vt="'+slug+'"]');if(!el)return;el.style.viewTransitionName="cover-"+slug;if(arriving&&here)document.documentElement.classList.add("vt-arrive");var clear=function(){el.style.viewTransitionName="";document.documentElement.classList.remove("vt-arrive");};vt.finished.then(clear,clear);};addEventListener("pageswap",function(e){if(!e.viewTransition||!e.activation||!e.activation.entry)return;mark(here||slugOf(e.activation.entry.url),e.viewTransition,false);});addEventListener("pagereveal",function(e){if(!e.viewTransition)return;var from=window.navigation&&navigation.activation&&navigation.activation.from;mark(here||(from&&slugOf(from.url)),e.viewTransition,true);});})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261075" />
+<link rel="stylesheet" href="/css/style.css?v=20261076" />
 </head>
 <body>
 
