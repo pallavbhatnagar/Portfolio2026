@@ -28,7 +28,7 @@
     try { sessionStorage.removeItem("caseStudiesUnlocked"); } catch (e) { /* private mode */ }
   }
 
-  // ---------- Breadcrumb: back to Works ----------
+  // ---------- Back to Works ----------
   // Coming from the Works page, step back in history instead of reloading
   // it, so its filter and scroll position are just as they were. From
   // anywhere else (Home, a shared link), the link simply opens /works.
@@ -38,10 +38,10 @@
     try { from = document.referrer ? new URL(document.referrer) : null; } catch (err) { from = null; }
     const sameSite = from && from.origin === location.origin;
     const fromWorks = sameSite && /^\/works(\.html)?\/?$/.test(from.pathname);
-    // data-back="history" (the rail's Back): back to wherever you came from
-    // on this site. Otherwise (the breadcrumb's Works): back only if that
-    // was the Works page. Either way, with nothing to go back to (a shared
-    // link, a new tab), the link opens /works.
+    // data-back="history" (both Back buttons): back to wherever you came
+    // from on this site. Otherwise: back only if that was the Works page.
+    // Either way, with nothing to go back to (a shared link, a new tab),
+    // the link opens /works.
     const goBack = link.dataset.back === "history" ? sameSite : fromWorks;
     if (goBack && history.length > 1) { e.preventDefault(); history.back(); }
   });

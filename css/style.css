@@ -1128,7 +1128,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    blur). Six stacked layers, each blurring more and covering a lower band,
    read as one smooth ramp. It sits under the floating buttons, ignores the
    pointer, and fades out when the footer comes into view. */
-.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 5.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
+.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 6.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
 .edge-blur.is-off, body.ask-open .edge-blur { opacity: 0; }
 .edge-blur i { position: absolute; inset: 0; }
 .edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(0.5px); backdrop-filter: blur(0.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 33%, transparent 50%); mask-image: linear-gradient(to bottom, transparent 0%, #000 16%, #000 33%, transparent 50%); }
@@ -1159,7 +1159,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .sound-toggle[aria-pressed="true"] .snd-on { opacity: 1; }
 .sound-toggle[aria-pressed="true"] .snd-off { opacity: 0; }
 /* Music and theme sit together as one small group of controls. */
-.nav-ctrls { display: flex; align-items: center; gap: 0.125rem; }
+.nav-ctrls { display: flex; align-items: center; gap: 0.5rem; }
 /* Like the nav links: soft grey, black only on hover (or keyboard focus). */
 @media (hover: hover) and (pointer: fine) { .sound-toggle:hover { background: rgba(13, 13, 13, 0.06); color: var(--ink); } }
 :root[data-theme="dark"] .sound-toggle:hover { background: rgba(255, 255, 255, 0.08); }
@@ -2357,42 +2357,31 @@ body.ask-open .shell-scrollbar {
 /* Below 1200px there's no room beside the content for the chapter list. */
 @media (max-width: 1200px) { .cs-side { display: none; } }
 
-/* Breadcrumb: the way back, in the same place at every width. It heads the
-   content column, above the title: "<- Works / <category>". "Works" is the
-   link (with a small arrow for "up a level"); coming from the Works page,
-   it steps back in history so the filter and scroll position are kept
-   (case.js). The category is plain text. */
-.cs-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 0.625rem; font-size: 1rem; font-weight: 500; color: var(--ink-soft); }
-.cs-crumb-back { display: inline-flex; align-items: center; gap: 0.375rem; margin: -0.3125rem -0.375rem; padding: 0.3125rem 0.375rem; border-radius: 0.3125rem; color: var(--ink); transition: background-color 0.2s ease; }
-.cs-crumb-back svg { flex: none; }
-.cs-crumb-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
-@media (hover: hover) and (pointer: fine) {
-  .cs-crumb-back:hover { background: var(--surface); }
-}
-.cs-crumb-sep { color: var(--ink-dim); }
-.cs-crumbs { margin-bottom: 0.25rem; }
+/* Above the title: the Back button (the same round glass button as the
+   chapter rail's, which replaces it on wide windows), then the category.
+   Coming from the Works page, Back steps back in history so the filter
+   and scroll position are kept (case.js). */
+.cs-crumbs { display: flex; flex-direction: column; align-items: flex-start; gap: 0.875rem; margin-bottom: 0.25rem; font-size: 1rem; font-weight: 500; color: var(--ink-soft); }
 
 /* Chapter rail (desktop, wide windows): Back (an arrow in a circle; it
    goes back to the previous page, case.js), "On this page", then the
    chapters. Where the rail is hidden (narrower windows, chat open)
    the breadcrumb above the title is the way back instead. */
 /* Frosted glass, like the nav. */
-.cs-rail-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(40px) saturate(170%); backdrop-filter: blur(40px) saturate(170%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
-:root[data-theme="dark"] .cs-rail-back { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
-.cs-rail-back svg { flex: none; }
-.cs-rail-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.cs-rail-back, .cs-crumb-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(40px) saturate(170%); backdrop-filter: blur(40px) saturate(170%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
+:root[data-theme="dark"] .cs-rail-back, :root[data-theme="dark"] .cs-crumb-back { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
+.cs-rail-back svg, .cs-crumb-back svg { flex: none; }
+.cs-rail-back:focus-visible, .cs-crumb-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-rail-back:hover { border-color: var(--ink); }
+  .cs-rail-back:hover, .cs-crumb-back:hover { border-color: var(--ink); }
 }
 .cs-rail-name { max-width: 11rem; margin: 1.25rem 0 0.625rem; font-size: var(--fs-small); line-height: 1.35; color: var(--ink-soft); }
 .cs-gated .cs-rail-name { display: none; }
-/* With the rail showing, the breadcrumb keeps just the category. */
+/* With the rail showing, only the category stays above the title. */
 @media (min-width: 1201px) {
-  body:not(.ask-open) .cs-crumb-back, body:not(.ask-open) .cs-crumb-sep { display: none; }
+  body:not(.ask-open) .cs-crumb-back { display: none; }
 }
 @media (max-width: 640px) { .cs-crumbs { margin-top: 0.875rem; } }
-/* A taller tap area on touch screens, without moving anything visually. */
-@media (pointer: coarse) { .cs-crumb-back { margin-block: -0.75rem; padding-block: 0.75rem; } }
 /* Title and headline on the left; Ask AI in the bottom-right corner, just
    above the divider over Role / Timeline / Team / Platform. */
 .cs-hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.125rem 2.125rem; }
