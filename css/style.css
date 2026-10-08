@@ -370,7 +370,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 }
 .nav-ai-ic { color: var(--ai-accent); transition: color 0.3s var(--ease-out), transform 0.3s var(--ease-out); }
 @media (hover: hover) and (pointer: fine) {
-  .btn.nav-ai:hover { background: color-mix(in srgb, var(--ai-accent) 8%, var(--bg)); border-color: color-mix(in srgb, var(--ai-accent) 45%, var(--line)); }
+  /* Hover: a faint wash of the AI colours (blue into pink), like the sparkle. */
+  .btn.nav-ai:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 9%, var(--bg)), color-mix(in srgb, #f2369a 8%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 55%, var(--line)); }
   .btn.nav-ai:hover .nav-ai-ic { transform: scale(1.12) rotate(90deg); }
 }
 /* Download resume: the call to action, in the CTA blue with a white label.
@@ -596,12 +597,12 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .proj-tip-in {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
-  padding: 0.375rem 0.625rem 0.375rem 0.75rem;
+  gap: 0.5rem;
+  padding: 0.5625rem 0.875rem 0.5625rem 1rem;
   border-radius: 999px;
   background: var(--tip-bg, var(--fill));
   color: var(--tip-ink, var(--fill-ink));
-  font-size: var(--fs-small);
+  font-size: 1rem;
   font-weight: 600;
   white-space: nowrap;
   box-shadow: 0 0.375rem 1rem rgba(13, 13, 13, 0.16);
@@ -610,7 +611,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   transform-origin: 0 0;
   transition: opacity 0.1s var(--ease-out), transform 0.12s var(--ease-out);
 }
-.proj-tip-in svg { width: 0.875rem; height: 0.875rem; flex: none; }
+.proj-tip-in svg { width: 1rem; height: 1rem; flex: none; }
 .proj-tip.is-on .proj-tip-in { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { .proj-tip-in { transform: none; transition: opacity 0.15s ease; } }
 @media (forced-colors: active) { .proj-tip-in { border: 1px solid CanvasText; } }
@@ -1092,13 +1093,22 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    blur). Six stacked layers, each blurring more and covering a lower band,
    read as one smooth ramp. It sits under the floating buttons, ignores the
    pointer, and fades out when the footer comes into view. */
-.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 4.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
-.edge-blur.is-off, body.ask-open .edge-blur { opacity: 0; }
+.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 6rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
+.edge-blur.is-off { opacity: 0; }
+/* With the chat open beside the page (wide screens), the blur stays on the
+   page side and never covers the chat's own box. */
+@media (min-width: 1300px) {
+  body.ask-open .edge-blur { left: var(--ask-gap); right: var(--ask-panel-w); bottom: var(--ask-gap); overflow: hidden; border-radius: 0 0 var(--ask-radius) var(--ask-radius); }
+}
 .edge-blur i { position: absolute; inset: 0; }
 /* One light layer that strengthens toward the bottom edge: the lightest
    version, since a blur is redrawn on every scroll frame. */
-.edge-blur i { -webkit-backdrop-filter: blur(2.5px); backdrop-filter: blur(2.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); }
-@media (max-width: 640px) { .edge-blur { height: 3.75rem; } }
+.edge-blur i { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); }
+/* Over the blur, a light wash into the page colour (white in the light
+   theme, the dark grey page in the dark theme), so content softens and
+   fades at the edge. A plain gradient: it costs almost nothing to draw. */
+.edge-blur::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--bg) 35%, transparent) 55%, color-mix(in srgb, var(--bg) 80%, transparent)); pointer-events: none; }
+@media (max-width: 640px) { .edge-blur { height: 4.75rem; } }
 @media print { .edge-blur { display: none; } }
 
 /* Ambient music: a speaker beside the theme switch. Muted (with an x) by
@@ -1108,19 +1118,41 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .sound-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 .sound-toggle:active { transform: scale(0.92); }
 .sound-toggle[hidden] { display: none; }
-/* Waiting for a click to resume (the browser held the sound on this page):
-   the speaker shows, gently pulsing. */
-.sound-toggle.is-held .snd-on { opacity: 1; }
-.sound-toggle.is-held .snd-off { opacity: 0; }
-@media (prefers-reduced-motion: no-preference) { .sound-toggle.is-held svg { animation: snd-wait 1.6s ease-in-out infinite; } }
+/* Music toggle: a five-bar equaliser (script.js builds it). Each bar is a
+   pill whose height is (rest dot) + (its dance) x (how "on" it is), so
+   its ends stay perfectly round at any height. At rest all five are round
+   bullets, in the same grey as the nav links and theme icon (ink on hover). Playing, they spring up and dance, each to its own
+   rhythm. Muting freezes the dance where it is and eases the bars back to
+   dots (the dance pauses rather than stops, so nothing jumps). Hover lifts
+   them a little; waiting for a click (the browser held the sound), they rise
+   halfway and pulse. Hover only changes the colour. Only five tiny bars, and only moving while playing. */
+@property --eq-h { syntax: "<number>"; inherits: false; initial-value: 0.5; }
+@property --eq-amp { syntax: "<number>"; inherits: true; initial-value: 0; }
+@property --eq-w { syntax: "<length>"; inherits: true; initial-value: 3px; }
+/* Width never sits in between: the bullets thin to lines the moment the
+   music starts, and only round out again once the bars have settled. */
+.snd-eq { display: flex; align-items: center; gap: 2px; height: 16px; pointer-events: none; --eq-amp: 0; --eq-w: 3px; transition: --eq-amp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), --eq-w 0.15s ease 0.45s; }
+.sound-toggle[aria-pressed="true"] .snd-eq, .sound-toggle.is-held .snd-eq { --eq-w: 0.078125rem; transition: --eq-amp 0.55s cubic-bezier(0.34, 1.56, 0.64, 1), --eq-w 0.12s ease; }
+/* At rest each bar is a 3px round bullet; as the music starts it narrows to
+   the sun icon's line width (16/256 of its 1.25rem size) while it
+   rises, and turns back into a bullet when muted. */
+.eq-bar { display: flex; align-items: center; justify-content: center; width: 3px; height: 100%; }
+.eq-bar i { width: var(--eq-w); height: calc(3px + 13px * var(--eq-h) * var(--eq-amp)); border-radius: 99px; background: currentColor; animation: var(--eq) var(--d) ease-in-out var(--dl) infinite alternate; animation-play-state: paused; }
+.sound-toggle[aria-pressed="true"] .snd-eq { --eq-amp: 1; }
+.sound-toggle[aria-pressed="true"] .eq-bar i { animation-play-state: running; }
+.sound-toggle.is-held .snd-eq { --eq-amp: 0.55; }
+@media (prefers-reduced-motion: no-preference) { .sound-toggle.is-held .snd-eq { animation: snd-wait 1.6s ease-in-out infinite; } }
 @keyframes snd-wait { 50% { opacity: 0.35; } }
-.sound-toggle svg { width: 1.25rem; height: 1.25rem; }
-.sound-toggle .snd-on, .sound-toggle .snd-off { transition: opacity 0.2s var(--ease-out); }
-.sound-toggle .snd-on { opacity: 0; }
-.sound-toggle[aria-pressed="true"] .snd-on { opacity: 1; }
-.sound-toggle[aria-pressed="true"] .snd-off { opacity: 0; }
+@keyframes eq-a { 0% { --eq-h: 0.3; } 35% { --eq-h: 0.95; } 65% { --eq-h: 0.5; } 100% { --eq-h: 0.85; } }
+@keyframes eq-b { 0% { --eq-h: 0.55; } 40% { --eq-h: 0.25; } 70% { --eq-h: 1; } 100% { --eq-h: 0.4; } }
+@keyframes eq-c { 0% { --eq-h: 0.8; } 30% { --eq-h: 0.45; } 60% { --eq-h: 0.9; } 100% { --eq-h: 0.3; } }
+/* Reduced motion: no dance; "playing" is a still, taller waveform. */
+@media (prefers-reduced-motion: reduce) {
+  .snd-eq { transition: none; }
+  .sound-toggle[aria-pressed="true"] .eq-bar i { animation-play-state: paused; }
+}
 /* Music and theme sit together as one small group of controls. */
-.nav-ctrls { display: flex; align-items: center; gap: 0.5rem; }
+.nav-ctrls { display: flex; align-items: center; gap: 0.875rem; }
 /* Like the nav links: soft grey, black only on hover (or keyboard focus). */
 @media (hover: hover) and (pointer: fine) { .sound-toggle:hover { color: var(--ink); } }
 .theme-toggle {
@@ -2310,7 +2342,7 @@ body.ask-open .shell-scrollbar {
 .cs-ask:active { transform: scale(0.97); }
 .cs-ask:focus-visible { outline: 2px solid var(--ink); outline-offset: 2.64px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-ask:hover { background: color-mix(in srgb, var(--ai-accent) 8%, var(--bg)); border-color: color-mix(in srgb, var(--ai-accent) 45%, var(--line)); }
+  .cs-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 9%, var(--bg)), color-mix(in srgb, #f2369a 8%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 55%, var(--line)); }
   .cs-ask:hover .cs-ask-ic { transform: scale(1.12) rotate(90deg); }
 }
 /* Below 1200px there's no room beside the content for the chapter list. */
@@ -2749,3 +2781,86 @@ body.ask-open .cs-side { display: none; }
   .nf-node { fill: Canvas; stroke: CanvasText; }
   .nf-dot { fill: CanvasText; }
 }
+
+/* AI glow around the chat box (like Apple Intelligence): while the chat
+   opens or an answer is being written, a soft halo of colour glows around
+   the box you type in, in "Bloom" (the AI blue through soft blue and pink
+   into hot pink), slowly turning. It sits behind the box (the panel's inner column
+   is its own layer, so it stays above the panel's background), and is
+   blurred so it reads as light rather than a border. Only shown while
+   active. It ignores the pointer. Reduced motion: it only fades. */
+.ask-panel-inner { isolation: isolate; }
+.ask-glow {
+  position: absolute; inset: -3px; z-index: -1; overflow: hidden; pointer-events: none;
+  border-radius: 19px;
+  opacity: 0; visibility: hidden;
+  -webkit-filter: blur(10px); filter: blur(10px);
+  transition: opacity 1.4s cubic-bezier(0.45, 0, 0.25, 1), visibility 0s linear 1.4s;
+}
+.ask-glow.is-on { opacity: 0.55; visibility: visible; transition: opacity 0.7s cubic-bezier(0.45, 0, 0.35, 1), visibility 0s; }
+:root[data-theme="dark"] .ask-glow.is-on { opacity: 0.5; }
+.ask-glow i {
+  position: absolute; top: 50%; left: 50%; width: 40rem; height: 40rem; margin: -20rem 0 0 -20rem;
+  border-radius: 50%;
+  background: conic-gradient(from 0deg, #3965fa, #8fb0ff, #ff8cc4, #f2369a, #ff8cc4, #8fb0ff, #3965fa);
+}
+@media (prefers-reduced-motion: no-preference) {
+  /* The wheel always keeps its angle: it pauses rather than resetting when
+     the glow fades out, so the colours never jump. It turns slowly. */
+  .ask-glow i { animation: ask-glow-turn 9s linear infinite; animation-play-state: paused; }
+  .ask-glow.is-on i { animation-play-state: running; }
+}
+@keyframes ask-glow-turn { to { transform: rotate(1turn); } }
+@media (forced-colors: active), print { .ask-glow { display: none; } }
+
+/* The AI sparkle (Talk to my Work, Ask AI about this project) in the AI
+   colours: "Bloom", blue into hot pink, the same as the chat glow.
+   The gradient is defined once by script.js; without it, plain AI blue. */
+.nav-ai-ic path, .cs-ask-ic path { fill: url(#ai-spark) var(--ai-accent); }
+/* Light theme: deeper, more saturated stops so the sparkle reads crisply on
+   white; dark theme: the brighter palette tones. */
+#ai-spark stop:nth-child(1) { stop-color: #3965fa; }
+#ai-spark stop:nth-child(2) { stop-color: #8a62e0; }
+#ai-spark stop:nth-child(3) { stop-color: #c454c4; }
+#ai-spark stop:nth-child(4) { stop-color: #f2369a; }
+:root[data-theme="dark"] #ai-spark stop:nth-child(1) { stop-color: #7d9cff; }
+:root[data-theme="dark"] #ai-spark stop:nth-child(2) { stop-color: #a88cf0; }
+:root[data-theme="dark"] #ai-spark stop:nth-child(3) { stop-color: #d08ae8; }
+:root[data-theme="dark"] #ai-spark stop:nth-child(4) { stop-color: #ff6fb2; }
+@media (forced-colors: active) { .nav-ai-ic path, .cs-ask-ic path { fill: CanvasText; } }
+
+/* Preloader: on the first page of a visit, a full-screen panel says hello in
+   a few languages, then lifts away with a curved bottom edge that flattens as
+   it goes. Ink panel, page-colour text (so it flips with the theme). The
+   head script sets html.is-preloading (first page of the visit, motion
+   allowed); until script.js builds the panel, ::before covers the page so
+   nothing flashes, and it clears itself after 7s if the script never runs. */
+html.is-preloading { overflow: hidden; }
+html.is-preloading::before { content: ""; position: fixed; inset: 0; z-index: 200; background: var(--pl-bg); animation: pl-safety 0.01s linear 10s forwards; }
+html.is-preloading.pl-ready::before { display: none; }
+@keyframes pl-safety { to { visibility: hidden; } }
+/* Light theme: an ink panel with white type; dark theme: a white panel with
+   ink type, so it always stands apart from the page beneath. */
+:root { --pl-bg: #0d0d0d; --pl-ink: #ffffff; }
+:root[data-theme="dark"] { --pl-bg: #ffffff; --pl-ink: #0d0d0d; }
+.preloader { position: fixed; inset: 0; z-index: 201; display: grid; place-items: center; background: var(--pl-bg); color: var(--pl-ink); cursor: pointer; transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+.preloader.is-leaving { transform: translateY(-100%); }
+/* The curved edge: an ellipse hanging below the panel, flattening as it lifts. */
+.pl-curve { position: absolute; left: -10%; top: calc(100% - 1px); width: 120%; height: 22vh; border-radius: 0 0 50% 50% / 0 0 100% 100%; background: var(--pl-bg); transform-origin: top; transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
+.preloader.is-leaving .pl-curve { transform: scaleY(0); }
+/* Type: large, in Manrope Medium (like the first line of the hero headline).
+   Other scripts fall back to each system's sans-serif. */
+.pl-word {
+  margin: 0;
+  font-family: var(--font), "Nirmala UI", "Kohinoor Devanagari", "Noto Sans Devanagari", "Noto Sans Gurmukhi", "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-size: clamp(2.75rem, 6.5vw, 5rem);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  opacity: 0;
+  transform: translateY(0.375rem);
+  filter: blur(4px);
+  transition: opacity 0.32s var(--ease-out), transform 0.32s var(--ease-out), filter 0.32s var(--ease-out);
+}
+.pl-word.is-on { opacity: 1; transform: none; filter: none; }
+@media print { html.is-preloading::before, .preloader { display: none; } }

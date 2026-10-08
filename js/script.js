@@ -2,6 +2,59 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
+  // 0) The AI colours (Bloom: blue into hot pink) as one shared SVG
+  //    gradient, so the AI sparkle icons can use it (CSS: fill url(#ai-spark)).
+  if (!document.getElementById("ai-spark")) {
+    document.body.insertAdjacentHTML("afterbegin", '<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><defs><linearGradient id="ai-spark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3965fa"/><stop offset="0.4" stop-color="#8a62e0"/><stop offset="0.7" stop-color="#c454c4"/><stop offset="1" stop-color="#f2369a"/></linearGradient></defs></svg>');
+  }
+
+  // 0b) Preloader (CSS .preloader): on the first page of a visit, "Hello"
+  //     in a few languages, a little slower than a flicker, then the panel
+  //     lifts away. A click or any key skips to the end. The head script
+  //     decides whether it runs (html.is-preloading). As it starts to lift
+  //     the page hears "preloader:leaving" (the hero starts drawing then),
+  //     and once it's gone, "preloader:done".
+  if (document.documentElement.classList.contains("is-preloading")) {
+    const html = document.documentElement;
+    try { sessionStorage.setItem("preloaded", "1"); } catch (e) { /* private mode */ }
+    const words = ["Hello", "नमस्ते", "Bonjour", "Hola", "Ciao", "こんにちは", "Olá", "Hallå", "ਸਤ ਸ੍ਰੀ ਅਕਾਲ"];
+    const pl = document.createElement("div");
+    pl.className = "preloader";
+    pl.setAttribute("aria-hidden", "true");
+    pl.innerHTML = '<p class="pl-word"></p><div class="pl-curve"></div>';
+    document.body.appendChild(pl);
+    html.classList.add("pl-ready");
+    const word = pl.querySelector(".pl-word");
+    let i = 0, timer = 0, done = false;
+    const finish = () => {
+      if (done) return;
+      done = true;
+      clearTimeout(timer);
+      pl.classList.add("is-leaving");
+      html.classList.remove("is-preloading");
+      document.dispatchEvent(new CustomEvent("preloader:leaving"));
+      setTimeout(() => {
+        pl.remove();
+        html.classList.remove("pl-ready");
+        document.dispatchEvent(new CustomEvent("preloader:done"));
+      }, 1200);
+    };
+    const show = () => {
+      // Each word eases in (a short fade and focus); "Hello" holds a moment,
+      // the rest pass at an easy pace, the last one lingers.
+      word.classList.remove("is-on");
+      word.textContent = words[i];
+      void word.offsetWidth;
+      word.classList.add("is-on");
+      const hold = i === 0 ? 1400 : i === words.length - 1 ? 900 : 360;
+      i += 1;
+      timer = setTimeout(i < words.length ? show : finish, hold);
+    };
+    requestAnimationFrame(show);
+    pl.addEventListener("pointerdown", finish);
+    addEventListener("keydown", finish, { once: true });
+  }
+
   // 1) Nav bar: an IntersectionObserver watches a 1px sentinel at the top of
   //    the page (no scroll listener) and flags the header once scrolled.
   const header = document.querySelector(".site-header");
@@ -187,7 +240,17 @@
         trailSvg.unpauseAnimations();
         rest();
       };
-      rest(); // the first run, which starts with the page
+      document.addEventListener("preloader:leaving", () => replay());
+      // The first run starts with the page, or, on a visit that opens with
+      // the loader, held at its very first frame (nothing drawn yet) and
+      // started the moment the loader begins to lift.
+      if (document.documentElement.classList.contains("is-preloading")) {
+        trail.classList.add("is-paused");
+        trailSvg.pauseAnimations();
+        trailSvg.setCurrentTime(0);
+      } else {
+        rest();
+      }
       if ("IntersectionObserver" in window) {
         new IntersectionObserver(([en]) => {
           if (!en.isIntersecting) {
@@ -476,6 +539,10 @@
   //      there, the button stays hidden.
   const soundBtn = document.querySelector(".sound-toggle");
   if (soundBtn) {
+    // The icon: a five-bar equaliser (CSS .snd-eq), each bar with its own
+    // rhythm, length and starting point so the dance never looks looped.
+    const bars = [["eq-a", 1.1, -0.3], ["eq-b", 0.8, -0.9], ["eq-c", 1.3, -0.1], ["eq-a", 0.9, -0.6], ["eq-b", 1.2, -0.4]];
+    soundBtn.innerHTML = '<span class="snd-eq" aria-hidden="true">' + bars.map(([k, d, dl]) => `<span class="eq-bar" style="--eq:${k};--d:${d}s;--dl:${dl}s"><i></i></span>`).join("") + "</span>";
     const src = (window.SITE && window.SITE.ambient) || "/assets/audio/ambient/ambient.mp3";
     const VOL = 0.35;
     const KEY = "ambient";
@@ -1454,6 +1521,27 @@
       return turn;
     };
 
+    // The AI glow (CSS .ask-glow): a soft halo of colour glows around the
+    // chat box while the chat opens and while an answer is being written,
+    // then fades. It stays at least a moment, so a quick answer still reads
+    // as a glow, not a flicker.
+    const askGlow = document.createElement("div");
+    askGlow.className = "ask-glow";
+    askGlow.setAttribute("aria-hidden", "true");
+    askGlow.innerHTML = "<i></i>";
+    askForm.prepend(askGlow);
+    let glowTimer = 0, glowSince = 0;
+    const glowOn = () => {
+      clearTimeout(glowTimer);
+      if (!askGlow.classList.contains("is-on")) glowSince = performance.now();
+      askGlow.classList.add("is-on");
+    };
+    const glowOff = (atLeast) => {
+      clearTimeout(glowTimer);
+      const wait = Math.max(0, (atLeast || 0) - (performance.now() - glowSince));
+      glowTimer = setTimeout(() => askGlow.classList.remove("is-on"), wait);
+    };
+
     let askBusy = false;
     const askAsk = (text) => {
       const clean = text.trim();
@@ -1463,11 +1551,13 @@
       addAskMessage("user", clean);
       askInput.value = "";
       const typing = addAskTyping();
+      glowOn();
       const delay = reduce.matches ? 100 : 500 + Math.random() * 400;
       setTimeout(() => {
         typing.remove();
         const reply = (typeof window.pageAnswer === "function" && window.pageAnswer(clean)) || match(clean);
         addAskMessage("agent", reply);
+        glowOff(1100);
         askSend.disabled = false;
         askBusy = false;
         askInput.focus();
@@ -1558,6 +1648,9 @@
       askPanel.hidden = false;
       askPanel.inert = false;
       document.body.classList.add("ask-open");
+      // A frame after the panel appears, so the glow fades in rather than
+      // starting at full strength (a hidden panel has nothing to fade from).
+      requestAnimationFrame(() => requestAnimationFrame(() => { if (askOpen) { glowOn(); glowOff(1400); } }));
       hold();
       void askPanel.offsetWidth;
       askPanel.classList.add("is-open");
@@ -1565,18 +1658,17 @@
       if (reduce.matches) askInput.focus();
       else askPanel.addEventListener("transitionend", () => askInput.focus(), { once: true });
     };
-    // Closing sound: plays however the panel closes (close button, the AI
-    // button again, or Escape).
-    sfx.load("chat-open.mp3");
-    sfx.load("chat-close.mp3");
+    // One sound, on opening only (sound-effects/apple_intelligence.mp3);
+    // closing is silent.
+    sfx.load("apple_intelligence.mp3");
     const closeAsk = () => {
       if (!askOpen) return;
       askOpen = false;
-      sfx.play("chat-close.mp3");
       const hold = pinnedY !== null ? () => {} : holdInPlace(askTrigger);
       askPanel.classList.remove("is-open");
       askPanel.inert = true;
       document.body.classList.remove("ask-open");
+      glowOff(0);
       unpinPage();
       hold();
       askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
@@ -1589,8 +1681,8 @@
     askTriggers.forEach((t) => {
       t.addEventListener("click", () => {
         askTrigger = t; // focus returns here when the panel closes
-        if (askOpen) { closeAsk(); return; } // closeAsk plays the closing sound
-        sfx.play("chat-open.mp3");
+        if (askOpen) { closeAsk(); return; }
+        sfx.play("apple_intelligence.mp3");
         openAsk();
         if (t.dataset.ask && !askThread.children.length) askAsk(t.dataset.ask);
       });
