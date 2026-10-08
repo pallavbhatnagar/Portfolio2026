@@ -411,6 +411,9 @@
     // first card is the last to let go of its sticky point, so once it starts
     // rising the pile is leaving; the heading keeps the same distance above
     // it. Measured without our own shift so it never compounds.
+    // Where the first card sticks, read once per measure() rather than on
+    // every scroll frame.
+    let firstStick = 0;
     const render = () => {
       ticking = false;
       if (!active || !pinned) {
@@ -418,16 +421,20 @@
         headShift = 0;
         return;
       }
-      const firstStick = parseFloat(getComputedStyle(cards[0]).top) || 0;
       const overshoot = Math.max(0, firstStick - cards[0].getBoundingClientRect().top);
       const natural = head.getBoundingClientRect().top - headShift;
       headShift = overshoot > 0 ? Math.min(0, headTop - overshoot - natural) : 0;
       head.style.transform = headShift ? `translateY(${headShift.toFixed(2)}px)` : "";
     };
+    // Scroll work only while the projects section is on screen (or near it).
+    let near = true;
     const requestRender = () => {
-      if (!ticking) { ticking = true; requestAnimationFrame(render); }
+      if (near && !ticking) { ticking = true; requestAnimationFrame(render); }
     };
-    const refresh = () => { measure(); render(); };
+    const refresh = () => { measure(); firstStick = parseFloat(getComputedStyle(cards[0]).top) || 0; render(); };
+    if (section && "IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => { near = en.isIntersecting; if (near) requestRender(); }, { rootMargin: "200px 0px" }).observe(section);
+    }
 
     refresh();
     window.addEventListener("scroll", requestRender, { passive: true });
@@ -453,7 +460,7 @@
     const edge = document.createElement("div");
     edge.className = "edge-blur";
     edge.setAttribute("aria-hidden", "true");
-    edge.innerHTML = "<i></i><i></i><i></i>";
+    edge.innerHTML = "<i></i><i></i>";
     document.body.appendChild(edge);
     const foot = document.querySelector(".site-footer");
     if (foot && "IntersectionObserver" in window) {

@@ -116,7 +116,7 @@
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
-:root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
+:root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.93); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
 :root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
 :root[data-theme="dark"] .tdp { background: #2c2c30; }
@@ -248,9 +248,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   border-radius: 0.625rem;
   /* Frosted glass: a translucent tint, a soft blur with a little extra
      saturation, and a bright hairline on top where light catches it. */
-  background: rgba(255, 255, 255, 0.8);
-  -webkit-backdrop-filter: blur(40px) saturate(170%);
-  backdrop-filter: blur(40px) saturate(170%);
+  background: rgba(255, 255, 255, 0.93);
+  -webkit-backdrop-filter: blur(12px) saturate(170%);
+  backdrop-filter: blur(12px) saturate(170%);
   border: 1px solid rgba(13, 13, 13, 0.07);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.18);
   opacity: 0;
@@ -377,7 +377,10 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .btn-primary[data-site-resume]:hover { background: color-mix(in srgb, var(--cta-bg) 86%, #000); }
 }
 @media (forced-colors: active) { .btn-primary[data-site-resume] { background: ButtonFace; color: ButtonText; } }
-.wk-card { position: relative; }
+/* Each card keeps its own layers (tags, badges) inside it, so nothing on a
+   card can ever sit above the nav or other page chrome. */
+.wk-card { position: relative; isolation: isolate; }
+.proj-stack .project { isolation: isolate; }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
@@ -641,13 +644,11 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   border-radius: 50%;
   color: #0d0d0d;
 }
-/* Tags on project images (Case study, the lock, the cover tag): light
-   frosted glass over the screenshot, with a bright edge. The tint stays
-   strong enough that the dark label reads over any image. */
+/* Tags on project images (Case study, the lock, the cover tag): translucent
+   white with a bright edge. No blur: they move with the page, and a blur
+   that moves is the most expensive thing to redraw while scrolling. */
 .shot-lock, .wk-badge, .cs-cover-tag {
-  background: rgba(255, 255, 255, 0.62);
-  -webkit-backdrop-filter: blur(14px) saturate(170%);
-  backdrop-filter: blur(14px) saturate(170%);
+  background: rgba(255, 255, 255, 0.88);
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.55), 0 0.25rem 0.75rem rgba(13, 13, 13, 0.12);
 }
 .sr-only {
@@ -1088,14 +1089,13 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    blur). Six stacked layers, each blurring more and covering a lower band,
    read as one smooth ramp. It sits under the floating buttons, ignores the
    pointer, and fades out when the footer comes into view. */
-.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 6.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
+.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 5.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
 .edge-blur.is-off, body.ask-open .edge-blur { opacity: 0; }
 .edge-blur i { position: absolute; inset: 0; }
-/* Three layers (sharp to soft): each blurs a little more and covers a lower
-   band, so the ramp reads smooth at a third of the cost of six. */
-.edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(1px); backdrop-filter: blur(1px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 55%, transparent 80%); mask-image: linear-gradient(to bottom, transparent 0%, #000 30%, #000 55%, transparent 80%); }
-.edge-blur i:nth-child(2) { -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); -webkit-mask-image: linear-gradient(to bottom, transparent 30%, #000 60%, #000 80%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 30%, #000 60%, #000 80%, transparent 100%); }
-.edge-blur i:nth-child(3) { -webkit-backdrop-filter: blur(7px); backdrop-filter: blur(7px); -webkit-mask-image: linear-gradient(to bottom, transparent 60%, #000 100%); mask-image: linear-gradient(to bottom, transparent 60%, #000 100%); }
+/* Two light layers (sharp to soft): kept small, since the blur is redrawn
+   on every scroll frame. */
+.edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(1.5px); backdrop-filter: blur(1.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 70%, transparent 100%); }
+.edge-blur i:nth-child(2) { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to bottom, transparent 45%, #000 100%); mask-image: linear-gradient(to bottom, transparent 45%, #000 100%); }
 @media (max-width: 640px) { .edge-blur { height: 4.5rem; } }
 @media print { .edge-blur { display: none; } }
 
@@ -1787,12 +1787,12 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   border: 1px solid var(--hairline);
   border-radius: 999px;
   /* Frosted glass, like the nav. */
-  background: rgba(255, 255, 255, 0.8);
-  -webkit-backdrop-filter: blur(40px) saturate(170%);
-  backdrop-filter: blur(40px) saturate(170%);
+  background: rgba(255, 255, 255, 0.93);
+  -webkit-backdrop-filter: blur(12px) saturate(170%);
+  backdrop-filter: blur(12px) saturate(170%);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.2);
 }
-:root[data-theme="dark"] .wk-filter { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
+:root[data-theme="dark"] .wk-filter { background: rgba(28, 28, 30, 0.93); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 .wk-filter-thumb {
   position: absolute;
   top: 0.1875rem;
@@ -2328,8 +2328,8 @@ body.ask-open .shell-scrollbar {
    chapters. Where the rail is hidden (narrower windows, chat open)
    the breadcrumb above the title is the way back instead. */
 /* Frosted glass, like the nav. */
-.cs-rail-back, .cs-crumb-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.8); -webkit-backdrop-filter: blur(40px) saturate(170%); backdrop-filter: blur(40px) saturate(170%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
-:root[data-theme="dark"] .cs-rail-back, :root[data-theme="dark"] .cs-crumb-back { background: rgba(28, 28, 30, 0.8); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
+.cs-rail-back, .cs-crumb-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.93); -webkit-backdrop-filter: blur(12px) saturate(170%); backdrop-filter: blur(12px) saturate(170%); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
+:root[data-theme="dark"] .cs-rail-back, :root[data-theme="dark"] .cs-crumb-back { background: rgba(28, 28, 30, 0.93); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 .cs-rail-back svg, .cs-crumb-back svg { flex: none; }
 .cs-rail-back:focus-visible, .cs-crumb-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
