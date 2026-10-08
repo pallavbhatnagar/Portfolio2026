@@ -494,12 +494,16 @@
     let gain = null, actx = null;
     const getVol = () => (gain ? gain.gain.value : audio.volume);
     const setVol = (v) => { v = Math.min(1, Math.max(0, v)); if (gain) gain.gain.value = v; else audio.volume = v; };
+    // Fades move evenly in loudness, not in raw volume (a straight volume
+    // ramp sounds like it jumps at one end), with a soft start and end.
     const fade = (to, ms, done) => {
       cancelAnimationFrame(fadeRaf);
-      const from = getVol(), t0 = performance.now();
+      const a = Math.sqrt(getVol()), b = Math.sqrt(to), t0 = performance.now();
       const step = (t) => {
         const k = Math.min(1, (t - t0) / ms);
-        setVol(from + (to - from) * k);
+        const e = k * k * (3 - 2 * k);
+        const amp = a + (b - a) * e;
+        setVol(amp * amp);
         if (k < 1) fadeRaf = requestAnimationFrame(step); else if (done) done();
       };
       fadeRaf = requestAnimationFrame(step);
@@ -530,12 +534,36 @@
       addEventListener("pagehide", () => { if (on) { store.set(KEY + "-at", String(audio.currentTime)); store.set(KEY + "-left", String(Date.now())); } });
       return audio;
     };
-    // A first play fades in gently; carrying on from the last page is quick.
-    const play = (resuming) => { ensure(); if (actx && actx.state === "suspended") actx.resume().catch(() => {}); return audio.play().then(() => { setUi(true); soundBtn.classList.remove("is-held"); store.set(KEY, "on"); fade(VOL, resuming ? 300 : 1200); return true; }, () => false); };
-    const stop = () => { setUi(false); store.set(KEY, "off"); store.set(KEY + "-at", "0"); fade(0, 500, () => audio.pause()); };
-    // Remember "on" the moment it's asked for, so leaving the page while the
-    // track is still starting doesn't lose it.
-    soundBtn.addEventListener("click", () => { if (on) stop(); else { store.set(KEY, "on"); play(false); } });
+    // A first play fades in slowly; carrying on from the last page fades in
+    // a little quicker. "want" is what the visitor last asked for, so a
+    // quick second click (muting while the track is still starting) wins.
+    let want = false;
+    const play = (resuming) => {
+      want = true;
+      ensure();
+      if (actx && actx.state === "suspended") actx.resume().catch(() => {});
+      return audio.play().then(() => {
+        if (!want) { audio.pause(); return false; }
+        setUi(true); soundBtn.classList.remove("is-held"); store.set(KEY, "on");
+        fade(VOL, resuming ? 900 : 1800);
+        return true;
+      }, () => false);
+    };
+    const stop = () => { want = false; setUi(false); store.set(KEY, "off"); store.set(KEY + "-at", "0"); if (audio) fade(0, 1000, () => { if (!want) audio.pause(); }); };
+    // The button answers the moment it's clicked; the music follows as soon
+    // as the track can play. "On" is remembered at once, so leaving the page
+    // while it's still starting doesn't lose it.
+    soundBtn.addEventListener("click", () => {
+      if (on) { stop(); return; }
+      store.set(KEY, "on");
+      setUi(true);
+      play(false).then((ok) => { if (!ok && want) { want = false; setUi(false); } });
+    });
+    // Start loading the track when the pointer comes near the button (or it
+    // gets keyboard focus), so it's usually ready by the time it's clicked.
+    const warm = () => { if (!audio) ensure(); };
+    soundBtn.addEventListener("pointerenter", warm, { once: true });
+    soundBtn.addEventListener("focus", warm, { once: true });
     // A browser may refuse to start sound on a freshly loaded page until the
     // visitor interacts with it. Then the button shows it's waiting, and the
     // music picks up at the first click, tap or key press anywhere (scrolling
@@ -583,7 +611,7 @@
       setUi(false);
       soundBtn.setAttribute("aria-label", "Ambient music paused while media plays");
       soundBtn.title = "Ambient music paused while media plays";
-      fade(0, 400, () => { if (!on) audio.pause(); });
+      fade(0, 700, () => { if (!on) audio.pause(); });
     };
     // Wait a moment before coming back, so a quick pause-and-play (or a
     // player hiccup) doesn't make the music flicker in and out.

@@ -145,6 +145,9 @@
 .first-screen { display: flex; flex-direction: column; }
 
 html { font-size: 90%; }
+/* Desktop (a mouse and a wide window): everything a step smaller, the way
+   the site looks at 90% browser zoom. Sizes are in rem, so they all follow. */
+@media (min-width: 1025px) and (hover: hover) and (pointer: fine) { html { font-size: 81%; } }
 /* Focus never hidden (WCAG 2.4.11): when the keyboard moves focus, the
    browser scrolls the item clear of the fixed nav, and on Works clear of the
    sticky filter bar too. The chat panel's scroll area gets the same offset. */
@@ -2279,8 +2282,10 @@ body.ask-open .shell-scrollbar {
   flex-direction: column;
   align-items: flex-start;
 }
-.cs-toc { display: flex; flex-direction: column; gap: 0.3125rem; margin: 0; padding: 0; list-style: none; }
-.cs-toc a { display: inline-block; padding: 0.0625rem 0; font-size: 1rem; font-weight: 500; color: var(--ink-soft); transition: color 0.25s ease; }
+.cs-toc { display: flex; flex-direction: column; gap: 0; margin: 0; padding: 0; list-style: none; }
+/* At least 24px tall to click (WCAG 2.5.8), in px so the smaller desktop
+   size never shrinks it; the rows sit edge to edge, as close as before. */
+.cs-toc a { display: inline-flex; align-items: center; min-height: 24px; padding: 0.0625rem 0; font-size: 1rem; font-weight: 500; color: var(--ink-soft); transition: color 0.25s ease; }
 .cs-toc a.is-active { color: var(--ink); }
 .cs-toc a:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.1875rem; }
 @media (hover: hover) and (pointer: fine) { .cs-toc a:hover { color: var(--ink); } }
