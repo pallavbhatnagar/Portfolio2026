@@ -460,7 +460,7 @@
     const edge = document.createElement("div");
     edge.className = "edge-blur";
     edge.setAttribute("aria-hidden", "true");
-    edge.innerHTML = "<i></i><i></i>";
+    edge.innerHTML = "<i></i>";
     document.body.appendChild(edge);
     const foot = document.querySelector(".site-footer");
     if (foot && "IntersectionObserver" in window) {

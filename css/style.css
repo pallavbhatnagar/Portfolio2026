@@ -147,7 +147,7 @@
 html { font-size: 90%; }
 /* Desktop (a mouse and a wide window): everything a step smaller, the way
    the site looks at 90% browser zoom. Sizes are in rem, so they all follow. */
-@media (min-width: 1025px) and (hover: hover) and (pointer: fine) { html { font-size: 81%; } }
+@media (min-width: 1025px) and (any-pointer: fine) { html { font-size: 81%; } }
 /* Focus never hidden (WCAG 2.4.11): when the keyboard moves focus, the
    browser scrolls the item clear of the fixed nav, and on Works clear of the
    sticky filter bar too. The chat panel's scroll area gets the same offset. */
@@ -1090,14 +1090,13 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    blur). Six stacked layers, each blurring more and covering a lower band,
    read as one smooth ramp. It sits under the floating buttons, ignores the
    pointer, and fades out when the footer comes into view. */
-.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 5.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
+.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 4.5rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
 .edge-blur.is-off, body.ask-open .edge-blur { opacity: 0; }
 .edge-blur i { position: absolute; inset: 0; }
-/* Two light layers (sharp to soft): kept small, since the blur is redrawn
-   on every scroll frame. */
-.edge-blur i:nth-child(1) { -webkit-backdrop-filter: blur(1.5px); backdrop-filter: blur(1.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 70%, transparent 100%); mask-image: linear-gradient(to bottom, transparent 0%, #000 45%, #000 70%, transparent 100%); }
-.edge-blur i:nth-child(2) { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to bottom, transparent 45%, #000 100%); mask-image: linear-gradient(to bottom, transparent 45%, #000 100%); }
-@media (max-width: 640px) { .edge-blur { height: 4.5rem; } }
+/* One light layer that strengthens toward the bottom edge: the lightest
+   version, since a blur is redrawn on every scroll frame. */
+.edge-blur i { -webkit-backdrop-filter: blur(2.5px); backdrop-filter: blur(2.5px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); }
+@media (max-width: 640px) { .edge-blur { height: 3.75rem; } }
 @media print { .edge-blur { display: none; } }
 
 /* Ambient music: a speaker beside the theme switch. Muted (with an x) by
