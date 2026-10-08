@@ -2067,9 +2067,10 @@ body.ask-open .shell-scrollbar {
   top: 0;
   right: 0;
   bottom: 0;
-  width: 10px;
+  width: 12px;
   z-index: 5;
-  pointer-events: none;
+  cursor: default;
+  touch-action: none;
 }
 .shell-scrollbar-thumb {
   position: absolute;
@@ -2078,10 +2079,13 @@ body.ask-open .shell-scrollbar {
   border-radius: 999px;
   background: color-mix(in srgb, var(--fade) 65%, transparent);
   opacity: 0;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.3s ease, width 0.15s ease, background-color 0.15s ease;
 }
 .shell-scrollbar.is-scrolling .shell-scrollbar-thumb,
-.shell-scrollbar.edge-hover .shell-scrollbar-thumb { opacity: 1; }
+.shell-scrollbar.edge-hover .shell-scrollbar-thumb,
+.shell-scrollbar.is-dragging .shell-scrollbar-thumb { opacity: 1; }
+/* Grabbable: the thumb widens a little under the pointer and while dragged. */
+.shell-scrollbar:hover .shell-scrollbar-thumb, .shell-scrollbar.is-dragging .shell-scrollbar-thumb { width: 6px; opacity: 1; background: color-mix(in srgb, var(--ink-soft) 70%, transparent); }
 @media (prefers-reduced-motion: reduce) {
   .shell-scrollbar-thumb { transition: none; }
 }

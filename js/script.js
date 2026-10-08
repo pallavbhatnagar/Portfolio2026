@@ -177,6 +177,36 @@
     }, { passive: true });
     if ("ResizeObserver" in window) new ResizeObserver(updateThumb).observe(shellScroll);
     updateThumb();
+
+    // It works like a real scrollbar: drag the thumb, or press the track to
+    // jump there. Pointer capture keeps the drag going outside the bar.
+    let drag = null;
+    const range = () => {
+      const trackH = shellScrollbar.clientHeight, thumbH = shellScrollbarThumb.offsetHeight;
+      return { trackH, thumbH, scrollMax: shellScroll.scrollHeight - shellScroll.clientHeight };
+    };
+    shellScrollbar.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      const r = range();
+      if (r.scrollMax <= 0) return;
+      if (e.target !== shellScrollbarThumb) {
+        // Press on the track: centre the thumb there, then keep dragging.
+        const y = e.clientY - shellScrollbar.getBoundingClientRect().top - r.thumbH / 2;
+        shellScroll.scrollTop = Math.max(0, Math.min(1, y / (r.trackH - r.thumbH))) * r.scrollMax;
+      }
+      drag = { y: e.clientY, top: shellScroll.scrollTop };
+      shellScrollbar.setPointerCapture(e.pointerId);
+      shellScrollbar.classList.add("is-dragging");
+    });
+    shellScrollbar.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const r = range();
+      shellScroll.scrollTop = drag.top + (e.clientY - drag.y) * (r.scrollMax / Math.max(1, r.trackH - r.thumbH));
+    });
+    const endDrag = () => { drag = null; shellScrollbar.classList.remove("is-dragging"); };
+    shellScrollbar.addEventListener("pointerup", endDrag);
+    shellScrollbar.addEventListener("pointercancel", endDrag);
   }
 
   // 2c) Reveal the scrollbar thumb on hover near the right edge too, not
@@ -283,7 +313,9 @@
   if (toTop) {
     toTop.addEventListener("click", (e) => {
       e.preventDefault();
-      window.scrollTo({ top: 0, behavior: reduce.matches ? "auto" : "smooth" });
+      // With the chat open beside it, the page scrolls inside .shell-scroll.
+      const scroller = inShellScroll() ? shellScroll : window;
+      scroller.scrollTo({ top: 0, behavior: reduce.matches ? "auto" : "smooth" });
     });
   }
 
