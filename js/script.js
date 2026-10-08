@@ -577,6 +577,14 @@
     };
     const ensure = () => {
       if (audio) return audio;
+      // Already started by the page's head script (carrying on from the last
+      // page): take it over as it is.
+      if (window.__ambient) {
+        audio = window.__ambient;
+        window.__ambTaken = true;
+        addEventListener("pagehide", () => { if (on) { store.set(KEY + "-at", String(audio.currentTime)); store.set(KEY + "-left", String(Date.now())); } });
+        return audio;
+      }
       audio = new Audio(src);
       audio.loop = true;
       audio.preload = "auto";
@@ -612,7 +620,7 @@
       return audio.play().then(() => {
         if (!want) { audio.pause(); return false; }
         setUi(true); soundBtn.classList.remove("is-held"); store.set(KEY, "on");
-        fade(VOL, resuming ? 900 : 1800);
+        fade(VOL, resuming ? 200 : 1800);
         return true;
       }, () => false);
     };
@@ -664,7 +672,11 @@
       fetch(src, { method: "HEAD" }).then((r) => { if (r.ok) soundBtn.hidden = false; }).catch(() => {});
     }
     // Coming back with the Back button (page restored from memory).
-    addEventListener("pageshow", (e) => { if (e.persisted && store.get(KEY) === "on" && (!audio || audio.paused)) play(true).then((ok) => { if (!ok) hold(); }); });
+    addEventListener("pageshow", (e) => {
+      if (!e.persisted || store.get(KEY) !== "on") return;
+      if (!audio || audio.paused) play(true).then((ok) => { if (!ok) hold(); });
+      else if (on) fade(VOL, 200); // back from memory
+    });
 
     // Step aside for other sound. While a video (or the SoundCloud player)
     // plays with sound, the music fades out; when it's paused, ends or is
