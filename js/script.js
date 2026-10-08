@@ -1065,6 +1065,16 @@
     t.setAttribute("datetime", `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   });
 
+  // 15c) About playlist card: the waveform's played part (lime) stops at a
+  //      random point on each visit, as if the playlist were already under
+  //      way somewhere (between about a sixth and five-sixths of the way).
+  const waveBars = document.querySelectorAll(".om-wave i");
+  if (waveBars.length) {
+    const n = waveBars.length;
+    const upTo = Math.round(n * (0.15 + Math.random() * 0.7));
+    waveBars.forEach((bar, i) => bar.classList.toggle("is-played", i < upTo));
+  }
+
   // 15a) About: the looping animations (the career path's pulsing ring, the
   //      playlist card's vinyl and waveform, the book shelf) pause while
   //      their section is off screen, so they cost nothing while you read
