@@ -476,7 +476,7 @@
   //      there, the button stays hidden.
   const soundBtn = document.querySelector(".sound-toggle");
   if (soundBtn) {
-    const src = (window.SITE && window.SITE.ambient) || "/assets/audio/ambient/ambient.wav";
+    const src = (window.SITE && window.SITE.ambient) || "/assets/audio/ambient/ambient.mp3";
     const VOL = 0.35;
     const KEY = "ambient";
     const store = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* private mode */ } } };

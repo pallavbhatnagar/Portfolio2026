@@ -28,22 +28,15 @@
     try { sessionStorage.removeItem("caseStudiesUnlocked"); } catch (e) { /* private mode */ }
   }
 
-  // ---------- Back to Works ----------
-  // Coming from the Works page, step back in history instead of reloading
-  // it, so its filter and scroll position are just as they were. From
-  // anywhere else (Home, a shared link), the link simply opens /works.
+  // ---------- Back ----------
+  // Back works exactly like the browser's Back button: it returns to the
+  // previous page, with its scroll position (and the Works filter) as they
+  // were. Only when there is no previous page (the case study opened in a
+  // new tab) does the link open /works instead. Opening it in a new tab
+  // (Ctrl/Cmd-click, middle click) is left to the browser.
   const smartBack = (link) => link.addEventListener("click", (e) => {
     if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
-    let from = null;
-    try { from = document.referrer ? new URL(document.referrer) : null; } catch (err) { from = null; }
-    const sameSite = from && from.origin === location.origin;
-    const fromWorks = sameSite && /^\/works(\.html)?\/?$/.test(from.pathname);
-    // data-back="history" (both Back buttons): back to wherever you came
-    // from on this site. Otherwise: back only if that was the Works page.
-    // Either way, with nothing to go back to (a shared link, a new tab),
-    // the link opens /works.
-    const goBack = link.dataset.back === "history" ? sameSite : fromWorks;
-    if (goBack && history.length > 1) { e.preventDefault(); history.back(); }
+    if (history.length > 1) { e.preventDefault(); history.back(); }
   });
 
   document.querySelectorAll("[data-back]").forEach(smartBack);
