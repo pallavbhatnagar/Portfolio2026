@@ -1103,7 +1103,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .edge-blur i { position: absolute; inset: 0; }
 /* One light layer that strengthens toward the bottom edge: the lightest
    version, since a blur is redrawn on every scroll frame. */
-.edge-blur i { -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); }
+.edge-blur i { -webkit-backdrop-filter: blur(2px); backdrop-filter: blur(2px); -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); mask-image: linear-gradient(to bottom, transparent 0%, #000 85%); }
 /* Over the blur, a light wash into the page colour (white in the light
    theme, the dark grey page in the dark theme), so content softens and
    fades at the edge. A plain gradient: it costs almost nothing to draw. */
