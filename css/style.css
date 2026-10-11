@@ -2861,18 +2861,20 @@ body.ask-open .cs-side { display: none; }
 /* The AI sparkle (Talk to my Work, Ask AI about this project) in the AI
    colours: "Bloom", blue into hot pink, the same as the chat glow.
    The gradient is defined once by script.js; without it, plain AI blue. */
-.nav-ai-ic path, .cs-ask-ic path { fill: url(#ai-spark) var(--ai-accent); }
+/* Without the script the sparkle is plain AI blue; the script gives each
+   icon its own gradient (script.js 0). */
+.nav-ai-ic path:not(.ai-spark-fill), .cs-ask-ic path:not(.ai-spark-fill) { fill: var(--ai-accent); }
 /* Light theme: deeper, more saturated stops so the sparkle reads crisply on
    white; dark theme: the brighter palette tones. */
-#ai-spark stop:nth-child(1) { stop-color: #3965fa; }
-#ai-spark stop:nth-child(2) { stop-color: #8a62e0; }
-#ai-spark stop:nth-child(3) { stop-color: #c454c4; }
-#ai-spark stop:nth-child(4) { stop-color: #f2369a; }
-:root[data-theme="dark"] #ai-spark stop:nth-child(1) { stop-color: #7d9cff; }
-:root[data-theme="dark"] #ai-spark stop:nth-child(2) { stop-color: #a88cf0; }
-:root[data-theme="dark"] #ai-spark stop:nth-child(3) { stop-color: #d08ae8; }
-:root[data-theme="dark"] #ai-spark stop:nth-child(4) { stop-color: #ff6fb2; }
-@media (forced-colors: active) { .nav-ai-ic path, .cs-ask-ic path { fill: CanvasText; } }
+.ai-spark stop:nth-child(1) { stop-color: #3965fa; }
+.ai-spark stop:nth-child(2) { stop-color: #8a62e0; }
+.ai-spark stop:nth-child(3) { stop-color: #c454c4; }
+.ai-spark stop:nth-child(4) { stop-color: #f2369a; }
+:root[data-theme="dark"] .ai-spark stop:nth-child(1) { stop-color: #7d9cff; }
+:root[data-theme="dark"] .ai-spark stop:nth-child(2) { stop-color: #a88cf0; }
+:root[data-theme="dark"] .ai-spark stop:nth-child(3) { stop-color: #d08ae8; }
+:root[data-theme="dark"] .ai-spark stop:nth-child(4) { stop-color: #ff6fb2; }
+@media (forced-colors: active) { .nav-ai-ic path, .cs-ask-ic path { fill: CanvasText !important; } }
 
 /* Preloader: on the first page of a visit, a full-screen panel says hello in
    a few languages, then lifts away with a curved bottom edge that flattens as

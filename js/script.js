@@ -2,11 +2,18 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  // 0) The AI colours (Bloom: blue into hot pink) as one shared SVG
-  //    gradient, so the AI sparkle icons can use it (CSS: fill url(#ai-spark)).
-  if (!document.getElementById("ai-spark")) {
-    document.body.insertAdjacentHTML("afterbegin", '<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute"><defs><linearGradient id="ai-spark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3965fa"/><stop offset="0.4" stop-color="#8a62e0"/><stop offset="0.7" stop-color="#c454c4"/><stop offset="1" stop-color="#f2369a"/></linearGradient></defs></svg>');
-  }
+  // 0) The AI colours (Bloom: blue into hot pink) on every AI sparkle icon.
+  //    Each icon gets its own copy of the gradient inside its own <svg>:
+  //    Safari doesn't reliably paint a gradient borrowed from another <svg>,
+  //    and fell back to plain blue. The stop colours follow the theme (CSS).
+  document.querySelectorAll(".nav-ai-ic, .cs-ask-ic svg").forEach((icon, i) => {
+    const path = icon.querySelector("path");
+    if (!path || icon.querySelector("linearGradient")) return;
+    const id = `ai-spark-${i}`;
+    icon.insertAdjacentHTML("afterbegin", `<defs><linearGradient class="ai-spark" id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3965fa"/><stop offset="0.4" stop-color="#8a62e0"/><stop offset="0.7" stop-color="#c454c4"/><stop offset="1" stop-color="#f2369a"/></linearGradient></defs>`);
+    path.setAttribute("fill", `url(#${id})`);
+    path.classList.add("ai-spark-fill");
+  });
 
   // 0b) Preloader (CSS .preloader): on the first page of a visit, "Hello"
   //     in a few languages, a little slower than a flicker, then the panel
@@ -274,10 +281,16 @@
     const easeIO = bezier(0.77, 0, 0.175, 1);
     const part = (t, start, dur) => Math.min(1, Math.max(0, (t - start) / dur));
     let len = 0;
+    const measure = () => {
+      line.setAttribute("d", from);
+      try { len = line.getTotalLength(); } catch (e) { len = 0; }
+    };
     const render = (t) => {
       const drawn = easeOut(part(t, 0.3, 1.3));
       const m = easeIO(part(t, 1.6, 1.6));
       line.setAttribute("d", m > 0 ? shape(m) : from);
+      // Before it starts (held under the loading screen) nothing is drawn.
+      line.style.visibility = drawn > 0 || len ? "" : "hidden";
       if (drawn < 1 && len) {
         line.style.strokeDasharray = `${len} ${len}`;
         line.style.strokeDashoffset = String(len * (1 - drawn));
@@ -313,13 +326,12 @@
       play() {
         stop();
         if (!svg.getClientRects().length) { render(99); return; }
-        line.setAttribute("d", from);
-        try { len = line.getTotalLength(); } catch (e) { len = 0; }
+        measure();
         t0 = performance.now();
         render(0);
         raf = requestAnimationFrame(frame);
       },
-      hold() { stop(); render(0); },
+      hold() { stop(); if (svg.getClientRects().length) measure(); render(0); },
       stop,
       finish() { stop(); render(99); }
     };
