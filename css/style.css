@@ -321,16 +321,16 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   font-size: var(--hero-fs);
   font-weight: 500;
   letter-spacing: -0.024em;
-  line-height: 0.98;
+  line-height: 1.1;
 }
 .hl, .hl > span { display: block; }
 .hl:last-child { font-weight: 300; }
 .hero-lede {
-  margin-top: 1.5rem;
+  margin-top: 2rem;
   max-width: 46em;
-  font-size: 1.25rem;
+  font-size: 1.1875rem;
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.65;
   color: var(--ink-soft);
 }
 /* The name stands out from the intro: heavier and full ink. */
@@ -392,7 +392,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .btn-secondary:hover { border-color: var(--ink); }
 }
 
-.trail { position: absolute; z-index: 0; top: calc(var(--hero-top) + var(--hero-fs) * 0.98); left: calc(var(--pad) + var(--hero-fs) * 5.2); right: var(--pad); transform: translateY(-52.6%); pointer-events: none; }
+.trail { position: absolute; z-index: 0; top: calc(var(--hero-top) + var(--hero-fs) * 1.1); left: calc(var(--pad) + var(--hero-fs) * 5.2); right: var(--pad); transform: translateY(-52.6%); pointer-events: none; }
 .trail-stage { position: relative; }
 .trail-svg { display: block; width: 100%; height: auto; overflow: visible; }
 .trail-ghost { fill: none; stroke: url(#ghostGrad); stroke-width: 1.8; stroke-dasharray: 2 8; stroke-linecap: round; }
@@ -463,6 +463,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   /* Sized to fit one line; allowed to wrap only if a reading tool adds
      letter spacing (WCAG 1.4.12), instead of running off the screen. */
   .hero-title { font-size: clamp(1.5rem, 7.75vw, 2.375rem); }
+  /* Phones keep their own intro spacing (the wider screens get more air). */
+  .hero-lede { margin-top: 1.5rem; font-size: 1.25rem; line-height: 1.5; }
+  .hero-actions { margin-top: 2.75rem; }
   .hero-title .hl, .hero-title .hl > span { display: inline-block; }
 }
 @media (max-width: 480px) {
