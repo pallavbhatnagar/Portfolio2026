@@ -12,16 +12,16 @@ Works are built by JavaScript from one data file, js/projects.js.
 
 ```text
 /                          Home            index.html
-├── /works                 Works           works.html
+├── /works                 Works           works/index.html
 ├── /about                 About           about.html
 ├── (any missing address)  Page not found  404.html
-└── /work/<slug>           Case study      work/<slug>.html (one page per project)
-    ├── /work/wealthbasket     WealthBasket     Fintech · 2021         case study (locked)
-    ├── /work/wayfarer         Wayfarer Health  Healthcare · 2024      case study · password protected
-    ├── /work/parcelo          Parcelo          B2B SaaS · 2024        case study · password protected
-    ├── /work/lumen            Lumen Learn      EdTech · 2023          case study
-    ├── /work/wave             Wave 2.0         Fintech · 2021         case study · detailed (11 chapters)
-    └── /work/jda              JDA Infra        Infrastructure · 2021  exploration
+└── /works/<slug>           Case study      works/<slug>.html (one page per project)
+    ├── /works/wealthbasket     WealthBasket     Fintech · 2021         case study (locked)
+    ├── /works/wayfarer         Wayfarer Health  Healthcare · 2024      case study · password protected
+    ├── /works/parcelo          Parcelo          B2B SaaS · 2024        case study · password protected
+    ├── /works/lumen            Lumen Learn      EdTech · 2023          case study
+    ├── /works/wave             Wave 2.0         Fintech · 2021         case study · detailed (11 chapters)
+    └── /works/jda              JDA Infra        Infrastructure · 2021  exploration
 ```
 
 Every page shares the same top navigation (Home, Works, About me, a light /
@@ -91,9 +91,9 @@ along the gap above a section, or peeks over the top of the Now or "Where I
 start" card. Clicking him plays a bark and shows a heart. With reduced motion
 he sits still above the last section.
 
-## Case study: `/work/<slug>`
+## Case study: `/works/<slug>`
 
-Each project has its own page, `work/<slug>.html`, with its own title,
+Each project has its own page, `works/<slug>.html`, with its own title,
 description and link-preview image. All six share the same layout.
 
 **Top of every case study:** back button, category, project name, one-line
@@ -141,8 +141,8 @@ both projects.
 
 ```text
 /
-├── index.html · works.html · about.html · 404.html
-├── work/                     wealthbasket · wayfarer · parcelo · lumen · wave · jda (.html)
+├── index.html · works/index.html · about.html · 404.html
+├── works/                    wealthbasket · wayfarer · parcelo · lumen · wave · jda (.html)
 ├── README.md                 How to edit and publish the site
 ├── SITEMAP.md                This file
 ├── .github/workflows/deploy-pages.yml   Publishes to GitHub Pages on every push
@@ -170,7 +170,7 @@ both projects.
 | Content | Source |
 |---|---|
 | Project cards on Home (4) and Works (6) | `js/projects.js` (`home` and `works` fields) |
-| Case study pages | `work/<slug>.html` (each page's own HTML) |
+| Case study pages | `works/<slug>.html` (each page's own HTML) |
 | Email, social links, resume link | `js/content.js` |
 | Hero, About text, skills, testimonials | Written directly in `index.html` and `about.html` |
 | Chat answers | `js/script.js` (project cards from `js/projects.js`; on a case study, `js/case.js` answers from that page) |

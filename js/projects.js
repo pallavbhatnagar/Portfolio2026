@@ -2,18 +2,18 @@
    Your project cards, in one place.
    The project cards on the Home page and the Works page, and the chat's
    project cards, are built from this list. Each project's case study is its
-   own page: work/<slug>.html (edit its content there).
+   own page: works/<slug>.html (edit its content there).
    Numbers and text are SAMPLE DATA: replace with your real work.
 
    To add a project:
-   1. Copy a case study page in work/ (for example work/wealthbasket.html), name
+   1. Copy a case study page in works/ (for example works/wealthbasket.html), name
       it after the new slug and replace its content.
    2. Put its images in assets/projects/<slug>/images/.
    3. Copy one { ... } block below and update it.
    The order of this list is the Works page order.
 
    Fields
-   - slug       the page's name: work/<slug>.html, shown at /work/<slug>
+   - slug       the page's name: works/<slug>.html, shown at /works/<slug>
    - name, category, year
    - kind       "Case study" or "Exploration" (the Works filter uses this)
    - tint       mint | lilac | rose | sky | sand (the card's colour)
@@ -24,7 +24,7 @@
    ========================================================= */
 window.CASE_STUDIES = [
   {
-    // Case study: work/wealthbasket.html (Paytm Money)
+    // Case study: works/wealthbasket.html (Paytm Money)
     slug: "wealthbasket",
     name: "WealthBasket",
     kind: "Case study",
@@ -57,7 +57,7 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: work/wayfarer.html
+    // Case study: works/wayfarer.html
     slug: "wayfarer",
     name: "Wayfarer Health",
     kind: "Case study",
@@ -90,7 +90,7 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: work/parcelo.html
+    // Case study: works/parcelo.html
     slug: "parcelo",
     name: "Parcelo",
     kind: "Case study",
@@ -123,7 +123,7 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: work/lumen.html
+    // Case study: works/lumen.html
     slug: "lumen",
     name: "Lumen Learn",
     kind: "Case study",
@@ -142,7 +142,7 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: work/wave.html
+    // Case study: works/wave.html
     slug: "wave",
     name: "Wave 2.0",
     kind: "Case study",
@@ -175,7 +175,7 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: work/jda.html
+    // Case study: works/jda.html
     slug: "jda",
     name: "JDA Infra",
     kind: "Exploration",

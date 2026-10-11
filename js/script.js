@@ -946,7 +946,7 @@
   //      /api/unlock, against the PORTFOLIO_PASSWORD secret; it is never in
   //      this site. A right password makes the Worker set a signed cookie
   //      (ends when the browser closes, 2 hours at most), and the Worker then
-  //      serves the full locked pages instead of the placeholders in work/.
+  //      serves the full locked pages instead of the placeholders in works/.
   //      To change the password: Cloudflare -> Workers & Pages ->
   //      portfolio-auth -> Settings -> Variables and secrets.
   const lockDialog = document.getElementById("lockDialog");
@@ -1124,7 +1124,7 @@
       const p = projects.find((x) => x.slug === slug);
       if (!p) return "";
       const label = p.locked ? `${p.name} (password protected)` : p.name;
-      return `<a class="rd-chip" href="/work/${p.slug}" style="--c-bg: var(--${p.tint}-bg); --c-ink: var(--${p.tint}-ink); --i: ${i}" aria-label="${label}">${p.locked ? lockIc : ""}${p.name}</a>`;
+      return `<a class="rd-chip" href="/works/${p.slug}" style="--c-bg: var(--${p.tint}-bg); --c-ink: var(--${p.tint}-ink); --i: ${i}" aria-label="${label}">${p.locked ? lockIc : ""}${p.name}</a>`;
     };
     const words = (text) => text.split(" ").map((w, i) => `<span class="rd-w" style="--i: ${i}">${w}</span>`).join(" ");
     rdRoles.innerHTML = READERS.map(([key, label]) => `<button class="rd-role" type="button" data-role="${key}" data-label="${label}" aria-pressed="false">${label}</button>`).join("");
@@ -1519,7 +1519,7 @@
     { co: "Studio Nine", role: "Design intern", years: "2017", tint: "sky" }
   ];
 
-  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="/work/${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
+  const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="/works/${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
     + `<div class="ag-card-top"><b>${p.name}</b></div>`
     + `<p>${p.desc}</p>`
     + `<span class="ag-card-metric"><b>${p.metric}</b>${p.metricLabel}</span></a>`;

@@ -14,14 +14,14 @@ A project's card (Home, Works)        js/projects.js
 A project's images                    assets/projects/<slug>/images/
 A project's videos                    assets/projects/<slug>/videos/
 Which projects are on the Home page   js/projects.js  (projects with "home")
-A case study's content                work/<slug>.html (its own page)
+A case study's content                works/<slug>.html (its own page)
 About page photos                     assets/images/about/  (see its README)
 The testimonial video                 assets/videos/testimonials/meera-kapoor.mp4
 Sounds: chat opening, dog bark       assets/audio/sound-effects/
 Fonts                                 assets/fonts/
 Favicon and app icons                 assets/favicon/
 Hero headline, About story, other     the page's own HTML file (index.html,
-page text                             about.html, works.html)
+page text                             about.html, works/index.html)
 Colours, sizes, spacing               css/style.css
 ```
 
@@ -30,10 +30,10 @@ Colours, sizes, spacing               css/style.css
 ```text
 new-portoflio/
 ├── index.html            Home
-├── works.html            All projects
+├── works/index.html            All projects
 ├── about.html            About
 ├── 404.html              Shown for any address that doesn't exist
-├── work/                 One page per case study, at /work/<slug>
+├── works/                One page per case study, at /works/<slug>
 │   ├── wealthbasket.html · wayfarer.html · parcelo.html
 │   └── lumen.html · wave.html · jda.html
 ├── README.md             This file
@@ -72,7 +72,7 @@ new-portoflio/
     └── favicon/          Browser and app icons
 ```
 
-The ✏️ files and the pages themselves (index, about, works, work/*) are
+The ✏️ files and the pages themselves (index, about, works, works/*) are
 what you edit.
 
 ## How to…
@@ -90,7 +90,7 @@ image over a file with the **same name** and it appears on the site:
 
 **One extra step for detail images.** While they're dummies, each decision
 shows a zoomed-in crop of the image. When you add a real detail image, open
-the project's page in `work/`, find that decision's image and change
+the project's page in `works/`, find that decision's image and change
 `<div class="cs-crop is-crop">` to `<div class="cs-crop">` and delete the
 `style="…"` on its `<img>`, so the image shows in full.
 
@@ -98,13 +98,13 @@ the project's page in `work/`, find that decision's image and change
 - **Its cards:** open `js/projects.js` and find the project by its `slug`.
   `home` is the Home page card (description and the two metrics), `works`
   the Works page card.
-- **Its case study:** open its page, `work/<slug>.html`, and edit the text
+- **Its case study:** open its page, `works/<slug>.html`, and edit the text
   directly. Its `<title>` and the `description` / `og:` lines at the top
   are what Google and link previews (LinkedIn, WhatsApp) show.
 
 ### Add a new project
-1. **The page:** copy a case study page in `work/` (for example
-   `work/wealthbasket.html`) as `work/new-app.html` (lowercase, hyphens). Replace
+1. **The page:** copy a case study page in `works/` (for example
+   `works/wealthbasket.html`) as `works/new-app.html` (lowercase, hyphens). Replace
    its text, its `<title>` and the description and `og:` lines at the top,
    change `data-slug="wealthbasket"` on `<main>` to `data-slug="new-app"`, and
    every `/assets/projects/wealthbasket/` to `/assets/projects/new-app/`.
@@ -115,7 +115,7 @@ the project's page in `work/`, find that decision's image and change
    on the Works page. To show it on the Home page, give it a `home` entry
    with an `order` (1 to 4) and remove `home` from the project it replaces.
 4. **"Next project" links:** each case study ends with a link to the next
-   one. Point the page before it at `/work/new-app`, and the new page at the
+   one. Point the page before it at `/works/new-app`, and the new page at the
    one after.
 
 To lock a project behind the password, add `data-locked` to its `<main>`
@@ -134,8 +134,8 @@ Save your PDF over `assets/documents/resume/resume.pdf`.
 **The file there now is a placeholder: replace it before publishing.**
 
 ### Locked case studies (Wayfarer Health, Parcelo)
-Their real pages are **not** in this folder. `work/wayfarer.html` and
-`work/parcelo.html` here are placeholders (the hero and the password card).
+Their real pages are **not** in this folder. `works/wayfarer.html` and
+`works/parcelo.html` here are placeholders (the hero and the password card).
 The full pages live in Cloudflare KV, and the Cloudflare Worker
 `portfolio-auth` serves them after the right password. The Worker's code and
 the full pages are in `../portfolio-auth/`, next to this folder, never on
@@ -177,7 +177,7 @@ Lowercase, words separated by hyphens: `wealthbasket-cover.jpg`,
 
 ## Run it locally
 The site uses clean addresses (`/`, `/works`, `/about`,
-`/work/wealthbasket`) instead of `index.html`, `works.html` and so on.
+`/works/wealthbasket`) instead of `index.html`, `works/index.html` and so on.
 A web server turns those into the right files, as GitHub Pages does online,
 so **preview through a local server, not by double-clicking the HTML files**
 (double-clicked files open, but the links between pages won't).
@@ -206,7 +206,7 @@ clean addresses.
 The workflow is `.github/workflows/deploy-pages.yml`. It uploads the site
 exactly as it is, with the permissions publishing needs.
 
-Paths in the site start from the domain root (`/assets/…`, `/work/…`), so the
+Paths in the site start from the domain root (`/assets/…`, `/works/…`), so the
 site must be served from the root of a domain, as it is on pallavbhatnagar.in.
 At a `github.io/<repo>/` address the styles and images wouldn't load.
 

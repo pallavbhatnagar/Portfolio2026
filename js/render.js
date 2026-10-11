@@ -14,7 +14,7 @@
 
   const lockIcon = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4.5" y="10.5" width="15" height="10" rx="2.5"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></svg>';
   const lockBadge = `<span class="shot-lock" title="Password protected">${lockIcon}<span class="sr-only">Password protected</span></span>`;
-  const link = (p) => `/work/${encodeURIComponent(p.slug)}`;
+  const link = (p) => `/works/${encodeURIComponent(p.slug)}`;
   const thumb = (p) => p.thumbnail || p.image;
   const thumbAlt = (p) => p.thumbAlt || p.alt || p.name;
   const isExploration = (p) => String(p.kind).toLowerCase() === "exploration";

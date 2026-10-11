@@ -1,4 +1,4 @@
-/* Case study pages (work/<project>.html). Each page's content is written in
+/* Case study pages (works/<project>.html). Each page's content is written in
    its own HTML; this script only adds the behaviour:
    - the password gate for locked projects (<main data-locked>); the
      password dialog itself is shared with the rest of the site (script.js
