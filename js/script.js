@@ -1143,7 +1143,58 @@
       rdStart.classList.remove("is-in");
       if (animate) { void rdStart.offsetWidth; rdStart.classList.add("is-in"); }
       try { sessionStorage.setItem("reader", r[0]); } catch (e) { /* private mode */ }
+      placeRole(animate);
     };
+
+    // Phones: the roles become one row you swipe sideways (CSS). An ink
+    // underline slides to the chosen role, which glides to the middle of
+    // the row; the edges fade only where there are more roles to see.
+    const rdInd = document.createElement("span");
+    rdInd.className = "rd-ind";
+    rdInd.setAttribute("aria-hidden", "true");
+    rdRoles.append(rdInd);
+    const phone = window.matchMedia("(max-width: 640px)");
+    const fadeEdges = () => {
+      const max = rdRoles.scrollWidth - rdRoles.clientWidth;
+      rdRoles.classList.toggle("is-more-l", rdRoles.scrollLeft > 2);
+      rdRoles.classList.toggle("is-more-r", rdRoles.scrollLeft < max - 2);
+    };
+    function placeRole(animate) {
+      const b = rdRoles.querySelector('.rd-role[aria-pressed="true"]');
+      if (!b || !phone.matches) return;
+      rdInd.style.width = `${b.offsetWidth}px`;
+      rdInd.style.transform = `translateX(${b.offsetLeft}px)`;
+      rdRoles.scrollTo({ left: b.offsetLeft - (rdRoles.clientWidth - b.offsetWidth) / 2, behavior: animate && !reduce.matches ? "smooth" : "auto" });
+      fadeEdges();
+    }
+    rdRoles.addEventListener("scroll", fadeEdges, { passive: true });
+
+    // A cue that the row slides: once per visit, it peeks a little to the
+    // left when it first comes into view.
+    let hinted = false;
+    try { hinted = sessionStorage.getItem("rdHint") === "1"; } catch (e) { /* private mode */ }
+    if (!hinted && !reduce.matches && "IntersectionObserver" in window) {
+      const hintIo = new IntersectionObserver((entries) => {
+        if (!entries[0].isIntersecting || !phone.matches) return;
+        hintIo.disconnect();
+        if (!rdRoles.classList.contains("is-more-r")) return;
+        try { sessionStorage.setItem("rdHint", "1"); } catch (e) { /* private mode */ }
+        const from = rdRoles.scrollLeft;
+        setTimeout(() => {
+          rdRoles.scrollTo({ left: from + 56, behavior: "smooth" });
+          setTimeout(() => rdRoles.scrollTo({ left: from, behavior: "smooth" }), 650);
+        }, 900);
+      }, { threshold: 1 });
+      // Not while the loading screen is still up.
+      if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:done", () => hintIo.observe(rdRoles), { once: true });
+      else hintIo.observe(rdRoles);
+    }
+    const replace = () => placeRole(false);
+    if (phone.addEventListener) phone.addEventListener("change", replace);
+    window.addEventListener("resize", replace);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { replace(); requestAnimationFrame(() => rdRoles.classList.add("is-ready")); });
+    else rdRoles.classList.add("is-ready");
+
     let saved = "anyone";
     try { saved = sessionStorage.getItem("reader") || "anyone"; } catch (e) { /* private mode */ }
     show(saved, false);
@@ -1151,6 +1202,46 @@
       const b = e.target.closest(".rd-role");
       if (b && b.getAttribute("aria-pressed") !== "true") show(b.dataset.role, true);
     });
+
+    // Swipe the sentence sideways for the next or previous reader (touch).
+    // It follows the finger a little, with growing resistance, and a quick
+    // flick counts as much as a long drag.
+    const step = (dir) => {
+      const i = READERS.findIndex((x) => x[0] === rdRoles.querySelector('.rd-role[aria-pressed="true"]').dataset.role);
+      const next = READERS[i + dir];
+      if (next) show(next[0], true);
+      return !!next;
+    };
+    let sw = null;
+    const settle = () => {
+      rdLines.style.transition = "transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)";
+      rdLines.style.transform = "";
+    };
+    rdLines.addEventListener("pointerdown", (e) => {
+      if (e.pointerType === "mouse" || sw) return;
+      sw = { id: e.pointerId, x: e.clientX, y: e.clientY, t: performance.now(), dx: 0 };
+      rdLines.style.transition = "none";
+    });
+    rdLines.addEventListener("pointermove", (e) => {
+      if (!sw || e.pointerId !== sw.id) return;
+      sw.dx = e.clientX - sw.x;
+      if (!reduce.matches) {
+        const w = rdLines.clientWidth;
+        const pull = (sw.dx * w * 0.35) / (w + 0.35 * Math.abs(sw.dx));
+        rdLines.style.transform = `translateX(${pull}px)`;
+      }
+    });
+    const endSwipe = (e) => {
+      if (!sw || e.pointerId !== sw.id) return;
+      const { dx } = sw;
+      const v = Math.abs(dx) / Math.max(1, performance.now() - sw.t);
+      const dy = Math.abs(e.clientY - sw.y);
+      sw = null;
+      settle();
+      if (e.type === "pointerup" && Math.abs(dx) > dy * 1.5 && (Math.abs(dx) > 56 || (Math.abs(dx) > 20 && v > 0.3))) step(dx < 0 ? 1 : -1);
+    };
+    rdLines.addEventListener("pointerup", endSwipe);
+    rdLines.addEventListener("pointercancel", endSwipe);
   }
 
   // 15c) About playlist card: the waveform's played part (lime) stops at a

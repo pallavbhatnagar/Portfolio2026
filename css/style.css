@@ -456,7 +456,10 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    the intro and the buttons. */
 @media (max-width: 640px) {
   .hero { display: flex; flex-direction: column; }
-  .trail { order: -1; margin: 0 0 1.75rem; }
+  /* Wider than the screen: the tangle starts off the left edge, so the
+     straight run, its points and their labels get room to breathe. The
+     end still lines up with the right margin. */
+  .trail { order: -1; width: calc(100% + var(--pad) + 16vw); margin: 0 0 2.25rem calc((var(--pad) + 16vw) * -1); }
   /* The drawing shrinks to about a third of its desktop size here, so the
      dot, line and nodes get thicker in SVG units to read the same. */
   .trail-dot { r: 16px; }
@@ -973,6 +976,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    float over the grey gap or the panel itself. */
 body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125rem); bottom: calc(var(--ask-gap) + 1.125rem); }
 .to-top:active { transform: scale(0.94); }
+/* Phones: the footer icons sit in the bottom-right corner, so the button
+   stays above them instead of covering Dribbble. */
+@media (max-width: 640px) { .to-top { bottom: 3.5rem; } }
 @media (hover: hover) and (pointer: fine) {
   .footer-mail:hover, .footer-links a:hover { color: var(--ink); }
   .to-top[data-show="true"]:hover { transform: translateY(-3px); }
@@ -2916,4 +2922,40 @@ html:not(.js) .rd-roles { display: none; }
 .rd-chip:active { transform: scale(0.97); }
 .rd-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) { .rd-start.is-in .rd-chip { animation: rd-word 0.5s var(--ease-out) both; animation-delay: calc(0.25s + var(--i) * 70ms); } }
-@media (max-width: 640px) { .rd-roles { gap: 0.125rem 1rem; } .rd-line { max-width: none; } }
+.rd-ind { display: none; }
+@media (max-width: 640px) { .rd-line { max-width: none; } }
+
+/* Phones: the roles as one row you swipe sideways, edge to edge. The page's
+   side gutter moves inside the row, so the first and last roles still line
+   up with the text; the edges fade only where more roles are hidden. An
+   ink underline slides to the chosen role (script.js 15d), and the
+   sentence below can be swiped for the next or previous reader. */
+@media (max-width: 640px) {
+  .rd-roles {
+    --fl: 0px;
+    --fr: 0px;
+    position: relative;
+    flex-wrap: nowrap;
+    gap: 1.25rem;
+    margin-inline: calc(var(--pad) * -1);
+    padding: 0 var(--pad) 0.5rem;
+    border-bottom: 1px solid var(--hairline);
+    overflow-x: auto;
+    scroll-padding-inline: var(--pad);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent);
+    mask-image: linear-gradient(to right, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent);
+  }
+  .rd-roles::-webkit-scrollbar { display: none; }
+  .rd-roles.is-more-l { --fl: 2.25rem; }
+  .rd-roles.is-more-r { --fr: 2.25rem; }
+  .rd-role { flex: none; white-space: nowrap; }
+  .rd-role:active { opacity: 0.6; }
+  .rd-ind { display: block; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; border-radius: 2px; background: var(--ink); pointer-events: none; }
+  .rd-lines { touch-action: pan-y; }
+}
+
+@media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
+  .rd-roles.is-ready .rd-ind { transition: transform 0.35s var(--ease-io), width 0.35s var(--ease-io); }
+}
