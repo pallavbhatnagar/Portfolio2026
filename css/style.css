@@ -243,7 +243,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-height: 2rem;
+  min-height: 2.375rem;
 }
 /* See-through bar: one translucent white layer with a light blur. */
 .nav::before {
@@ -1847,7 +1847,7 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
    the list scrolls. The dark thumb slides to the chosen option (script.js
    20 sets its position and width). */
 :root[data-theme="dark"] .wk-filter { --fill: #f2f1ee; }
-.wk-filter-bar { position: sticky; top: 4.375rem; z-index: 5; margin-top: var(--space-5); }
+.wk-filter-bar { position: sticky; top: 4.75rem; z-index: 5; margin-top: var(--space-5); }
 /* Phones: full width, the three options sharing it equally. */
 @media (max-width: 640px) {
   .wk-filter { display: flex; width: 100%; }
@@ -1991,7 +1991,7 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 @media (max-width: 900px) {
   .wk-hero { padding-top: calc(var(--pad) + 3.75rem); }
   /* A clear step below the nav. */
-  .wk-filter-bar { top: 4.375rem; }
+  .wk-filter-bar { top: 4.75rem; }
   .wk-seg { padding: 0.4375rem 0.625rem; }
   .wk-card { grid-template-columns: 1fr; min-height: 0; }
   .wk-visual { order: -1; min-height: 0; aspect-ratio: 4 / 3; }
@@ -2994,5 +2994,25 @@ html:not(.js) .rd-roles { display: none; }
 @media (max-width: 640px) {
   .site-header { padding-top: 1.5rem; }
   .nav::before { inset: -0.75rem var(--pad); }
-  .wk-filter-bar { top: 4.95rem; }
+  .wk-filter-bar { top: 5.325rem; }
 }
+
+/* More breathing room on tablet and desktop, matching the home hero:
+   looser headline leading, a clearer gap under each headline, more
+   space between intro lines. Phones keep their spacing. */
+@media (min-width: 641px) {
+  /* Works: role tabs, then the big sentence, then "Start with". */
+  .rd-lines { margin-top: 1.75rem; }
+  .rd-line { line-height: 1.22; }
+  .rd-foot { margin-top: 2rem; }
+  /* About: title, photo row, intro. */
+  .ab-title { line-height: 1.1; }
+  .ab-carousel { margin-top: 2.75rem; }
+  .ab-lede { margin-top: 2.5rem; line-height: 1.4; }
+}
+
+/* Home in the nav is Pallav's photo, already a circle (it reads as
+   "Home" to screen readers). */
+.nav-dp { display: inline-grid; place-items: center; padding: 0; border-radius: 50%; }
+.nav-dp img { display: block; width: 2.375rem; height: 2.375rem; border-radius: 50%; }
+.nav-dp:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
