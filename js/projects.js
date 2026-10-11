@@ -35,7 +35,7 @@ window.CASE_STUDIES = [
     thumbnail: "/assets/projects/wealthbasket/images/thumbnail.jpg",
     thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
-      order: 1,
+      order: 2,
       text: "Investing in a basket means trusting stocks you didn't pick. The app had to show its working before it asked for money.",
       metrics: [
         [
@@ -68,7 +68,7 @@ window.CASE_STUDIES = [
     thumbnail: "/assets/projects/wayfarer/images/thumbnail.jpg",
     thumbAlt: "Wayfarer Health mobile screen",
     home: {
-      order: 2,
+      order: 3,
       text: "Patients gave up on an eleven-field booking form. It became one short, guided conversation.",
       metrics: [
         [
@@ -101,7 +101,7 @@ window.CASE_STUDIES = [
     thumbnail: "/assets/projects/parcelo/images/thumbnail.jpg",
     thumbAlt: "Parcelo dashboard on a laptop",
     home: {
-      order: 3,
+      order: 4,
       text: "Late deliveries were hiding in a dashboard that showed everything. Now they surface in seconds.",
       metrics: [
         [
@@ -133,20 +133,6 @@ window.CASE_STUDIES = [
     locked: false,
     thumbnail: "/assets/projects/lumen/images/thumbnail.jpg",
     thumbAlt: "Lumen Learn onboarding screen",
-    home: {
-      order: 4,
-      text: "Students stalled on the very first screen. The fix was quieter: fewer choices, more lessons finished.",
-      metrics: [
-        [
-          "Course completion",
-          "+41%"
-        ],
-        [
-          "Usability score",
-          "86"
-        ]
-      ]
-    },
     works: {
       text: "Onboarding and lesson flow for an online learning platform, tested across three rounds of usability sessions with real students. The biggest fix was quiet: fewer choices on the first screen.",
       meta: [
@@ -166,6 +152,20 @@ window.CASE_STUDIES = [
     locked: false,
     thumbnail: "/assets/projects/wave/images/thumbnail.jpg",
     thumbAlt: "Wave 2.0 trading screen on a phone",
+    home: {
+      order: 1,
+      text: "Brokers wanted a trading app of their own without building one. One white-label app had to feel native under every brand.",
+      metrics: [
+        [
+          "Branded broker apps launched",
+          "25+"
+        ],
+        [
+          "Trades placed every day",
+          "4M"
+        ]
+      ]
+    },
     works: {
       text: "A white-label trading app that lets brokers launch their own branded app. I designed core trading journeys, from curated watchlists to trading straight from the list.",
       meta: [
