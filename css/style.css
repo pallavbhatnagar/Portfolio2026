@@ -456,19 +456,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    the intro and the buttons. */
 @media (max-width: 640px) {
   .hero { display: flex; flex-direction: column; }
-  /* Wider than the screen: the tangle starts off the left edge, so the
-     straight run, its points and their labels get room to breathe. The
-     end still lines up with the right margin. */
-  .trail { order: -1; width: calc(100% + var(--pad) + 16vw); margin: 0 0 2.25rem calc((var(--pad) + 16vw) * -1); }
-  /* The drawing shrinks to about a third of its desktop size here, so the
-     dot, line and nodes get thicker in SVG units to read the same. */
-  .trail-dot { r: 16px; }
-  .trail-line { stroke-width: 6; }
-  .trail-ghost { stroke-width: 3; }
-  .trail-node { r: 12px; stroke-width: 4.5; }
+  /* Phones show their own drawing (.trail-m), at its real size. */
+  .trail { order: -1; margin: 0 0 1.75rem; }
+  .trail-stage { display: none; }
+  .trail-m { display: block; }
   /* Sized to fit one line; allowed to wrap only if a reading tool adds
      letter spacing (WCAG 1.4.12), instead of running off the screen. */
-  .hero-title { font-size: clamp(1.375rem, 7.4vw, 2.25rem); }
+  .hero-title { font-size: clamp(1.5rem, 7.75vw, 2.375rem); }
   .hero-title .hl, .hero-title .hl > span { display: inline-block; }
 }
 @media (max-width: 480px) {
@@ -484,6 +478,51 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .trail-lab.up { top: auto; bottom: calc(47.4% + 0.4375rem); }
   .trail-lab.down { top: calc(52.6% + 0.4375rem); }
   .trail-done svg { width: 0.625rem; height: 0.625rem; }
+}
+/* Phone drawing (<=640px): the route untangles. It draws in as a knot,
+   pulls itself straight across the width (an SVG morph), then a dot runs
+   the straight line past four markers; each phase name appears as the dot
+   reaches its marker and stays, and it ends on Done. Reduced motion: the
+   finished line with its names and Done. */
+@media (min-width: 641px) { .trail-m { display: none; } }
+/* Edge to edge across the phone screen. */
+.trail-m { margin-inline: calc(var(--pad) * -1); }
+.um-ghost { fill: none; stroke: var(--ink); stroke-opacity: 0; stroke-width: 1.3; stroke-dasharray: 2 6; stroke-linecap: round; }
+.um-line { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.um-tick { fill: var(--ink); stroke: var(--ink); stroke-width: 1.8; }
+.um-dot { fill: var(--ink); }
+.um-lab { font-size: 10.25px; font-weight: 600; letter-spacing: 1px; text-anchor: middle; fill: var(--ink-soft); }
+.um-done rect { fill: var(--mint-bg); }
+.um-done path { fill: none; stroke: var(--mint-ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+.um-done text { font-size: 10.25px; font-weight: 700; letter-spacing: 1px; fill: var(--mint-ink); }
+@media (prefers-reduced-motion: no-preference) {
+  /* The knot draws in, its faint dashed trace stays behind while it
+     straightens, then fades. */
+  .trail.is-run .um-line { stroke-dashoffset: 1; animation: trail-draw 1.3s cubic-bezier(0.23, 1, 0.32, 1) 0.3s forwards; }
+  .trail.is-run .um-ghost { animation: um-ghost 2.6s ease 1.4s forwards; }
+  .trail.is-run .um-dot { opacity: 0; animation: fade-in 0.2s ease 3.0500000000000003s forwards; }
+  /* Markers appear once the line is straight, hollow, and fill as the dot
+     passes. */
+  .trail.is-run .um-tick { opacity: 0; fill: var(--bg); animation: fade-in 0.4s var(--hero-ease) 3s forwards, um-fill 0.25s ease forwards; }
+  .trail.is-run .um-tick.k1 { animation-delay: 3.00s, 3.51s; }
+  .trail.is-run .um-tick.k2 { animation-delay: 3.06s, 4.23s; }
+  .trail.is-run .um-tick.k3 { animation-delay: 3.12s, 4.95s; }
+  .trail.is-run .um-tick.k4 { animation-delay: 3.18s, 5.68s; }
+  /* Each phase name appears as the dot reaches its marker, and stays;
+     they alternate above and below the line so they never crowd. */
+  .trail.is-run .um-lab.c1 { animation: label-in 0.5s var(--hero-ease) 3.46s both; }
+  .trail.is-run .um-lab.c2 { animation: label-in 0.5s var(--hero-ease) 4.18s both; }
+  .trail.is-run .um-lab.c3 { animation: label-in 0.5s var(--hero-ease) 4.90s both; }
+  .trail.is-run .um-lab.c4 { animation: label-in 0.5s var(--hero-ease) 5.63s both; }
+  .trail.is-run .um-done { opacity: 0; animation: label-in 0.5s var(--hero-ease) 6.4s forwards; }
+}
+@keyframes um-ghost { 0% { stroke-opacity: 0.22; } 60% { stroke-opacity: 0.22; } 100% { stroke-opacity: 0; } }
+@keyframes um-fill { to { fill: var(--ink); } }
+@media (forced-colors: active) {
+  .um-line, .um-ghost, .um-tick { stroke: CanvasText; }
+  .um-dot, .um-tick, .um-lab, .um-done text { fill: CanvasText; }
+  .um-done rect { fill: Canvas; stroke: CanvasText; }
+  .um-done path { stroke: CanvasText; }
 }
 /* Shared keyframes (page sections and nav) */
 @keyframes rise { to { opacity: 1; transform: none; } }
@@ -2964,4 +3003,13 @@ html:not(.js) .rd-roles { display: none; }
 
 @media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
   .rd-roles.is-ready .rd-ind { transition: transform 0.35s var(--ease-io), width 0.35s var(--ease-io); }
+}
+
+
+/* Phones: a taller nav bar, easier to hit; the Works filter sticks a step
+   below it. */
+@media (max-width: 640px) {
+  .site-header { padding-top: 1.5rem; }
+  .nav::before { inset: -0.75rem var(--pad); }
+  .wk-filter-bar { top: 4.95rem; }
 }

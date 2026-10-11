@@ -236,6 +236,9 @@
   //    Reduced motion: the finished line, no dot travel, no replay.
   const trail = document.querySelector(".trail");
   const trailSvg = document.querySelector(".trail-svg");
+  // Phones get their own drawing (.trail-svg-m); both run on one schedule.
+  const trailSvgs = Array.from(document.querySelectorAll(".trail-svg"));
+  const eachSvg = (fn) => trailSvgs.forEach(fn);
   if (trail && trailSvg) {
     // On phones the drawing shrinks, so the dot and nodes get larger radii
     // (style.css does the same with the CSS r property, which some Safari
@@ -249,25 +252,27 @@
     sizeTrail();
     if (smallMq.addEventListener) smallMq.addEventListener("change", sizeTrail);
     if (reduce.matches) {
-      trailSvg.querySelectorAll("animateMotion").forEach((m) => m.remove());
+      eachSvg((svg) => svg.querySelectorAll("animateMotion").forEach((m) => m.remove()));
       const dot = trailSvg.querySelector(".trail-dot");
       dot.setAttribute("cx", "990");
       dot.setAttribute("cy", "100");
+      // Phone drawing: jump its morph and dot to the finished state.
+      const svgM = document.querySelector(".trail-svg-m");
+      if (svgM) { svgM.setCurrentTime(30); svgM.pauseAnimations(); }
     } else {
       // It plays once when the page opens, then rests on the finished
       // drawing (at Done). It plays again only when the visitor comes back
       // to it: scrolls away and back, or returns to the page with Back.
       // The dot's SVG motion keeps the browser redrawing while its clock
       // runs, so the clock is paused as soon as each run is done.
-      const runTime = 5400;
+      const runTime = 7100;
       let restTimer = 0, away = false;
-      const rest = () => { clearTimeout(restTimer); restTimer = setTimeout(() => trailSvg.pauseAnimations(), Math.max(0, runTime - trailSvg.getCurrentTime() * 1000)); };
+      const rest = () => { clearTimeout(restTimer); restTimer = setTimeout(() => eachSvg((svg) => svg.pauseAnimations()), Math.max(0, runTime - trailSvg.getCurrentTime() * 1000)); };
       const replay = () => {
         trail.classList.remove("is-run", "is-paused");
         void trail.offsetWidth;
         trail.classList.add("is-run");
-        trailSvg.setCurrentTime(0);
-        trailSvg.unpauseAnimations();
+        eachSvg((svg) => { svg.setCurrentTime(0); svg.unpauseAnimations(); });
         rest();
       };
       document.addEventListener("preloader:leaving", () => replay());
@@ -276,8 +281,7 @@
       // started the moment the loader begins to lift.
       if (document.documentElement.classList.contains("is-preloading")) {
         trail.classList.add("is-paused");
-        trailSvg.pauseAnimations();
-        trailSvg.setCurrentTime(0);
+        eachSvg((svg) => { svg.pauseAnimations(); svg.setCurrentTime(0); });
       } else {
         rest();
       }
@@ -287,7 +291,7 @@
             // Gone from the screen: stop where it is; it starts over on return.
             away = true;
             clearTimeout(restTimer);
-            trailSvg.pauseAnimations();
+            eachSvg((svg) => svg.pauseAnimations());
             trail.classList.add("is-paused");
           } else if (away && en.intersectionRatio >= 0.35) {
             away = false;
