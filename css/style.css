@@ -2950,7 +2950,14 @@ html:not(.js) .rd-roles { display: none; }
 .rd-chip:active { transform: scale(0.97); }
 .rd-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (prefers-reduced-motion: no-preference) { .rd-start.is-in .rd-chip { animation: rd-word 0.5s var(--ease-out) both; animation-delay: calc(0.25s + var(--i) * 70ms); } }
-.rd-ind { display: none; }
+/* The chosen role is underlined; the line glides to the new one (script.js
+   15d). Phones restyle it below, on the swipeable row. */
+.rd-roles { position: relative; }
+.rd-ind { position: absolute; top: 0; left: 0; width: 0; height: 2px; border-radius: 2px; background: var(--ink); pointer-events: none; }
+html:not(.js) .rd-ind { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .rd-roles.is-ready .rd-ind { transition: transform 0.35s var(--ease-io), width 0.35s var(--ease-io); }
+}
 @media (max-width: 640px) { .rd-line { max-width: none; } }
 
 /* Phones: the roles as one row you swipe sideways, edge to edge. The page's
@@ -2980,7 +2987,7 @@ html:not(.js) .rd-roles { display: none; }
   .rd-roles.is-more-r { --fr: 2.25rem; }
   .rd-role { flex: none; white-space: nowrap; }
   .rd-role:active { opacity: 0.6; }
-  .rd-ind { display: block; position: absolute; bottom: 0; left: 0; width: 0; height: 2px; border-radius: 2px; background: var(--ink); pointer-events: none; }
+  .rd-ind { top: auto; bottom: 0; }
   .rd-lines { touch-action: pan-y; }
 }
 
@@ -3011,8 +3018,8 @@ html:not(.js) .rd-roles { display: none; }
   .ab-lede { margin-top: 2.5rem; line-height: 1.4; }
 }
 
-/* Home in the nav is Pallav's photo, already a circle (it reads as
-   "Home" to screen readers). */
-.nav-dp { display: inline-grid; place-items: center; padding: 0; border-radius: 50%; }
-.nav-dp img { display: block; width: 2.375rem; height: 2.375rem; border-radius: 50%; }
+/* Home in the nav is Pallav's photo, the whole square with softly rounded
+   corners (it reads as "Home" to screen readers). */
+.nav-dp { display: inline-grid; place-items: center; padding: 0; border-radius: 0.5rem; }
+.nav-dp img { display: block; width: 2.375rem; height: 2.375rem; border-radius: 0.5rem; }
 .nav-dp:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }

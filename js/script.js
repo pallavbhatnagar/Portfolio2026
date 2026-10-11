@@ -1264,11 +1264,14 @@
       rdRoles.classList.toggle("is-more-l", rdRoles.scrollLeft > 2);
       rdRoles.classList.toggle("is-more-r", rdRoles.scrollLeft < max - 2);
     };
+    // Wider screens: the underline sits just under the chosen role (the
+    // roles can wrap onto two rows, so it moves down as well as across).
     function placeRole(animate) {
       const b = rdRoles.querySelector('.rd-role[aria-pressed="true"]');
-      if (!b || !phone.matches) return;
+      if (!b) return;
       rdInd.style.width = `${b.offsetWidth}px`;
-      rdInd.style.transform = `translateX(${b.offsetLeft}px)`;
+      rdInd.style.transform = phone.matches ? `translateX(${b.offsetLeft}px)` : `translate(${b.offsetLeft}px, ${b.offsetTop + b.offsetHeight}px)`;
+      if (!phone.matches) return;
       rdRoles.scrollTo({ left: b.offsetLeft - (rdRoles.clientWidth - b.offsetWidth) / 2, behavior: animate && !reduce.matches ? "smooth" : "auto" });
       fadeEdges();
     }
