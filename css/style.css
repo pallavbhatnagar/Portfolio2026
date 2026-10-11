@@ -1828,6 +1828,11 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
    20 sets its position and width). */
 :root[data-theme="dark"] .wk-filter { --fill: #f2f1ee; }
 .wk-filter-bar { position: sticky; top: 4.375rem; z-index: 5; margin-top: var(--space-5); }
+/* Phones: full width, the three options sharing it equally. */
+@media (max-width: 640px) {
+  .wk-filter { display: flex; width: 100%; }
+  .wk-seg { flex: 1; justify-content: center; }
+}
 .wk-filter {
   --fill: #202020;
   position: relative;
@@ -1965,7 +1970,8 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 
 @media (max-width: 900px) {
   .wk-hero { padding-top: calc(var(--pad) + 3.75rem); }
-  .wk-filter-bar { top: 3.75rem; }
+  /* A clear step below the nav. */
+  .wk-filter-bar { top: 4.375rem; }
   .wk-seg { padding: 0.4375rem 0.625rem; }
   .wk-card { grid-template-columns: 1fr; min-height: 0; }
   .wk-visual { order: -1; min-height: 0; aspect-ratio: 4 / 3; }
