@@ -1097,6 +1097,62 @@
     t.setAttribute("datetime", `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`);
   });
 
+  // 15d) Works intro: who's reading? Pick a role and the big sentence
+  //      describes the work in that reader's terms, with the two case studies
+  //      to start with (in their project tints). The choice is kept for the
+  //      visit. Everything said here is already true elsewhere on the site.
+  const rdRoles = document.getElementById("rdRoles");
+  const rdLines = document.getElementById("rdLines");
+  const rdStart = document.getElementById("rdStart");
+  if (rdRoles && rdLines && rdStart) {
+    // Each line answers the question that reader is really asking:
+    // recruiter, "is he senior and available?"; design lead, "will he hold
+    // the bar?"; product manager, "will he move a number, quickly?";
+    // engineer, "will his handoff hurt?"; founder, "can he take this from
+    // zero on his own?". Every claim is stated elsewhere on the site.
+    const READERS = [
+      ["anyone", "For anyone", "I make complicated products feel obvious, and I stay with them until they ship.", ["wave", "wealthbasket"]],
+      ["recruiters", "Recruiters", "Senior product designer, eight years in. Open to senior roles, remote or in Bengaluru, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
+      ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["lumen", "wave"]],
+      ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["parcelo", "wayfarer"]],
+      ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["wave", "jda"]],
+      ["founders", "Founders", "Bring the idea and the deadline. I'll talk to your users, design what matters first and put something real in front of people fast.", ["wealthbasket", "lumen"]]
+    ];
+    const projects = window.CASE_STUDIES || [];
+    const lockIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+    const chip = (slug, i) => {
+      const p = projects.find((x) => x.slug === slug);
+      if (!p) return "";
+      const label = p.locked ? `${p.name} (password protected)` : p.name;
+      return `<a class="rd-chip" href="/work/${p.slug}" style="--c-bg: var(--${p.tint}-bg); --c-ink: var(--${p.tint}-ink); --i: ${i}" aria-label="${label}">${p.locked ? lockIc : ""}${p.name}</a>`;
+    };
+    const words = (text) => text.split(" ").map((w, i) => `<span class="rd-w" style="--i: ${i}">${w}</span>`).join(" ");
+    rdRoles.innerHTML = READERS.map(([key, label]) => `<button class="rd-role" type="button" data-role="${key}" data-label="${label}" aria-pressed="false">${label}</button>`).join("");
+    rdLines.innerHTML = READERS.map(([key, , text]) => `<p class="rd-line" data-role="${key}">${words(text)}</p>`).join("");
+    const show = (key, animate) => {
+      const r = READERS.find((x) => x[0] === key) || READERS[0];
+      rdRoles.querySelectorAll(".rd-role").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.role === r[0])));
+      rdLines.querySelectorAll(".rd-line").forEach((l) => {
+        const on = l.dataset.role === r[0];
+        l.classList.toggle("is-on", on);
+        l.setAttribute("aria-hidden", String(!on));
+        l.classList.remove("is-in");
+        if (on && animate) { void l.offsetWidth; l.classList.add("is-in"); }
+      });
+      rdStart.innerHTML = '<span class="rd-start-label">Start with</span> ' + r[3].map(chip).join(" ");
+      rdStart.classList.remove("is-in");
+      if (animate) { void rdStart.offsetWidth; rdStart.classList.add("is-in"); }
+      try { sessionStorage.setItem("reader", r[0]); } catch (e) { /* private mode */ }
+    };
+    let saved = "anyone";
+    try { saved = sessionStorage.getItem("reader") || "anyone"; } catch (e) { /* private mode */ }
+    show(saved, false);
+    rdRoles.addEventListener("click", (e) => {
+      const b = e.target.closest(".rd-role");
+      if (b && b.getAttribute("aria-pressed") !== "true") show(b.dataset.role, true);
+    });
+  }
+
   // 15c) About playlist card: the waveform's played part (lime) stops at a
   //      random point on each visit, as if the playlist were already under
   //      way somewhere (between about a sixth and five-sixths of the way).
