@@ -239,6 +239,93 @@
   // Phones get their own drawing (.trail-svg-m); both run on one schedule.
   const trailSvgs = Array.from(document.querySelectorAll(".trail-svg"));
   const eachSvg = (fn) => trailSvgs.forEach(fn);
+  // The phone drawing runs on one clock (requestAnimationFrame) instead of
+  // mixing SVG and CSS timers, which browsers start at different moments
+  // (Safari starts the SVG one late), so every part stays in step. Times in
+  // seconds: draw in 0.3-1.6, straighten 1.6-3.2, the dot runs 3.2-6.4,
+  // each name appears as the dot reaches its marker, Done at 6.4.
+  const untangle = (svg) => {
+    const line = svg.querySelector(".um-line");
+    const ghost = svg.querySelector(".um-ghost");
+    const dot = svg.querySelector(".um-dot");
+    const ticks = Array.from(svg.querySelectorAll(".um-tick"));
+    const labs = Array.from(svg.querySelectorAll(".um-lab"));
+    const done = svg.querySelector(".um-done");
+    const from = line.getAttribute("d");
+    const num = /-?\d+(?:\.\d+)?/g;
+    const A = from.match(num).map(Number);
+    const B = line.dataset.to.match(num).map(Number);
+    const shape = (k) => { let n = 0; return from.replace(num, () => { const v = A[n] + (B[n] - A[n]) * k; n++; return v.toFixed(2); }); };
+    const x0 = Number(dot.getAttribute("cx"));
+    const x1 = Number(dot.dataset.to);
+    const hits = ticks.map((t) => 3.2 + 3.2 * (Number(t.getAttribute("cx")) - x0) / (x1 - x0));
+    const bezier = (p1x, p1y, p2x, p2y) => (x) => {
+      if (x <= 0) return 0;
+      if (x >= 1) return 1;
+      let lo = 0, hi = 1, t = x;
+      for (let k = 0; k < 24; k++) {
+        t = (lo + hi) / 2;
+        const bx = 3 * (1 - t) * (1 - t) * t * p1x + 3 * (1 - t) * t * t * p2x + t * t * t;
+        if (bx < x) lo = t; else hi = t;
+      }
+      return 3 * (1 - t) * (1 - t) * t * p1y + 3 * (1 - t) * t * t * p2y + t * t * t;
+    };
+    const easeOut = bezier(0.23, 1, 0.32, 1);
+    const easeIO = bezier(0.77, 0, 0.175, 1);
+    const part = (t, start, dur) => Math.min(1, Math.max(0, (t - start) / dur));
+    let len = 0;
+    const render = (t) => {
+      const drawn = easeOut(part(t, 0.3, 1.3));
+      const m = easeIO(part(t, 1.6, 1.6));
+      line.setAttribute("d", m > 0 ? shape(m) : from);
+      if (drawn < 1 && len) {
+        line.style.strokeDasharray = `${len} ${len}`;
+        line.style.strokeDashoffset = String(len * (1 - drawn));
+      } else {
+        line.style.strokeDasharray = "";
+        line.style.strokeDashoffset = "";
+      }
+      ghost.style.strokeOpacity = String(t < 1.4 ? 0 : 0.22 * (1 - part(t, 2.96, 1.04)));
+      dot.style.opacity = String(part(t, 3.05, 0.2));
+      dot.setAttribute("cx", (x0 + (x1 - x0) * part(t, 3.2, 3.2)).toFixed(2));
+      ticks.forEach((tick, n) => {
+        tick.style.opacity = String(easeOut(part(t, 3 + n * 0.06, 0.4)));
+        tick.style.fill = t >= hits[n] ? "" : "var(--bg)";
+      });
+      labs.forEach((lab, n) => {
+        const k = easeOut(part(t, hits[n] - 0.05, 0.5));
+        lab.style.opacity = String(k);
+        lab.setAttribute("transform", `translate(0 ${((1 - k) * 5).toFixed(2)})`);
+      });
+      const k = easeOut(part(t, 6.4, 0.5));
+      done.style.opacity = String(k);
+      done.setAttribute("transform", `translate(0 ${((1 - k) * 5).toFixed(2)})`);
+    };
+    let raf = 0, t0 = 0;
+    const frame = (now) => {
+      const t = (now - t0) / 1000;
+      render(t);
+      raf = t < 7 ? requestAnimationFrame(frame) : 0;
+    };
+    const stop = () => { cancelAnimationFrame(raf); raf = 0; };
+    return {
+      // Not on screen (wider windows hide it): show it finished instead.
+      play() {
+        stop();
+        if (!svg.getClientRects().length) { render(99); return; }
+        line.setAttribute("d", from);
+        try { len = line.getTotalLength(); } catch (e) { len = 0; }
+        t0 = performance.now();
+        render(0);
+        raf = requestAnimationFrame(frame);
+      },
+      hold() { stop(); render(0); },
+      stop,
+      finish() { stop(); render(99); }
+    };
+  };
+  const trailM = document.querySelector(".trail-svg-m");
+  const um = trailM ? untangle(trailM) : null;
   if (trail && trailSvg) {
     // On phones the drawing shrinks, so the dot and nodes get larger radii
     // (style.css does the same with the CSS r property, which some Safari
@@ -256,9 +343,7 @@
       const dot = trailSvg.querySelector(".trail-dot");
       dot.setAttribute("cx", "990");
       dot.setAttribute("cy", "100");
-      // Phone drawing: jump its morph and dot to the finished state.
-      const svgM = document.querySelector(".trail-svg-m");
-      if (svgM) { svgM.setCurrentTime(30); svgM.pauseAnimations(); }
+      if (um) um.finish();
     } else {
       // It plays once when the page opens, then rests on the finished
       // drawing (at Done). It plays again only when the visitor comes back
@@ -273,6 +358,7 @@
         void trail.offsetWidth;
         trail.classList.add("is-run");
         eachSvg((svg) => { svg.setCurrentTime(0); svg.unpauseAnimations(); });
+        if (um) um.play();
         rest();
       };
       document.addEventListener("preloader:leaving", () => replay());
@@ -282,7 +368,9 @@
       if (document.documentElement.classList.contains("is-preloading")) {
         trail.classList.add("is-paused");
         eachSvg((svg) => { svg.pauseAnimations(); svg.setCurrentTime(0); });
+        if (um) um.hold();
       } else {
+        if (um) um.play();
         rest();
       }
       if ("IntersectionObserver" in window) {
@@ -292,6 +380,7 @@
             away = true;
             clearTimeout(restTimer);
             eachSvg((svg) => svg.pauseAnimations());
+            if (um) um.stop();
             trail.classList.add("is-paused");
           } else if (away && en.intersectionRatio >= 0.35) {
             away = false;

@@ -18,7 +18,7 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261167" />
+<link rel="stylesheet" href="/css/style.css?v=20261169" />
 </head>
 <body>
 
@@ -94,15 +94,11 @@
     <div class="trail-m" aria-hidden="true">
       <svg class="trail-svg trail-svg-m" viewBox="0 0 440 95">
         <path class="um-ghost" d="M12 61.2 C 46.7 13.2, 133.3 13.2, 121 53.2 C 111 88.4, 46.7 82, 71.4 50 C 96.2 18, 207.6 16.4, 202.7 54.8 C 197.7 86.8, 135.8 82, 160.6 51.6 C 185.3 22.8, 291.8 22.8, 284.4 56.4 C 279.4 83.6, 227.4 77.2, 252.2 50 C 277 22.8, 368.6 37.2, 428 50"/>
-        <path class="um-line" pathLength="1" d="M12 61.2 C 46.7 13.2, 133.3 13.2, 121 53.2 C 111 88.4, 46.7 82, 71.4 50 C 96.2 18, 207.6 16.4, 202.7 54.8 C 197.7 86.8, 135.8 82, 160.6 51.6 C 185.3 22.8, 291.8 22.8, 284.4 56.4 C 279.4 83.6, 227.4 77.2, 252.2 50 C 277 22.8, 368.6 37.2, 428 50">
-          <animate attributeName="d" begin="1.6s" dur="1.6s" fill="freeze" calcMode="spline" keyTimes="0;1" keySplines="0.77 0 0.175 1" values="M12 61.2 C 46.7 13.2, 133.3 13.2, 121 53.2 C 111 88.4, 46.7 82, 71.4 50 C 96.2 18, 207.6 16.4, 202.7 54.8 C 197.7 86.8, 135.8 82, 160.6 51.6 C 185.3 22.8, 291.8 22.8, 284.4 56.4 C 279.4 83.6, 227.4 77.2, 252.2 50 C 277 22.8, 368.6 37.2, 428 50;M12 50 C 31.8 50, 51.6 50, 71.4 50 C 91.2 50, 111.0 50, 130.9 50 C 150.7 50, 170.5 50, 190.3 50 C 210.1 50, 229.9 50, 249.7 50 C 269.5 50, 289.3 50, 309.1 50 C 329.0 50, 348.8 50, 368.6 50 C 388.4 50, 408.2 50, 428.0 50"/>
-        </path>
+        <path class="um-line" d="M12 61.2 C 46.7 13.2, 133.3 13.2, 121 53.2 C 111 88.4, 46.7 82, 71.4 50 C 96.2 18, 207.6 16.4, 202.7 54.8 C 197.7 86.8, 135.8 82, 160.6 51.6 C 185.3 22.8, 291.8 22.8, 284.4 56.4 C 279.4 83.6, 227.4 77.2, 252.2 50 C 277 22.8, 368.6 37.2, 428 50" data-to="M12 50 C 31.8 50, 51.6 50, 71.4 50 C 91.2 50, 111.0 50, 130.9 50 C 150.7 50, 170.5 50, 190.3 50 C 210.1 50, 229.9 50, 249.7 50 C 269.5 50, 289.3 50, 309.1 50 C 329.0 50, 348.8 50, 368.6 50 C 388.4 50, 408.2 50, 428.0 50"/>
         <g class="um-ticks"><circle class="um-tick k1" cx="52" cy="50" r="4"/><circle class="um-tick k2" cx="146" cy="50" r="4"/><circle class="um-tick k3" cx="240" cy="50" r="4"/><circle class="um-tick k4" cx="334" cy="50" r="4"/></g>
         <g class="um-labs"><text class="um-lab c1" x="52" y="35">INSIGHT</text><text class="um-lab c2" x="146" y="75">FRAMING</text><text class="um-lab c3" x="240" y="35">INTERACTION</text><text class="um-lab c4" x="334" y="75">VALIDATION</text></g>
         <g transform="translate(373 17)"><g class="um-done"><rect width="55" height="19" rx="4"/><path d="M7.5 9.9l2.3 2.3 5-5.4"/><text x="19.5" y="13.3">DONE</text></g></g>
-        <circle class="um-dot" cx="12" cy="50" r="5.5">
-          <animate attributeName="cx" begin="3.2s" dur="3.2s" fill="freeze" calcMode="linear" values="12;428"/>
-        </circle>
+        <circle class="um-dot" cx="12" cy="50" r="5.5" data-to="428"/>
       </svg>
     </div>
   </section>
@@ -347,10 +343,10 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261167" defer></script>
-<script src="/js/projects.js?v=20261167" defer></script>
-<script src="/js/render.js?v=20261167" defer></script>
-<script src="/js/script.js?v=20261167" defer></script>
+<script src="/js/content.js?v=20261169" defer></script>
+<script src="/js/projects.js?v=20261169" defer></script>
+<script src="/js/render.js?v=20261169" defer></script>
+<script src="/js/script.js?v=20261169" defer></script>
 </body>
 </html>
 

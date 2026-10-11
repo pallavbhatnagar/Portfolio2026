@@ -480,44 +480,22 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .trail-done svg { width: 0.625rem; height: 0.625rem; }
 }
 /* Phone drawing (<=640px): the route untangles. It draws in as a knot,
-   pulls itself straight across the width (an SVG morph), then a dot runs
-   the straight line past four markers; each phase name appears as the dot
-   reaches its marker and stays, and it ends on Done. Reduced motion: the
-   finished line with its names and Done. */
+   pulls itself straight across the width, then a dot runs the straight
+   line past four markers; each phase name appears as the dot reaches its
+   marker and stays, and it ends on Done. One script clock drives every
+   part (script.js 3), so it plays the same in every browser; these styles
+   are the finished drawing, which is also what reduced motion shows. */
 @media (min-width: 641px) { .trail-m { display: none; } }
 /* Edge to edge across the phone screen. */
 .trail-m { margin-inline: calc(var(--pad) * -1); }
 .um-ghost { fill: none; stroke: var(--ink); stroke-opacity: 0; stroke-width: 1.3; stroke-dasharray: 2 6; stroke-linecap: round; }
-.um-line { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
+.um-line { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
 .um-tick { fill: var(--ink); stroke: var(--ink); stroke-width: 1.8; }
 .um-dot { fill: var(--ink); }
 .um-lab { font-size: 10.25px; font-weight: 600; letter-spacing: 1px; text-anchor: middle; fill: var(--ink-soft); }
 .um-done rect { fill: var(--mint-bg); }
 .um-done path { fill: none; stroke: var(--mint-ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
 .um-done text { font-size: 10.25px; font-weight: 700; letter-spacing: 1px; fill: var(--mint-ink); }
-@media (prefers-reduced-motion: no-preference) {
-  /* The knot draws in, its faint dashed trace stays behind while it
-     straightens, then fades. */
-  .trail.is-run .um-line { stroke-dashoffset: 1; animation: trail-draw 1.3s cubic-bezier(0.23, 1, 0.32, 1) 0.3s forwards; }
-  .trail.is-run .um-ghost { animation: um-ghost 2.6s ease 1.4s forwards; }
-  .trail.is-run .um-dot { opacity: 0; animation: fade-in 0.2s ease 3.0500000000000003s forwards; }
-  /* Markers appear once the line is straight, hollow, and fill as the dot
-     passes. */
-  .trail.is-run .um-tick { opacity: 0; fill: var(--bg); animation: fade-in 0.4s var(--hero-ease) 3s forwards, um-fill 0.25s ease forwards; }
-  .trail.is-run .um-tick.k1 { animation-delay: 3.00s, 3.51s; }
-  .trail.is-run .um-tick.k2 { animation-delay: 3.06s, 4.23s; }
-  .trail.is-run .um-tick.k3 { animation-delay: 3.12s, 4.95s; }
-  .trail.is-run .um-tick.k4 { animation-delay: 3.18s, 5.68s; }
-  /* Each phase name appears as the dot reaches its marker, and stays;
-     they alternate above and below the line so they never crowd. */
-  .trail.is-run .um-lab.c1 { animation: label-in 0.5s var(--hero-ease) 3.46s both; }
-  .trail.is-run .um-lab.c2 { animation: label-in 0.5s var(--hero-ease) 4.18s both; }
-  .trail.is-run .um-lab.c3 { animation: label-in 0.5s var(--hero-ease) 4.90s both; }
-  .trail.is-run .um-lab.c4 { animation: label-in 0.5s var(--hero-ease) 5.63s both; }
-  .trail.is-run .um-done { opacity: 0; animation: label-in 0.5s var(--hero-ease) 6.4s forwards; }
-}
-@keyframes um-ghost { 0% { stroke-opacity: 0.22; } 60% { stroke-opacity: 0.22; } 100% { stroke-opacity: 0; } }
-@keyframes um-fill { to { fill: var(--ink); } }
 @media (forced-colors: active) {
   .um-line, .um-ghost, .um-tick { stroke: CanvasText; }
   .um-dot, .um-tick, .um-lab, .um-done text { fill: CanvasText; }
@@ -1017,7 +995,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .to-top:active { transform: scale(0.94); }
 /* Phones: the footer icons sit in the bottom-right corner, so the button
    stays above them instead of covering Dribbble. */
-@media (max-width: 640px) { .to-top { bottom: 3.5rem; } }
+@media (max-width: 640px) { .to-top { bottom: 4rem; } }
 @media (hover: hover) and (pointer: fine) {
   .footer-mail:hover, .footer-links a:hover { color: var(--ink); }
   .to-top[data-show="true"]:hover { transform: translateY(-3px); }
