@@ -16,9 +16,8 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  min-height: min(100svh, 56rem);
-  padding-top: calc(var(--pad) + 6.5rem);
-  padding-bottom: 6.5rem;
+  padding-top: calc(var(--pad) + 8rem);
+  padding-bottom: 1.5rem;
 }
 
 /* ---------- Atmosphere (full width, behind everything) ---------- */
@@ -39,14 +38,14 @@
 
 /* ---------- Words ---------- */
 /* Opening signature: Pallav's photo, name and role. */
-.hc-sign { display: inline-flex; align-items: center; gap: 1rem; margin: 0 0 2.5rem; text-align: left; }
-.hc-sign img { flex: none; width: 3.75rem; height: 3.75rem; border-radius: 0.9375rem; }
-.hc-sign b { display: block; font-size: 1.1875rem; font-weight: 600; color: var(--ink); }
-.hc-sign span span { display: block; margin-top: 0.125rem; font-size: 1rem; color: var(--ink-soft); }
+.hc-sign { display: inline-flex; align-items: center; gap: 0.875rem; margin: 0 0 2rem; text-align: left; }
+.hc-sign img { flex: none; width: 3.25rem; height: 3.25rem; border-radius: 0.8125rem; }
+.hc-sign b { display: block; font-size: 1.0625rem; font-weight: 600; color: var(--ink); }
+.hc-sign span span { display: block; margin-top: 0.0625rem; font-size: 0.9375rem; color: var(--ink-soft); }
 
 .hc-title {
   max-width: 17em;
-  font-size: clamp(2.625rem, 6.4vw, 5.25rem);
+  font-size: clamp(2.375rem, 5.2vw, 4.25rem);
   font-weight: 700;
   letter-spacing: -0.045em;
   line-height: 0.98;
@@ -55,7 +54,7 @@
 .hc-title .hc-line { display: block; }
 .hc-mess { display: inline-block; white-space: nowrap; }
 .hc-mess .ch { display: inline-block; }
-.hc-lede { max-width: 40em; text-wrap: balance; margin-top: 1.75rem; font-size: 1.0625rem; line-height: 1.6; color: var(--ink-soft); }
+.hc-lede { max-width: 40em; text-wrap: balance; margin-top: 1.5rem; font-size: 1rem; line-height: 1.6; color: var(--ink-soft); }
 
 /* ---------- The chat box ---------- */
 .hc-ask {
@@ -64,9 +63,9 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  width: min(100%, 36rem);
-  min-height: 3.875rem;
-  margin-top: 2.75rem;
+  width: min(100%, 32rem);
+  min-height: 3.5rem;
+  margin-top: 2.25rem;
   padding: 0.5rem 0.5rem 0.5rem 1.125rem;
   border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
   border-radius: 1.25rem;
@@ -98,11 +97,11 @@
 @media (prefers-reduced-motion: no-preference) { .hc-ask::before { animation: hc-turn 6s linear infinite; } }
 @keyframes hc-turn { to { --hc-a: 360deg; } }
 .hc-ask .nav-ai-ic { flex: none; }
-.hc-q { position: relative; flex: 1; height: 1.5rem; overflow: hidden; font-size: 1.0625rem; }
+.hc-q { position: relative; flex: 1; height: 1.5rem; overflow: hidden; font-size: 1rem; }
 .hc-q span { position: absolute; inset: 0; display: flex; align-items: center; white-space: nowrap; overflow: hidden; color: var(--ink-soft); transition: transform 0.45s var(--hc-out), opacity 0.35s ease; }
 .hc-q span.is-out { transform: translateY(-110%); opacity: 0; }
 .hc-q span.is-next { transform: translateY(110%); opacity: 0; transition: none; }
-.hc-go { flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; background: var(--ink); color: var(--bg); transition: transform 0.2s var(--hc-out); }
+.hc-go { flex: none; display: grid; place-items: center; width: 2.5rem; height: 2.5rem; border-radius: 0.875rem; background: var(--ink); color: var(--bg); transition: transform 0.2s var(--hc-out); }
 .hc-go svg { width: 0.9375rem; height: 0.9375rem; }
 @media (hover: hover) and (pointer: fine) {
   .hc-ask:hover { transform: translateY(-2px); }
@@ -114,7 +113,7 @@
 
 
 /* Download resume, centred under the chat box. */
-.hc-resume { margin-top: 1.75rem; }
+.hc-resume { margin-top: 1.5rem; }
 .hc-link { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 24px; font-size: var(--fs-small); font-weight: 600; color: var(--ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--ink) 25%, transparent); text-underline-offset: 0.3em; transition: text-decoration-color 0.2s ease; }
 .hc-link svg { width: 0.875rem; height: 0.875rem; }
 @media (hover: hover) and (pointer: fine) { .hc-link:hover { text-decoration-color: currentColor; } }
@@ -130,7 +129,7 @@
 }
 
 @media (max-width: 640px) {
-  .hc { min-height: 0; padding-top: calc(var(--pad) + 6rem); padding-bottom: 4rem; }
+  .hc { padding-top: calc(var(--pad) + 6rem); padding-bottom: 0.5rem; }
   .hc-sign { gap: 0.75rem; margin-bottom: 1.75rem; }
   .hc-sign img { width: 3.25rem; height: 3.25rem; border-radius: 0.8125rem; }
   .hc-sign b { font-size: 1.0625rem; }

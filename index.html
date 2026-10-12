@@ -18,8 +18,8 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261183" />
-<link rel="stylesheet" href="/css/hero.css?v=20261183" />
+<link rel="stylesheet" href="/css/style.css?v=20261187" />
+<link rel="stylesheet" href="/css/hero.css?v=20261187" />
 </head>
 <body>
 
@@ -57,9 +57,9 @@
   <p class="hc-sign hc-rise" style="--d:0"><img src="/assets/images/dp/dp-nav.webp" alt="" width="52" height="52"><span><b>Pallav Bhatnagar</b><span>Product Builder, UX Enthusiast</span></span></p>
   <h1 class="hc-title"><span class="hc-line hc-rise" style="--d:90">I make <span class="hc-mess">complicated</span></span> <span class="hc-line hc-rise" style="--d:180">products feel obvious.</span></h1>
   <p class="hc-lede hc-rise" style="--d:260">Eight years of research-led product building, from early-stage startups to platforms used by millions. Ask my work anything below, it answers back.</p>
-  <button class="hc-ask hc-rise" id="askAiTrigger" type="button" data-ask-trigger aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false" aria-label="Talk to my Work: ask about my projects" style="--d:420">
+  <button class="hc-ask hc-rise" id="askAiTrigger" type="button" aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false" aria-label="Talk to my Work" style="--d:420">
     <svg class="nav-ai-ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg>
-    <span class="hc-q" aria-hidden="true"></span>
+    <span class="hc-q" aria-hidden="true"><span>What have you shipped?</span></span>
     <span class="hc-go" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M7 11.5v-9M3 6l4-4 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
   </button>
   <a class="hc-link hc-resume hc-rise" href="/assets/documents/resume/resume.pdf" data-site-resume download style="--d:520"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download resume</a>
@@ -263,12 +263,12 @@
       </button>
     </div>
     <div class="ask-panel-scroll" id="askPanelScroll">
-      <p class="ask-panel-lede">Ask about a project, my process, or how to reach me.</p>
+      <p class="ask-panel-lede">Ask what I've shipped, how I work, where I've worked, or how to reach me.</p>
       <div class="ask-panel-suggest" id="askPanelSuggest">
         <button class="wk-chip" type="button" data-q="What have you shipped?">What have you shipped?</button>
         <button class="wk-chip" type="button" data-q="How do you work?">How do you work?</button>
         <button class="wk-chip" type="button" data-q="Where have you worked?">Where have you worked?</button>
-        <button class="wk-chip" type="button" data-q="Tell me about WealthBasket.">Tell me about WealthBasket</button>
+        <button class="wk-chip" type="button" data-q="How can I reach you?">How can I reach you?</button>
       </div>
       <div class="ask-panel-thread" id="askPanelThread" role="log" aria-live="polite" aria-label="Conversation"></div>
     </div>
@@ -302,11 +302,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261183" defer></script>
-<script src="/js/projects.js?v=20261183" defer></script>
-<script src="/js/render.js?v=20261183" defer></script>
-<script src="/js/script.js?v=20261183" defer></script>
-<script src="/js/hero.js?v=20261183" defer></script>
+<script src="/js/content.js?v=20261187" defer></script>
+<script src="/js/projects.js?v=20261187" defer></script>
+<script src="/js/render.js?v=20261187" defer></script>
+<script src="/js/script.js?v=20261187" defer></script>
+<script src="/js/hero.js?v=20261187" defer></script>
 </body>
 </html>
 

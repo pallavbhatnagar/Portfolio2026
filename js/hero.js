@@ -1,6 +1,7 @@
 /* Hero (centred): one entrance after the loading screen ("complicated"
    arrives scattered and snaps straight), and the chat box turning through
-   real questions. Clicking it asks the one showing. */
+   example questions as hints. Clicking the box only opens or closes the
+   Talk to my Work chat (script.js); it never asks anything itself. */
 (() => {
   const hc = document.querySelector(".hc");
   if (!hc) return;
@@ -22,16 +23,14 @@
   if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", enter, { once: true });
   else enter();
 
+  // Example questions turning in the box (hints only).
   const ask = hc.querySelector(".hc-ask");
   const qBox = hc.querySelector(".hc-q");
-  const QS = ["What have you shipped?", "How do you work?", "Where have you worked?", "Tell me about WealthBasket.", "What are you looking for next?"];
-  if (!ask || !qBox) return;
+  const QS = ["What have you shipped?", "How do you work?", "Where have you worked?", "How can I reach you?"];
+  if (!ask || !qBox || reduce.matches) return;
   let qi = 0;
-  let cur = document.createElement("span");
+  let cur = qBox.firstElementChild;
   cur.textContent = QS[0];
-  qBox.append(cur);
-  ask.dataset.ask = QS[0];
-  if (reduce.matches) return;
   setInterval(() => {
     if (document.hidden || ask.matches(":hover, :focus-visible")) return;
     qi = (qi + 1) % QS.length;
@@ -45,6 +44,5 @@
     const old = cur;
     setTimeout(() => old.remove(), 500);
     cur = next;
-    ask.dataset.ask = QS[qi];
   }, 3000);
 })();
