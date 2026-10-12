@@ -117,9 +117,6 @@
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
 :root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.98); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
-:root[data-theme="dark"] .tpanel { background: var(--surface-2); }
-:root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
-:root[data-theme="dark"] .tdp { background: #2c2c30; }
 :root[data-theme="dark"] .im-tag { background: var(--surface); }
 :root[data-theme="dark"] .im-avatars svg { border-color: var(--surface-2); background: var(--surface-2); }
 :root[data-theme="dark"] .off-card { background: var(--surface); }
@@ -135,7 +132,7 @@
 /* A calm cross-fade between themes on the surfaces that actually change,
    not a blanket transition on every element. */
 @media (prefers-reduced-motion: no-preference) {
-  body, .nav::before, .project, .tpanel, .to-top, .im-tag,
+  body, .nav::before, .project, .to-top, .im-tag,
   .off-card, .off-books, .wk-card, .ag-info, .theme-toggle {
     transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out), border-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
   }
@@ -781,7 +778,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
   .projects + .value { margin-top: calc(var(--space-section) - 2.75rem); }
   .proj-stack .project-panel { order: -1; margin: -1.125rem -1.125rem 0; border-radius: 0.5rem 0.5rem 0 0; }
-  .proj-stack .project-shot { min-height: 0; aspect-ratio: 16 / 9; }
+  .proj-stack .project-shot { min-height: 0; aspect-ratio: 9 / 16; }
   .proj-stack .metrics { margin-top: 1.125rem; }
 }
 
@@ -1014,10 +1011,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 }
 
 /* =========================================================
-   Testimonials: a strip of portraits. Black and white until hovered; the
-   hovered (or focused, or tapped) panel opens to show the quote. No clicks
-   needed. Panels animate flex-grow only, and are contained so nothing
-   outside them is re-laid out.
+   Testimonials: a row of cards with arrows beside the heading.
+   Each has a small photo, the quote and the name at the foot; one is pink,
+   and the second is a video with its own play and sound controls.
    ========================================================= */
 .testi {
   max-width: 60.125rem;
@@ -1026,7 +1022,18 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   content-visibility: auto;
   contain-intrinsic-size: auto 31rem;
 }
-.testi-head { margin-bottom: var(--space-4); }
+.testi-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.5rem; margin-bottom: var(--space-4); }
+.tq-arrows { display: flex; flex: none; gap: 0.5rem; }
+.tq-arrow { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; padding: 0; border: 0; border-radius: 50%; background: #f2f2f2; color: var(--ink); cursor: pointer; transition: background-color 0.2s ease, transform 0.16s var(--ease-out); }
+.tq-arrow svg { width: 1.125rem; height: 1.125rem; }
+.tq-arrow:active { transform: scale(0.94); }
+.tq-arrow:disabled { opacity: 0.4; cursor: default; transform: none; }
+.tq-arrow:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+:root[data-theme="dark"] .tq-arrow { background: var(--surface-2); }
+@media (hover: hover) and (pointer: fine) {
+  .tq-arrow:not(:disabled):hover { background: #e6e6e6; }
+  :root[data-theme="dark"] .tq-arrow:not(:disabled):hover { background: #333; }
+}
 .testi-head h2 {
   font-size: var(--fs-h2);
   font-weight: 500;
@@ -1041,85 +1048,70 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   color: var(--ink-soft);
 }
 
-.tstrip { display: flex; gap: 0.375rem; height: 19.875rem; }
-.tpanel {
+/* The row: clipped at the text column's edges. It moves with the arrows,
+   the keyboard arrows, or by dragging (mouse) and swiping (touch); vertical
+   swipes still scroll the page. Without scripts it simply scrolls sideways. */
+.tq-view { --tq-w: clamp(15rem, 22vw, 17rem); --tq-gap: 1.375rem; overflow-x: auto; outline: none; scrollbar-width: none; }
+.tq-view::-webkit-scrollbar { display: none; }
+.js .tq-view { overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.js .tq-view.is-dragging { cursor: grabbing; }
+.tq-view:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 1rem; }
+.tq-track { display: flex; gap: var(--tq-gap); width: max-content; margin: 0; padding: 0; list-style: none; }
+/* A card: photo top-left, the quote below it, the name at the foot. */
+.tq-card {
   position: relative;
-  flex: 1 1 0;
-  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  width: var(--tq-w);
+  aspect-ratio: 3 / 4;
+  padding: 1.25rem 1.25rem 1.375rem;
   overflow: hidden;
-  border-radius: 0.5rem;
-  background: #e9e9e9;
-  cursor: pointer;
-  contain: layout paint;
-  transition: flex-grow 0.7s var(--ease-out);
+  border-radius: 0.875rem;
+  background: #f2f2f2;
+  color: var(--ink);
 }
-/* The open panel takes a larger share, so the collapsed ones sit narrower. */
-.tpanel.is-active { flex-grow: 7; }
-.tpanel:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.tq-card--pink { background: #f7d3f2; }
+.tq-dp { display: grid; place-items: center; width: 3.25rem; height: 3.25rem; overflow: hidden; border-radius: 50%; background: var(--tint); color: var(--tint-ink); font-size: 0.9375rem; font-weight: 500; letter-spacing: 0.03em; }
+.tq-card--pink .tq-dp { background: rgba(255, 255, 255, 0.7); color: #5c2f56; }
+.tq-dp img { width: 100%; height: 100%; object-fit: cover; }
+.tq-quote { margin: 2rem 0 0; font-size: 0.875rem; line-height: 1.5; quotes: "\201C" "\201D"; }
+.tq-quote::before { content: open-quote; }
+.tq-quote::after { content: close-quote; }
+.tq-name { display: flex; flex-direction: column; gap: 0.1875rem; margin-top: auto; }
+.tq-name strong { font-size: 1.125rem; font-weight: 500; letter-spacing: -0.01em; line-height: 1.2; }
+.tq-name span { font-size: 0.8125rem; color: var(--ink-soft); }
+.tq-card--pink .tq-name span { color: #5c4459; }
+:root[data-theme="dark"] .tq-card { background: var(--surface-2); }
+:root[data-theme="dark"] .tq-card--pink { background: #3a2637; }
+:root[data-theme="dark"] .tq-card--pink .tq-dp { background: rgba(0, 0, 0, 0.25); color: #f7d3f2; }
+:root[data-theme="dark"] .tq-card--pink .tq-name span { color: #d9b8d4; }
 
-.tside {
-  position: absolute;
-  left: 50%;
-  bottom: 0.75rem;
-  writing-mode: vertical-rl;
-  transform: translateX(-50%) rotate(180deg);
-  font-size: var(--fs-small);
-  font-weight: 500;
-  letter-spacing: 0.04em;
-  color: #fff;
-  white-space: nowrap;
-  transition: opacity 0.3s var(--ease-out);
-}
-.tpanel.is-active .tside { opacity: 0; }
+/* The video card: the video fills it, a play button sits in the middle and
+   the name lies over a dark fade at the foot. */
+.tq-card--video { padding: 0; background: #1c1c1c; color: #fff; isolation: isolate; -webkit-mask-image: -webkit-radial-gradient(white, black); }
+:root[data-theme="dark"] .tq-card--video { background: #1c1c1c; }
+/* The video overshoots the card by a pixel on every side, so no sliver of the
+   card shows at its edges while the row moves between pixels; isolation and
+   the mask keep Safari clipping the video to the rounded corners. */
+.tq-vid { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); max-width: none; object-fit: cover; pointer-events: none; }
+.tq-card--video .tq-name { position: absolute; inset: auto 0 0; padding: 3rem 1.25rem 1.375rem; background: linear-gradient(to top, rgba(0, 0, 0, 0.65), transparent); pointer-events: none; }
+.tq-card--video .tq-name span { color: rgba(255, 255, 255, 0.8); }
+/* The video's own controls (play or pause, sound), top right. */
+.tq-card--video .tctl { top: 0.75rem; right: 0.75rem; bottom: auto; z-index: 1; }
+.tq-card--video.is-playing .tplay .i-play { display: none; }
+.tq-card--video.is-playing .tplay .i-pause { display: block; }
+@media (max-width: 640px) { .tq-arrow { width: 2.5rem; height: 2.5rem; } }
+@media (forced-colors: active) { .tq-card, .tq-arrow { border: 1px solid CanvasText; } }
 
-.tbody {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  padding: 1.125rem 1.25rem;
-  color: #fff;
-  opacity: 0;
-  transform: translateY(0.5rem);
-  pointer-events: none;
-  transition: opacity 0.3s var(--ease-out), transform 0.4s var(--ease-out);
-}
-.tpanel.is-active .tbody {
-  opacity: 1;
-  transform: none;
-  transition-duration: 0.5s;
-  transition-delay: 0.18s;
-}
-.tbody blockquote {
-  margin: 0;
-  max-width: 34ch;
-  font-size: var(--fs-lead);
-  font-weight: 500;
-  line-height: 1.4;
-  letter-spacing: 0;
-}
-.tname { margin-top: 0.625rem; font-size: var(--fs-small); color: rgba(255, 255, 255, 0.75); }
-.tname strong { display: block; font-size: var(--fs-body); font-weight: 500; color: #fff; }
-
-@media (max-width: 900px) {
-  .tstrip { flex-direction: column; height: auto; }
-  .tpanel { flex: 0 0 3.375rem; transition: flex-basis 0.6s var(--ease-out); }
-  .tpanel.is-active { flex-basis: 16.125rem; }
-  .tside { writing-mode: horizontal-tb; transform: none; left: 0.75rem; bottom: 0.75rem; }
-}
 
 /* =========================================================
    Quiet motion (only ever transform and opacity, all gated)
    ========================================================= */
 @media (prefers-reduced-motion: no-preference) {
   /* entrances start hidden only when scripts run (the .js class) */
-  .js .tstrip:not(.is-in) .tpanel { opacity: 0; transform: translateY(0.875rem); }
-  .tpanel {
-    transition:
-      flex-grow 0.7s var(--ease-out),
-      opacity 0.8s var(--ease-out) calc(var(--i, 0) * 80ms),
-      transform 0.8s var(--ease-out) calc(var(--i, 0) * 80ms);
-  }
+  .js .tq-view:not(.is-in) .tq-card { opacity: 0; transform: translateY(0.875rem); }
+  .tq-card { transition: opacity 0.8s var(--ease-out) calc(var(--i, 0) * 80ms), transform 0.8s var(--ease-out) calc(var(--i, 0) * 80ms); }
 }
 /* Off-screen sections skip layout and paint until they are near the viewport */
 .value { content-visibility: auto; contain-intrinsic-size: auto 26rem; }
@@ -1228,69 +1220,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   :root[data-theme="dark"] .theme-toggle:hover .moon { transform: rotate(-18deg); }
 }
 .theme-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
-/* Small round photo slot (dp). With no photo it shows initials. Collapsed, it
-   sits centred at the top of the tile; when the panel opens it glides to the
-   left, above the quote. left + transform animate on a tiny element inside a
-   contained panel, so the cost stays local. */
-/* Each testimonial sits on its own tint all the time (not only on hover);
-   the open panel and hover deepen it a touch. */
-/* Testimonials are plain grey (palette Light Gray) and show their colour
-   only when pointed at or focused; on touch screens, while open. */
-.tpanel--mono { background: #ededed; }
-.tpanel--mono .tside,
-.tpanel--mono .tbody,
-.tpanel--mono .tname strong { color: var(--ink); }
-.tpanel--mono .tname { color: var(--ink-soft); }
-.tdp {
-  position: absolute;
-  top: 1rem;
-  left: 50%;
-  display: grid;
-  place-items: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  overflow: hidden;
-  border-radius: 50%;
-  background: #d9d9d9;
-  font-size: var(--fs-small);
-  font-weight: 500;
-  letter-spacing: 0.03em;
-  color: var(--ink);
-  transform: translateX(-50%);
-  transition: left 0.7s var(--ease-out), transform 0.7s var(--ease-out), background-color 0.5s var(--ease-out), color 0.5s var(--ease-out);
-}
-.tdp img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(1); transition: filter 0.5s var(--ease-out); }
-.tpanel.is-active .tdp { left: 1.25rem; transform: none; }
-.tpanel--mono:focus-visible, :root[data-theme="dark"] .tpanel--mono:focus-visible { background: var(--tint); }
-.tpanel--mono:focus-visible .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
-:root[data-theme="dark"] .tpanel--mono:focus-visible .tdp { background: rgba(0, 0, 0, 0.25); }
-.tpanel:focus-visible .tdp img { filter: none; }
-@media (hover: hover) and (pointer: fine) {
-  .tpanel--mono:hover, :root[data-theme="dark"] .tpanel--mono:hover { background: var(--tint); }
-  .tpanel--mono:hover .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
-  :root[data-theme="dark"] .tpanel--mono:hover .tdp { background: rgba(0, 0, 0, 0.25); }
-  .tpanel:hover .tdp img { filter: none; }
-}
-@media (hover: none) {
-  .tpanel--mono.is-active, :root[data-theme="dark"] .tpanel--mono.is-active { background: var(--tint); }
-  .tpanel--mono.is-active .tdp { background: rgba(255, 255, 255, 0.75); color: var(--tint-ink); }
-  :root[data-theme="dark"] .tpanel--mono.is-active .tdp { background: rgba(0, 0, 0, 0.25); }
-  .tpanel.is-active .tdp img { filter: none; }
-}
-@media (prefers-reduced-motion: no-preference) {
-  .tpanel--mono {
-    transition:
-      flex-grow 0.7s var(--ease-out),
-      background-color 0.5s var(--ease-out),
-      opacity 0.8s var(--ease-out) calc(var(--i, 0) * 80ms),
-      transform 0.8s var(--ease-out) calc(var(--i, 0) * 80ms);
-  }
-}
-@media (max-width: 900px) {
-  .tdp,
-  .tpanel.is-active .tdp { top: 0.625rem; left: 0.75rem; transform: none; }
-  .tside { left: 3.5rem; bottom: 1.25rem; }
-}
 
 /* =========================================================
    System mono: only for small, label-like text (categories, captions, footer
@@ -1315,23 +1244,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .value-meta dt { font-weight: 500; }
 
 
-/* First testimonial: a video box above the quote. It fills the panel down to
-   the description (the body is a column that ends at the panel bottom).
-   Muted autoplay while open; two quiet controls sit in the box corner. */
-.tpanel--video .tbody { top: 0; display: flex; flex-direction: column; padding: 0.625rem 0.625rem 0.875rem; }
-.tpanel--video .tbody blockquote, .tpanel--video .tname { padding-inline: 0.625rem; }
-.tvideo {
-  position: relative;
-  flex: 1 1 auto;
-  min-height: 5rem;
-  margin-bottom: 0.75rem;
-  overflow: hidden;
-  border-radius: 0.375rem;
-  background: #1c1c1c;
-}
-.tpanel.is-active .tvideo { pointer-events: auto; }
-.tpanel--video.is-active .tdp { opacity: 0; pointer-events: none; }
-.tvideo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+/* Round video controls (used by the About music card). */
 .tctl { position: absolute; right: 0.375rem; bottom: 0.375rem; display: flex; align-items: center; gap: 0.375rem; padding: 0.1875rem 0.4375rem; border-radius: 999px; background: rgba(13, 13, 13, 0.62); }
 .tbtn {
   display: grid;
@@ -1356,10 +1269,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .tplay .i-pause, .tmute .i-mute { display: none; }
 .tmute[aria-pressed="true"] .i-vol { display: none; }
 .tmute[aria-pressed="true"] .i-mute { display: block; }
-.tpanel--video.is-active video { cursor: pointer; }
-.tpanel--video.is-playing .tplay .i-play { display: none; }
-.tpanel--video.is-playing .tplay .i-pause { display: block; }
-@media (max-width: 900px) { .tpanel--video.is-active { flex-basis: 21.125rem; } }
 
 /* Copy email: a thin two-sheet icon that swaps to a check for a moment. */
 .copy-mail {
@@ -1463,7 +1372,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .im-fit-h { margin: 0; font-size: var(--fs-body); font-weight: 500; color: var(--ink); }
 .im-fit-list { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; margin: 0; padding: 0; list-style: none; }
 .im-fit-list li { font-size: var(--fs-body); line-height: 1.5; color: var(--ink-soft); }
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   .im-fit { grid-template-columns: 1fr; gap: 0.75rem; }
   .im-fit-list { grid-template-columns: 1fr; gap: 0; }
   .im-fit-list li { padding: 0.5rem 0; border-top: 1px solid var(--hairline); }
@@ -1520,7 +1429,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .im-card:nth-child(2) { transition-delay: 0.12s, 0s, 0s; }
   .im-card:nth-child(3) { transition-delay: 0.24s, 0s, 0s; }
 }
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   .ab-impact { grid-template-columns: 1fr; gap: var(--space-4); }
   .im-foot { padding-top: var(--space-3); }
   .im-grid { min-height: 0; grid-template-rows: none; }
@@ -1532,7 +1441,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .ab-r { transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   .ab-hero { padding-top: calc(var(--pad) + 6.5rem); }
   .ab-stats { flex-wrap: wrap; row-gap: 0.375rem; }
   .ab-story, .ab-glance { grid-template-columns: 1fr; gap: var(--space-3); }
@@ -1612,7 +1521,7 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 @keyframes eq-idle { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(0.7); } }
 @keyframes eq-play { from { transform: scaleY(0.3); } to { transform: scaleY(1); } }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   .off-music { grid-template-columns: 1fr; gap: var(--space-3); padding: 1.125rem; }
 }
 @media (max-width: 560px) { .om-facade { grid-template-columns: 1fr; } .om-disc { width: 5.25rem; height: 5.25rem; } }
@@ -1769,7 +1678,7 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 .faq-list details p { max-width: 54ch; margin: 0; font-size: var(--fs-body); line-height: 1.55; color: var(--ink-soft); }
 @media (prefers-reduced-motion: reduce) { .faq-list summary::after { transition: none; } }
 
-@media (max-width: 900px) {
+@media (max-width: 640px) {
   /* Where I've been becomes a vertical timeline. */
   .path-line { display: none; }
   .path-grid { grid-template-columns: 1fr; margin: var(--space-4) 0 0 0.4375rem; border-left: 2px solid var(--ink); }
@@ -2690,7 +2599,7 @@ body.ask-open .cs-side { display: none; }
    colour. Canvas, CanvasText and Highlight are the visitor's system colours. */
 @media (forced-colors: active) {
   .proj-stack .project, .wk-card, .cs-cover, .cs-insight, .cs-quad, .cs-side-card, .cs-testimonial, .cs-gate,
-  .im-card, .off-card, .tpanel, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv,
+  .im-card, .off-card, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv,
   .btn, .cs-ask, .wk-chip, .wk-badge, .cs-cover-tag, .shot-lock, .trail-done,
   .cs-tags li, .cs-quad-items li, .cs-tools li {
     border: 1px solid CanvasText;
@@ -2700,7 +2609,6 @@ body.ask-open .cs-side { display: none; }
   .wk-seg[aria-pressed="true"], .wk-chip[aria-pressed="true"] { forced-color-adjust: none; background: Highlight; color: HighlightText; }
   .cs-toc a.is-active, .vx-item.is-active .vx-trigger { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 0.25em; }
   .vx-bar i { forced-color-adjust: none; background: Highlight; }
-  .tpanel.is-active { outline: 2px solid Highlight; outline-offset: 2px; }
   /* Footer icons are black image files: full strength, and flipped to light
      when the contrast theme has a dark background. */
   .footer-links img, .copy-mail { opacity: 1 !important; filter: none !important; }
@@ -3104,7 +3012,7 @@ html:not(.js) .rd-pick { display: none; }
    About hero, "the table": the intro in the middle, and around it
    snapshots lying like polaroids on a desk (white frame, a caption, each
    a little askew). They drop in one after another (script.js 15).
-   Below 1240px they become a tilted strip you swipe.
+   Below 1024px they become a tilted strip you swipe.
    ========================================================= */
 .ab-table { position: relative; isolation: isolate; justify-content: center; min-height: 54rem; padding-bottom: 4rem; }
 /* The About page clips sideways overflow; the table needs its full width on
@@ -3120,7 +3028,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
   position: absolute;
   left: calc(var(--x) * 1%);
   top: calc(var(--y) * 1%);
-  width: clamp(8.5rem, 10.5vw, 11rem);
+  width: var(--w, clamp(8.5rem, 10.5vw, 11rem));
   margin: 0;
   padding: 0.5rem 0.5rem 0;
   border-radius: 0.375rem;
@@ -3147,10 +3055,15 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 @keyframes ab-drop { from { opacity: 0; transform: translateY(-2.5rem) scale(1.18) rotate(14deg); } 60% { opacity: 1; } to { opacity: 1; transform: none; } }
 
 /* Tablets and phones: the words, then a tilted strip of snapshots. */
-@media (max-width: 1239px) {
+@media (max-width: 1023px) {
   .ab-table { min-height: 0; padding-bottom: 1rem; }
   .ab-pile { position: relative; top: auto; left: auto; bottom: auto; translate: none; flex: none; width: 100vw; margin: 2.5rem 0 0; padding: 1.25rem 0 2rem; overflow: hidden; pointer-events: auto; }
-  .ab-track { display: flex; gap: 1rem; width: max-content; padding-right: 1rem; touch-action: pan-y; cursor: grab; will-change: transform; }
+  .ab-track { display: flex; align-items: flex-start; gap: 1rem; width: max-content; padding-right: 1rem; touch-action: pan-y; cursor: grab; will-change: transform; }
+  /* A tapped snapshot: straight, on top, with its line open. */
+  .ab-snap { transition: rotate 0.35s var(--ease-out); }
+  .ab-snap.is-open { z-index: 50; rotate: 0deg; }
+  .ab-snap.is-open .ab-snap-more { grid-template-rows: 1fr; }
+  .ab-snap.is-open .ab-snap-more > span { opacity: 1; padding-top: 0.25rem; }
   .ab-track:active { cursor: grabbing; }
   .ab-snap { position: relative; left: auto; top: auto; flex: none; width: 10.5rem; rotate: calc(var(--r) * 0.6deg); }
 }
@@ -3158,7 +3071,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 
 /* About table: the track only exists to move the strip on smaller screens;
    on wide screens the snapshots are placed on the table directly. */
-@media (min-width: 1240px) {
+@media (min-width: 1024px) {
   .ab-track { display: contents; }
   .ab-snap.is-copy, .ab-snap.is-spare { display: none; }
   .ab-table { min-height: 40rem; padding-bottom: 0; }
@@ -3229,7 +3142,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 }
 /* More room above "Hi, I'm Pallav." on wide screens (the words sit centred
    on the table, so the room goes on the words themselves). */
-@media (min-width: 1240px) { .ab-table { padding-top: calc(var(--pad) + 5rem); } }
+@media (min-width: 1024px) { .ab-table { padding-top: calc(var(--pad) + 5rem); } }
 /* The intro on three lines (wider screens). */
 @media (min-width: 641px) { .ab-table .ab-lede { max-width: 31.5em; text-wrap: balance; } }
 
@@ -3274,8 +3187,8 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 }
 .om-video { margin: 0; }
 @media (max-width: 640px) { .om-video { margin-top: 1.5rem; } }
-.om-screen { position: relative; overflow: hidden; aspect-ratio: 1024 / 720; border-radius: 0.375rem; background: #111; box-shadow: 0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.55); }
-.om-vid { display: block; width: 100%; height: 100%; object-fit: cover; }
+.om-screen { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 0.375rem; background: #111; box-shadow: 0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.55); }
+.om-vid { display: block; width: 100%; height: 100%; object-fit: contain; }
 .om-vid-empty { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; background: radial-gradient(120% 90% at 50% 0%, #2a2a2e, #111); color: rgba(255, 255, 255, 0.7); font-size: var(--fs-small); font-weight: 500; }
 .om-video.is-empty .om-vid-empty { display: flex; }
 .om-video.is-empty .om-vid { display: none; }
@@ -3301,7 +3214,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 .om-s .om-genres li { border-color: rgba(182, 227, 123, 0.25); color: rgba(242, 241, 238, 0.8); }
 .om-s .om-sc { background: #b6e37b; color: #141a12; }
 .om-s .om-sc:focus-visible { outline-color: #b6e37b; }
-.om-s .om-screen { box-shadow: none; background: #141a12; }
+.om-s .om-screen { box-shadow: none; background: #000; }
 /* A dark fade over the foot of the video, into the card. */
 .om-s .om-screen::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(to top, #141a12 0%, rgba(20, 26, 18, 0.6) 45%, transparent); pointer-events: none; }
 .om-s .om-screen .tctl { z-index: 1; }
@@ -3346,10 +3259,155 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 .hs-plus span { font-size: 0.9em; font-weight: 800; line-height: 1; translate: 0 -0.04em; }
 .hs-heart { right: -0.95em; top: -0.3em; width: 0.8em; height: 0.8em; --hr: -10deg; }
 .hs-steps { right: -1em; top: -0.32em; width: 0.84em; height: 0.84em; border-radius: 50%; background: #cfe7b0; padding: 0.16em; --hr: -8deg; }
-.hs-hand { right: -1em; top: -0.32em; width: 0.82em; height: 0.82em; border-radius: 50%; background: #c4d6fb; --hr: 10deg; }
-.hs-hand span { font-size: 0.48em; line-height: 1; }
+.hs-hand { position: relative; right: auto; top: auto; display: inline-grid; vertical-align: 0.05em; margin-left: 0.25em; width: 1.08em; height: 1.08em; border-radius: 50%; background: #c4d6fb; --hr: 10deg; }
+.hs-hand span { font-size: 0.68em; line-height: 1; }
 @media (prefers-reduced-motion: no-preference) {
   .is-in .hs-heart { animation: hs-beat 1.4s ease-in-out 1s 2; }
 }
 @keyframes hs-beat { 0%, 100% { scale: 1; } 30% { scale: 1.18; } 60% { scale: 0.95; } }
 /* Works cards: a sticker for the field, on the top-left of the image. */
+/* Playlist name over the video, bottom left (on the dark fade). */
+.om-vid-tag { position: absolute; left: 1rem; bottom: 0.875rem; z-index: 1; display: flex; flex-direction: column; gap: 0.125rem; max-width: calc(100% - 7rem); margin: 0; line-height: 1.25; pointer-events: none; }
+.om-vid-tag b { font-size: 1rem; font-weight: 600; letter-spacing: -0.015em; color: #fff; }
+.om-vid-tag span:last-child { font-size: 0.8125rem; color: rgba(255, 255, 255, 0.7); }
+.om-video.is-empty .om-vid-tag { display: none; }
+@media (max-width: 640px) { .om-vid-tag b { font-size: 0.9375rem; } .om-vid-tag span:last-child { font-size: 0.75rem; } }
+/* The film title always on one line; it scales down on narrow screens. */
+.om-vid-tag b { white-space: nowrap; font-size: clamp(0.8125rem, 3.6vw, 1rem); }
+@media (max-width: 640px) { .om-vid-tag { max-width: calc(100% - 6.5rem); } .om-vid-tag b { font-size: clamp(0.75rem, 3.5vw, 0.9375rem); } }
+@media (max-width: 640px) { .om-video .tctl { top: 0.625rem; bottom: auto; } .om-vid-tag { max-width: calc(100% - 2rem); } }
+/* Tablets: a narrower column of words, so the snapshots have room. */
+@media (min-width: 1024px) and (max-width: 1100px) {
+  .ab-table .ab-lede { max-width: 24em; }
+  .ab-table .ab-title { font-size: clamp(2rem, 4.6vw, 3rem); }
+  .ab-snap figcaption { font-size: 0.6875rem; padding: 0.375rem 0.0625rem 0.5rem; }
+  .ab-snap { padding: 0.375rem 0.375rem 0; }
+}
+
+/* The spread: a snapshot under the mouse, or just tapped, sits on top. */
+@media (min-width: 1024px) {
+  .ab-snap { transition: scale 0.25s var(--ease-out), rotate 0.35s var(--ease-out), box-shadow 0.25s ease; }
+  .ab-snap.is-top { z-index: 50; scale: 1.04; }
+}
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .ab-snap:hover { z-index: 50; scale: 1.04; }
+}
+
+/* Music card: as tall as the Books card, with room between the tags and
+   the SoundCloud link. */
+@media (min-width: 641px) {
+  .off-music.om-s { min-height: 21rem; }
+  /* The video runs the full height of the card (inside its padding), filled. */
+  .om-s .om-video { align-self: stretch; display: flex; }
+  .om-s .om-screen { flex: 1; aspect-ratio: auto; height: 100%; }
+  .om-s .om-vid { object-fit: cover; object-position: 28% 50%; }
+}
+.om-s .om-vid-cap { padding-top: 2.5rem; }
+
+/* "Who you'd be working with": the cards' doodles keep clear of their
+   words at every width. */
+.im-card:not(.im-wide) .im-label, .im-card:not(.im-wide) .im-big { padding-right: 3.5rem; }
+.im-wide .im-label { padding-right: 8.25rem; }
+
+/* Stickers on section headings, a size up (the Home headline's stay as
+   they are). */
+.hs-quote, .hs-ask, .hs-steps, .hs-plus, .hs-heart { font-size: 1.22em; }
+.hs-hand { position: absolute; right: -1.15em; top: -0.45em; display: inline-grid; vertical-align: baseline; margin: 0; width: 1.05em; height: 1.05em; }
+.hs-talk { font-size: 1.15em; }
+
+/* Very small phones: the signature on Home stacks, photo above the name. */
+@media (max-width: 360px) {
+  .hc-sign { flex-direction: column; text-align: center; gap: 0.5rem; }
+  .hc-sign > span { text-align: center; }
+}
+/* Heading stickers sit in the heading's own top-right corner, in room kept
+   for them, so they never reach a neighbouring column or the screen edge. */
+.ab-h2 .hs-host, #value-title .hs-host, #testi-title .hs-host { padding-right: 1.3em; }
+.ab-h2 .hs-host .hs, #value-title .hs-host .hs, #testi-title .hs-host .hs { right: 0; top: -0.5em; }
+.hs-hand { right: 0; top: -0.5em; }
+@media (max-width: 640px) {
+  .im-wide .im-doodle { width: 4.5rem; }
+  .im-wide .im-label { padding-right: 5rem; }
+}
+.rd-menu[hidden] { display: none; }
+@media (max-width: 640px) { .rd-menu { left: auto; right: -0.5rem; transform: translateY(-4px) scale(0.97); transform-origin: top right; } .rd-menu.is-open { transform: none; } }
+@media (max-width: 360px) { .ab-title { font-size: clamp(1.75rem, 9.6vw, 2.25rem); } }
+
+/* "Pallav", with how to say it: a small tooltip on hover, focus or tap. */
+.say { position: relative; text-decoration: underline dotted; text-decoration-thickness: 0.06em; text-underline-offset: 0.18em; text-decoration-color: color-mix(in srgb, currentColor 45%, transparent); cursor: help; outline: none; }
+.say:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 0.2em; }
+.say-tip { position: absolute; left: 50%; bottom: calc(100% + 0.5rem); z-index: 60; padding: 0.375rem 0.625rem; border-radius: 0.5rem; background: var(--ink); color: var(--bg); font-size: 0.8125rem; font-weight: 500; letter-spacing: 0; line-height: 1.2; white-space: nowrap; text-decoration: none; pointer-events: none; opacity: 0; transform: translate(-50%, 4px); transition: opacity 0.15s ease, transform 0.2s var(--ease-out); }
+.say:hover .say-tip, .say:focus-visible .say-tip { opacity: 1; transform: translate(-50%, 0); }
+.ab-title .say-tip { font-size: 0.875rem; }
+@media (prefers-reduced-motion: reduce) { .say-tip { transform: translate(-50%, 0); } }
+@media (forced-colors: active) { .say-tip { border: 1px solid CanvasText; } }
+
+/* "Pallav" is a button that says the name; it reads as part of the title. */
+button.say { padding: 0; border: 0; background: none; font: inherit; letter-spacing: inherit; color: inherit; }
+.say-tip { display: flex; flex-direction: column; align-items: flex-start; gap: 0.125rem; text-align: left; }
+.say-hint { font-size: 0.75em; opacity: 0.7; }
+
+/* The spread: hovering a snapshot straightens it and opens a line about it. */
+.ab-snap-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s var(--ease-out); }
+.ab-snap-more > span { overflow: hidden; display: block; padding-top: 0; font-size: 0.75rem; font-weight: 400; line-height: 1.35; color: #555; opacity: 0; transition: opacity 0.25s ease, padding-top 0.35s var(--ease-out); }
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
+  .ab-snap:hover { rotate: 0deg; }
+  .ab-snap:hover .ab-snap-more { grid-template-rows: 1fr; }
+  .ab-snap:hover .ab-snap-more > span { opacity: 1; padding-top: 0.25rem; }
+}
+@media (prefers-reduced-motion: reduce) { .ab-snap, .ab-snap-more, .ab-snap-more > span { transition: none; } }
+
+/* =========================================================
+   About, "Life, lately": the heading on the left, and on the right an
+   endless row of tall pictures running slowly (it slows on hover, pauses
+   off screen, and can be dragged or swiped either way). Each picture has its place name in white on its top
+   left and a short line below it. Phones: the heading sits above the row.
+   Reduced motion: it stays still until dragged.
+   ========================================================= */
+.ab-life { display: grid; grid-template-columns: minmax(0, 15rem) minmax(0, 1fr); gap: 1.5rem 2rem; align-items: start; }
+.ab-life-head { display: flex; flex-direction: column; }
+.hs-cam { font-size: 1.22em; right: 0; top: -0.5em; width: 0.9em; height: 0.9em; --hr: -10deg; }
+.lf-row { overflow: hidden; outline: none; }
+.lf-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.5rem; }
+.lf-track { display: flex; gap: 0.75rem; width: max-content; margin: 0; padding: 0; list-style: none; }
+.lf-card { flex: none; width: clamp(12.5rem, 19vw, 15.5rem); }
+.lf-fig { margin: 0; }
+.lf-pic { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 0.5rem; background: #ddd; }
+.lf-pic > svg, .lf-pic > img, .lf-pic > video { display: block; width: 100%; height: 100%; object-fit: cover; }
+.lf-label { position: absolute; left: 0.875rem; top: 0.75rem; z-index: 1; font-size: 1rem; font-weight: 500; color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35); }
+.lf-fig figcaption { margin-top: 0.75rem; padding-right: 0.5rem; font-size: 0.875rem; line-height: 1.45; color: var(--ink-soft); }
+/* The script runs and drags the row. Without it, the row scrolls sideways
+   and shows each picture once. */
+.js .lf-row { touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }
+.js .lf-row.is-dragging { cursor: grabbing; }
+.lf-pic img, .lf-pic video { pointer-events: none; }
+html:not(.js) .lf-row { overflow-x: auto; }
+html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  /* Placeholder video pictures move a little, as if playing. */
+  .lf-pic[data-type="video"] > svg { animation: lf-drift 9s ease-in-out infinite alternate; }
+}
+@keyframes lf-drift { to { transform: scale(1.12) translate(-3%, -2%); } }
+@media (max-width: 767px) {
+  .ab-life { grid-template-columns: minmax(0, 1fr); }
+  .lf-row { margin-inline: calc(var(--pad) * -1); padding-inline: var(--pad); }
+}
+@media (forced-colors: active) { .lf-pic { border: 1px solid CanvasText; } }
+
+/* Phones: "Didn't find your question?" sits above a full-width "Ask me
+   anything", and "Listen more on SoundCloud" spans the music card. */
+@media (max-width: 640px) {
+  .faq-more { flex-direction: column; align-items: stretch; gap: 0.875rem; }
+  .faq-more .btn { justify-content: center; width: 100%; }
+  .om-vid-cap { align-self: stretch; align-items: stretch; }
+  .om-sc { justify-content: center; width: 100%; }
+}
+
+/* About: "On this page", the case studies' section rail. It stays hidden
+   while the opening spread is on screen (the snapshots run under where it
+   sits) and fades in once that has scrolled away. Same breakpoints as the
+   case studies: wide screens only, and not while the chat is open. */
+.ab-side { margin-top: -1.25rem; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
+.ab-side.is-shown { opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0s; }
+.ab-story, .ab-path, .ab-glance, .ab-pr, .ab-impact, .ab-now, .ab-off, .ab-life, .ab-faq { scroll-margin-top: 5.25rem; }
+@media (prefers-reduced-motion: reduce) { .ab-side, .ab-side.is-shown { transition: none; } }

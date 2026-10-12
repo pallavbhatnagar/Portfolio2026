@@ -424,86 +424,173 @@
     });
   }
 
-  // 9) Testimonial strip: hovering, focusing or tapping a portrait opens it.
-  //    Only one panel is open at a time; the others are read as collapsed.
-  const strip = document.querySelector(".tstrip");
-  const panels9 = strip ? Array.from(strip.querySelectorAll(".tpanel")) : [];
-  if (panels9.length) {
-    const vPanel = strip.querySelector(".tpanel--video");
-    const vid = vPanel?.querySelector("video");
-    let userPaused = false;
-    let stripSeen = false; // the video loads and plays only once the strip is on screen
-    // Plays muted; the visitor turns the sound on with the mute button.
-    const playVideo = () => {
-      if (!vid || !stripSeen || userPaused || reduce.matches) return;
-      if (vid.preload === "none") { vid.preload = "auto"; vid.load(); }
-      vid.play().catch(() => {});
+  // 9) Testimonials: a row of cards, clipped at the text column. It moves
+  //    with the arrows (greyed out at either end), the keyboard arrows, or a
+  //    drag or swipe that carries its speed and settles on the nearest card.
+  const tqView = document.querySelector(".tq-view");
+  const tqTrack = tqView && tqView.querySelector(".tq-track");
+  if (tqTrack) {
+    const cards = Array.from(tqTrack.children);
+    cards.forEach((card, i) => card.style.setProperty("--i", i));
+    const arrows = Array.from(document.querySelectorAll(".tq-arrow"));
+    let x = 0;           // how far the row has moved, in px
+    let target = 0;      // where the current glide ends
+    let stepPx = 0;
+    let maxX = 0;
+    const measure = () => {
+      const c = cards[0].getBoundingClientRect().width;
+      const gap = parseFloat(getComputedStyle(tqTrack).columnGap) || 0;
+      stepPx = c + gap;
+      maxX = Math.max(0, tqTrack.scrollWidth - tqView.clientWidth);
     };
-    const open = (panel) => {
-      panels9.forEach((p) => {
-        const on = p === panel;
-        p.classList.toggle("is-active", on);
-        p.querySelector(".tbody")?.setAttribute("aria-hidden", String(!on));
-      });
-      if (vid) {
-        if (panel === vPanel) playVideo();
-        else vid.pause();
-      }
+    const clamp = (v) => Math.min(maxX, Math.max(0, v));
+    const snap = (v) => clamp(Math.round(v / stepPx) * stepPx);
+    const render = () => {
+      tqTrack.style.transform = "translate3d(" + -x + "px, 0, 0)";
+      const at = drag && drag.on ? x : target;
+      arrows.forEach((b) => { b.disabled = b.dataset.dir === "-1" ? at <= 1 : at >= maxX - 1; });
     };
-    if (vid && "IntersectionObserver" in window) {
-      new IntersectionObserver(([entry]) => {
-        stripSeen = entry.isIntersecting;
-        if (stripSeen && vPanel.classList.contains("is-active")) playVideo();
-        else if (!stripSeen) vid.pause();
-      }, { threshold: 0.5 }).observe(vPanel);
-    }
-    // The panel marked data-default (the video) is the resting state: it is
-    // open on load and reopens when the pointer leaves the strip.
-    const restPanel = strip.querySelector(".tpanel[data-default]") || panels9[0];
-    strip.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") open(restPanel); });
+    // Re-measure whenever the cards change size (resizes, and the first real
+    // layout: the section skips layout until it is near the screen).
+    const remeasure = () => {
+      const old = stepPx;
+      measure();
+      if (!stepPx) return;
+      if (old && old !== stepPx) { x = (x / old) * stepPx; target = (target / old) * stepPx; }
+      x = clamp(x); target = clamp(target);
+      render();
+    };
+    let drag = null;
+    if ("ResizeObserver" in window) new ResizeObserver(remeasure).observe(tqView);
+    else window.addEventListener("resize", remeasure);
+    remeasure();
 
-    // Video controls: play or pause, mute or unmute.
-    if (vid) {
-      const playBtn = vPanel.querySelector(".tplay");
-      const muteBtn = vPanel.querySelector(".tmute");
+    let raf = 0;
+    const glideTo = (to) => {
+      cancelAnimationFrame(raf);
+      target = clamp(to);
+      to = target;
+      if (reduce.matches) { x = to; render(); return; }
+      const from = x;
+      const t0 = performance.now();
+      const dur = 520;
+      const tick = (now) => {
+        const t = Math.min(1, (now - t0) / dur);
+        x = from + (to - from) * (1 - Math.pow(1 - t, 4));
+        render();
+        if (t < 1) raf = requestAnimationFrame(tick); else raf = 0;
+      };
+      raf = requestAnimationFrame(tick);
+    };
+    const go = (dir) => {
+      const from = raf ? target : x;
+      // Card by card; the last stop lines the final card up with the right edge.
+      const i = from / stepPx;
+      const next = dir > 0 ? Math.floor(i + 1.01) : Math.ceil(i - 1.01);
+      glideTo(next * stepPx);
+    };
+    document.querySelectorAll(".tq-arrow").forEach((b) => b.addEventListener("click", () => go(Number(b.dataset.dir))));
+    tqView.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+      else if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+    });
+
+    // Drag and swipe. Horizontal movement takes over after a few pixels;
+    // a mostly vertical touch is left to scroll the page. Past either end
+    // the row gives a little, with growing resistance, and springs back.
+    let justDragged = false;
+    tqView.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0 || e.target.closest("button")) return;
+      drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, from: x, on: false, hist: [[e.clientX, e.timeStamp]] };
+    });
+    tqView.addEventListener("pointermove", (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x0;
+      const dy = e.clientY - drag.y0;
+      if (!drag.on) {
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; }
+        drag.on = true;
+        drag.from = x + dx; // start from where the row is, without a jump
+        cancelAnimationFrame(raf); raf = 0;
+        tqView.setPointerCapture(e.pointerId);
+        tqView.classList.add("is-dragging");
+      }
+      const raw = drag.from - dx;
+      const over = raw < 0 ? raw : raw > maxX ? raw - maxX : 0;
+      const give = (over * 0.55 * 300) / (300 + 0.55 * Math.abs(over));
+      x = over ? (over < 0 ? give : maxX + give) : raw;
+      render();
+      drag.hist.push([e.clientX, e.timeStamp]);
+      if (drag.hist.length > 5) drag.hist.shift();
+    });
+    const endDrag = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const d = drag;
+      drag = null;
+      if (!d.on) return;
+      tqView.classList.remove("is-dragging");
+      justDragged = true;
+      setTimeout(() => { justDragged = false; }, 0);
+      // Speed over the last few moves (px per ms), carried into the glide.
+      const a = d.hist[0];
+      const b = d.hist[d.hist.length - 1];
+      const v = b[1] > a[1] ? (b[0] - a[0]) / (b[1] - a[1]) : 0;
+      const projected = x - v * 180;
+      glideTo(projected >= maxX - stepPx / 2 ? maxX : snap(projected));
+    };
+    tqView.addEventListener("pointerup", endDrag);
+    tqView.addEventListener("pointercancel", endDrag);
+    tqView.addEventListener("click", (e) => { if (justDragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+
+    // The video card plays silently while on screen. The sound button turns
+    // the sound on (from the start, the first time).
+    const vCards = cards.filter((c) => c.classList.contains("tq-card--video"));
+    const vids = vCards.map((c) => c.querySelector("video"));
+    vCards.forEach((vCard, idx) => {
+      const vid = vids[idx];
+      const playBtn = vCard.querySelector(".tplay");
+      const muteBtn = vCard.querySelector(".tmute");
+      if (!vid || !playBtn || !muteBtn) return;
+      let userPaused = false;
+      let seen = false;
+      let heard = false;
+      const play = () => {
+        if (!seen || userPaused || reduce.matches) return;
+        if (vid.preload === "none") { vid.preload = "auto"; vid.load(); }
+        vid.play().catch(() => {});
+      };
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(([en]) => {
+          seen = en.isIntersecting;
+          if (seen) play(); else vid.pause();
+        }, { root: tqView, threshold: 0.5 }).observe(vCard);
+      }
       const syncMute = () => {
         muteBtn.setAttribute("aria-pressed", String(vid.muted));
         muteBtn.setAttribute("aria-label", vid.muted ? "Unmute" : "Mute");
       };
-      // Turning the sound on starts the video from the beginning the first
-      // time (so the whole testimonial is heard), and plays it if paused.
-      let heard = false;
-      const soundOn = () => {
-        vid.muted = false;
-        if (!heard) { heard = true; vid.currentTime = 0; }
-        if (vid.paused) { userPaused = false; vid.play().catch(() => {}); }
-      };
-      muteBtn.addEventListener("click", (e) => { e.stopPropagation(); if (vid.muted) soundOn(); else vid.muted = true; });
-      // Clicking the silent video itself turns the sound on too.
-      vid.addEventListener("click", () => { if (vPanel.classList.contains("is-active") && vid.muted) soundOn(); });
-      vid.addEventListener("volumechange", syncMute);
-      syncMute();
       const syncPlay = () => {
         const playing = !vid.paused && !vid.ended;
-        vPanel.classList.toggle("is-playing", playing);
+        vCard.classList.toggle("is-playing", playing);
         playBtn.setAttribute("aria-label", playing ? "Pause video" : "Play video");
       };
-      playBtn.addEventListener("click", (e) => {
-        e.stopPropagation();
-        userPaused = !vid.paused;
-        if (vid.paused) vid.play().catch(() => {}); else vid.pause();
+      muteBtn.addEventListener("click", () => {
+        if (!vid.muted) { vid.muted = true; return; }
+        vids.forEach((o) => { if (o !== vid) o.muted = true; });
+        vid.muted = false;
+        if (!heard) { heard = true; vid.currentTime = 0; }
+        if (vid.paused) { userPaused = false; seen = true; play(); }
       });
-      vid.addEventListener("play", syncPlay);
-      vid.addEventListener("pause", syncPlay);
-      vid.addEventListener("ended", syncPlay);
+      playBtn.addEventListener("click", () => {
+        userPaused = !vid.paused;
+        if (vid.paused) { seen = true; play(); } else vid.pause();
+      });
+      vid.addEventListener("volumechange", syncMute);
+      ["play", "pause", "ended"].forEach((ev) => vid.addEventListener(ev, syncPlay));
+      syncMute();
       syncPlay();
-    }
-    panels9.forEach((p) => {
-      p.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") open(p); });
-      p.addEventListener("focus", () => open(p));
-      p.addEventListener("click", () => open(p));
     });
-    open(restPanel);
   }
 
   // 10) Entrances: add .is-in once each block is meaningfully on screen.
@@ -512,7 +599,7 @@
   //     runs, which would shift elements the observer already judged "not on
   //     screen yet" and leave them stuck hidden; once fonts settle, any block
   //     still waiting is re-checked against final layout.
-  const revealSelector = ".ab-r, .ab-facts, .im-grid, .off-grid, .wk-list, .tstrip, .proj-head";
+  const revealSelector = ".ab-r, .ab-facts, .im-grid, .off-grid, .ab-life, .wk-list, .tq-view, .proj-head";
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
@@ -1429,7 +1516,7 @@
   //      playlist card's vinyl and waveform, the book shelf) pause while
   //      their section is off screen, so they cost nothing while you read
   //      elsewhere. CSS: .is-offscreen.
-  const loops = document.querySelectorAll(".ab-path, .off-music, .off-books");
+  const loops = document.querySelectorAll(".ab-path, .off-music, .off-books, .ab-life");
   if (loops.length && "IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach((en) => en.target.classList.toggle("is-offscreen", !en.isIntersecting));
@@ -1485,6 +1572,145 @@
     stickerHosts.forEach((el) => stickIo.observe(el));
   } else stickerHosts.forEach((el) => el.classList.add("is-in"));
 
+  // About, "On this page": shows once the opening spread has scrolled away,
+  // and highlights the section you're reading (as on the case studies).
+  const abSide = document.querySelector(".ab-side");
+  if (abSide) {
+    const hero = document.querySelector(".ab-hero");
+    const links = Array.from(abSide.querySelectorAll(".cs-toc a"));
+    const secs = links.map((l) => document.getElementById(l.getAttribute("href").slice(1)));
+    const shell = document.getElementById("shellScroll");
+    let ticking = false;
+    const render = () => {
+      ticking = false;
+      const mark = window.innerHeight * 0.45;
+      abSide.classList.toggle("is-shown", !hero || hero.getBoundingClientRect().bottom < mark);
+      let active = -1;
+      secs.forEach((sec, i) => { if (sec && sec.getBoundingClientRect().top < mark) active = i; });
+      // Short last sections never reach the mark, so the page bottom selects the last one.
+      const doc = document.documentElement;
+      const atBottom = (shell && shell.scrollHeight > shell.clientHeight + 1)
+        ? shell.scrollTop + shell.clientHeight >= shell.scrollHeight - 2
+        : window.scrollY + window.innerHeight >= doc.scrollHeight - 2;
+      if (atBottom && active >= 0) active = secs.length - 1;
+      links.forEach((l, i) => {
+        const on = i === Math.max(0, active);
+        l.classList.toggle("is-active", on);
+        if (on) l.setAttribute("aria-current", "true"); else l.removeAttribute("aria-current");
+      });
+    };
+    const request = () => { if (!ticking) { ticking = true; requestAnimationFrame(render); } };
+    render();
+    window.addEventListener("scroll", request, { passive: true });
+    window.addEventListener("resize", request);
+    if (shell) shell.addEventListener("scroll", request, { passive: true });
+  }
+
+  // "Life, lately" on About: an endless row that runs slowly on its own and
+  // can be dragged or swiped either way; a fling carries on and eases back
+  // to the slow run. The pictures are listed twice, so wrapping the position
+  // by the width of one set never shows a seam. Hovering slows it, it stops
+  // off screen, and with reduced motion it only moves when dragged. The left
+  // and right arrow keys move it by one picture.
+  const lfRow = document.querySelector(".lf-row");
+  const lfTrack = lfRow && lfRow.querySelector(".lf-track");
+  if (lfTrack) {
+    const section = lfRow.closest(".ab-life");
+    const BASE = 0.03;          // px per ms, the slow run
+    let x = 0;                  // distance moved to the left, in px
+    let v = BASE;               // current speed
+    let setW = 0;
+    let hover = false;
+    let drag = null;
+    let last = 0;
+    const measure = () => {
+      const cards = lfTrack.children;
+      const half = cards[cards.length / 2];
+      setW = half ? half.offsetLeft - cards[0].offsetLeft : lfTrack.scrollWidth / 2;
+    };
+    const wrap = () => { if (setW) x = ((x % setW) + setW) % setW; };
+    const draw = () => { lfTrack.style.transform = "translate3d(" + -x + "px, 0, 0)"; };
+    const frame = (now) => {
+      const dt = Math.min(48, now - (last || now));
+      last = now;
+      if (!drag && !(section && section.classList.contains("is-offscreen"))) {
+        const want = reduce.matches ? 0 : hover ? BASE * 0.35 : BASE;
+        v += (want - v) * Math.min(1, dt / 420); // ease back to the slow run
+        x += v * dt;
+        wrap();
+        draw();
+      }
+      requestAnimationFrame(frame);
+    };
+    measure();
+    if ("ResizeObserver" in window) new ResizeObserver(measure).observe(lfTrack);
+    requestAnimationFrame(frame);
+    lfRow.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") hover = true; });
+    lfRow.addEventListener("pointerleave", () => { hover = false; });
+
+    let justDragged = false;
+    lfRow.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      drag = { id: e.pointerId, x0: e.clientX, y0: e.clientY, from: x, on: false, hist: [[e.clientX, e.timeStamp]] };
+    });
+    lfRow.addEventListener("pointermove", (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x0;
+      const dy = e.clientY - drag.y0;
+      if (!drag.on) {
+        if (Math.abs(dx) < 6 && Math.abs(dy) < 6) return;
+        if (Math.abs(dy) > Math.abs(dx)) { drag = null; return; } // a vertical swipe scrolls the page
+        drag.on = true;
+        drag.from = x + dx;
+        lfRow.setPointerCapture(e.pointerId);
+        lfRow.classList.add("is-dragging");
+      }
+      x = drag.from - dx;
+      wrap();
+      draw();
+      drag.hist.push([e.clientX, e.timeStamp]);
+      if (drag.hist.length > 5) drag.hist.shift();
+    });
+    const endDrag = (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const d = drag;
+      drag = null;
+      if (!d.on) return;
+      lfRow.classList.remove("is-dragging");
+      justDragged = true;
+      setTimeout(() => { justDragged = false; }, 0);
+      const a = d.hist[0];
+      const b = d.hist[d.hist.length - 1];
+      const fling = b[1] > a[1] ? -(b[0] - a[0]) / (b[1] - a[1]) : 0;
+      v = Math.max(-3, Math.min(3, fling)); // carries on, then eases back
+      last = 0;
+    };
+    lfRow.addEventListener("pointerup", endDrag);
+    lfRow.addEventListener("pointercancel", endDrag);
+    lfRow.addEventListener("click", (e) => { if (justDragged) { e.preventDefault(); e.stopPropagation(); } }, true);
+    lfRow.addEventListener("keydown", (e) => {
+      if (e.key !== "ArrowRight" && e.key !== "ArrowLeft") return;
+      e.preventDefault();
+      const card = lfTrack.children[1];
+      const step = card ? card.offsetLeft - lfTrack.children[0].offsetLeft : 240;
+      x += e.key === "ArrowRight" ? step : -step;
+      wrap();
+      draw();
+    });
+  }
+
+  // "Pallav" on About: clicking it says the name out loud, always in the
+  // browser's default voice, slowed a little.
+  const sayBtn = document.querySelector("button.say");
+  if (sayBtn && "speechSynthesis" in window) {
+    sayBtn.addEventListener("click", () => {
+      speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance("Puh-luv");
+      u.rate = 0.8;
+      speechSynthesis.speak(u);
+    });
+  }
+
   // 15) About hero, "the table": the snapshots drop onto the table one
   //     after another once the page shows (after the loader). CSS does the
   //     motion; reduced motion shows them already in place.
@@ -1500,25 +1726,61 @@
     // set, so the loop never shows a seam. Pauses off screen and while the
     // tab is hidden; reduced motion: no drift, still draggable.
     const pile = table.querySelector(".ab-pile");
-    const narrow = window.matchMedia("(max-width: 1239px)");
+    const narrow = window.matchMedia("(max-width: 1023px)");
     if (pile) {
       // A new arrangement on every visit: the snapshots swap places at
       // random (the spots stay clear of the words), each a little off its
       // spot and turned its own way; the strip on phones gets the new order.
       const snaps = Array.from(pile.querySelectorAll(".ab-snap"));
-      const spots = snaps.map((el) => ["--x", "--y"].map((v) => parseFloat(el.style.getPropertyValue(v))));
       for (let i = snaps.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [snaps[i], snaps[j]] = [snaps[j], snaps[i]]; }
       const jitter = (n) => (Math.random() * 2 - 1) * n;
       snaps.forEach((el, i) => {
-        const [x, y] = spots[i];
-        el.style.setProperty("--x", (x + jitter(0.8)).toFixed(1));
-        el.style.setProperty("--y", Math.max(0, y + jitter(2.5)).toFixed(1));
+        el.dataset.jy = jitter(1).toFixed(3);
         el.style.setProperty("--r", ((i % 2 ? 1 : -1) * (3 + Math.random() * 6)).toFixed(1));
         el.style.setProperty("--i", String(i));
-        // The spot below the words is left empty on the table (CSS); that
-        // snapshot still shows in the strip on smaller screens.
-        el.classList.toggle("is-spare", i === snaps.length - 1);
+        // Eight fit around the words on the table; the ninth shows only in
+        // the strip on phones.
+        el.classList.toggle("is-spare", i >= 7);
         pile.append(el);
+      });
+      // On the table (tablets and desktops) the snapshots hug the words: two
+      // staggered columns on each side, sized to the room there, a small gap
+      // from the text, a little vertical jitter. Recomputed on resize.
+      const copyEl = table.querySelector(".ab-table-copy");
+      const hug = () => {
+        if (narrow.matches || !copyEl) return;
+        const pr = pile.getBoundingClientRect();
+        const cr = copyEl.getBoundingClientRect();
+        const H = pr.height;
+        const side = cr.left - pr.left;
+        const gap = 28;
+        const w = Math.max(70, Math.min(148, (side - gap) / 1.94));
+        const h = w * 1.24;
+        pile.style.setProperty("--w", `${w}px`);
+        const innerL = cr.left - pr.left - gap - w;
+        const innerR = cr.right - pr.left + gap;
+        const step = w * 0.94;
+        // [x, y as a share of the free height] for the 8 spots.
+        const free = Math.max(0, H - h);
+        const spotsXY = [
+          [innerL - step, 0.02], [innerL, 0.3], [innerL - step, 0.62], [innerL, 0.94],
+          [innerR + step, 0.04], [innerR, 0.46], [innerR + step, 0.9],
+        ];
+        Array.from(pile.querySelectorAll(".ab-snap:not(.is-copy):not(.is-spare)")).forEach((el, i) => {
+          const [x, f] = spotsXY[i % spotsXY.length];
+          const y = Math.max(0, Math.min(free, free * f + Number(el.dataset.jy || 0) * h * 0.12));
+          el.style.left = `${Math.round(Math.max(w * 0.12, Math.min(pr.width - w * 1.12, x)))}px`;
+          el.style.top = `${Math.round(y)}px`;
+        });
+      };
+      let topTimer = 0;
+      pile.addEventListener("pointerdown", (e) => {
+        const el = e.target.closest(".ab-snap");
+        if (!el || e.pointerType === "mouse" || narrow.matches) return;
+        pile.querySelectorAll(".ab-snap.is-top").forEach((x) => x.classList.remove("is-top"));
+        el.classList.add("is-top");
+        clearTimeout(topTimer);
+        topTimer = setTimeout(() => el.classList.remove("is-top"), 2500);
       });
       const track = document.createElement("div");
       track.className = "ab-track";
@@ -1531,14 +1793,23 @@
       });
       pile.append(track);
       const DRIFT = 0.03; // px per ms
-      let pos = 0, vel = -DRIFT, last = 0, raf = 0, setW = 0, drag = null, inView = true;
+      let pos = 0, vel = -DRIFT, last = 0, raf = 0, setW = 0, drag = null, inView = true, held = false;
+      // A tap on a snapshot straightens it and opens its line, and the strip
+      // stops; a second tap closes it and the strip runs on.
+      const closeOpen = () => { track.querySelectorAll(".ab-snap.is-open").forEach((x) => x.classList.remove("is-open")); held = false; };
+      const tapSnap = (el) => {
+        if (!el || el.classList.contains("is-open")) { closeOpen(); return; }
+        closeOpen();
+        el.classList.add("is-open");
+        held = true;
+      };
       const measure = () => { setW = track.scrollWidth / 2; };
       const wrap = () => { if (setW) { pos %= setW; if (pos > 0) pos -= setW; } };
       const frame = (now) => {
         const dt = Math.min(48, now - (last || now));
         last = now;
         if (!drag) {
-          const target = reduce.matches ? 0 : -DRIFT;
+          const target = reduce.matches || held ? 0 : -DRIFT;
           vel += (target - vel) * Math.min(1, dt / 600);
           pos += vel * dt;
           wrap();
@@ -1548,7 +1819,7 @@
       };
       const run = () => { if (!raf && narrow.matches && inView && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } };
       const halt = () => { cancelAnimationFrame(raf); raf = 0; };
-      const reset = () => { halt(); track.style.transform = ""; pos = 0; if (narrow.matches) { measure(); run(); } };
+      const reset = () => { halt(); closeOpen(); track.style.transform = ""; pos = 0; if (narrow.matches) { measure(); run(); } };
       track.addEventListener("pointerdown", (e) => {
         if (!narrow.matches || drag) return;
         drag = { id: e.pointerId, x: e.clientX, y: e.clientY, p: pos, t: performance.now(), lx: e.clientX, on: false };
@@ -1560,6 +1831,7 @@
           if (Math.abs(e.clientY - drag.y) > Math.abs(dx)) { drag = null; return; }
           if (Math.abs(dx) < 6) return;
           drag.on = true;
+          closeOpen();
           track.setPointerCapture(e.pointerId);
         }
         const now = performance.now();
@@ -1570,15 +1842,22 @@
         if (pos !== drag.p + dx) drag.p = pos - dx;
         track.style.transform = `translate3d(${pos}px, 0, 0)`;
       });
-      const end = (e) => { if (drag && e.pointerId === drag.id) { if (!drag.on) vel = -DRIFT; drag = null; } };
+      const end = (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const tapped = !drag.on && e.type === "pointerup";
+        drag = null;
+        if (tapped) { vel = 0; tapSnap(e.target.closest(".ab-snap")); }
+        else if (!held) vel = vel || -DRIFT;
+      };
       track.addEventListener("pointerup", end);
       track.addEventListener("pointercancel", end);
       document.addEventListener("visibilitychange", () => (document.hidden ? halt() : run()));
       if ("IntersectionObserver" in window) new IntersectionObserver(([en]) => { inView = en.isIntersecting; inView ? run() : halt(); }).observe(pile);
-      narrow.addEventListener("change", reset);
-      window.addEventListener("resize", () => { if (narrow.matches) measure(); });
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+      narrow.addEventListener("change", () => { reset(); if (!narrow.matches) hug(); else pile.querySelectorAll(".ab-snap").forEach((el) => { el.style.left = ""; el.style.top = ""; }); });
+      window.addEventListener("resize", () => { if (narrow.matches) measure(); else hug(); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measure(); hug(); });
       reset();
+      hug();
     }
   }
 

@@ -18,7 +18,7 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261254" />
+<link rel="stylesheet" href="/css/style.css?v=20261299" />
 </head>
 <body>
 
@@ -56,12 +56,23 @@
        around the intro like polaroids on a desk; they drop in on load
        (script.js 15). On tablets and phones they
        sit in a tilted strip you swipe. Swap each icon for a photo. ============ -->
+<!-- ============ ON THIS PAGE: the section list on the left, the same as on
+       the case studies. Wide screens only; it appears once the opening
+       spread has scrolled away, and the section you're reading is
+       highlighted (script.js). ============ -->
+  <nav class="cs-side ab-side" aria-label="On this page">
+    <p class="cs-rail-name" aria-hidden="true">On this page</p>
+    <ol class="cs-toc">
+      <li><a href="#story">How I got here</a></li><li><a href="#path">Where I've been</a></li><li><a href="#glance">At a glance</a></li><li><a href="#beliefs">What I believe</a></li><li><a href="#working">Working with me</a></li><li><a href="#now">Now</a></li><li><a href="#outside">Outside the brief</a></li><li><a href="#life">Life, lately</a></li><li><a href="#questions">Questions</a></li>
+    </ol>
+  </nav>
+
   <section class="ab-hero ab-table">
     <div class="wk-sky" aria-hidden="true"></div>
     <div class="ab-table-copy">
       <h1 class="ab-title">
-        <span class="hl"><span>Hi, I'm Pallav.</span></span>
-        <span class="hl"><span>I make products clear.</span></span>
+        <span class="hl"><span>Hi, I'm <button class="say" type="button" aria-describedby="say-about">Pallav<span class="say-tip" id="say-about" role="tooltip"><span>Pronounced (puh-luv)</span><span class="say-hint">Click to hear it</span></span></button>.</span></span>
+        <span class="hl"><span>I make products click.</span></span>
       </h1>
       <p class="ab-lede">I'm a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. I care about the moment a confusing thing quietly becomes obvious.</p>
     </div>
@@ -71,63 +82,63 @@
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-1.jpg" alt="Trail run, 21K"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 58c10-30 20 6 30-22s20 8 38-26"/><path d="M6 68h68" opacity=".5"/></svg>
         </div>
-        <figcaption>Trail run, 21K</figcaption>
+        <figcaption>Trail run, 21K<span class="ab-snap-more"><span>Long Sunday runs. Most design problems untangle around kilometre 12.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 12.5; --y: 24; --r: 6; --i: 1">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-2.jpg" alt="One roll a month"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="40" r="30"/><circle cx="40" cy="40" r="19"/><circle cx="40" cy="40" r="8"/></svg>
         </div>
-        <figcaption>One roll a month</figcaption>
+        <figcaption>One roll a month<span class="ab-snap-more"><span>One roll of film, 36 frames. No retakes, so every shot counts.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--rose-bg); --tone: var(--rose-ink); --x: 2; --y: 46; --r: 4; --i: 2">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-3.jpg" alt="Pour-over, slowly"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 30h42v18a16 16 0 01-16 16h-10a16 16 0 01-16-16z"/><path d="M56 34h6a8 8 0 010 16h-6"/><path d="M26 14c-3 4 3 6 0 10M38 14c-3 4 3 6 0 10" opacity=".6"/></svg>
         </div>
-        <figcaption>Pour-over, slowly</figcaption>
+        <figcaption>Pour-over, slowly<span class="ab-snap-more"><span>The first quiet ten minutes of the day, before any screen.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 12.5; --y: 66; --r: -6; --i: 3">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-4.jpg" alt="Currently reading"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 62V22a4 4 0 014-4h40a4 4 0 014 4v40"/><path d="M12 62a4 4 0 014-4h44"/><path d="M24 30h28M24 40h20"/></svg>
         </div>
-        <figcaption>Currently reading</figcaption>
+        <figcaption>Currently reading<span class="ab-snap-more"><span>Always one design book and one comic on the go.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--sand-bg); --tone: var(--sand-ink); --x: 85; --y: 0; --r: 7; --i: 4">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-5.jpg" alt="Patch cables"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="10"/><circle cx="56" cy="26" r="10"/><path d="M24 20v6M56 20v6"/><path d="M12 56h56M12 66h56" opacity=".6"/></svg>
         </div>
-        <figcaption>Patch cables</figcaption>
+        <figcaption>Patch cables<span class="ab-snap-more"><span>Synths on the desk, and music for short films.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--mint-bg); --tone: var(--mint-ink); --x: 75.5; --y: 22; --r: -5; --i: 5">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-6.jpg" alt="Team offsite, Goa"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="28" cy="30" r="8"/><circle cx="54" cy="30" r="8"/><path d="M12 62c1-12 8-18 16-18s15 6 16 18M38 62c1-12 8-18 16-18s15 6 16 18"/></svg>
         </div>
-        <figcaption>Team offsite, Goa</figcaption>
+        <figcaption>Team offsite, Goa<span class="ab-snap-more"><span>Three days, one whiteboard and a lot of coffee.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 86; --y: 44; --r: -3; --i: 6">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-7.jpg" alt="Design critique"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="14" width="60" height="44" rx="5"/><path d="M22 30h36M22 40h22"/><path d="M28 66h24" opacity=".6"/></svg>
         </div>
-        <figcaption>Design critique</figcaption>
+        <figcaption>Design critique<span class="ab-snap-more"><span>Rough work shown early, while it's still cheap to change.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--rose-bg); --tone: var(--rose-ink); --x: 75.5; --y: 66; --r: 6; --i: 7">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-8.jpg" alt="Sketchbook Sundays"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 62l8-2 38-38-6-6-38 38z"/><path d="M50 14l6 6"/><path d="M14 70h52" opacity=".5"/></svg>
         </div>
-        <figcaption>Sketchbook Sundays</figcaption>
+        <figcaption>Sketchbook Sundays<span class="ab-snap-more"><span>Pencil first, pixels later.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 30; --y: 86; --r: -4; --i: 8">
         <div class="ab-snap-pic">
           <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-9.jpg" alt="Mentoring hour"> -->
           <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="26" r="10"/><path d="M20 66c2-16 10-24 20-24s18 8 20 24"/><path d="M60 18l6 6M66 18l-6 6" opacity=".6"/></svg>
         </div>
-        <figcaption>Mentoring hour</figcaption>
+        <figcaption>Mentoring hour<span class="ab-snap-more"><span>An hour a week with designers just starting out.</span></span></figcaption>
       </figure>
     </div>
   </section>
@@ -140,7 +151,7 @@
   </section>
 
   <!-- ============ STORY ============ -->
-  <section class="ab-story">
+  <section id="story" class="ab-story">
     <h2 class="ab-h2 ab-r"><span class="hs-host">How I got here<span class="hs hs-steps" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h5v-5h5V9h6" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 5.5 20 9l-3.5 3.5" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></h2>
     <div class="ab-story-body ab-r">
       <p>I started in graphic design, drawn to the way a good layout could make people feel calm. Then I watched users struggle with a checkout I had made beautiful, and I learned that polish is not the same as clarity.</p>
@@ -153,7 +164,7 @@
        first; the last one is "now". The line above them is drawn for four
        stops: to add or remove one, change the grid count in style.css
        (.path-grid) and the nodes in the SVG. ============ -->
-  <section class="ab-path" aria-labelledby="path-title">
+  <section id="path" class="ab-path" aria-labelledby="path-title">
     <h2 class="ab-h2" id="path-title">Where I've been</h2>
     <p class="ab-sub">Four teams in eight years. It started tangled and got clearer with every job.</p>
     <svg class="path-line" viewBox="0 0 1000 64" aria-hidden="true">
@@ -171,7 +182,7 @@
   </section>
 
   <!-- ============ AT A GLANCE (sample data) ============ -->
-  <section class="ab-glance">
+  <section id="glance" class="ab-glance">
     <h2 class="ab-h2 ab-r">At a glance</h2>
     <dl class="ab-facts ab-r">
       <div><dt>Based in</dt><dd>Bengaluru, India. Remote friendly.</dd></div>
@@ -185,7 +196,7 @@
 
   <!-- ============ WHAT I BELIEVE. Each line links to the case study that shows
        it: the whole row is the link. On hover, the other rows fade back. ============ -->
-  <section class="ab-pr" aria-labelledby="pr-title">
+  <section id="beliefs" class="ab-pr" aria-labelledby="pr-title">
     <h2 class="ab-h2" id="pr-title"><span class="hs-host">What I believe about design<span class="hs hs-quote" aria-hidden="true"><span>&ldquo;</span></span></span></h2>
     <p class="ab-sub">Five rules I keep coming back to, and where you can see them at work.</p>
     <ul class="pr-list">
@@ -198,7 +209,7 @@
   </section>
 
   <!-- ============ WORKING WITH ME: how I work, in three habits. Edit the sentences. ============ -->
-  <section class="ab-impact" aria-labelledby="impact-title">
+  <section id="working" class="ab-impact" aria-labelledby="impact-title">
     <div class="im-copy ab-r">
       <p class="im-tag">Working with me</p>
       <h2 class="ab-h2" id="impact-title"><span class="hs-host">Who you'd be working with<span class="hs hs-hand" aria-hidden="true"><span>&#129309;</span></span></span></h2>
@@ -246,7 +257,7 @@
   </section>
   <!-- ============ NOW (sample data). Update it every month or so, and change
        the date. ============ -->
-  <section class="ab-now" aria-labelledby="now-title">
+  <section id="now" class="ab-now" aria-labelledby="now-title">
     <div class="ab-r">
       <h2 class="ab-h2" id="now-title">Now</h2>
       <p class="ab-sub">What I'm up to this month.</p>
@@ -264,7 +275,7 @@
   </section>
 
   <!-- ============ OFF THE CLOCK (sample data). SoundCloud source is in data-sc-src ============ -->
-  <section class="ab-off" aria-labelledby="off-title">
+  <section id="outside" class="ab-off" aria-labelledby="off-title">
     <header class="ab-off-head ab-r">
       <h2 class="ab-h2" id="off-title">Outside the brief</h2>
       <p>Film scores, comics and a stack of books: what I make and read when nobody is waiting on a deliverable.</p>
@@ -281,7 +292,7 @@
         <p class="off-p">Away from the desk, I write music for short films and experiment with sound: synths, strings, found noises and a lot of trial and error.</p>
         <ul class="om-genres"><li>Film scores</li><li>Experiments</li><li>Ambient</li></ul>
         <div class="om-vid-cap">
-            <a class="om-sc" href="https://soundcloud.com/" target="_blank" rel="noopener">Listen on SoundCloud<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="sr-only"> (opens in a new tab)</span></a>
+            <a class="om-sc" href="https://soundcloud.com/" target="_blank" rel="noopener">Listen more on SoundCloud<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="sr-only"> (opens in a new tab)</span></a>
           </div>
         </div>
         <!-- The sound video: plays silently on a loop; tap it for sound.
@@ -294,6 +305,7 @@
             <video class="om-vid" muted loop playsinline preload="none" poster="/assets/videos/music/sound-poster.jpg" aria-label="Death in the Family: a scene I scored">
               <source src="/assets/videos/music/sound.mp4" type="video/mp4">
             </video>
+            <p class="om-vid-tag"><b>Batman v Superman: Dawn of Justice</b><span>Rescored by Pallav Bhatnagar</span></p>
             <div class="om-vid-empty" aria-hidden="true"><span class="om-vinyl"></span><span>Video coming soon</span></div>
             <div class="tctl">
               <button class="tbtn tplay" type="button" aria-label="Play video">
@@ -371,10 +383,187 @@
     </div>
   </section>
 
+<!-- ============ LIFE, LATELY: the heading on the left; on the right, an
+       endless row of tall photos and videos, each with a place name on the
+       picture and a line about it below. It runs slowly on its own, slows
+       on hover, and can be dragged or swiped. Swap each placeholder scene for an <img>, or a <video>
+       (autoplay, muted, loop), as noted in it. The set is listed twice so the
+       loop never shows a seam: change a card in both halves. ============ -->
+  <section id="life" class="ab-life" aria-labelledby="life-title">
+    <div class="ab-life-head">
+      <h2 class="ab-h2" id="life-title"><span class="hs-host">Life, lately<span class="hs hs-cam" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8"/><path d="M8.5 7l1.5-2.5h4L15.5 7" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#fff" stroke="#5c3d0b" stroke-width="1.8"/></svg></span></span></h2>
+      <p class="ab-sub">Trips, weekends and whatever has my attention lately.</p>
+    </div>
+    <div class="lf-row" role="region" aria-label="Life, lately: photos and videos. Use the left and right arrow keys to move." tabindex="0">
+      <ul class="lf-track">
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/1.jpg" alt="Spiti Valley"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Spiti Valley"><defs><linearGradient id="s500" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb38a"/><stop offset="1" stop-color="#7b5ea7"/></linearGradient></defs><rect width="400" height="500" fill="url(#s500)"/><circle cx="290" cy="190" r="34" fill="#ffe2b8" opacity=".9"/><path d="M0 330 110 190 170 260 250 150 400 320V500H0z" fill="#4a3f6b"/><path d="M0 380 90 300 180 360 290 260 400 350V500H0z" fill="#2f2a4a"/><path d="M220 190 250 150 280 190 262 182 250 196 238 184z" fill="#fff" opacity=".85"/></svg>
+              <span class="lf-label">Spiti Valley</span>
+            </span>
+            <figcaption>Ten days at altitude with no signal. The quiet stays with you long after.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <!-- Replace with <img src="/assets/images/life/2.jpg" alt="Goa">, or for a video: <video src="/assets/videos/life/2.mp4" autoplay muted loop playsinline></video> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Goa"><defs><linearGradient id="s501" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7e5f"/><stop offset="1" stop-color="#feb47b"/></linearGradient></defs><rect width="400" height="500" fill="url(#s501)"/><circle cx="200" cy="270" r="60" fill="#ffe0a3"/><rect y="290" width="400" height="210" fill="#2b5876"/><g stroke="#ffe0a3" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M150 320h100M170 345h60M185 368h30"/></g><path d="M0 440c80-20 160 10 240-8s120 6 160 0V500H0z" fill="#f3d9a4"/></svg>
+              <span class="lf-label">Goa</span>
+            </span>
+            <figcaption>Golden hour on a weekday, the beach almost empty.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/3.jpg" alt="Mumbai"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mumbai"><defs><linearGradient id="s502" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2027"/><stop offset="1" stop-color="#2c5364"/></linearGradient></defs><rect width="400" height="500" fill="url(#s502)"/><g fill="#0b141a"><rect x="10" y="250" width="60" height="250"/><rect x="80" y="190" width="70" height="310"/><rect x="160" y="280" width="50" height="220"/><rect x="220" y="150" width="80" height="350"/><rect x="310" y="230" width="80" height="270"/></g><g fill="#ffd36e"><rect x="20" y="170" width="6" height="8" opacity="0.5"/><rect x="105" y="207" width="6" height="8" opacity="0.7"/><rect x="196" y="244" width="6" height="8" opacity="0.9"/><rect x="271" y="281" width="6" height="8" opacity="0.5"/><rect x="334" y="318" width="6" height="8" opacity="0.7"/><rect x="45" y="355" width="6" height="8" opacity="0.9"/><rect x="130" y="392" width="6" height="8" opacity="0.5"/><rect x="181" y="429" width="6" height="8" opacity="0.7"/><rect x="256" y="466" width="6" height="8" opacity="0.9"/><rect x="359" y="203" width="6" height="8" opacity="0.5"/><rect x="30" y="240" width="6" height="8" opacity="0.7"/><rect x="115" y="277" width="6" height="8" opacity="0.9"/><rect x="206" y="314" width="6" height="8" opacity="0.5"/><rect x="241" y="351" width="6" height="8" opacity="0.7"/><rect x="344" y="388" width="6" height="8" opacity="0.9"/><rect x="55" y="425" width="6" height="8" opacity="0.5"/><rect x="100" y="462" width="6" height="8" opacity="0.7"/><rect x="191" y="199" width="6" height="8" opacity="0.9"/><rect x="266" y="236" width="6" height="8" opacity="0.5"/><rect x="329" y="273" width="6" height="8" opacity="0.7"/><rect x="40" y="310" width="6" height="8" opacity="0.9"/><rect x="125" y="347" width="6" height="8" opacity="0.5"/><rect x="176" y="384" width="6" height="8" opacity="0.7"/><rect x="251" y="421" width="6" height="8" opacity="0.9"/><rect x="354" y="458" width="6" height="8" opacity="0.5"/><rect x="25" y="195" width="6" height="8" opacity="0.7"/><rect x="110" y="232" width="6" height="8" opacity="0.9"/><rect x="201" y="269" width="6" height="8" opacity="0.5"/><rect x="236" y="306" width="6" height="8" opacity="0.7"/><rect x="339" y="343" width="6" height="8" opacity="0.9"/><rect x="50" y="380" width="6" height="8" opacity="0.5"/><rect x="95" y="417" width="6" height="8" opacity="0.7"/><rect x="186" y="454" width="6" height="8" opacity="0.9"/><rect x="261" y="191" width="6" height="8" opacity="0.5"/><rect x="324" y="228" width="6" height="8" opacity="0.7"/><rect x="35" y="265" width="6" height="8" opacity="0.9"/><rect x="120" y="302" width="6" height="8" opacity="0.5"/><rect x="171" y="339" width="6" height="8" opacity="0.7"/><rect x="246" y="376" width="6" height="8" opacity="0.9"/><rect x="349" y="413" width="6" height="8" opacity="0.5"/></g></svg>
+              <span class="lf-label">Mumbai</span>
+            </span>
+            <figcaption>The city right after the first heavy rain of the season.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/4.jpg" alt="Sunday mornings"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sunday mornings"><defs><linearGradient id="s503" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e7e9"/><stop offset="1" stop-color="#e3eeff"/></linearGradient></defs><rect width="400" height="500" fill="url(#s503)"/><ellipse cx="200" cy="360" rx="130" ry="26" fill="#d9cbbd"/><path d="M120 230h160v90a50 50 0 0 1-50 50h-60a50 50 0 0 1-50-50z" fill="#fff"/><path d="M280 255h22a28 28 0 0 1 0 56h-22" fill="none" stroke="#fff" stroke-width="16"/><ellipse cx="200" cy="232" rx="78" ry="12" fill="#6f4e37"/><path d="M175 200c-10-20 10-30 0-50M215 200c-10-20 10-30 0-50" stroke="#b9a99a" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+              <span class="lf-label">Sunday mornings</span>
+            </span>
+            <figcaption>A slow pour-over before any screen gets switched on.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <!-- Replace with <img src="/assets/images/life/5.jpg" alt="Bengaluru">, or for a video: <video src="/assets/videos/life/5.mp4" autoplay muted loop playsinline></video> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Bengaluru"><rect width="400" height="500" fill="#120b26"/><g opacity=".75"><path d="M80 0 30 500h100z" fill="#ff3cac"/><path d="M200 0 150 500h100z" fill="#784ba0"/><path d="M320 0 270 500h100z" fill="#2b86c5"/></g><g fill="#0a0614"><circle cx="20" cy="430" r="22"/><circle cx="66" cy="440" r="26"/><circle cx="112" cy="430" r="30"/><circle cx="158" cy="440" r="22"/><circle cx="204" cy="430" r="26"/><circle cx="250" cy="440" r="30"/><circle cx="296" cy="430" r="22"/><circle cx="342" cy="440" r="26"/><circle cx="388" cy="430" r="30"/><rect y="440" width="400" height="60"/></g></svg>
+              <span class="lf-label">Bengaluru</span>
+            </span>
+            <figcaption>Front row at a gig. Mostly here for the sound design.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/6.jpg" alt="Jaisalmer"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Jaisalmer"><defs><linearGradient id="s505" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/></linearGradient></defs><rect width="400" height="500" fill="url(#s505)"/><circle cx="110" cy="170" r="40" fill="#fff4d6"/><path d="M0 330c90-40 170-30 250 0s110 20 150 0V500H0z" fill="#e2955f"/><path d="M0 400c120-50 220-20 400-30V500H0z" fill="#c8733f"/><path d="M290 300v-40m0 15h-14v-12m14 22h14v-14" stroke="#7a4a2a" stroke-width="7" stroke-linecap="round" fill="none"/></svg>
+              <span class="lf-label">Jaisalmer</span>
+            </span>
+            <figcaption>Dunes at dusk, and a sky that took over the whole frame.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/7.jpg" alt="Coorg"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Coorg"><defs><linearGradient id="s506" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4fc79"/><stop offset="1" stop-color="#96e6a1"/></linearGradient></defs><rect width="400" height="500" fill="url(#s506)"/><g fill="#2d6a4f"><path d="M30 200 -20 420 h100z"/><path d="M110 230 60 420 h100z"/><path d="M190 200 140 420 h100z"/><path d="M270 230 220 420 h100z"/><path d="M350 200 300 420 h100z"/></g><g fill="#1b4332"><path d="M70 260 15 500 h110z"/><path d="M150 280 95 500 h110z"/><path d="M230 260 175 500 h110z"/><path d="M310 280 255 500 h110z"/></g></svg>
+              <span class="lf-label">Coorg</span>
+            </span>
+            <figcaption>A long trail through coffee estates and a lot of mist.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <!-- Replace with <img src="/assets/images/life/8.jpg" alt="Ladakh">, or for a video: <video src="/assets/videos/life/8.mp4" autoplay muted loop playsinline></video> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ladakh"><defs><linearGradient id="s507" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020111"/><stop offset="1" stop-color="#20202c"/></linearGradient></defs><rect width="400" height="500" fill="url(#s507)"/><g fill="#fff"><circle cx="0" cy="0" r="0.6" opacity="0.4"/><circle cx="97" cy="53" r="1.1" opacity="0.52"/><circle cx="194" cy="106" r="1.6" opacity="0.64"/><circle cx="291" cy="159" r="2.1" opacity="0.76"/><circle cx="388" cy="212" r="0.6" opacity="0.88"/><circle cx="85" cy="265" r="1.1" opacity="0.4"/><circle cx="182" cy="318" r="1.6" opacity="0.52"/><circle cx="279" cy="11" r="2.1" opacity="0.64"/><circle cx="376" cy="64" r="0.6" opacity="0.76"/><circle cx="73" cy="117" r="1.1" opacity="0.88"/><circle cx="170" cy="170" r="1.6" opacity="0.4"/><circle cx="267" cy="223" r="2.1" opacity="0.52"/><circle cx="364" cy="276" r="0.6" opacity="0.64"/><circle cx="61" cy="329" r="1.1" opacity="0.76"/><circle cx="158" cy="22" r="1.6" opacity="0.88"/><circle cx="255" cy="75" r="2.1" opacity="0.4"/><circle cx="352" cy="128" r="0.6" opacity="0.52"/><circle cx="49" cy="181" r="1.1" opacity="0.64"/><circle cx="146" cy="234" r="1.6" opacity="0.76"/><circle cx="243" cy="287" r="2.1" opacity="0.88"/><circle cx="340" cy="340" r="0.6" opacity="0.4"/><circle cx="37" cy="33" r="1.1" opacity="0.52"/><circle cx="134" cy="86" r="1.6" opacity="0.64"/><circle cx="231" cy="139" r="2.1" opacity="0.76"/><circle cx="328" cy="192" r="0.6" opacity="0.88"/><circle cx="25" cy="245" r="1.1" opacity="0.4"/><circle cx="122" cy="298" r="1.6" opacity="0.52"/><circle cx="219" cy="351" r="2.1" opacity="0.64"/><circle cx="316" cy="44" r="0.6" opacity="0.76"/><circle cx="13" cy="97" r="1.1" opacity="0.88"/><circle cx="110" cy="150" r="1.6" opacity="0.4"/><circle cx="207" cy="203" r="2.1" opacity="0.52"/><circle cx="304" cy="256" r="0.6" opacity="0.64"/><circle cx="1" cy="309" r="1.1" opacity="0.76"/><circle cx="98" cy="2" r="1.6" opacity="0.88"/><circle cx="195" cy="55" r="2.1" opacity="0.4"/><circle cx="292" cy="108" r="0.6" opacity="0.52"/><circle cx="389" cy="161" r="1.1" opacity="0.64"/><circle cx="86" cy="214" r="1.6" opacity="0.76"/><circle cx="183" cy="267" r="2.1" opacity="0.88"/><circle cx="280" cy="320" r="0.6" opacity="0.4"/><circle cx="377" cy="13" r="1.1" opacity="0.52"/><circle cx="74" cy="66" r="1.6" opacity="0.64"/><circle cx="171" cy="119" r="2.1" opacity="0.76"/><circle cx="268" cy="172" r="0.6" opacity="0.88"/><circle cx="365" cy="225" r="1.1" opacity="0.4"/><circle cx="62" cy="278" r="1.6" opacity="0.52"/><circle cx="159" cy="331" r="2.1" opacity="0.64"/><circle cx="256" cy="24" r="0.6" opacity="0.76"/><circle cx="353" cy="77" r="1.1" opacity="0.88"/><circle cx="50" cy="130" r="1.6" opacity="0.4"/><circle cx="147" cy="183" r="2.1" opacity="0.52"/><circle cx="244" cy="236" r="0.6" opacity="0.64"/><circle cx="341" cy="289" r="1.1" opacity="0.76"/><circle cx="38" cy="342" r="1.6" opacity="0.88"/><circle cx="135" cy="35" r="2.1" opacity="0.4"/><circle cx="232" cy="88" r="0.6" opacity="0.52"/><circle cx="329" cy="141" r="1.1" opacity="0.64"/><circle cx="26" cy="194" r="1.6" opacity="0.76"/><circle cx="123" cy="247" r="2.1" opacity="0.88"/><circle cx="220" cy="300" r="0.6" opacity="0.4"/><circle cx="317" cy="353" r="1.1" opacity="0.52"/><circle cx="14" cy="46" r="1.6" opacity="0.64"/><circle cx="111" cy="99" r="2.1" opacity="0.76"/><circle cx="208" cy="152" r="0.6" opacity="0.88"/><circle cx="305" cy="205" r="1.1" opacity="0.4"/><circle cx="2" cy="258" r="1.6" opacity="0.52"/><circle cx="99" cy="311" r="2.1" opacity="0.64"/><circle cx="196" cy="4" r="0.6" opacity="0.76"/><circle cx="293" cy="57" r="1.1" opacity="0.88"/></g><path d="M40 60c120 40 220 90 330 220" stroke="#9fb8ff" stroke-width="2" opacity=".5" fill="none"/><path d="M0 430c100-30 200-10 400-40V500H0z" fill="#07070d"/></svg>
+              <span class="lf-label">Ladakh</span>
+            </span>
+            <figcaption>A night-sky timelapse shot from a tripod outside the tent.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/1.jpg" alt="Spiti Valley"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s400" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb38a"/><stop offset="1" stop-color="#7b5ea7"/></linearGradient></defs><rect width="400" height="500" fill="url(#s400)"/><circle cx="290" cy="190" r="34" fill="#ffe2b8" opacity=".9"/><path d="M0 330 110 190 170 260 250 150 400 320V500H0z" fill="#4a3f6b"/><path d="M0 380 90 300 180 360 290 260 400 350V500H0z" fill="#2f2a4a"/><path d="M220 190 250 150 280 190 262 182 250 196 238 184z" fill="#fff" opacity=".85"/></svg>
+              <span class="lf-label">Spiti Valley</span>
+            </span>
+            <figcaption>Ten days at altitude with no signal. The quiet stays with you long after.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <!-- Replace with <img src="/assets/images/life/2.jpg" alt="Goa">, or for a video: <video src="/assets/videos/life/2.mp4" autoplay muted loop playsinline></video> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s401" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7e5f"/><stop offset="1" stop-color="#feb47b"/></linearGradient></defs><rect width="400" height="500" fill="url(#s401)"/><circle cx="200" cy="270" r="60" fill="#ffe0a3"/><rect y="290" width="400" height="210" fill="#2b5876"/><g stroke="#ffe0a3" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M150 320h100M170 345h60M185 368h30"/></g><path d="M0 440c80-20 160 10 240-8s120 6 160 0V500H0z" fill="#f3d9a4"/></svg>
+              <span class="lf-label">Goa</span>
+            </span>
+            <figcaption>Golden hour on a weekday, the beach almost empty.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/3.jpg" alt="Mumbai"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s402" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2027"/><stop offset="1" stop-color="#2c5364"/></linearGradient></defs><rect width="400" height="500" fill="url(#s402)"/><g fill="#0b141a"><rect x="10" y="250" width="60" height="250"/><rect x="80" y="190" width="70" height="310"/><rect x="160" y="280" width="50" height="220"/><rect x="220" y="150" width="80" height="350"/><rect x="310" y="230" width="80" height="270"/></g><g fill="#ffd36e"><rect x="20" y="170" width="6" height="8" opacity="0.5"/><rect x="105" y="207" width="6" height="8" opacity="0.7"/><rect x="196" y="244" width="6" height="8" opacity="0.9"/><rect x="271" y="281" width="6" height="8" opacity="0.5"/><rect x="334" y="318" width="6" height="8" opacity="0.7"/><rect x="45" y="355" width="6" height="8" opacity="0.9"/><rect x="130" y="392" width="6" height="8" opacity="0.5"/><rect x="181" y="429" width="6" height="8" opacity="0.7"/><rect x="256" y="466" width="6" height="8" opacity="0.9"/><rect x="359" y="203" width="6" height="8" opacity="0.5"/><rect x="30" y="240" width="6" height="8" opacity="0.7"/><rect x="115" y="277" width="6" height="8" opacity="0.9"/><rect x="206" y="314" width="6" height="8" opacity="0.5"/><rect x="241" y="351" width="6" height="8" opacity="0.7"/><rect x="344" y="388" width="6" height="8" opacity="0.9"/><rect x="55" y="425" width="6" height="8" opacity="0.5"/><rect x="100" y="462" width="6" height="8" opacity="0.7"/><rect x="191" y="199" width="6" height="8" opacity="0.9"/><rect x="266" y="236" width="6" height="8" opacity="0.5"/><rect x="329" y="273" width="6" height="8" opacity="0.7"/><rect x="40" y="310" width="6" height="8" opacity="0.9"/><rect x="125" y="347" width="6" height="8" opacity="0.5"/><rect x="176" y="384" width="6" height="8" opacity="0.7"/><rect x="251" y="421" width="6" height="8" opacity="0.9"/><rect x="354" y="458" width="6" height="8" opacity="0.5"/><rect x="25" y="195" width="6" height="8" opacity="0.7"/><rect x="110" y="232" width="6" height="8" opacity="0.9"/><rect x="201" y="269" width="6" height="8" opacity="0.5"/><rect x="236" y="306" width="6" height="8" opacity="0.7"/><rect x="339" y="343" width="6" height="8" opacity="0.9"/><rect x="50" y="380" width="6" height="8" opacity="0.5"/><rect x="95" y="417" width="6" height="8" opacity="0.7"/><rect x="186" y="454" width="6" height="8" opacity="0.9"/><rect x="261" y="191" width="6" height="8" opacity="0.5"/><rect x="324" y="228" width="6" height="8" opacity="0.7"/><rect x="35" y="265" width="6" height="8" opacity="0.9"/><rect x="120" y="302" width="6" height="8" opacity="0.5"/><rect x="171" y="339" width="6" height="8" opacity="0.7"/><rect x="246" y="376" width="6" height="8" opacity="0.9"/><rect x="349" y="413" width="6" height="8" opacity="0.5"/></g></svg>
+              <span class="lf-label">Mumbai</span>
+            </span>
+            <figcaption>The city right after the first heavy rain of the season.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/4.jpg" alt="Sunday mornings"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s403" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e7e9"/><stop offset="1" stop-color="#e3eeff"/></linearGradient></defs><rect width="400" height="500" fill="url(#s403)"/><ellipse cx="200" cy="360" rx="130" ry="26" fill="#d9cbbd"/><path d="M120 230h160v90a50 50 0 0 1-50 50h-60a50 50 0 0 1-50-50z" fill="#fff"/><path d="M280 255h22a28 28 0 0 1 0 56h-22" fill="none" stroke="#fff" stroke-width="16"/><ellipse cx="200" cy="232" rx="78" ry="12" fill="#6f4e37"/><path d="M175 200c-10-20 10-30 0-50M215 200c-10-20 10-30 0-50" stroke="#b9a99a" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+              <span class="lf-label">Sunday mornings</span>
+            </span>
+            <figcaption>A slow pour-over before any screen gets switched on.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <!-- Replace with <img src="/assets/images/life/5.jpg" alt="Bengaluru">, or for a video: <video src="/assets/videos/life/5.mp4" autoplay muted loop playsinline></video> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><rect width="400" height="500" fill="#120b26"/><g opacity=".75"><path d="M80 0 30 500h100z" fill="#ff3cac"/><path d="M200 0 150 500h100z" fill="#784ba0"/><path d="M320 0 270 500h100z" fill="#2b86c5"/></g><g fill="#0a0614"><circle cx="20" cy="430" r="22"/><circle cx="66" cy="440" r="26"/><circle cx="112" cy="430" r="30"/><circle cx="158" cy="440" r="22"/><circle cx="204" cy="430" r="26"/><circle cx="250" cy="440" r="30"/><circle cx="296" cy="430" r="22"/><circle cx="342" cy="440" r="26"/><circle cx="388" cy="430" r="30"/><rect y="440" width="400" height="60"/></g></svg>
+              <span class="lf-label">Bengaluru</span>
+            </span>
+            <figcaption>Front row at a gig. Mostly here for the sound design.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/6.jpg" alt="Jaisalmer"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s405" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/></linearGradient></defs><rect width="400" height="500" fill="url(#s405)"/><circle cx="110" cy="170" r="40" fill="#fff4d6"/><path d="M0 330c90-40 170-30 250 0s110 20 150 0V500H0z" fill="#e2955f"/><path d="M0 400c120-50 220-20 400-30V500H0z" fill="#c8733f"/><path d="M290 300v-40m0 15h-14v-12m14 22h14v-14" stroke="#7a4a2a" stroke-width="7" stroke-linecap="round" fill="none"/></svg>
+              <span class="lf-label">Jaisalmer</span>
+            </span>
+            <figcaption>Dunes at dusk, and a sky that took over the whole frame.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <!-- Replace with <img src="/assets/images/life/7.jpg" alt="Coorg"> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s406" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4fc79"/><stop offset="1" stop-color="#96e6a1"/></linearGradient></defs><rect width="400" height="500" fill="url(#s406)"/><g fill="#2d6a4f"><path d="M30 200 -20 420 h100z"/><path d="M110 230 60 420 h100z"/><path d="M190 200 140 420 h100z"/><path d="M270 230 220 420 h100z"/><path d="M350 200 300 420 h100z"/></g><g fill="#1b4332"><path d="M70 260 15 500 h110z"/><path d="M150 280 95 500 h110z"/><path d="M230 260 175 500 h110z"/><path d="M310 280 255 500 h110z"/></g></svg>
+              <span class="lf-label">Coorg</span>
+            </span>
+            <figcaption>A long trail through coffee estates and a lot of mist.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <!-- Replace with <img src="/assets/images/life/8.jpg" alt="Ladakh">, or for a video: <video src="/assets/videos/life/8.mp4" autoplay muted loop playsinline></video> -->
+              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s407" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020111"/><stop offset="1" stop-color="#20202c"/></linearGradient></defs><rect width="400" height="500" fill="url(#s407)"/><g fill="#fff"><circle cx="0" cy="0" r="0.6" opacity="0.4"/><circle cx="97" cy="53" r="1.1" opacity="0.52"/><circle cx="194" cy="106" r="1.6" opacity="0.64"/><circle cx="291" cy="159" r="2.1" opacity="0.76"/><circle cx="388" cy="212" r="0.6" opacity="0.88"/><circle cx="85" cy="265" r="1.1" opacity="0.4"/><circle cx="182" cy="318" r="1.6" opacity="0.52"/><circle cx="279" cy="11" r="2.1" opacity="0.64"/><circle cx="376" cy="64" r="0.6" opacity="0.76"/><circle cx="73" cy="117" r="1.1" opacity="0.88"/><circle cx="170" cy="170" r="1.6" opacity="0.4"/><circle cx="267" cy="223" r="2.1" opacity="0.52"/><circle cx="364" cy="276" r="0.6" opacity="0.64"/><circle cx="61" cy="329" r="1.1" opacity="0.76"/><circle cx="158" cy="22" r="1.6" opacity="0.88"/><circle cx="255" cy="75" r="2.1" opacity="0.4"/><circle cx="352" cy="128" r="0.6" opacity="0.52"/><circle cx="49" cy="181" r="1.1" opacity="0.64"/><circle cx="146" cy="234" r="1.6" opacity="0.76"/><circle cx="243" cy="287" r="2.1" opacity="0.88"/><circle cx="340" cy="340" r="0.6" opacity="0.4"/><circle cx="37" cy="33" r="1.1" opacity="0.52"/><circle cx="134" cy="86" r="1.6" opacity="0.64"/><circle cx="231" cy="139" r="2.1" opacity="0.76"/><circle cx="328" cy="192" r="0.6" opacity="0.88"/><circle cx="25" cy="245" r="1.1" opacity="0.4"/><circle cx="122" cy="298" r="1.6" opacity="0.52"/><circle cx="219" cy="351" r="2.1" opacity="0.64"/><circle cx="316" cy="44" r="0.6" opacity="0.76"/><circle cx="13" cy="97" r="1.1" opacity="0.88"/><circle cx="110" cy="150" r="1.6" opacity="0.4"/><circle cx="207" cy="203" r="2.1" opacity="0.52"/><circle cx="304" cy="256" r="0.6" opacity="0.64"/><circle cx="1" cy="309" r="1.1" opacity="0.76"/><circle cx="98" cy="2" r="1.6" opacity="0.88"/><circle cx="195" cy="55" r="2.1" opacity="0.4"/><circle cx="292" cy="108" r="0.6" opacity="0.52"/><circle cx="389" cy="161" r="1.1" opacity="0.64"/><circle cx="86" cy="214" r="1.6" opacity="0.76"/><circle cx="183" cy="267" r="2.1" opacity="0.88"/><circle cx="280" cy="320" r="0.6" opacity="0.4"/><circle cx="377" cy="13" r="1.1" opacity="0.52"/><circle cx="74" cy="66" r="1.6" opacity="0.64"/><circle cx="171" cy="119" r="2.1" opacity="0.76"/><circle cx="268" cy="172" r="0.6" opacity="0.88"/><circle cx="365" cy="225" r="1.1" opacity="0.4"/><circle cx="62" cy="278" r="1.6" opacity="0.52"/><circle cx="159" cy="331" r="2.1" opacity="0.64"/><circle cx="256" cy="24" r="0.6" opacity="0.76"/><circle cx="353" cy="77" r="1.1" opacity="0.88"/><circle cx="50" cy="130" r="1.6" opacity="0.4"/><circle cx="147" cy="183" r="2.1" opacity="0.52"/><circle cx="244" cy="236" r="0.6" opacity="0.64"/><circle cx="341" cy="289" r="1.1" opacity="0.76"/><circle cx="38" cy="342" r="1.6" opacity="0.88"/><circle cx="135" cy="35" r="2.1" opacity="0.4"/><circle cx="232" cy="88" r="0.6" opacity="0.52"/><circle cx="329" cy="141" r="1.1" opacity="0.64"/><circle cx="26" cy="194" r="1.6" opacity="0.76"/><circle cx="123" cy="247" r="2.1" opacity="0.88"/><circle cx="220" cy="300" r="0.6" opacity="0.4"/><circle cx="317" cy="353" r="1.1" opacity="0.52"/><circle cx="14" cy="46" r="1.6" opacity="0.64"/><circle cx="111" cy="99" r="2.1" opacity="0.76"/><circle cx="208" cy="152" r="0.6" opacity="0.88"/><circle cx="305" cy="205" r="1.1" opacity="0.4"/><circle cx="2" cy="258" r="1.6" opacity="0.52"/><circle cx="99" cy="311" r="2.1" opacity="0.64"/><circle cx="196" cy="4" r="0.6" opacity="0.76"/><circle cx="293" cy="57" r="1.1" opacity="0.88"/></g><path d="M40 60c120 40 220 90 330 220" stroke="#9fb8ff" stroke-width="2" opacity=".5" fill="none"/><path d="M0 430c100-30 200-10 400-40V500H0z" fill="#07070d"/></svg>
+              <span class="lf-label">Ladakh</span>
+            </span>
+            <figcaption>A night-sky timelapse shot from a tripod outside the tent.</figcaption>
+          </figure>
+        </li>
+      </ul>
+    </div>
+  </section>
+
   <!-- ============ QUESTIONS PEOPLE ASK (sample answers). Add or remove a
        <details> block per question. The first one starts open; opening one
        closes the others, with a short slide (script.js). ============ -->
-  <section class="ab-faq" aria-labelledby="faq-title">
+  <section id="questions" class="ab-faq" aria-labelledby="faq-title">
     <div class="faq-side ab-r">
       <h2 class="ab-h2" id="faq-title"><span class="hs-host">Questions people ask<span class="hs hs-ask" aria-hidden="true"><span>?</span></span></span></h2>
       <p>Short answers to what teams usually ask me first.</p>
@@ -450,11 +639,11 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261254" defer></script>
-<script src="/js/projects.js?v=20261254" defer></script>
-<script src="/js/render.js?v=20261254" defer></script>
-<script src="/js/script.js?v=20261254" defer></script>
-<script src="/js/pixel-dog.js?v=20261254" defer></script>
+<script src="/js/content.js?v=20261299" defer></script>
+<script src="/js/projects.js?v=20261299" defer></script>
+<script src="/js/render.js?v=20261299" defer></script>
+<script src="/js/script.js?v=20261299" defer></script>
+<script src="/js/pixel-dog.js?v=20261299" defer></script>
 </body>
 </html>
 

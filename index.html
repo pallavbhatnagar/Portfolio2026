@@ -18,8 +18,8 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261254" />
-<link rel="stylesheet" href="/css/hero.css?v=20261254" />
+<link rel="stylesheet" href="/css/style.css?v=20261299" />
+<link rel="stylesheet" href="/css/hero.css?v=20261299" />
 </head>
 <body>
 
@@ -170,59 +170,53 @@
     </div>
   </div>
 </section>
-<!-- ============ TESTIMONIALS: sample data. Hover, focus or tap a panel to read it.
-     No photo? The small circle shows initials. Have a photo? Replace <span class="tdp-init">MK</span>
-     with <img src="/assets/images/about/name.jpg" alt=""> (it shows black and white, colour on hover). ============ -->
+<!-- ============ TESTIMONIALS: sample data. A row of cards: arrows, drag or
+     swipe to move it. The second is the video. No photo? The small circle
+     shows initials. Have one? Replace the initials inside <span class="tq-dp">
+     with <img src="/assets/images/about/name.jpg" alt="">. ============ -->
 <section class="testi" id="testimonials" aria-labelledby="testi-title">
   <header class="testi-head">
+    <div class="testi-head-text">
     <h2 id="testi-title"><span class="hs-host">Kind words from people I've worked with<span class="hs hs-heart" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="#f6c9bd" stroke="#6f3432" stroke-width="1.8" stroke-linejoin="round"/></svg></span></span></h2>
     <p>A few notes from founders, product leads and engineers on what it was like to build together.</p>
+    </div>
+    <div class="tq-arrows">
+      <button class="tq-arrow" type="button" data-dir="-1" aria-label="Previous testimonial" aria-controls="tq-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+      <button class="tq-arrow" type="button" data-dir="1" aria-label="Next testimonial" aria-controls="tq-view"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </div>
   </header>
-  <div class="tstrip">
-      <article class="tpanel tpanel--mono tpanel--video" data-default style="--i:0; --tint: var(--mint-bg); --tint-ink: var(--mint-ink)" tabindex="0" aria-label="Meera Kapoor, Head of Product, Ledgerly">
-        <span class="tdp" aria-hidden="true"><span class="tdp-init">MK</span></span>
-        <p class="tside" aria-hidden="true">Meera Kapoor</p>
-        <div class="tbody">
-          <div class="tvideo">
-            <video muted loop preload="none" playsinline aria-label="Video testimonial from Meera Kapoor"><source src="/assets/videos/testimonials/meera-kapoor.mp4" type="video/mp4"></video>
-            <div class="tctl">
-              <button class="tbtn tplay" type="button" aria-label="Play video">
-                <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-                <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
-              </button>
-              <button class="tbtn tmute" type="button" aria-label="Unmute" aria-pressed="true">
-                <svg class="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11"/></svg>
-                <svg class="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
-              </button>
-            </div>
-          </div>
-          <p class="tname"><strong>Meera Kapoor</strong>Head of Product, Ledgerly</p>
+  <div class="tq-view" id="tq-view" role="region" aria-roledescription="carousel" aria-label="Testimonials. Use the left and right arrow keys to move." tabindex="0">
+    <ul class="tq-track">
+      <li class="tq-card" style="--tint: var(--mint-panel); --tint-ink: var(--mint-ink)">
+        <span class="tq-dp" aria-hidden="true">DO</span>
+        <blockquote class="tq-quote">The research readouts were short, sharp and impossible to ignore. Engineering finally knew what to build and why.</blockquote>
+        <p class="tq-name"><strong>Daniel Okafor</strong><span>Engineering Manager, Parcelo</span></p>
+      </li>
+      <li class="tq-card tq-card--video">
+        <video class="tq-vid" muted loop playsinline preload="none" aria-label="Video testimonial from Meera Kapoor"><source src="/assets/videos/testimonials/meera-kapoor.mp4" type="video/mp4"></video>
+        <div class="tctl">
+          <button class="tbtn tplay" type="button" aria-label="Play video">
+            <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+            <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+          </button>
+          <button class="tbtn tmute" type="button" aria-label="Unmute" aria-pressed="true">
+            <svg class="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11"/></svg>
+            <svg class="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+          </button>
         </div>
-      </article>
-      <article class="tpanel tpanel--mono" style="--i:1; --tint: var(--blue-bg); --tint-ink: var(--blue-ink)" tabindex="0" aria-label="Daniel Okafor, Engineering Manager, Parcelo">
-        <span class="tdp" aria-hidden="true"><span class="tdp-init">DO</span></span>
-        <p class="tside" aria-hidden="true">Daniel Okafor</p>
-        <div class="tbody">
-          <blockquote>The research readouts were short, sharp and impossible to ignore. Engineering finally knew what to build and why.</blockquote>
-          <p class="tname"><strong>Daniel Okafor</strong>Engineering Manager, Parcelo</p>
-        </div>
-      </article>
-      <article class="tpanel tpanel--mono" style="--i:2; --tint: var(--rose-bg); --tint-ink: var(--rose-ink)" tabindex="0" aria-label="Sofia Marchetti, COO, Lumen Learn">
-        <span class="tdp" aria-hidden="true"><span class="tdp-init">SM</span></span>
-        <p class="tside" aria-hidden="true">Sofia Marchetti</p>
-        <div class="tbody">
-          <blockquote>He sits with users, not just in Figma. Our onboarding completion jumped and nobody had to argue about opinions.</blockquote>
-          <p class="tname"><strong>Sofia Marchetti</strong>COO, Lumen Learn</p>
-        </div>
-      </article>
-      <article class="tpanel tpanel--mono" style="--i:3; --tint: var(--sand-bg); --tint-ink: var(--sand-ink)" tabindex="0" aria-label="Hannah Lindqvist, Design Lead, Wayfarer Health">
-        <span class="tdp" aria-hidden="true"><span class="tdp-init">HL</span></span>
-        <p class="tside" aria-hidden="true">Hannah Lindqvist</p>
-        <div class="tbody">
-          <blockquote>Every critique made the work sharper and the team kinder. I would hire him again tomorrow.</blockquote>
-          <p class="tname"><strong>Hannah Lindqvist</strong>Design Lead, Wayfarer Health</p>
-        </div>
-      </article>
+        <p class="tq-name"><strong>Meera Kapoor</strong><span>Head of Product, Ledgerly</span></p>
+      </li>
+      <li class="tq-card" style="--tint: var(--rose-panel); --tint-ink: var(--rose-ink)">
+        <span class="tq-dp" aria-hidden="true">SM</span>
+        <blockquote class="tq-quote">He sits with users, not just in Figma. Our onboarding completion jumped and nobody had to argue about opinions.</blockquote>
+        <p class="tq-name"><strong>Sofia Marchetti</strong><span>COO, Lumen Learn</span></p>
+      </li>
+      <li class="tq-card tq-card--pink" style="--tint: var(--lilac-panel); --tint-ink: var(--lilac-ink)">
+        <span class="tq-dp" aria-hidden="true">HL</span>
+        <blockquote class="tq-quote">Every critique made the work sharper and the team kinder. I would hire him again tomorrow.</blockquote>
+        <p class="tq-name"><strong>Hannah Lindqvist</strong><span>Design Lead, Wayfarer Health</span></p>
+      </li>
+    </ul>
   </div>
 </section>
 <span class="page-end" aria-hidden="true"></span>
@@ -305,11 +299,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261254" defer></script>
-<script src="/js/projects.js?v=20261254" defer></script>
-<script src="/js/render.js?v=20261254" defer></script>
-<script src="/js/script.js?v=20261254" defer></script>
-<script src="/js/hero.js?v=20261254" defer></script>
+<script src="/js/content.js?v=20261299" defer></script>
+<script src="/js/projects.js?v=20261299" defer></script>
+<script src="/js/render.js?v=20261299" defer></script>
+<script src="/js/script.js?v=20261299" defer></script>
+<script src="/js/hero.js?v=20261299" defer></script>
 </body>
 </html>
 
