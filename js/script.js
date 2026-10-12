@@ -1482,6 +1482,99 @@
     const drop = () => requestAnimationFrame(() => requestAnimationFrame(() => table.classList.add("is-in")));
     if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", drop, { once: true });
     else drop();
+
+    // Tablets and phones: the snapshots run as an endless strip that drifts
+    // on its own and can be pulled along by hand (it keeps the flick's
+    // speed, then eases back to the drift). A copy of the set follows the
+    // set, so the loop never shows a seam. Pauses off screen and while the
+    // tab is hidden; reduced motion: no drift, still draggable.
+    const pile = table.querySelector(".ab-pile");
+    const narrow = window.matchMedia("(max-width: 1100px)");
+    if (pile) {
+      const track = document.createElement("div");
+      track.className = "ab-track";
+      Array.from(pile.children).forEach((el) => track.append(el));
+      Array.from(track.children).forEach((el) => {
+        const copy = el.cloneNode(true);
+        copy.classList.add("is-copy");
+        copy.setAttribute("aria-hidden", "true");
+        track.append(copy);
+      });
+      pile.append(track);
+      const DRIFT = 0.03; // px per ms
+      let pos = 0, vel = -DRIFT, last = 0, raf = 0, setW = 0, drag = null, inView = true;
+      const measure = () => { setW = track.scrollWidth / 2; };
+      const wrap = () => { if (setW) { pos %= setW; if (pos > 0) pos -= setW; } };
+      const frame = (now) => {
+        const dt = Math.min(48, now - (last || now));
+        last = now;
+        if (!drag) {
+          const target = reduce.matches ? 0 : -DRIFT;
+          vel += (target - vel) * Math.min(1, dt / 600);
+          pos += vel * dt;
+          wrap();
+          track.style.transform = `translate3d(${pos}px, 0, 0)`;
+        }
+        raf = requestAnimationFrame(frame);
+      };
+      const run = () => { if (!raf && narrow.matches && inView && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } };
+      const halt = () => { cancelAnimationFrame(raf); raf = 0; };
+      const reset = () => { halt(); track.style.transform = ""; pos = 0; if (narrow.matches) { measure(); run(); } };
+      track.addEventListener("pointerdown", (e) => {
+        if (!narrow.matches || drag) return;
+        drag = { id: e.pointerId, x: e.clientX, y: e.clientY, p: pos, t: performance.now(), lx: e.clientX, on: false };
+      });
+      track.addEventListener("pointermove", (e) => {
+        if (!drag || e.pointerId !== drag.id) return;
+        const dx = e.clientX - drag.x;
+        if (!drag.on) {
+          if (Math.abs(e.clientY - drag.y) > Math.abs(dx)) { drag = null; return; }
+          if (Math.abs(dx) < 6) return;
+          drag.on = true;
+          track.setPointerCapture(e.pointerId);
+        }
+        const now = performance.now();
+        vel = (e.clientX - drag.lx) / Math.max(1, now - drag.t);
+        drag.t = now; drag.lx = e.clientX;
+        pos = drag.p + dx;
+        wrap();
+        if (pos !== drag.p + dx) drag.p = pos - dx;
+        track.style.transform = `translate3d(${pos}px, 0, 0)`;
+      });
+      const end = (e) => { if (drag && e.pointerId === drag.id) { if (!drag.on) vel = -DRIFT; drag = null; } };
+      track.addEventListener("pointerup", end);
+      track.addEventListener("pointercancel", end);
+      document.addEventListener("visibilitychange", () => (document.hidden ? halt() : run()));
+      if ("IntersectionObserver" in window) new IntersectionObserver(([en]) => { inView = en.isIntersecting; inView ? run() : halt(); }).observe(pile);
+      narrow.addEventListener("change", reset);
+      window.addEventListener("resize", () => { if (narrow.matches) measure(); });
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(measure);
+      reset();
+    }
+  }
+
+  // 15b) About "Where I've been" on phones: the jobs are cards you swipe
+  //      sideways; the dots under them show which one is in view and jump
+  //      to a card when tapped.
+  const pathGrid = document.querySelector(".path-grid");
+  if (pathGrid) {
+    const jobs = Array.from(pathGrid.children);
+    const dots = document.createElement("div");
+    dots.className = "path-dots";
+    dots.setAttribute("aria-hidden", "true");
+    dots.innerHTML = jobs.map(() => "<i></i>").join("");
+    pathGrid.after(dots);
+    const marks = Array.from(dots.children);
+    marks.forEach((m, i) => m.addEventListener("click", () => pathGrid.scrollTo({ left: jobs[i].offsetLeft - pathGrid.offsetLeft - parseFloat(getComputedStyle(pathGrid).paddingLeft), behavior: reduce.matches ? "auto" : "smooth" })));
+    const mark = () => {
+      const mid = pathGrid.scrollLeft + pathGrid.clientWidth / 2;
+      let best = 0, bestD = Infinity;
+      jobs.forEach((j, i) => { const d = Math.abs(j.offsetLeft - pathGrid.offsetLeft + j.offsetWidth / 2 - mid); if (d < bestD) { bestD = d; best = i; } });
+      marks.forEach((m, i) => m.classList.toggle("is-on", i === best));
+    };
+    pathGrid.addEventListener("scroll", mark, { passive: true });
+    window.addEventListener("resize", mark);
+    mark();
   }
 
   // 17) About story: a reading highlight that moves line by line. Words are

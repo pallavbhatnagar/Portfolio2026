@@ -116,7 +116,7 @@
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
-:root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.93); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
+:root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.98); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
 :root[data-theme="dark"] .tpanel { background: var(--surface-2); }
 :root[data-theme="dark"] .tpanel--mono { background: var(--surface-2); }
 :root[data-theme="dark"] .tdp { background: #2c2c30; }
@@ -253,7 +253,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   border-radius: 0.625rem;
   /* Glass look without a blur (a blur is redrawn on every scroll frame): a
      nearly opaque tint and a bright hairline on top where light catches it. */
-  background: rgba(255, 255, 255, 0.93);
+  background: rgba(255, 255, 255, 0.98);
   border: 1px solid rgba(13, 13, 13, 0.07);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.18);
   opacity: 0;
@@ -1404,7 +1404,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab > section + section { margin-top: clamp(4.75rem, 9vw, 7.5rem); }
 .ab-h2 { font-size: var(--fs-h2); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.08; }
 
-.ab-hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: calc(var(--pad) + 6.875rem) 0 0; }
+.ab-hero { display: flex; flex-direction: column; align-items: center; text-align: center; padding: calc(var(--pad) + 9rem) 0 0; }
 /* About type follows the home page scale: the title matches the home hero
    headline, the intro matches the home hero intro. */
 .ab-title { font-size: clamp(2.25rem, 5.56vw, 3.25rem); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
@@ -1531,7 +1531,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 }
 
 @media (max-width: 900px) {
-  .ab-hero { padding-top: calc(var(--pad) + 4.375rem); }
+  .ab-hero { padding-top: calc(var(--pad) + 6.5rem); }
   .ab-stats { flex-wrap: wrap; row-gap: 0.375rem; }
   .ab-story, .ab-glance { grid-template-columns: 1fr; gap: var(--space-3); }
   .ab-story .ab-h2 { position: static; }
@@ -3104,7 +3104,7 @@ html:not(.js) .rd-pick { display: none; }
    a little askew). They drop in one after another (script.js 15).
    Below 1100px they become a tilted strip you swipe.
    ========================================================= */
-.ab-table { position: relative; justify-content: center; min-height: 50rem; padding-bottom: 4rem; }
+.ab-table { position: relative; isolation: isolate; justify-content: center; min-height: 50rem; padding-bottom: 4rem; }
 /* The About page clips sideways overflow; the table needs its full width on
    wide screens (the page itself never scrolls sideways). */
 main.ab:has(.ab-table) { overflow-x: visible; }
@@ -3147,8 +3147,82 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 /* Tablets and phones: the words, then a tilted strip of snapshots. */
 @media (max-width: 1100px) {
   .ab-table { min-height: 0; padding-bottom: 1rem; }
-  .ab-pile { position: relative; top: auto; left: auto; bottom: auto; translate: none; flex: none; width: 100vw; margin: 2.5rem 0 0; display: flex; gap: 1rem; padding: 1.25rem var(--pad) 2rem; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; pointer-events: auto; }
-  .ab-pile::-webkit-scrollbar { display: none; }
-  .ab-snap { position: relative; left: auto; top: auto; flex: none; width: 10.5rem; scroll-snap-align: center; rotate: calc(var(--r) * 0.6deg); }
+  .ab-pile { position: relative; top: auto; left: auto; bottom: auto; translate: none; flex: none; width: 100vw; margin: 2.5rem 0 0; padding: 1.25rem 0 2rem; overflow: hidden; pointer-events: auto; }
+  .ab-track { display: flex; gap: 1rem; width: max-content; padding-right: 1rem; touch-action: pan-y; cursor: grab; will-change: transform; }
+  .ab-track:active { cursor: grabbing; }
+  .ab-snap { position: relative; left: auto; top: auto; flex: none; width: 10.5rem; rotate: calc(var(--r) * 0.6deg); }
 }
 @media (forced-colors: active) { .ab-snap { border: 1px solid CanvasText; } }
+
+/* About table: the track only exists to move the strip on smaller screens;
+   on wide screens the snapshots are placed on the table directly. */
+@media (min-width: 1101px) {
+  .ab-track { display: contents; }
+  .ab-snap.is-copy { display: none; }
+}
+
+/* =========================================================
+   Phones: more breathing room between sections on every page.
+   ========================================================= */
+@media (max-width: 640px) {
+  :root { --space-section: 5rem; }
+  .ab > section + section { margin-top: 6rem; }
+  .cs-ch + .cs-ch { margin-top: 4rem; }
+}
+
+/* =========================================================
+   About, phones: "Where I've been" as cards you swipe, one per job, each
+   in its own tint with the years large, and dots under them; "At a
+   glance" as a small bento of tiles.
+   ========================================================= */
+.path-dots { display: none; }
+@media (max-width: 640px) {
+  .path-grid {
+    display: flex;
+    gap: 0.75rem;
+    margin: var(--space-4) calc(var(--pad) * -1) 0;
+    padding: 0.25rem var(--pad) 0.5rem;
+    border-left: 0;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .path-grid::-webkit-scrollbar { display: none; }
+  .path-grid li {
+    flex: 0 0 82%;
+    display: flex;
+    flex-direction: column;
+    min-height: 15rem;
+    padding: 1.25rem 1.25rem 1.375rem;
+    border-radius: 1.25rem;
+    background: var(--c);
+    scroll-snap-align: start;
+  }
+  .path-grid li:last-child { padding-bottom: 1.375rem; }
+  .path-grid li::before { content: none; }
+  .path-grid li:nth-child(1) { --c: var(--sky-bg); --k: var(--sky-ink); }
+  .path-grid li:nth-child(2) { --c: var(--rose-bg); --k: var(--rose-ink); }
+  .path-grid li:nth-child(3) { --c: var(--sand-bg); --k: var(--sand-ink); }
+  .path-grid li:nth-child(4) { --c: var(--mint-bg); --k: var(--mint-ink); }
+  .path-yr { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.03em; color: var(--k); }
+  .path-co { margin-top: auto; padding-top: 1.5rem; font-size: 1.25rem; font-weight: 600; }
+  .path-p { max-width: none; }
+  .path-now { vertical-align: middle; background: var(--bg); }
+  .path-dots { display: flex; justify-content: center; gap: 0.375rem; margin-top: 1rem; }
+  .path-dots i { width: 0.4375rem; height: 0.4375rem; border-radius: 99px; background: color-mix(in srgb, var(--ink) 18%, transparent); transition: width 0.3s var(--ease-out), background-color 0.3s ease; cursor: pointer; }
+  .path-dots i.is-on { width: 1.375rem; background: var(--ink); }
+
+  .ab-facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.625rem; }
+  .ab-facts > div { padding: 1rem 1rem 1.125rem; border-radius: 1rem; background: color-mix(in srgb, var(--ink) 4%, var(--bg)); }
+  .ab-facts > div::before, .ab-facts > div::after { content: none; }
+  .ab-facts > div:nth-child(1), .ab-facts > div:nth-child(2) { grid-column: 1 / -1; }
+  .ab-facts > div:nth-child(1) { background: var(--mint-bg); }
+  .ab-facts > div:nth-child(4) { background: var(--lilac-bg); }
+  .ab-facts > div:nth-child(5) { background: var(--sand-bg); }
+  .ab-facts dd { margin-top: 0.375rem; font-size: 1.0625rem; font-weight: 600; line-height: 1.35; }
+}
+/* More room above "Hi, I'm Pallav." on wide screens (the words sit centred
+   on the table, so the room goes on the words themselves). */
+@media (min-width: 1101px) { .ab-table-copy { margin-top: 3rem; } }

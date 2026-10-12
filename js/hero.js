@@ -26,7 +26,9 @@
   // Example questions turning in the box (hints only).
   const ask = hc.querySelector(".hc-ask");
   const qBox = hc.querySelector(".hc-q");
-  const QS = ["What have you shipped?", "How do you work?", "Where have you worked?", "How can I reach you?"];
+  // What hiring people actually ask (different from the chat's own
+  // suggestions).
+  const QS = ["What impact did your work have?", "Have you led design on a team?", "How do you work with engineers?", "When could you start?"];
   if (!ask || !qBox || reduce.matches) return;
   let qi = 0;
   let cur = qBox.firstElementChild;
