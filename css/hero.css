@@ -1,0 +1,147 @@
+/* =========================================================
+   Hero (Home): centred. A signature (photo, name, role), a bold claim, a
+   two-line intro, and the "Talk to my Work" chat box as the centrepiece,
+   with Download resume below, over a faint dot grid. On load the letters
+   of "complicated" arrive scattered and askew, then snap into a line
+   (js/hero.js). The chat box turns through real questions; clicking it
+   opens the chat and asks the one showing.
+   ========================================================= */
+.hc {
+  --hc-io: cubic-bezier(0.77, 0, 0.175, 1);
+  --hc-out: cubic-bezier(0.23, 1, 0.32, 1);
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  min-height: min(100svh, 56rem);
+  padding-top: calc(var(--pad) + 6.5rem);
+  padding-bottom: 6.5rem;
+}
+
+/* ---------- Atmosphere (full width, behind everything) ---------- */
+.hc-sky { position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; transform: translateX(-50%); overflow: hidden; pointer-events: none; }
+/* Faint dot grid, strongest in the middle, fading to nothing. */
+.hc-sky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(color-mix(in srgb, var(--ink) 16%, transparent) 1px, transparent 1.4px);
+  background-size: 22px 22px;
+  -webkit-mask-image: radial-gradient(60% 55% at 50% 45%, #000 0%, transparent 75%);
+  mask-image: radial-gradient(60% 55% at 50% 45%, #000 0%, transparent 75%);
+  opacity: 0.55;
+}
+/* Fades the sky into the page below. */
+.hc-sky::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, var(--bg)); }
+
+/* ---------- Words ---------- */
+/* Opening signature: Pallav's photo, name and role. */
+.hc-sign { display: inline-flex; align-items: center; gap: 1rem; margin: 0 0 2.5rem; text-align: left; }
+.hc-sign img { flex: none; width: 3.75rem; height: 3.75rem; border-radius: 0.9375rem; }
+.hc-sign b { display: block; font-size: 1.1875rem; font-weight: 600; color: var(--ink); }
+.hc-sign span span { display: block; margin-top: 0.125rem; font-size: 1rem; color: var(--ink-soft); }
+
+.hc-title {
+  max-width: 17em;
+  font-size: clamp(2.625rem, 6.4vw, 5.25rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 0.98;
+  text-wrap: balance;
+}
+.hc-title .hc-line { display: block; }
+.hc-mess { display: inline-block; white-space: nowrap; }
+.hc-mess .ch { display: inline-block; }
+.hc-lede { max-width: 40em; text-wrap: balance; margin-top: 1.75rem; font-size: 1.0625rem; line-height: 1.6; color: var(--ink-soft); }
+
+/* ---------- The chat box ---------- */
+.hc-ask {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: min(100%, 36rem);
+  min-height: 3.875rem;
+  margin-top: 2.75rem;
+  padding: 0.5rem 0.5rem 0.5rem 1.125rem;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  border-radius: 1.25rem;
+  background: color-mix(in srgb, var(--bg) 82%, transparent);
+  -webkit-backdrop-filter: blur(14px) saturate(160%);
+  backdrop-filter: blur(14px) saturate(160%);
+  box-shadow: 0 1.5rem 3rem -1.75rem rgba(57, 60, 120, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  font: inherit;
+  text-align: left;
+  color: var(--ink);
+  cursor: pointer;
+  transition: border-color 0.25s ease, transform 0.25s var(--hc-out);
+}
+:root[data-theme="dark"] .hc-ask { box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+/* A thin Bloom-coloured light that slowly travels round the box's edge. */
+@property --hc-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
+.hc-ask::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  z-index: -1;
+  padding: 1.5px;
+  border-radius: inherit;
+  background: conic-gradient(from var(--hc-a), #3965fa, #9b7fe8 12%, #f2369a 24%, transparent 36%, transparent 64%, #3965fa);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+@media (prefers-reduced-motion: no-preference) { .hc-ask::before { animation: hc-turn 6s linear infinite; } }
+@keyframes hc-turn { to { --hc-a: 360deg; } }
+.hc-ask .nav-ai-ic { flex: none; }
+.hc-q { position: relative; flex: 1; height: 1.5rem; overflow: hidden; font-size: 1.0625rem; }
+.hc-q span { position: absolute; inset: 0; display: flex; align-items: center; white-space: nowrap; overflow: hidden; color: var(--ink-soft); transition: transform 0.45s var(--hc-out), opacity 0.35s ease; }
+.hc-q span.is-out { transform: translateY(-110%); opacity: 0; }
+.hc-q span.is-next { transform: translateY(110%); opacity: 0; transition: none; }
+.hc-go { flex: none; display: grid; place-items: center; width: 2.75rem; height: 2.75rem; border-radius: 0.875rem; background: var(--ink); color: var(--bg); transition: transform 0.2s var(--hc-out); }
+.hc-go svg { width: 0.9375rem; height: 0.9375rem; }
+@media (hover: hover) and (pointer: fine) {
+  .hc-ask:hover { transform: translateY(-2px); }
+  .hc-ask:hover .hc-go { transform: rotate(-12deg) scale(1.05); }
+}
+.hc-ask:active { transform: scale(0.99); }
+.hc-ask:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
+
+
+
+/* Download resume, centred under the chat box. */
+.hc-resume { margin-top: 1.75rem; }
+.hc-link { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 24px; font-size: var(--fs-small); font-weight: 600; color: var(--ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--ink) 25%, transparent); text-underline-offset: 0.3em; transition: text-decoration-color 0.2s ease; }
+.hc-link svg { width: 0.875rem; height: 0.875rem; }
+@media (hover: hover) and (pointer: fine) { .hc-link:hover { text-decoration-color: currentColor; } }
+.hc-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 0.25rem; }
+
+/* ---------- Entrance: one sequence ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .js .hc:not(.is-in) .hc-rise { opacity: 0; transform: translateY(0.875rem); filter: blur(6px); }
+  .hc-rise { transition: opacity 0.9s var(--hc-out), transform 0.9s var(--hc-out), filter 0.9s var(--hc-out); transition-delay: calc(var(--d, 0) * 1ms); }
+  /* "complicated": each letter starts out of line, then snaps straight. */
+  .js .hc:not(.is-in) .hc-mess .ch { transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) rotate(calc(var(--r) * 1deg)); }
+  .hc-mess .ch { transition: transform 1.1s var(--hc-io); transition-delay: calc(700ms + var(--i) * 70ms); }
+}
+
+@media (max-width: 640px) {
+  .hc { min-height: 0; padding-top: calc(var(--pad) + 6rem); padding-bottom: 4rem; }
+  .hc-sign { gap: 0.75rem; margin-bottom: 1.75rem; }
+  .hc-sign img { width: 3.25rem; height: 3.25rem; border-radius: 0.8125rem; }
+  .hc-sign b { font-size: 1.0625rem; }
+  .hc-sign span span { font-size: 0.9375rem; }
+  .hc-title { font-size: clamp(1.5rem, 8.2vw, 3.25rem); }
+  .hc-title .hc-line { white-space: nowrap; }
+  .hc-lede { font-size: 1rem; margin-top: 1.25rem; }
+  .hc-ask { margin-top: 2rem; min-height: 3.5rem; }
+  .hc-q { font-size: 0.9375rem; }
+}
+@media (forced-colors: active) {
+  .hc-ask { border: 1px solid CanvasText; }
+  .hc-sky { display: none; }
+}

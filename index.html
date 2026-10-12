@@ -18,7 +18,8 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261182" />
+<link rel="stylesheet" href="/css/style.css?v=20261183" />
+<link rel="stylesheet" href="/css/hero.css?v=20261183" />
 </head>
 <body>
 
@@ -26,7 +27,7 @@
 <div class="site-shell" id="siteShell">
 <header class="site-header" id="top">
   <nav class="nav" aria-label="Primary">
-    <a class="nav-home nav-dp" href="/" aria-label="Home" aria-current="page"><img src="/assets/images/dp/dp-nav.webp" alt="" width="32" height="32"></a>
+    <a class="nav-home" href="/" aria-current="page">Home</a>
     <ul class="nav-links">
       <li><a href="/works/">Works</a></li>
       <li><a href="/about">About me</a></li>
@@ -51,59 +52,17 @@
 
 <div class="first-screen">
 
-<main class="hero" id="main">
-
-  <!-- ============ HERO: edit the copy here ============ -->
-  <section class="hero-copy">
-    <h1 class="hero-title">
-      <span class="hl"><span>The shortest</span></span>
-      <span class="hl"><span>path to done.</span></span>
-    </h1>
-    <p class="hero-lede">I'm <strong class="hero-name">Pallav Bhatnagar</strong>, a product designer who untangles complex products.<br class="br-d"> I find the friction and straighten it, from first insight to a shipped experience.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="/assets/documents/resume/resume.pdf" data-site-resume download>Download resume</a>
-      <button class="btn btn-secondary nav-ai" type="button" id="askAiTrigger" aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false">
-        <svg class="nav-ai-ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg>
-        <span>Talk to my Work</span>
-      </button>
-    </div>
-  </section>
-
-  <!-- A desire path: one person's route through a confusing product. The line
-       starts as a tangle and straightens as a dot follows it to "Done". -->
-  <section class="trail is-run" aria-label="A route drawn as a line: it starts tangled and ends straight">
-    <div class="trail-stage" aria-hidden="true">
-      <svg class="trail-svg" viewBox="0 0 1000 190">
-        <defs><linearGradient id="trailGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="560" y2="0"><stop offset="0" style="stop-color:var(--ink)" stop-opacity="0.05"/><stop offset="0.55" style="stop-color:var(--ink)" stop-opacity="0.12"/><stop offset="0.82" style="stop-color:var(--ink)" stop-opacity="0.8"/><stop offset="1" style="stop-color:var(--ink)"/></linearGradient><linearGradient id="ghostGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="560" y2="0"><stop offset="0" style="stop-color:var(--ink)" stop-opacity="0.06"/><stop offset="0.12" style="stop-color:var(--ink)" stop-opacity="0.06"/><stop offset="0.24" style="stop-color:var(--ink)" stop-opacity="0.3"/><stop offset="1" style="stop-color:var(--ink)" stop-opacity="0.3"/></linearGradient></defs>
-        <path class="trail-ghost" d="M8 120 C 60 -52, 203 -56, 209 94 C 216 225, 61 226, 89 112 C 118 -2, 313 -4, 318 100 C 322 194, 208 198, 232 129 C 256 71, 378 51, 426 96 C 446 106, 470 100, 500 100 L 990 100"/>
-        <path class="trail-line" id="trailPath" pathLength="1" d="M8 120 C 60 -52, 203 -56, 209 94 C 216 225, 61 226, 89 112 C 118 -2, 313 -4, 318 100 C 322 194, 208 198, 232 129 C 256 71, 378 51, 426 96 C 446 106, 470 100, 500 100 L 990 100"/>
-        <g class="trail-nodes"><circle class="trail-node n1" cx="525" cy="100" r="6"/><circle class="trail-node n2" cx="635" cy="100" r="6"/><circle class="trail-node n3" cx="745" cy="100" r="6"/><circle class="trail-node n4" cx="855" cy="100" r="6"/></g>
-        <circle class="trail-dot" r="7" cx="0" cy="0">
-          <animateMotion dur="4.7s" begin="0s" fill="freeze" calcMode="spline" keyTimes="0;0.106;1" keyPoints="0;0;1" keySplines="0 0 1 1;0.55 0 0.2 1"><mpath href="#trailPath" xlink:href="#trailPath"/></animateMotion>
-        </circle>
-      </svg>
-      <span class="trail-lab t1 up" style="--x:52.5%">Insight</span>
-      <span class="trail-lab t2 down" style="--x:63.5%">Framing</span>
-      <span class="trail-lab t3 up" style="--x:74.5%">Interaction</span>
-      <span class="trail-lab t4 down" style="--x:85.5%">Validation</span>
-      <span class="trail-done"><svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.2 6.4l2.4 2.4 5.2-5.6"/></svg>Done</span>
-    </div>
-    <!-- Phones: the same route drawn for a narrow screen. The tangle runs
-         across the top, then the line drops straight down the left edge,
-         past the four phases, to Done. Same timings as the wide drawing. -->
-    <div class="trail-m" aria-hidden="true">
-      <svg class="trail-svg trail-svg-m" viewBox="0 0 440 95">
-        <path class="um-ghost" d="M12 61.2 C 46.7 13.2, 133.3 13.2, 121 53.2 C 111 88.4, 46.7 82, 71.4 50 C 96.2 18, 207.6 16.4, 202.7 54.8 C 197.7 86.8, 135.8 82, 160.6 51.6 C 185.3 22.8, 291.8 22.8, 284.4 56.4 C 279.4 83.6, 227.4 77.2, 252.2 50 C 277 22.8, 368.6 37.2, 428 50"/>
-        <path class="um-line" d="M12 61.2 C 46.7 13.2, 133.3 13.2, 121 53.2 C 111 88.4, 46.7 82, 71.4 50 C 96.2 18, 207.6 16.4, 202.7 54.8 C 197.7 86.8, 135.8 82, 160.6 51.6 C 185.3 22.8, 291.8 22.8, 284.4 56.4 C 279.4 83.6, 227.4 77.2, 252.2 50 C 277 22.8, 368.6 37.2, 428 50" data-to="M12 50 C 31.8 50, 51.6 50, 71.4 50 C 91.2 50, 111.0 50, 130.9 50 C 150.7 50, 170.5 50, 190.3 50 C 210.1 50, 229.9 50, 249.7 50 C 269.5 50, 289.3 50, 309.1 50 C 329.0 50, 348.8 50, 368.6 50 C 388.4 50, 408.2 50, 428.0 50"/>
-        <g class="um-ticks"><circle class="um-tick k1" cx="52" cy="50" r="4"/><circle class="um-tick k2" cx="146" cy="50" r="4"/><circle class="um-tick k3" cx="240" cy="50" r="4"/><circle class="um-tick k4" cx="334" cy="50" r="4"/></g>
-        <g class="um-labs"><text class="um-lab c1" x="52" y="35">INSIGHT</text><text class="um-lab c2" x="146" y="75">FRAMING</text><text class="um-lab c3" x="240" y="35">INTERACTION</text><text class="um-lab c4" x="334" y="75">VALIDATION</text></g>
-        <g transform="translate(373 17)"><g class="um-done"><rect width="55" height="19" rx="4"/><path d="M7.5 9.9l2.3 2.3 5-5.4"/><text x="19.5" y="13.3">DONE</text></g></g>
-        <circle class="um-dot" cx="12" cy="50" r="5.5" data-to="428"/>
-      </svg>
-    </div>
-  </section>
-  <!-- ================================================= -->
-
+<main class="hero hc" id="main">
+  <div class="hc-sky" aria-hidden="true"></div>
+  <p class="hc-sign hc-rise" style="--d:0"><img src="/assets/images/dp/dp-nav.webp" alt="" width="52" height="52"><span><b>Pallav Bhatnagar</b><span>Product Builder, UX Enthusiast</span></span></p>
+  <h1 class="hc-title"><span class="hc-line hc-rise" style="--d:90">I make <span class="hc-mess">complicated</span></span> <span class="hc-line hc-rise" style="--d:180">products feel obvious.</span></h1>
+  <p class="hc-lede hc-rise" style="--d:260">Eight years of research-led product building, from early-stage startups to platforms used by millions. Ask my work anything below, it answers back.</p>
+  <button class="hc-ask hc-rise" id="askAiTrigger" type="button" data-ask-trigger aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false" aria-label="Talk to my Work: ask about my projects" style="--d:420">
+    <svg class="nav-ai-ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg>
+    <span class="hc-q" aria-hidden="true"></span>
+    <span class="hc-go" aria-hidden="true"><svg viewBox="0 0 14 14" fill="none"><path d="M7 11.5v-9M3 6l4-4 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  </button>
+  <a class="hc-link hc-resume hc-rise" href="/assets/documents/resume/resume.pdf" data-site-resume download style="--d:520"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Download resume</a>
 </main>
 
 </div>
@@ -343,10 +302,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261182" defer></script>
-<script src="/js/projects.js?v=20261182" defer></script>
-<script src="/js/render.js?v=20261182" defer></script>
-<script src="/js/script.js?v=20261182" defer></script>
+<script src="/js/content.js?v=20261183" defer></script>
+<script src="/js/projects.js?v=20261183" defer></script>
+<script src="/js/render.js?v=20261183" defer></script>
+<script src="/js/script.js?v=20261183" defer></script>
+<script src="/js/hero.js?v=20261183" defer></script>
 </body>
 </html>
 
