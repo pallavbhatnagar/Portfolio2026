@@ -1234,6 +1234,34 @@
     const words = (text) => text.split(" ").map((w, i) => `<span class="rd-w" style="--i: ${i}">${w}</span>`).join(" ");
     rdRoles.innerHTML = READERS.map(([key, label]) => `<button class="rd-role" type="button" data-role="${key}" data-label="${label}" aria-pressed="false">${label}</button>`).join("");
     rdLines.innerHTML = READERS.map(([key, , text]) => `<p class="rd-line" data-role="${key}">${words(text)}</p>`).join("");
+    // The sentences share one spot, as tall as the longest of them, so the
+    // page below never moves when the reader changes; each sits centred in it.
+    const rdTrig = document.getElementById("rdTrig");
+    const rdTrigTxt = rdTrig ? rdTrig.querySelector(".rd-trig-txt") : null;
+    // Each sentence gets the width that sets it on exactly three lines
+    // (the narrowest that still does), so all six read as the same shape.
+    // Where even the full width needs more (narrow phones), it uses it all.
+    function threeLines(l) {
+      const lh = parseFloat(getComputedStyle(l).lineHeight);
+      const full = rdLines.clientWidth;
+      const lines = () => Math.round(l.offsetHeight / lh);
+      l.style.maxWidth = `${full}px`;
+      if (lines() > 3) return;
+      let lo = 120, hi = full;
+      while (hi - lo > 2) {
+        const mid = (lo + hi) / 2;
+        l.style.maxWidth = `${mid}px`;
+        if (lines() <= 3) hi = mid; else lo = mid;
+      }
+      l.style.maxWidth = `${Math.ceil(hi) + 1}px`;
+    }
+    function fitLines() {
+      rdLines.querySelectorAll(".rd-line").forEach(threeLines);
+      const tallest = Math.max(...Array.from(rdLines.querySelectorAll(".rd-line"), (l) => l.offsetHeight));
+      if (tallest > 0) rdLines.style.height = `${tallest}px`;
+    }
+    window.addEventListener("resize", () => fitLines());
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitLines());
     const show = (key, animate) => {
       const r = READERS.find((x) => x[0] === key) || READERS[0];
       rdRoles.querySelectorAll(".rd-role").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.role === r[0])));
@@ -1249,6 +1277,8 @@
       if (animate) { void rdStart.offsetWidth; rdStart.classList.add("is-in"); }
       try { sessionStorage.setItem("reader", r[0]); } catch (e) { /* private mode */ }
       placeRole(animate);
+      fitLines();
+      if (rdTrigTxt) rdTrigTxt.textContent = r[1].replace(/^For /, "").toLowerCase();
     };
 
     // Phones: the roles become one row you swipe sideways (CSS). An ink
@@ -1270,7 +1300,10 @@
       const b = rdRoles.querySelector('.rd-role[aria-pressed="true"]');
       if (!b) return;
       rdInd.style.width = `${b.offsetWidth}px`;
-      rdInd.style.transform = phone.matches ? `translateX(${b.offsetLeft}px)` : `translate(${b.offsetLeft}px, ${b.offsetTop + b.offsetHeight}px)`;
+      // Phones: an underline on the swipeable row. Wider screens: a pill
+      // that sits behind the chosen role (CSS gives it its look).
+      rdInd.style.height = phone.matches ? "" : `${b.offsetHeight}px`;
+      rdInd.style.transform = phone.matches ? `translateX(${b.offsetLeft}px)` : `translate(${b.offsetLeft}px, ${b.offsetTop}px)`;
       if (!phone.matches) return;
       rdRoles.scrollTo({ left: b.offsetLeft - (rdRoles.clientWidth - b.offsetWidth) / 2, behavior: animate && !reduce.matches ? "smooth" : "auto" });
       fadeEdges();
@@ -1306,6 +1339,35 @@
     let saved = "anyone";
     try { saved = sessionStorage.getItem("reader") || "anyone"; } catch (e) { /* private mode */ }
     show(saved, false);
+    // The reader picker: the last word of "The work, explained for …" opens
+    // the list; choosing, Escape or a click elsewhere closes it.
+    if (rdTrig) {
+      const roleBtns = () => Array.from(rdRoles.querySelectorAll(".rd-role"));
+      const openMenu = () => {
+        rdRoles.hidden = false;
+        rdTrig.setAttribute("aria-expanded", "true");
+        requestAnimationFrame(() => rdRoles.classList.add("is-open"));
+        (rdRoles.querySelector('.rd-role[aria-pressed="true"]') || roleBtns()[0]).focus();
+      };
+      const closeMenu = (focus) => {
+        if (rdRoles.hidden) return;
+        rdTrig.setAttribute("aria-expanded", "false");
+        rdRoles.classList.remove("is-open");
+        rdRoles.hidden = true;
+        if (focus) rdTrig.focus();
+      };
+      rdTrig.addEventListener("click", () => (rdRoles.hidden ? openMenu() : closeMenu(false)));
+      rdRoles.addEventListener("click", (e) => { if (e.target.closest(".rd-role")) closeMenu(true); });
+      rdRoles.addEventListener("keydown", (e) => {
+        const list = roleBtns();
+        const i = list.indexOf(document.activeElement);
+        if (e.key === "Escape") { e.preventDefault(); closeMenu(true); }
+        else if (e.key === "ArrowDown") { e.preventDefault(); list[(i + 1) % list.length].focus(); }
+        else if (e.key === "ArrowUp") { e.preventDefault(); list[(i - 1 + list.length) % list.length].focus(); }
+        else if (e.key === "Tab") closeMenu(false);
+      });
+      document.addEventListener("pointerdown", (e) => { if (!e.target.closest(".rd-pick-at")) closeMenu(false); });
+    }
     rdRoles.addEventListener("click", (e) => {
       const b = e.target.closest(".rd-role");
       if (b && b.getAttribute("aria-pressed") !== "true") show(b.dataset.role, true);
@@ -1412,47 +1474,14 @@
     if (title) readingEl.textContent = title + ".";
   }
 
-  // 15) About carousel: an endless loop. Each slide gets data-o (its offset
-  //     from the centre, -4..4); CSS turns that into size and position.
-  //     Every 2s the next slide glides in. Keeps running under the mouse;
-  //     pauses for keyboard focus, when the tab or carousel is off screen, and
-  //     never auto-plays for reduced motion.
-  const car = document.querySelector(".ab-carousel");
-  if (car) {
-    const slides = Array.from(car.querySelectorAll(".ab-slide"));
-    const n = slides.length;
-    let cur = 0;
-    let timer = null;
-    let inView = true;
-    const render = () => {
-      slides.forEach((s, i) => {
-        let o = (((i - cur) % n) + n) % n;
-        if (o > n / 2) o -= n;
-        o = Math.max(-4, Math.min(4, o));
-        s.dataset.o = String(o);
-        s.setAttribute("aria-hidden", String(Math.abs(o) > 3));
-        s.setAttribute("aria-current", String(o === 0));
-      });
-    };
-    const go = (to) => { cur = ((to % n) + n) % n; render(); };
-    const stop = () => { clearInterval(timer); timer = null; };
-    const start = () => {
-      if (reduce.matches || timer || !inView || document.hidden) return;
-      timer = setInterval(() => go(cur + 1), 2000);
-    };
-    slides.forEach((s, i) => s.addEventListener("click", () => { go(i); stop(); start(); }));
-    car.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowRight") { e.preventDefault(); go(cur + 1); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); go(cur - 1); }
-    });
-    car.addEventListener("focusin", () => { if (car.matches(":focus-visible")) stop(); });
-    car.addEventListener("focusout", start);
-    document.addEventListener("visibilitychange", () => (document.hidden ? stop() : start()));
-    if ("IntersectionObserver" in window) {
-      new IntersectionObserver(([entry]) => { inView = entry.isIntersecting; inView ? start() : stop(); }, { threshold: 0.2 }).observe(car);
-    }
-    render();
-    start();
+  // 15) About hero, "the table": the snapshots drop onto the table one
+  //     after another once the page shows (after the loader). CSS does the
+  //     motion; reduced motion shows them already in place.
+  const table = document.querySelector(".ab-table");
+  if (table) {
+    const drop = () => requestAnimationFrame(() => requestAnimationFrame(() => table.classList.add("is-in")));
+    if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", drop, { once: true });
+    else drop();
   }
 
   // 17) About story: a reading highlight that moves line by line. Words are

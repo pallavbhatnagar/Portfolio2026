@@ -18,7 +18,7 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261187" />
+<link rel="stylesheet" href="/css/style.css?v=20261210" />
 </head>
 <body>
 
@@ -52,52 +52,83 @@
 <main class="ab" id="main">
 
   <!-- ============ INTRO ============ -->
-  <section class="ab-hero">
-    <h1 class="ab-title">
-      <span class="hl"><span>Hi, I'm Pallav.</span></span>
-      <span class="hl"><span>I make products clear.</span></span>
-    </h1>
-
-    <div class="ab-carousel" role="region" aria-roledescription="carousel" aria-label="Snapshots from my life and work" tabindex="0">
-      <figure class="ab-slide" aria-label="Trail run, 21K" data-i="0" style="--tint: var(--mint-bg); --tone: var(--mint-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-1.jpg" alt="Trail run, 21K"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 58c10-30 20 6 30-22s20 8 38-26"/><path d="M6 68h68" opacity=".5"/></svg>
+  <!-- ============ HERO: "the table". Snapshots from life and work lie
+       around the intro like polaroids on a desk; they drop in on load
+       (script.js 15). On tablets and phones they
+       sit in a tilted strip you swipe. Swap each icon for a photo. ============ -->
+  <section class="ab-hero ab-table">
+    <div class="ab-table-copy">
+      <h1 class="ab-title">
+        <span class="hl"><span>Hi, I'm Pallav.</span></span>
+        <span class="hl"><span>I make products clear.</span></span>
+      </h1>
+      <p class="ab-lede">I'm a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. I care about the moment a confusing thing quietly becomes obvious.</p>
+    </div>
+    <div class="ab-pile" role="group" aria-label="Snapshots from my life and work">
+      <figure class="ab-snap" style="--tint: var(--mint-bg); --tone: var(--mint-ink); --x: 3; --y: 0; --r: -8; --i: 0">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-1.jpg" alt="Trail run, 21K"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 58c10-30 20 6 30-22s20 8 38-26"/><path d="M6 68h68" opacity=".5"/></svg>
+        </div>
+        <figcaption>Trail run, 21K</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="One roll a month" data-i="1" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-2.jpg" alt="One roll a month"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="40" r="30"/><circle cx="40" cy="40" r="19"/><circle cx="40" cy="40" r="8"/></svg>
+      <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 16; --y: 24; --r: 6; --i: 1">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-2.jpg" alt="One roll a month"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="40" r="30"/><circle cx="40" cy="40" r="19"/><circle cx="40" cy="40" r="8"/></svg>
+        </div>
+        <figcaption>One roll a month</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Pour-over, slowly" data-i="2" style="--tint: var(--rose-bg); --tone: var(--rose-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-3.jpg" alt="Pour-over, slowly"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 30h42v18a16 16 0 01-16 16h-10a16 16 0 01-16-16z"/><path d="M56 34h6a8 8 0 010 16h-6"/><path d="M26 14c-3 4 3 6 0 10M38 14c-3 4 3 6 0 10" opacity=".6"/></svg>
+      <figure class="ab-snap" style="--tint: var(--rose-bg); --tone: var(--rose-ink); --x: 2; --y: 46; --r: 4; --i: 2">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-3.jpg" alt="Pour-over, slowly"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 30h42v18a16 16 0 01-16 16h-10a16 16 0 01-16-16z"/><path d="M56 34h6a8 8 0 010 16h-6"/><path d="M26 14c-3 4 3 6 0 10M38 14c-3 4 3 6 0 10" opacity=".6"/></svg>
+        </div>
+        <figcaption>Pour-over, slowly</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Currently reading" data-i="3" style="--tint: var(--sky-bg); --tone: var(--sky-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-4.jpg" alt="Currently reading"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 62V22a4 4 0 014-4h40a4 4 0 014 4v40"/><path d="M12 62a4 4 0 014-4h44"/><path d="M24 30h28M24 40h20"/></svg>
+      <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 15; --y: 68; --r: -6; --i: 3">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-4.jpg" alt="Currently reading"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 62V22a4 4 0 014-4h40a4 4 0 014 4v40"/><path d="M12 62a4 4 0 014-4h44"/><path d="M24 30h28M24 40h20"/></svg>
+        </div>
+        <figcaption>Currently reading</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Patch cables" data-i="4" style="--tint: var(--sand-bg); --tone: var(--sand-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-5.jpg" alt="Patch cables"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="10"/><circle cx="56" cy="26" r="10"/><path d="M24 20v6M56 20v6"/><path d="M12 56h56M12 66h56" opacity=".6"/></svg>
+      <figure class="ab-snap" style="--tint: var(--sand-bg); --tone: var(--sand-ink); --x: 85; --y: 0; --r: 7; --i: 4">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-5.jpg" alt="Patch cables"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="10"/><circle cx="56" cy="26" r="10"/><path d="M24 20v6M56 20v6"/><path d="M12 56h56M12 66h56" opacity=".6"/></svg>
+        </div>
+        <figcaption>Patch cables</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Team offsite, Goa" data-i="5" style="--tint: var(--mint-bg); --tone: var(--mint-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-6.jpg" alt="Team offsite, Goa"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="28" cy="30" r="8"/><circle cx="54" cy="30" r="8"/><path d="M12 62c1-12 8-18 16-18s15 6 16 18M38 62c1-12 8-18 16-18s15 6 16 18"/></svg>
+      <figure class="ab-snap" style="--tint: var(--mint-bg); --tone: var(--mint-ink); --x: 71; --y: 22; --r: -5; --i: 5">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-6.jpg" alt="Team offsite, Goa"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="28" cy="30" r="8"/><circle cx="54" cy="30" r="8"/><path d="M12 62c1-12 8-18 16-18s15 6 16 18M38 62c1-12 8-18 16-18s15 6 16 18"/></svg>
+        </div>
+        <figcaption>Team offsite, Goa</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Design critique" data-i="6" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-7.jpg" alt="Design critique"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="14" width="60" height="44" rx="5"/><path d="M22 30h36M22 40h22"/><path d="M28 66h24" opacity=".6"/></svg>
+      <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 86; --y: 44; --r: -3; --i: 6">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-7.jpg" alt="Design critique"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="10" y="14" width="60" height="44" rx="5"/><path d="M22 30h36M22 40h22"/><path d="M28 66h24" opacity=".6"/></svg>
+        </div>
+        <figcaption>Design critique</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Sketchbook Sundays" data-i="7" style="--tint: var(--rose-bg); --tone: var(--rose-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-8.jpg" alt="Sketchbook Sundays"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 62l8-2 38-38-6-6-38 38z"/><path d="M50 14l6 6"/><path d="M14 70h52" opacity=".5"/></svg>
+      <figure class="ab-snap" style="--tint: var(--rose-bg); --tone: var(--rose-ink); --x: 72; --y: 68; --r: 6; --i: 7">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-8.jpg" alt="Sketchbook Sundays"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 62l8-2 38-38-6-6-38 38z"/><path d="M50 14l6 6"/><path d="M14 70h52" opacity=".5"/></svg>
+        </div>
+        <figcaption>Sketchbook Sundays</figcaption>
       </figure>
-      <figure class="ab-slide" aria-label="Mentoring hour" data-i="8" style="--tint: var(--sky-bg); --tone: var(--sky-ink)">
-        <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-9.jpg" alt="Mentoring hour"> -->
-        <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="26" r="10"/><path d="M20 66c2-16 10-24 20-24s18 8 20 24"/><path d="M60 18l6 6M66 18l-6 6" opacity=".6"/></svg>
+      <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 29; --y: 76; --r: -4; --i: 8">
+        <div class="ab-snap-pic">
+          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-9.jpg" alt="Mentoring hour"> -->
+          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="26" r="10"/><path d="M20 66c2-16 10-24 20-24s18 8 20 24"/><path d="M60 18l6 6M66 18l-6 6" opacity=".6"/></svg>
+        </div>
+        <figcaption>Mentoring hour</figcaption>
       </figure>
     </div>
-
-    <p class="ab-lede">I'm a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. I care about the moment a confusing thing quietly becomes obvious.</p>
   </section>
 
   <!-- ============ NUMBERS (sample data) ============ -->
@@ -403,11 +434,11 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261187" defer></script>
-<script src="/js/projects.js?v=20261187" defer></script>
-<script src="/js/render.js?v=20261187" defer></script>
-<script src="/js/script.js?v=20261187" defer></script>
-<script src="/js/pixel-dog.js?v=20261187" defer></script>
+<script src="/js/content.js?v=20261210" defer></script>
+<script src="/js/projects.js?v=20261210" defer></script>
+<script src="/js/render.js?v=20261210" defer></script>
+<script src="/js/script.js?v=20261210" defer></script>
+<script src="/js/pixel-dog.js?v=20261210" defer></script>
 </body>
 </html>
 
