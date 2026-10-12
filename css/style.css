@@ -633,19 +633,21 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   gap: 0.5rem;
   padding: 0.5625rem 0.875rem 0.5625rem 1rem;
   border-radius: 999px;
+  /* A sticker: the card's tint, its ink as text and outline, tilted. */
   background: var(--tip-bg, var(--fill));
   color: var(--tip-ink, var(--fill-ink));
+  border: 2px solid currentColor;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
-  box-shadow: 0 0.375rem 1rem rgba(13, 13, 13, 0.16);
+  box-shadow: 0 0.5rem 1.25rem -0.25rem rgba(13, 13, 13, 0.25);
   opacity: 0;
-  transform: scale(0.9);
+  transform: scale(0.6) rotate(-6deg);
   transform-origin: 0 0;
-  transition: opacity 0.1s var(--ease-out), transform 0.12s var(--ease-out);
+  transition: opacity 0.12s var(--ease-out), transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 .proj-tip-in svg { width: 1rem; height: 1rem; flex: none; }
-.proj-tip.is-on .proj-tip-in { opacity: 1; transform: none; }
+.proj-tip.is-on .proj-tip-in { opacity: 1; transform: rotate(-4deg); }
 @media (prefers-reduced-motion: reduce) { .proj-tip-in { transform: none; transition: opacity 0.15s ease; } }
 @media (forced-colors: active) { .proj-tip-in { border: 1px solid CanvasText; } }
 
@@ -1410,7 +1412,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-title { font-size: clamp(2.25rem, 5.56vw, 3.25rem); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
 .ab-title .hl, .ab-title .hl > span { display: block; }
 .ab-title .hl:last-child { font-weight: 300; }
-.ab-lede { max-width: 58ch; margin: 2rem auto 0; font-size: clamp(1rem, 2.49vw, 1.375rem); font-weight: 400; line-height: 1.5; color: var(--ink); }
+.ab-lede { max-width: 58ch; margin: 2rem auto 0; font-size: clamp(1rem, 2.1vw, 1.1875rem); font-weight: 400; line-height: 1.5; color: var(--ink); }
 
 .ab-stats { display: flex; justify-content: center; gap: clamp(1.5rem, 6vw, 3.125rem); text-align: center; }
 .ab-stat { padding: 0.875rem 0; }
@@ -3102,13 +3104,13 @@ html:not(.js) .rd-pick { display: none; }
    About hero, "the table": the intro in the middle, and around it
    snapshots lying like polaroids on a desk (white frame, a caption, each
    a little askew). They drop in one after another (script.js 15).
-   Below 1100px they become a tilted strip you swipe.
+   Below 1240px they become a tilted strip you swipe.
    ========================================================= */
-.ab-table { position: relative; isolation: isolate; justify-content: center; min-height: 50rem; padding-bottom: 4rem; }
+.ab-table { position: relative; isolation: isolate; justify-content: center; min-height: 54rem; padding-bottom: 4rem; }
 /* The About page clips sideways overflow; the table needs its full width on
    wide screens (the page itself never scrolls sideways). */
 main.ab:has(.ab-table) { overflow-x: visible; }
-.ab-table-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; max-width: 40rem; pointer-events: none; }
+.ab-table-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: center; max-width: 46rem; pointer-events: none; }
 .ab-table-copy > * { pointer-events: auto; }
 .ab-title { font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 600; letter-spacing: -0.04em; }
 .ab-title .hl:last-child { font-weight: 300; }
@@ -3145,7 +3147,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 @keyframes ab-drop { from { opacity: 0; transform: translateY(-2.5rem) scale(1.18) rotate(14deg); } 60% { opacity: 1; } to { opacity: 1; transform: none; } }
 
 /* Tablets and phones: the words, then a tilted strip of snapshots. */
-@media (max-width: 1100px) {
+@media (max-width: 1239px) {
   .ab-table { min-height: 0; padding-bottom: 1rem; }
   .ab-pile { position: relative; top: auto; left: auto; bottom: auto; translate: none; flex: none; width: 100vw; margin: 2.5rem 0 0; padding: 1.25rem 0 2rem; overflow: hidden; pointer-events: auto; }
   .ab-track { display: flex; gap: 1rem; width: max-content; padding-right: 1rem; touch-action: pan-y; cursor: grab; will-change: transform; }
@@ -3156,9 +3158,11 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 
 /* About table: the track only exists to move the strip on smaller screens;
    on wide screens the snapshots are placed on the table directly. */
-@media (min-width: 1101px) {
+@media (min-width: 1240px) {
   .ab-track { display: contents; }
-  .ab-snap.is-copy { display: none; }
+  .ab-snap.is-copy, .ab-snap.is-spare { display: none; }
+  .ab-table { min-height: 40rem; padding-bottom: 0; }
+  .ab-table + .ab-stats { margin-top: 2.5rem; }
 }
 
 /* =========================================================
@@ -3225,4 +3229,127 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 }
 /* More room above "Hi, I'm Pallav." on wide screens (the words sit centred
    on the table, so the room goes on the words themselves). */
-@media (min-width: 1101px) { .ab-table-copy { margin-top: 3rem; } }
+@media (min-width: 1240px) { .ab-table { padding-top: calc(var(--pad) + 5rem); } }
+/* The intro on three lines (wider screens). */
+@media (min-width: 641px) { .ab-table .ab-lede { max-width: 31.5em; text-wrap: balance; } }
+
+
+/* =========================================================
+   About, Music: kept simple, like the other cards on this page. The
+   site's own card, the words and genres, and one button that opens the
+   SoundCloud player in place. The button carries a small record that
+   turns while it's hovered.
+   ========================================================= */
+.off-music.om-s, :root[data-theme="dark"] .off-music.om-s { display: flex; flex-direction: column; align-items: flex-start; gap: 0; background: var(--surface); color: var(--ink); }
+.om-s .off-tag { color: var(--ink-soft); }
+.om-s .off-h { color: var(--ink); }
+.om-s .off-p { margin-bottom: 0; color: var(--ink-soft); }
+.om-s .om-genres { margin-top: 1rem; }
+.om-s .om-genres li { border-color: var(--hairline); color: var(--ink-soft); }
+.om-s .om-player { align-self: stretch; min-height: 0; margin-top: auto; padding-top: 1.5rem; overflow: visible; border-radius: 0; background: none; }
+.om-s .om-player iframe { border-radius: 0.75rem; }
+.om-s .om-play { display: flex; align-items: center; gap: 0.875rem; width: auto; max-width: 100%; padding: 0.5rem 1.25rem 0.5rem 0.5rem; border: 0; border-radius: 999px; background: var(--ink); color: var(--bg); font: inherit; text-align: left; cursor: pointer; transition: transform 0.2s var(--ease-out); }
+.om-vinyl { position: relative; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: repeating-radial-gradient(circle, #111 0 1.5px, #262626 1.5px 3px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.om-vinyl::after { content: ""; position: absolute; inset: 34%; border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 3px #d4d0f2; }
+:root[data-theme="dark"] .om-vinyl { background: repeating-radial-gradient(circle, #e7e5e0 0 1.5px, #d4d1ca 1.5px 3px); }
+.om-play-t { display: flex; flex-direction: column; line-height: 1.2; }
+.om-play-t b { font-size: 1rem; font-weight: 600; }
+.om-play-t span { margin-top: 0.125rem; font-size: 0.8125rem; opacity: 0.7; }
+.om-play-ic { flex: none; margin-left: 0.5rem; }
+.om-s .om-play:active { transform: scale(0.98); }
+.om-s .om-play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) { .om-s .om-play:hover { transform: translateY(-2px); } }
+@media (prefers-reduced-motion: no-preference) {
+  .om-vinyl { transition: rotate 0s; }
+  .om-s .om-play:hover .om-vinyl { animation: spin 1.6s linear infinite; }
+}
+@media (max-width: 640px) { .om-s .om-play { width: 100%; } .om-play-ic { margin-left: auto; } }
+@media (forced-colors: active) { .om-s .om-play { border: 1px solid CanvasText; } }
+/* Music, two columns: the words on the left, the sound video on the
+   right (a screen with a caption and a link to SoundCloud). */
+@media (min-width: 641px) {
+  .off-music.om-s, :root[data-theme="dark"] .off-music.om-s { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr); align-items: stretch; gap: 2rem; }
+  .om-s .om-copy { display: flex; flex-direction: column; align-items: flex-start; }
+  .om-s .om-video { align-self: center; }
+}
+.om-video { margin: 0; }
+@media (max-width: 640px) { .om-video { margin-top: 1.5rem; } }
+.om-screen { position: relative; overflow: hidden; aspect-ratio: 1024 / 720; border-radius: 0.375rem; background: #111; box-shadow: 0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.55); }
+.om-vid { display: block; width: 100%; height: 100%; object-fit: cover; }
+.om-vid-empty { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; background: radial-gradient(120% 90% at 50% 0%, #2a2a2e, #111); color: rgba(255, 255, 255, 0.7); font-size: var(--fs-small); font-weight: 500; }
+.om-video.is-empty .om-vid-empty { display: flex; }
+.om-video.is-empty .om-vid { display: none; }
+.om-vid-empty .om-vinyl { width: 3rem; height: 3rem; }
+@media (prefers-reduced-motion: no-preference) { .om-vid-empty .om-vinyl { animation: spin 6s linear infinite; } }
+/* Controls: the Home testimonial video's (.tctl, .tbtn). */
+.om-video .tctl { right: 0.625rem; bottom: 0.625rem; }
+.om-vid { cursor: pointer; }
+.om-video.is-playing .tplay .i-play { display: none; }
+.om-video.is-playing .tplay .i-pause { display: block; }
+.om-video.is-empty .tctl { display: none; }
+.om-vid-cap { display: flex; flex-direction: column; align-items: flex-start; gap: 0.875rem; margin-top: auto; padding-top: 1.5rem; }
+.om-sc { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 24px; padding: 0.5rem 0.875rem; border-radius: 0.375rem; background: var(--ink); color: var(--bg); font-size: var(--fs-small); font-weight: 600; text-decoration: none; transition: transform 0.2s var(--ease-out); }
+@media (hover: hover) and (pointer: fine) { .om-sc:hover { transform: translateY(-2px); } }
+.om-sc:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+/* Music card: dark with a green tint (the lime of the old player), a soft
+   lime glow in the corner; the video sits in it without a visible edge and
+   fades into the card at its foot. */
+.off-music.om-s, :root[data-theme="dark"] .off-music.om-s { background: radial-gradient(90% 120% at 0% 0%, rgba(182, 227, 123, 0.16), transparent 60%), #141a12; color: #f2f1ee; box-shadow: none; }
+.om-s .off-tag { color: #b6e37b; }
+.om-s .off-h { color: #f2f1ee; }
+.om-s .off-p { color: rgba(242, 241, 238, 0.7); }
+.om-s .om-genres li { border-color: rgba(182, 227, 123, 0.25); color: rgba(242, 241, 238, 0.8); }
+.om-s .om-sc { background: #b6e37b; color: #141a12; }
+.om-s .om-sc:focus-visible { outline-color: #b6e37b; }
+.om-s .om-screen { box-shadow: none; background: #141a12; }
+/* A dark fade over the foot of the video, into the card. */
+.om-s .om-screen::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 45%; background: linear-gradient(to top, #141a12 0%, rgba(20, 26, 18, 0.6) 45%, transparent); pointer-events: none; }
+.om-s .om-screen .tctl { z-index: 1; }
+
+/* =========================================================
+   Stickers: small, tilted marks placed on a few headings across the site,
+   each acting out its words (a knot and a tick on the Home headline, the
+   project count on Selected work, a speech bubble on "explained", a wave
+   on "Hi"). They pop on, with a little bounce, once their block is in
+   view (.is-in); reduced motion shows them in place. Decorative only.
+   ========================================================= */
+.hs { position: absolute; display: inline-grid; place-items: center; pointer-events: none; rotate: var(--hr, 0deg); }
+.hs svg { display: block; width: 100%; height: 100%; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .hs { opacity: 0; scale: 0.4; }
+  .is-in .hs { opacity: 1; scale: 1; }
+  .hs { transition: opacity 0.3s ease 0.5s, scale 0.55s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s; }
+}
+.rd-pick-lead { position: relative; }
+.hs-talk { left: -2.1em; top: -0.55em; width: 1.8em; height: 1.8em; --hr: -10deg; }
+.hs-talk path { fill: #c4d6fb; }
+.hs-talk circle { fill: #1b1b39; }
+.hs-host { position: relative; display: inline-block; }
+@media (prefers-reduced-motion: no-preference) {
+  .is-in }
+@media (max-width: 640px) {
+  .hs-talk { left: -1.7em; top: -0.45em; width: 1.45em; height: 1.45em; }
+  }
+/* Stickers on About headings, each acting out its words. */
+.ab-h2 .hs-host { position: relative; display: inline-block; }
+.hs-quote { right: -1em; top: -0.42em; width: 0.82em; height: 0.82em; border-radius: 50%; background: #d4d0f2; color: #1b1b39; --hr: -10deg; }
+.hs-quote span { display: block; height: 0.5em; font-size: 1.5em; font-weight: 800; line-height: 1; translate: 0 -0.02em; }
+.hs-ask { right: -0.95em; top: -0.38em; width: 0.8em; height: 0.8em; border-radius: 0.22em; background: #c4d6fb; color: #1b1b39; --hr: 10deg; }
+.hs-ask span { font-size: 0.6em; font-weight: 800; line-height: 1; }
+/* Home headline: an app window on "products". */
+.hs-app { left: -0.9em; top: 0.08em; width: 0.74em; height: 0.6em; --hr: -9deg; }
+@media (prefers-reduced-motion: no-preference) { .hc.is-in .hs-app { transition-delay: 1.42s; } }
+@media (max-width: 640px) { .hs-app { left: -0.78em; width: 0.6em; height: 0.5em; } }
+/* More heading stickers. */
+#value-title .hs-host, #testi-title .hs-host { position: relative; display: inline-block; }
+.hs-plus { right: -0.95em; top: -0.32em; width: 0.78em; height: 0.78em; border-radius: 0.24em; background: #cfe7b0; color: #215452; --hr: 12deg; }
+.hs-plus span { font-size: 0.9em; font-weight: 800; line-height: 1; translate: 0 -0.04em; }
+.hs-heart { right: -0.95em; top: -0.3em; width: 0.8em; height: 0.8em; --hr: -10deg; }
+.hs-steps { right: -1em; top: -0.32em; width: 0.84em; height: 0.84em; border-radius: 50%; background: #cfe7b0; padding: 0.16em; --hr: -8deg; }
+.hs-hand { right: -1em; top: -0.32em; width: 0.82em; height: 0.82em; border-radius: 50%; background: #c4d6fb; --hr: 10deg; }
+.hs-hand span { font-size: 0.48em; line-height: 1; }
+@media (prefers-reduced-motion: no-preference) {
+  .is-in .hs-heart { animation: hs-beat 1.4s ease-in-out 1s 2; }
+}
+@keyframes hs-beat { 0%, 100% { scale: 1; } 30% { scale: 1.18; } 60% { scale: 0.95; } }
+/* Works cards: a sticker for the field, on the top-left of the image. */

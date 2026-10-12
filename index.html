@@ -18,8 +18,8 @@
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261212" />
-<link rel="stylesheet" href="/css/hero.css?v=20261212" />
+<link rel="stylesheet" href="/css/style.css?v=20261254" />
+<link rel="stylesheet" href="/css/hero.css?v=20261254" />
 </head>
 <body>
 
@@ -55,8 +55,11 @@
 <main class="hero hc" id="main">
   <div class="hc-sky" aria-hidden="true"></div>
   <p class="hc-sign hc-rise" style="--d:0"><img src="/assets/images/dp/dp-nav.webp" alt="" width="52" height="52"><span><b>Pallav Bhatnagar</b><span>Product Builder, UX Enthusiast</span></span></p>
-  <h1 class="hc-title"><span class="hc-line hc-rise" style="--d:90">I make <span class="hc-mess">complicated</span></span> <span class="hc-line hc-rise" style="--d:180">products feel obvious.</span></h1>
-  <p class="hc-lede hc-rise" style="--d:260">Eight years of research-led product building, from early-stage startups to platforms used by millions. Ask my work anything below, it answers back.</p>
+  <!-- The headline on two lines, with two stickers that act out its words:
+       a knot on "complicated", an app window on "products", a tick on
+       "obvious". -->
+  <h1 class="hc-title hc-big"><span class="hc-line hc-rise" style="--d:90">I make <span class="hc-mess">complicated</span><span class="hs hs-knot" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="hs-burst" d="M32 2l6.5 7.8 10-2.2 1.8 10 9.4 4.2-4.2 9.2 4.2 9.2-9.4 4.2-1.8 10-10-2.2L32 62l-6.5-7.8-10 2.2-1.8-10-9.4-4.2L8.5 33 4.3 23.8l9.4-4.2 1.8-10 10 2.2z"/><path d="M14 38c5-14 12 6 16-6s8 6 10-2c1.5-6 6 0 10 0" fill="none" stroke="#1b1b39" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span> <span class="hc-line hc-rise" style="--d:180"><span class="hs hs-app" aria-hidden="true"><svg viewBox="0 0 40 32"><rect x="1.5" y="1.5" width="37" height="29" rx="6" fill="#cfe7b0" stroke="#215452" stroke-width="2.4"/><path d="M1.5 9.5h37" stroke="#215452" stroke-width="2.4"/><circle cx="7" cy="5.6" r="1.4" fill="#215452"/><circle cx="11.5" cy="5.6" r="1.4" fill="#215452"/><rect x="7" y="15" width="12" height="3" rx="1.5" fill="#215452"/><rect x="7" y="21" width="20" height="3" rx="1.5" fill="#215452" opacity=".5"/></svg></span>products feel obvious.<span class="hs hs-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span></h1>
+  <p class="hc-lede hc-rise" style="--d:340">Eight years of research-led product building, from early-stage startups to platforms used by millions. Curious how I work? Ask my portfolio below.</p>
   <button class="hc-ask hc-rise" id="askAiTrigger" type="button" aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false" aria-label="Talk to my Work" style="--d:420">
     <svg class="nav-ai-ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg>
     <span class="hc-q" aria-hidden="true"><span>What impact did your work have?</span></span>
@@ -95,7 +98,7 @@
      outcomes. ============ -->
 <section class="value" id="value" aria-labelledby="value-title">
   <header class="value-head">
-    <h2 id="value-title">What I bring to the table</h2>
+    <h2 id="value-title"><span class="hs-host">What I bring to the table<span class="hs hs-plus" aria-hidden="true"><span>+</span></span></span></h2>
     <p>The skills I use to move a product from unclear to useful, and what you can expect from each one.</p>
   </header>
 
@@ -172,7 +175,7 @@
      with <img src="/assets/images/about/name.jpg" alt=""> (it shows black and white, colour on hover). ============ -->
 <section class="testi" id="testimonials" aria-labelledby="testi-title">
   <header class="testi-head">
-    <h2 id="testi-title">Kind words from people I've worked with</h2>
+    <h2 id="testi-title"><span class="hs-host">Kind words from people I've worked with<span class="hs hs-heart" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z" fill="#f6c9bd" stroke="#6f3432" stroke-width="1.8" stroke-linejoin="round"/></svg></span></span></h2>
     <p>A few notes from founders, product leads and engineers on what it was like to build together.</p>
   </header>
   <div class="tstrip">
@@ -302,11 +305,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261212" defer></script>
-<script src="/js/projects.js?v=20261212" defer></script>
-<script src="/js/render.js?v=20261212" defer></script>
-<script src="/js/script.js?v=20261212" defer></script>
-<script src="/js/hero.js?v=20261212" defer></script>
+<script src="/js/content.js?v=20261254" defer></script>
+<script src="/js/projects.js?v=20261254" defer></script>
+<script src="/js/render.js?v=20261254" defer></script>
+<script src="/js/script.js?v=20261254" defer></script>
+<script src="/js/hero.js?v=20261254" defer></script>
 </body>
 </html>
 

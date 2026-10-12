@@ -909,8 +909,9 @@
       if (!current) { cancelAnimationFrame(raf); move(); }
       current = card;
       const cs = getComputedStyle(card);
-      tip.style.setProperty("--tip-bg", cs.getPropertyValue("--ink-tag").trim());
-      tip.style.setProperty("--tip-ink", cs.getPropertyValue("--card").trim());
+      // A sticker in the card's own colours: its deeper tint, its ink.
+      tip.style.setProperty("--tip-bg", `color-mix(in srgb, ${cs.getPropertyValue("--ink-tag").trim()} 18%, ${cs.getPropertyValue("--card").trim()})`);
+      tip.style.setProperty("--tip-ink", cs.getPropertyValue("--ink-tag").trim());
       inner.innerHTML = card.hasAttribute("data-locked") ? `${lock}Unlock case study` : `Read case study${arrow}`;
       tip.classList.add("is-on");
     };
@@ -1474,6 +1475,16 @@
     if (title) readingEl.textContent = title + ".";
   }
 
+  // Stickers (.hs) on headings: the heading gets .is-in the first time it
+  //    is on screen, so its sticker pops on then (CSS).
+  const stickerHosts = Array.from(new Set(Array.from(document.querySelectorAll(".hs")).map((el) => el.closest("h1, h2")).filter(Boolean)));
+  if (stickerHosts.length && "IntersectionObserver" in window) {
+    const stickIo = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) { en.target.classList.add("is-in"); stickIo.unobserve(en.target); } });
+    }, { threshold: 0.6 });
+    stickerHosts.forEach((el) => stickIo.observe(el));
+  } else stickerHosts.forEach((el) => el.classList.add("is-in"));
+
   // 15) About hero, "the table": the snapshots drop onto the table one
   //     after another once the page shows (after the loader). CSS does the
   //     motion; reduced motion shows them already in place.
@@ -1489,8 +1500,26 @@
     // set, so the loop never shows a seam. Pauses off screen and while the
     // tab is hidden; reduced motion: no drift, still draggable.
     const pile = table.querySelector(".ab-pile");
-    const narrow = window.matchMedia("(max-width: 1100px)");
+    const narrow = window.matchMedia("(max-width: 1239px)");
     if (pile) {
+      // A new arrangement on every visit: the snapshots swap places at
+      // random (the spots stay clear of the words), each a little off its
+      // spot and turned its own way; the strip on phones gets the new order.
+      const snaps = Array.from(pile.querySelectorAll(".ab-snap"));
+      const spots = snaps.map((el) => ["--x", "--y"].map((v) => parseFloat(el.style.getPropertyValue(v))));
+      for (let i = snaps.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [snaps[i], snaps[j]] = [snaps[j], snaps[i]]; }
+      const jitter = (n) => (Math.random() * 2 - 1) * n;
+      snaps.forEach((el, i) => {
+        const [x, y] = spots[i];
+        el.style.setProperty("--x", (x + jitter(0.8)).toFixed(1));
+        el.style.setProperty("--y", Math.max(0, y + jitter(2.5)).toFixed(1));
+        el.style.setProperty("--r", ((i % 2 ? 1 : -1) * (3 + Math.random() * 6)).toFixed(1));
+        el.style.setProperty("--i", String(i));
+        // The spot below the words is left empty on the table (CSS); that
+        // snapshot still shows in the strip on smaller screens.
+        el.classList.toggle("is-spare", i === snaps.length - 1);
+        pile.append(el);
+      });
       const track = document.createElement("div");
       track.className = "ab-track";
       Array.from(pile.children).forEach((el) => track.append(el));
@@ -1650,44 +1679,54 @@
   //     reacts: the disc spins, the waveform and equaliser move, and the
   //     "now playing" line shows the current track. Nothing third-party loads
   //     before the click.
-  const omPlayer = document.querySelector(".om-player");
-  const omPlay = document.querySelector(".om-play");
-  const omCard = document.querySelector(".off-music");
-  const omNow = document.querySelector(".om-now-text");
-  if (omPlayer && omPlay && omCard) {
-    const loadWidgetApi = () => new Promise((resolve, reject) => {
-      if (window.SC && window.SC.Widget) return resolve();
-      const s = document.createElement("script");
-      s.src = "https://w.soundcloud.com/player/api.js";
-      s.onload = () => resolve();
-      s.onerror = reject;
-      document.head.appendChild(s);
+  // The sound video, like the Home testimonial video: plays silently on a
+  // loop while on screen (never on its own for reduced motion), with play /
+  // pause and sound buttons in the corner. Turning the sound on the first
+  // time starts it from the beginning; clicking the silent video turns the
+  // sound on too. Without the file, a placeholder shows instead.
+  const omVid = document.querySelector(".om-vid");
+  if (omVid) {
+    const box = omVid.closest(".om-video");
+    const playBtn = box.querySelector(".tplay");
+    const muteBtn = box.querySelector(".tmute");
+    const src = omVid.querySelector("source");
+    (src || omVid).addEventListener("error", () => box.classList.add("is-empty"));
+    let seen = false, userPaused = false, heard = false;
+    const start = () => {
+      if (!seen || userPaused || reduce.matches) return;
+      if (omVid.preload === "none") { omVid.preload = "auto"; omVid.load(); }
+      omVid.play().catch(() => {});
+    };
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => { seen = en.isIntersecting; seen ? start() : omVid.pause(); }, { threshold: 0.5 }).observe(omVid);
+    }
+    const syncMute = () => {
+      muteBtn.setAttribute("aria-pressed", String(omVid.muted));
+      muteBtn.setAttribute("aria-label", omVid.muted ? "Unmute" : "Mute");
+    };
+    const soundOn = () => {
+      omVid.muted = false;
+      if (!heard) { heard = true; omVid.currentTime = 0; }
+      if (omVid.paused) { userPaused = false; if (omVid.preload === "none") { omVid.preload = "auto"; omVid.load(); } omVid.play().catch(() => {}); }
+    };
+    muteBtn.addEventListener("click", () => { if (omVid.muted) soundOn(); else omVid.muted = true; });
+    omVid.addEventListener("click", () => { if (omVid.muted) soundOn(); });
+    omVid.addEventListener("volumechange", syncMute);
+    syncMute();
+    const syncPlay = () => {
+      const playing = !omVid.paused && !omVid.ended;
+      box.classList.toggle("is-playing", playing);
+      playBtn.setAttribute("aria-label", playing ? "Pause video" : "Play video");
+    };
+    playBtn.addEventListener("click", () => {
+      // While it plays silently, the first press means "let me hear it".
+      if (omVid.muted && !heard) { soundOn(); return; }
+      userPaused = !omVid.paused;
+      if (omVid.paused) { if (omVid.preload === "none") { omVid.preload = "auto"; omVid.load(); } omVid.play().catch(() => {}); } else omVid.pause();
     });
-    omPlay.addEventListener("click", () => {
-      const src = (omPlayer.dataset.scSrc || "").trim();
-      const params = new URLSearchParams({
-        url: src, auto_play: "true", hide_related: "true", show_comments: "false",
-        show_user: "false", show_reposts: "false", show_playcount: "false", visual: "true", color: "#b6e37b",
-      });
-      const frame = document.createElement("iframe");
-      frame.src = `https://w.soundcloud.com/player/?${params.toString()}`;
-      frame.title = "SoundCloud player";
-      frame.allow = "autoplay";
-      frame.setAttribute("scrolling", "no");
-      frame.height = window.innerWidth < 1024 ? "560" : "450";
-      omPlayer.replaceChildren(frame);
-      if (omNow) omNow.textContent = "Loading the playlist…";
-      loadWidgetApi().then(() => {
-        const widget = window.SC.Widget(frame);
-        const setTitle = () => widget.getCurrentSound((sound) => {
-          if (sound && omNow) omNow.textContent = `Now playing: ${sound.title}`;
-        });
-        widget.bind(window.SC.Widget.Events.READY, setTitle);
-        widget.bind(window.SC.Widget.Events.PLAY, () => { omCard.classList.add("is-playing"); setTitle(); });
-        widget.bind(window.SC.Widget.Events.PAUSE, () => { omCard.classList.remove("is-playing"); if (omNow) omNow.textContent = "Paused"; });
-        widget.bind(window.SC.Widget.Events.FINISH, () => omCard.classList.remove("is-playing"));
-      }).catch(() => { if (omNow) omNow.textContent = "Playing on SoundCloud"; });
-    });
+    omVid.addEventListener("play", syncPlay);
+    omVid.addEventListener("pause", syncPlay);
+    syncPlay();
   }
 
   // 20) Works page.
