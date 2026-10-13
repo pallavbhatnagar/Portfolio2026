@@ -12,8 +12,8 @@
      text) or above the footer; sometimes he peeks over the top of the Now
      card or the "Where I start" card instead. He visits every 11 to 22
      seconds, and if you scroll away he leaves until his next visit.
-   - Reduced motion: he doesn't move; he sits above the last section and
-     still shows a heart when clicked.
+   - Reduced motion: he doesn't move; he sits above the last section, and
+     a click only barks (no heart).
    - Decorative: hidden from screen readers.
    To remove him, delete his script tag from about.html.
    ========================================================= */
@@ -285,8 +285,9 @@
   if (sfx) sfx.load("puppy.mp3");
   const barkNow = () => { if (sfx) sfx.play("puppy.mp3"); };
   el.addEventListener("pointerdown", barkNow);
+  // With reduced motion (the device setting, or Calm) there is no heart.
   const heart = (e) => {
-    bubble("pxdog-heart", 1100);
+    if (!window.matchMedia("(prefers-reduced-motion: reduce)").matches) bubble("pxdog-heart", 1100);
     if (e && e.detail === 0) barkNow();
   };
 

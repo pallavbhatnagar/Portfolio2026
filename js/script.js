@@ -110,6 +110,8 @@
       return loads[name];
     };
     const play = (name, volume = 1) => {
+      // "Quiet sounds" in the display settings turns the effects off.
+      if (document.documentElement.hasAttribute("data-quiet")) return 0;
       const c = getCtx();
       const clip = loads[name] && loads[name].ready;
       if (c && clip) {
@@ -755,8 +757,9 @@
     }
   }
 
-  // 11g) Ambient music (assets/audio/ambient/). Off by default; the speaker
-  //      in the nav fades it in and out. Once it's on, it keeps playing from
+  // 11g) Ambient music (assets/audio/ambient/). Off by default; its button
+  //      (an equaliser) lives in the display settings panel and fades it in
+  //      and out. Once it's on, it keeps playing from
   //      the same spot as you move between pages in this tab, until muted.
   //      A browser may hold sound on a new page until you interact with it;
   //      then it resumes on your next click, tap or key. If the file isn't
@@ -768,8 +771,11 @@
     const bars = [["eq-a", 1.1, -0.3], ["eq-b", 0.8, -0.9], ["eq-c", 1.3, -0.1], ["eq-a", 0.9, -0.6], ["eq-b", 1.2, -0.4]];
     soundBtn.innerHTML = '<span class="snd-eq" aria-hidden="true">' + bars.map(([k, d, dl]) => `<span class="eq-bar" style="--eq:${k};--d:${d}s;--dl:${dl}s"><i></i></span>`).join("") + "</span>";
     const src = (window.SITE && window.SITE.ambient) || "/assets/audio/ambient/ambient.mp3";
-    const VOL = 0.35;
     const KEY = "ambient";
+    // The level the music plays at: 0.35 unless the visitor has set their
+    // own with the slider in the display settings panel (remembered).
+    let VOL = 0.35;
+    try { const v = parseFloat(localStorage.getItem("ambient-vol")); if (v >= 0 && v <= 1) VOL = v; } catch (e) { /* private mode */ }
     const store = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* private mode */ } } };
     let audio = null, fadeRaf = 0, on = false;
     const setUi = (playing) => {
@@ -928,6 +934,14 @@
       }, 700);
     };
     soundBtn.addEventListener("click", () => { stepped = false; }, true);
+    // The display settings panel's volume slider sets the level here.
+    window.__ambientVolume = (v) => {
+      VOL = Math.min(1, Math.max(0, v));
+      try { localStorage.setItem("ambient-vol", String(VOL)); } catch (e) { /* private mode */ }
+      if (on && audio) { cancelAnimationFrame(fadeRaf); setVol(VOL); }
+      return VOL;
+    };
+    window.__ambientVolumeNow = () => VOL;
     const mark = (id, playing) => {
       if (playing) { loud.add(id); quiet(); } else if (loud.delete(id)) back();
     };
@@ -1032,6 +1046,8 @@
     const items = Array.from(vx.querySelectorAll(".vx-item"));
     const tabs = items.map((it) => it.querySelector(".vx-trigger"));
     const panels = Array.from(vx.querySelectorAll(".vx-panel"));
+    const card = vx.querySelector(".vx-card");
+    let liveTimer = 0;
     const reduceV = window.matchMedia("(prefers-reduced-motion: reduce)");
     let current = 0;
     let countRun = 0;
@@ -1063,8 +1079,7 @@
       items.forEach((it, k) => {
         const on = k === i;
         it.classList.toggle("is-active", on);
-        tabs[k].setAttribute("aria-selected", String(on));
-        tabs[k].tabIndex = on ? 0 : -1;
+        tabs[k].setAttribute("aria-pressed", String(on));
         panels[k].classList.toggle("is-on", on);
         if (on) panels[k].removeAttribute("aria-hidden"); else panels[k].setAttribute("aria-hidden", "true");
       });
@@ -1077,16 +1092,29 @@
       vx.classList.toggle("is-paused", !inView || focused);
     };
 
+    // Each option is a plain button in the Tab order. Reaching one shows its
+    // card: Tab and Shift+Tab (or the arrow keys) move between them, a click
+    // works too, and focus stays on the option. The card isn't a Tab stop;
+    // screen readers hear which option is chosen and the card's new content.
+    const choose = (k) => {
+      if (k === current) return;
+      // Announce the new card only when someone chose it (not on the timer).
+      card.setAttribute("aria-live", "polite");
+      open(k);
+      clearTimeout(liveTimer);
+      liveTimer = setTimeout(() => card.removeAttribute("aria-live"), 1500);
+    };
     tabs.forEach((tab, k) => {
-      tab.addEventListener("click", () => { if (k !== current) open(k); });
+      tab.addEventListener("click", () => choose(k));
+      tab.addEventListener("focus", () => choose(k));
       tab.addEventListener("keydown", (e) => {
         const last = tabs.length - 1;
         let next = null;
-        if (e.key === "ArrowDown" || e.key === "ArrowRight") next = current === last ? 0 : current + 1;
-        else if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = current === 0 ? last : current - 1;
+        if (e.key === "ArrowDown" || e.key === "ArrowRight") next = k === last ? 0 : k + 1;
+        else if (e.key === "ArrowUp" || e.key === "ArrowLeft") next = k === 0 ? last : k - 1;
         else if (e.key === "Home") next = 0;
         else if (e.key === "End") next = last;
-        if (next !== null) { e.preventDefault(); open(next, true); }
+        if (next !== null) { e.preventDefault(); tabs[next].focus(); }
       });
     });
     items.forEach((it, k) => {
@@ -1542,7 +1570,7 @@
       [order[i], order[k]] = [order[k], order[i]];
     }
     const frag = document.createDocumentFragment();
-    [0, 1].forEach((set) => order.forEach((i) => frag.appendChild(all[set * half + i])));
+    [0, 1].forEach((set) => order.forEach((i) => { if (set) all[set * half + i].classList.add("is-loop"); frag.appendChild(all[set * half + i]); }));
     shelf.appendChild(frag);
   }
   const readingEl = document.querySelector("[data-reading]");
@@ -1636,6 +1664,7 @@
       if (!drag && !(section && section.classList.contains("is-offscreen"))) {
         const want = reduce.matches ? 0 : hover ? BASE * 0.35 : BASE;
         v += (want - v) * Math.min(1, dt / 420); // ease back to the slow run
+        if (!want && Math.abs(v) < 0.002) v = 0; // and come to a full stop when still
         x += v * dt;
         wrap();
         draw();
@@ -2561,12 +2590,243 @@
       themeToggle.setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
     };
     syncToggle();
+    const setDark = (d) => { if (d) root.setAttribute("data-theme", "dark"); else root.removeAttribute("data-theme"); };
+    const announce = () => document.dispatchEvent(new Event("theme:change"));
     themeToggle.addEventListener("click", () => {
       const dark = root.getAttribute("data-theme") === "dark";
-      if (dark) { root.removeAttribute("data-theme"); } else { root.setAttribute("data-theme", "dark"); }
+      setDark(!dark);
       try { localStorage.setItem("theme", dark ? "light" : "dark"); } catch (e) { /* private mode */ }
       syncToggle();
+      announce();
     });
+    // The display settings panel can also pick light, dark, or "match my
+    // device" (auto: nothing saved, and it follows the device as it changes).
+    const darkMq = window.matchMedia("(prefers-color-scheme: dark)");
+    window.__setTheme = (mode) => {
+      try { if (mode === "auto") localStorage.removeItem("theme"); else localStorage.setItem("theme", mode); } catch (e) { /* private mode */ }
+      setDark(mode === "auto" ? darkMq.matches : mode === "dark");
+      syncToggle();
+    };
+    darkMq.addEventListener("change", () => {
+      let saved = null;
+      try { saved = localStorage.getItem("theme"); } catch (e) { /* private mode */ }
+      if (!saved) { setDark(darkMq.matches); syncToggle(); announce(); }
+    });
+  }
+
+  // Display settings, "Make it comfortable": the accessibility figure in
+  // the nav opens a compact panel. Three one-line choices (text size,
+  // motion, click sounds), six toggles in a grid with one shared line explaining
+  // whichever is pointed at or focused, and the background music. Choices
+  // are attributes on <html> (the head script applies saved ones before the
+  // page paints) and are saved in localStorage under "display". Motion
+  // starts from the device's own setting. Click sounds are off until
+  // chosen.
+  const ctrls = document.querySelector(".nav-ctrls");
+  if (ctrls) {
+    const html = document.documentElement;
+    const KEY = "display";
+    const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } };
+    const save = (o) => { try { if (Object.keys(o).length) localStorage.setItem(KEY, JSON.stringify(o)); else localStorage.removeItem(KEY); } catch (e) { /* private mode */ } };
+    let prefs = load();
+    const deviceCalm = () => { const m = html.getAttribute("data-motion"); html.removeAttribute("data-motion"); const r = window.matchMedia("(prefers-reduced-motion: reduce)").matches; if (m) html.setAttribute("data-motion", m); return r; };
+    const ic = (d, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra}>${d}</svg>`;
+    const TOGGLES = [
+      ["read", "Easier reading", "More room between lines, letters and words.", ic('<path d="M4 6h16M4 12h11M4 18h14"/>')],
+      ["contrast", "More contrast", "Darker text and firmer edges on cards.", ic('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/>')],
+      ["links", "Underline links", "Every link underlined, so links never hide in the text.", ic('<path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-.8.8M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l.8-.8"/><path d="M4 21.5h16"/>')],
+      ["focus", "Bold focus", "Press Tab to move around; a thick, bright outline shows where you are.", ic('<rect x="7" y="7" width="10" height="10" rx="2"/><rect x="3" y="3" width="18" height="18" rx="4.5" stroke-width="2.6"/>')],
+      ["plain", "Hide stickers", "Hides the stickers, doodles and the dog. Just the words and the work.", ic('<path d="M14.5 3.5H6A2.5 2.5 0 0 0 3.5 6v12A2.5 2.5 0 0 0 6 20.5h12a2.5 2.5 0 0 0 2.5-2.5V9.5z"/><path d="M14.5 3.5v4a2 2 0 0 0 2 2h4M4 4l16 16"/>')],
+      ["quiet", "Quiet sounds", "Turns off the little sound effects, like the dog's bark and the chat chime.", ic('<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>')],
+    ];
+    // On touch screens there's nothing to point with, so the prompt says tap.
+    const HINT = window.matchMedia("(hover: none)").matches ? "Tap an option to see what it does." : "Point at an option to see what it does.";
+    const figure = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><g class="dsp-fig"><circle cx="12" cy="7.1" r="1.55" fill="currentColor" stroke="none"/><path d="M7.4 8.6 12 11l4.6-2.4M12 11v3.2M12 14.2l-2.4 4M12 14.2l2.4 4"/></g></svg>';
+    const btn = document.createElement("button");
+    btn.className = "dsp-toggle";
+    btn.type = "button";
+    btn.setAttribute("aria-label", "Display settings");
+    btn.setAttribute("title", "Display settings");
+    btn.setAttribute("aria-expanded", "false");
+    btn.setAttribute("aria-controls", "dsp");
+    btn.innerHTML = figure;
+    ctrls.insertBefore(btn, ctrls.querySelector(".theme-toggle"));
+
+    // A row: a label, then a small segmented choice (radio buttons).
+    const seg = (name, label, hint, opts) => `
+      <div class="dsp-line" role="radiogroup" aria-label="${label}" data-hint="${hint}">
+        <span class="dsp-line-label" aria-hidden="true">${label}</span>
+        <div class="dsp-seg">${opts.map(([v, inner, aria]) => `<label class="dsp-opt" title="${aria}"><input type="radio" name="${name}" value="${v}" aria-label="${aria}">${inner}</label>`).join("")}</div>
+      </div>`;
+    const panel = document.createElement("div");
+    panel.className = "dsp";
+    panel.id = "dsp";
+    panel.hidden = true;
+    panel.setAttribute("role", "dialog");
+    panel.setAttribute("aria-labelledby", "dsp-title");
+    panel.innerHTML = `
+      <div class="dsp-head">
+        <div class="dsp-head-text">
+          <h2 class="dsp-title" id="dsp-title">Make it comfortable</h2>
+          <p class="dsp-sub">Change how this site looks and moves.</p>
+        </div>
+        <button class="dsp-reset" type="button" hidden>Reset</button>
+        <button class="dsp-close" type="button" aria-label="Close">${ic('<path d="M6 6l12 12M18 6L6 18"/>', ' stroke-width="2"')}</button>
+      </div>
+      <div class="dsp-lines">
+        ${seg("dsp-text", "Text size", "Makes every word on the site bigger, the panel too.", [["0", '<span class="dsp-a dsp-a0">A</span>', "Default text size"], ["1", '<span class="dsp-a dsp-a1">A</span>', "Large text"], ["2", '<span class="dsp-a dsp-a2">A</span>', "Larger text"]])}
+        ${seg("dsp-motion", "Motion", "", [["lively", ic('<path class="dsp-spark dsp-spark-a" d="M10 6.5l1.5 4.6 4.6 1.5-4.6 1.5L10 18.7l-1.5-4.6-4.6-1.5 4.6-1.5z"/><path class="dsp-spark dsp-spark-b" d="M18 3l.7 2.1 2.1.7-2.1.7L18 8.6l-.7-2.1-2.1-.7 2.1-.7z"/>') + "<span>Lively</span>", "Lively motion"], ["calm", ic('<ellipse cx="12" cy="18.2" rx="7.2" ry="2.6"/><ellipse cx="12" cy="12.7" rx="5" ry="2.3"/><ellipse cx="12" cy="7.9" rx="3" ry="1.8"/>') + "<span>Calm</span>", "Calm motion"]])}
+        ${seg("dsp-clicks", "Click sounds", "A soft click whenever you press something on the site.", [["off", "<span>Off</span>", "Click sounds off"], ["on", "<span>On</span>", "Click sounds on"]])}
+      </div>
+      <div class="dsp-chips">
+        ${TOGGLES.map(([k, name, hint, icon]) => `<button class="dsp-chip" type="button" aria-pressed="false" data-key="${k}" data-hint="${hint}" aria-describedby="dsp-d-${k}">${icon}<span>${name}</span><span class="sr-only" id="dsp-d-${k}">${hint}</span></button>`).join("")}
+      </div>
+      <p class="dsp-hint" aria-hidden="true">${HINT}</p>
+      <div class="dsp-music" hidden data-hint="A quiet track for reading the work.">
+        <div class="dsp-music-slot"></div>
+        <div class="dsp-music-text"><span class="dsp-music-name">Background music</span><span class="dsp-music-state" aria-live="polite"></span></div>
+        <input class="dsp-vol-range" type="range" min="0" max="100" step="5" aria-label="Music volume">
+      </div>`;
+    document.body.appendChild(panel);
+
+    // The shared hint line: what the option under the pointer (or with
+    // focus) does; back to the prompt when nothing is.
+    const hintEl = panel.querySelector(".dsp-hint");
+    const motionHint = () => (window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? (prefs.motion ? "Calm: carousels, pop-ins and videos stay still until you press them." : "Your device asks for less motion, so the site keeps still.")
+      : "Lively: carousels drift, stickers pop in and videos play on their own.");
+    const hintFor = (el) => {
+      const host = el && el.closest("[data-hint]");
+      if (!host) return HINT;
+      return host.querySelector('input[name="dsp-motion"]') ? motionHint() : host.dataset.hint;
+    };
+    let hintTimer = 0;
+    const showHint = (el) => { clearTimeout(hintTimer); hintEl.textContent = hintFor(el); };
+    panel.addEventListener("pointerover", (e) => showHint(e.target));
+    // Keyboard focus explains too (not the focus a mouse click leaves behind).
+    panel.addEventListener("focusin", (e) => { let kb = false; try { kb = e.target.matches(":focus-visible"); } catch (x) { /* old browser */ } if (kb) showHint(e.target); });
+    panel.addEventListener("pointerleave", () => { hintTimer = setTimeout(() => { if (!panel.contains(document.activeElement) || document.activeElement === panel) showHint(null); else showHint(document.activeElement); }, 150); });
+
+    // Background music: the music button moves into the panel as a round
+    // play button, with a line saying what it's doing and a volume slider.
+    const music = panel.querySelector(".dsp-music");
+    const sndBtn = document.querySelector(".sound-toggle");
+    if (sndBtn) {
+      panel.querySelector(".dsp-music-slot").appendChild(sndBtn);
+      const state = panel.querySelector(".dsp-music-state");
+      const range = panel.querySelector(".dsp-vol-range");
+      const syncMusic = () => {
+        music.hidden = sndBtn.hidden;
+        const playing = sndBtn.getAttribute("aria-pressed") === "true";
+        const label = sndBtn.getAttribute("aria-label") || "";
+        state.textContent = playing ? "Playing, across pages"
+          : /media plays/.test(label) ? "Paused while a video plays"
+          : sndBtn.classList.contains("is-held") ? "Tap anywhere to carry on"
+          : "Click to play";
+        btn.classList.toggle("is-music", playing);
+      };
+      // The whole row plays (or pauses) the music, not just the round button;
+      // the volume slider keeps to itself.
+      music.addEventListener("click", (e) => {
+        if (e.target.closest(".sound-toggle, .dsp-vol-range")) return;
+        sndBtn.click();
+      });
+      new MutationObserver(syncMusic).observe(sndBtn, { attributes: true, attributeFilter: ["aria-pressed", "aria-label", "class", "hidden"] });
+      syncMusic();
+      const fill = () => range.style.setProperty("--v", range.value + "%");
+      if (window.__ambientVolumeNow) range.value = String(Math.round(window.__ambientVolumeNow() * 100));
+      fill();
+      range.addEventListener("input", () => { fill(); if (window.__ambientVolume) window.__ambientVolume(Number(range.value) / 100); });
+    }
+
+    const PRESSABLE = "a[href], button, [role='button'], summary, label, input[type='checkbox'], input[type='radio'], .project, .wk-card, .tq-card, .bcv";
+    const clickSound = () => { if (prefs.clicks && window.siteSfx) window.siteSfx.play("click.mp3", 0.5); };
+    // Mouse and pen: on press, so it lands with the click. Touch: on the tap
+    // itself, because iPhone and iPad Safari only allow sound to start from a
+    // completed tap. Keyboard presses (Enter, Space) arrive as clicks too.
+    let lastPointer = "mouse";
+    document.addEventListener("pointerdown", (e) => {
+      lastPointer = e.pointerType;
+      if (e.pointerType !== "touch" && e.button === 0 && e.target.closest && e.target.closest(PRESSABLE)) clickSound();
+    }, true);
+    document.addEventListener("click", (e) => {
+      const keyboard = e.detail === 0;
+      if ((keyboard || lastPointer === "touch") && e.target.closest && e.target.closest(PRESSABLE)) clickSound();
+    }, true);
+    if (prefs.clicks && window.siteSfx) window.siteSfx.load("click.mp3");
+    const resetBtn = panel.querySelector(".dsp-reset");
+    const apply = () => {
+      if (prefs.text) html.setAttribute("data-text", String(prefs.text)); else html.removeAttribute("data-text");
+      TOGGLES.forEach(([k]) => { if (prefs[k]) html.setAttribute("data-" + k, ""); else html.removeAttribute("data-" + k); });
+      const before = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (prefs.motion) html.setAttribute("data-motion", prefs.motion); else html.removeAttribute("data-motion");
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches !== before) (window.__motionHooks || []).forEach((f) => f());
+      // Reflect the state in the panel.
+      const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      panel.querySelectorAll('input[name="dsp-text"]').forEach((r) => { r.checked = r.value === String(prefs.text || 0); });
+      panel.querySelectorAll('input[name="dsp-motion"]').forEach((r) => { r.checked = r.value === (calm ? "calm" : "lively"); });
+      panel.querySelectorAll('input[name="dsp-clicks"]').forEach((r) => { r.checked = r.value === (prefs.clicks ? "on" : "off"); });
+      panel.querySelectorAll(".dsp-chip").forEach((c) => c.setAttribute("aria-pressed", String(!!prefs[c.dataset.key])));
+      const custom = Object.keys(prefs).length > 0;
+      btn.classList.toggle("is-custom", custom);
+      resetBtn.hidden = !custom;
+      save(prefs);
+    };
+    panel.addEventListener("change", (e) => {
+      const t = e.target;
+      if (t.name === "dsp-text") { if (t.value === "0") delete prefs.text; else prefs.text = Number(t.value); }
+      else if (t.name === "dsp-motion") {
+        // Only remember a choice that differs from what the device asks for.
+        if ((t.value === "calm") === deviceCalm()) delete prefs.motion; else prefs.motion = t.value;
+      } else if (t.name === "dsp-clicks") {
+        // Clicks and "Quiet sounds" can't both be on: turning one on turns
+        // the other off, so the choice always does what it says.
+        if (t.value === "on") { prefs.clicks = 1; delete prefs.quiet; if (window.siteSfx) window.siteSfx.load("click.mp3"); } else delete prefs.clicks;
+      }
+      apply();
+      showHint(t);
+    });
+    panel.querySelectorAll(".dsp-chip").forEach((c) => c.addEventListener("click", () => {
+      const k = c.dataset.key;
+      if (prefs[k]) delete prefs[k]; else prefs[k] = 1;
+      if (k === "quiet" && prefs.quiet) delete prefs.clicks;
+      apply();
+    }));
+    resetBtn.addEventListener("click", () => {
+      prefs = {};
+      apply();
+      panel.querySelector('input[name="dsp-text"]:checked').focus();
+    });
+
+    // Open under the button (a sheet from the bottom on phones); close with
+    // Escape, the close button, or a click outside. Focus goes in and back.
+    const place = () => {
+      const r = btn.getBoundingClientRect();
+      panel.style.top = Math.round(r.bottom + 12) + "px";
+      panel.style.right = Math.max(8, Math.round(window.innerWidth - r.right - 10)) + "px";
+      panel.style.left = "auto";
+    };
+    const open = () => {
+      apply();
+      showHint(null);
+      panel.hidden = false;
+      place();
+      panel.classList.remove("is-opening"); void panel.offsetWidth; panel.classList.add("is-opening");
+      btn.setAttribute("aria-expanded", "true");
+      panel.querySelector('input[name="dsp-text"]:checked').focus({ preventScroll: true });
+    };
+    const close = (back) => {
+      if (panel.hidden) return;
+      panel.hidden = true;
+      btn.setAttribute("aria-expanded", "false");
+      if (back) btn.focus({ preventScroll: true });
+    };
+    btn.addEventListener("click", () => (panel.hidden ? open() : close(true)));
+    panel.querySelector(".dsp-close").addEventListener("click", () => close(true));
+    document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) { e.preventDefault(); close(true); } });
+    document.addEventListener("pointerdown", (e) => { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) close(false); });
+    window.addEventListener("resize", () => { if (!panel.hidden) place(); });
+    apply();
   }
 })();
 

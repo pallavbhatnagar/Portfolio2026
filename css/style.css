@@ -141,12 +141,12 @@
 * { box-sizing: border-box; }
 .first-screen { display: flex; flex-direction: column; }
 
-html { font-size: 90%; }
+html { font-size: calc(90% * var(--text-scale, 1)); }
 /* Laptops (a mouse and a window 1025-1699px wide): everything a step
    smaller, the way the site looks at 90% browser zoom. Bigger desktop
    monitors (1700px and up) keep the full size. Sizes are in rem, so they
    all follow. */
-@media (min-width: 1025px) and (max-width: 1699px) and (any-pointer: fine) { html { font-size: 81%; } }
+@media (min-width: 1025px) and (max-width: 1699px) and (any-pointer: fine) { html { font-size: calc(81% * var(--text-scale, 1)); } }
 /* Focus never hidden (WCAG 2.4.11): when the keyboard moves focus, the
    browser scrolls the item clear of the fixed nav, and on Works clear of the
    sticky filter bar too. The chat panel's scroll area gets the same offset. */
@@ -770,6 +770,11 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .proj-stack .project { position: relative; top: auto; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
 }
+/* Wider screens, cards not stacking: the same space under the heading as
+   when they stack. */
+@media (prefers-reduced-motion: reduce) and (min-width: 901px), (max-height: 560px) and (min-width: 901px) {
+  .proj-head, .projects.proj-pinned .proj-head { margin-bottom: 3rem; }
+}
 /* Phones: as in the original design, the cards simply scroll by, and the
    heading scrolls with the page too (no pinning). script.js reads the
    heading's position, so with it not sticky it stops pinning altogether. */
@@ -898,8 +903,11 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   from { opacity: 0; transform: translateY(0.5rem); }
   to   { opacity: 1; transform: none; }
 }
+/* Reduced motion: no timer running along the tabs; the chosen tab has a
+   full, still underline, and the panel changes only when a tab is picked. */
 @media (prefers-reduced-motion: reduce) {
-  .vx-bar { display: none; }
+  .vx-bar i { animation: none !important; transform: scaleX(0); }
+  .vx-item.is-active .vx-bar i { transform: none; }
 }
 
 @media (max-width: 900px) {
@@ -1188,8 +1196,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .theme-toggle {
   display: grid;
   place-items: center;
-  width: 1.625rem;
-  height: 1.625rem;
+  width: 1.875rem;
+  height: 1.875rem;
   margin-left: 0.125rem;
   padding: 0;
   border: 0;
@@ -1199,7 +1207,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   cursor: pointer;
   transition: color 0.2s ease, background-color 0.25s var(--ease-out), transform 0.2s var(--ease-out);
 }
-.theme-toggle svg { width: 1.25rem; height: 1.25rem; overflow: visible; }
+.theme-toggle svg { width: 1.5rem; height: 1.5rem; overflow: visible; }
 .sun-rays,
 .sun-core,
 .moon { transform-box: view-box; transform-origin: 128px 128px; }
@@ -1560,7 +1568,23 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
   .bk-new { transition: opacity 0.4s var(--ease-out) 1.4s, transform 0.5s var(--ease-out) 1.4s; }
 }
 @keyframes bm { to { transform: translateX(-50%); } }
-@media (prefers-reduced-motion: reduce) { .bm { overflow-x: auto; -webkit-mask-image: none; mask-image: none; } }
+/* Reduced motion: the shelf stays still, shows each book once, and scrolls
+   sideways with a slim scrollbar so it is clear there is more. */
+@media (prefers-reduced-motion: reduce) {
+  /* A drawn scrollbar (always on screen in Chrome, Safari and Edge, unlike
+     the system one that macOS hides); Firefox gets its thin system one.
+     The page sets an invisible scrollbar colour on <html>, which the shelf
+     would inherit, so it is reset here. */
+  .bm { overflow-x: auto; -webkit-mask-image: none; mask-image: none; scrollbar-width: auto; scrollbar-color: auto; }
+  @supports not selector(::-webkit-scrollbar) { .bm { scrollbar-width: thin; scrollbar-color: rgba(13, 13, 13, 0.35) transparent; } }
+  .bm::-webkit-scrollbar { height: 6px; }
+  .bm::-webkit-scrollbar-thumb { border-radius: 99px; background: rgba(13, 13, 13, 0.35); }
+  .bm::-webkit-scrollbar-track { margin-inline: 1.125rem; border-radius: 99px; background: rgba(13, 13, 13, 0.08); }
+  .bm-track { padding-inline: 1.125rem; }
+  .bcv.is-loop { display: none; }
+  :root[data-theme="dark"] .bm::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.35); }
+  :root[data-theme="dark"] .bm::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.08); }
+}
 /* The shelf is focusable (keyboard users can scroll it, and focus pauses
    it). Its fading mask would clip a focus ring, so the card shows it.
    Browsers without :has() (Firefox 115-120) keep the shelf's own outline. */
@@ -1851,6 +1875,11 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
     .wk-media img { animation: wk-drift linear both; animation-timeline: view(); animation-range: cover; }
+  }
+  /* Reduced motion (or Calm): no drift, but the same framing it has while
+     drifting (held at 110%), so switching never zooms the images out. */
+  @media (prefers-reduced-motion: reduce) {
+    .wk-media img { transform: scale(1.1); }
   }
 }
 @keyframes wk-drift {
@@ -2551,6 +2580,12 @@ body.ask-open .cs-side { display: none; }
     .cs-crop img { animation: cs-drift-full linear both; animation-timeline: view(); animation-range: cover; }
     .cs-crop.is-crop img { animation-name: cs-drift-crop; }
   }
+  /* Reduced motion (or Calm): no drift, but the framing it has while
+     drifting, so switching never zooms the images out. */
+  @media (prefers-reduced-motion: reduce) {
+    .cs-cover-media img { transform: scale(1.06); }
+    .cs-crop:not(.is-crop) img { transform: scale(1.08); }
+  }
 }
 @keyframes cs-drift-cover { from { transform: translateY(0) scale(1.06); } to { transform: translateY(8%) scale(1.06); } }
 @keyframes cs-drift-crop { from { transform: translateY(-5%) scale(1.7); } to { transform: translateY(5%) scale(1.7); } }
@@ -3109,26 +3144,26 @@ main.ab:has(.ab-table) { overflow-x: visible; }
   }
   .path-grid::-webkit-scrollbar { display: none; }
   .path-grid li {
-    flex: 0 0 82%;
+    flex: 0 0 74%;
     display: flex;
     flex-direction: column;
-    min-height: 15rem;
-    padding: 1.25rem 1.25rem 1.375rem;
-    border-radius: 1.25rem;
+    min-height: 13rem;
+    padding: 1.125rem 1.125rem 1.25rem;
+    border-radius: 0.5rem;
     background: var(--c);
     scroll-snap-align: start;
   }
-  .path-grid li:last-child { padding-bottom: 1.375rem; }
+  .path-grid li:last-child { padding-bottom: 1.25rem; }
   .path-grid li::before { content: none; }
   .path-grid li:nth-child(1) { --c: var(--sky-bg); --k: var(--sky-ink); }
   .path-grid li:nth-child(2) { --c: var(--rose-bg); --k: var(--rose-ink); }
   .path-grid li:nth-child(3) { --c: var(--sand-bg); --k: var(--sand-ink); }
   .path-grid li:nth-child(4) { --c: var(--mint-bg); --k: var(--mint-ink); }
-  .path-yr { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.03em; color: var(--k); }
+  .path-yr { font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; color: var(--k); }
   .path-co { margin-top: auto; padding-top: 1.5rem; font-size: 1.25rem; font-weight: 600; }
   .path-p { max-width: none; }
   .path-now { vertical-align: middle; background: var(--bg); }
-  .path-dots { display: flex; justify-content: center; gap: 0.375rem; margin-top: 1rem; }
+  .path-dots { display: flex; justify-content: flex-start; gap: 0.375rem; margin-top: 1rem; }
   .path-dots i { width: 0.4375rem; height: 0.4375rem; border-radius: 99px; background: color-mix(in srgb, var(--ink) 18%, transparent); transition: width 0.3s var(--ease-out), background-color 0.3s ease; cursor: pointer; }
   .path-dots i.is-on { width: 1.375rem; background: var(--ink); }
 
@@ -3417,3 +3452,207 @@ html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
 .ab-snap.is-open { z-index: 50; rotate: 0deg; }
 .ab-snap.is-open .ab-snap-more { grid-template-rows: 1fr; }
 .ab-snap.is-open .ab-snap-more > span { opacity: 1; padding-top: 0.25rem; }
+
+/* =========================================================
+   Display settings: "Make it comfortable". A small faders button in the
+   nav opens a panel (a popover under the button; a sheet from the bottom on
+   phones). Each choice is an attribute on <html>, set before the page
+   paints (head script) and saved in localStorage ("display").
+   ========================================================= */
+
+/* --- What each setting does to the site --- */
+html[data-text="1"] { --text-scale: 1.125; }
+html[data-text="2"] { --text-scale: 1.25; }
+
+/* Easier reading: the WCAG 1.4.12 kinds of spacing, at a comfortable level. */
+html[data-read] :is(p, li, dd, dt, blockquote, figcaption, summary, label, td):not(.nav *) { line-height: 1.75 !important; letter-spacing: 0.03em !important; word-spacing: 0.1em !important; }
+html[data-read] p + p { margin-top: 0.9em; }
+
+/* Calm: the site treats it exactly like a device asking for reduced motion
+   (js/motion-css.js applies every reduced-motion rule, and scripts read Calm
+   through the same question). As a safety net, any animation that still
+   runs finishes at once, in its final state. */
+html[data-motion="calm"] *, html[data-motion="calm"] *::before, html[data-motion="calm"] *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+
+/* Higher contrast: the same values the site uses when a device asks for more. */
+html[data-contrast] { --ink-soft: #3a3a3a; --line: #7a7a7a; --hairline: rgba(13, 13, 13, 0.4); }
+html[data-contrast][data-theme="dark"] { --ink-soft: #d6d6d6; --line: #8a8a8a; --hairline: rgba(255, 255, 255, 0.45); }
+html[data-contrast] :is(.proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card, .tq-card, .off-card) { box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.35); }
+html[data-contrast][data-theme="dark"] :is(.proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card, .tq-card, .off-card) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4); }
+html[data-contrast] .tq-name span, html[data-contrast] .lf-fig figcaption { color: var(--ink-soft); }
+
+/* Underline links: every text link, not the cards or buttons. */
+html[data-links] a:not(.btn):not(.project-link):not([class*="card"]):not(.cs-rail-back):not(.cs-crumb-back):not(.om-sc) { text-decoration-line: underline !important; text-decoration-thickness: 0.075em !important; text-underline-offset: 0.22em !important; }
+
+/* Bold focus ring: thick ink outline with a bright halo, on everything. */
+html[data-focus] :focus-visible { outline: 3px solid var(--ink) !important; outline-offset: 3px !important; box-shadow: 0 0 0 7px #ffd23f !important; }
+
+/* Hide stickers and the dog. */
+html[data-plain] :is(.hs, .im-doodle, .pxdog) { display: none !important; }
+
+/* --- The button in the nav --- */
+.dsp-toggle { display: grid; place-items: center; width: 1.875rem; height: 1.875rem; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft); cursor: pointer; transition: color 0.2s ease, transform 0.2s var(--ease-out); }
+.dsp-toggle svg { width: 1.5rem; height: 1.5rem; overflow: visible; }
+.dsp-fig { transform-box: view-box; transform-origin: 12px 12px; transition: transform 0.35s var(--ease-out); }
+.dsp-toggle:active { transform: scale(0.92); }
+.dsp-toggle:focus-visible { color: var(--ink); outline: 2px solid var(--ink); outline-offset: 2px; }
+.dsp-toggle[aria-expanded="true"] { color: var(--ink); }
+@media (hover: hover) and (pointer: fine) {
+  .dsp-toggle:hover { color: var(--ink); }
+  .dsp-toggle:hover .dsp-fig { transform: translateY(-1px) scale(1.06); }
+}
+/* A small dot on the button once anything differs from the defaults. */
+.dsp-toggle { position: relative; }
+/* While the music plays, a small mint dot with a soft pulse. */
+.dsp-toggle.is-music::before { content: ""; position: absolute; right: -0.0625rem; bottom: 0; width: 0.4375rem; height: 0.4375rem; border-radius: 50%; background: #3fbf7f; box-shadow: 0 0 0 2px var(--bg); }
+@media (prefers-reduced-motion: no-preference) {
+  .dsp-toggle.is-music::before { animation: dsp-pulse 1.8s ease-out infinite; }
+}
+@keyframes dsp-pulse { 0% { box-shadow: 0 0 0 2px var(--bg), 0 0 0 2px rgba(63, 191, 127, 0.5); } 100% { box-shadow: 0 0 0 2px var(--bg), 0 0 0 8px rgba(63, 191, 127, 0); } }
+.dsp-toggle.is-custom::after { content: ""; position: absolute; top: 0.0625rem; right: 0.0625rem; width: 0.375rem; height: 0.375rem; border-radius: 50%; background: #3965fa; box-shadow: 0 0 0 2px var(--bg); }
+
+/* --- The panel ---
+   Compact: a header, three one-line choices (text size, motion, theme),
+   six toggles in a two-column grid, one shared line explaining whichever
+   option is pointed at or focused, and the music in a single row. */
+/* The same glass as the nav bar: a near-solid tint, a faint hairline and
+   a bright inner top edge. */
+.dsp { position: fixed; z-index: 120; width: min(21rem, calc(100vw - 1rem)); max-height: calc(100vh - 6rem); overflow: auto; overscroll-behavior: contain; padding: 1rem; border: 1px solid rgba(13, 13, 13, 0.07); border-radius: 0.875rem; background: rgba(255, 255, 255, 0.98); color: var(--ink); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 1.25rem 2.5rem -1.25rem rgba(13, 13, 13, 0.22), 0 0.125rem 0.5rem -0.125rem rgba(13, 13, 13, 0.06); transform-origin: top right; }
+:root[data-theme="dark"] .dsp { background: rgba(28, 28, 30, 0.98); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 1.25rem 2.5rem -1rem rgba(0, 0, 0, 0.6); }
+@media (prefers-reduced-transparency: reduce) {
+  .dsp { background: #fff; }
+  :root[data-theme="dark"] .dsp { background: #1c1c1e; }
+}
+.dsp[hidden] { display: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .dsp.is-opening { animation: dsp-in 0.2s var(--ease-out); }
+}
+@keyframes dsp-in { from { opacity: 0; transform: scale(0.96) translateY(-0.25rem); } }
+
+/* Header: title and one line; Reset (only once something is changed) and
+   close on the right. */
+.dsp-head { display: flex; align-items: flex-start; gap: 0.375rem; }
+.dsp-head-text { flex: 1; min-width: 0; }
+.dsp-title { margin: 0; font-size: 1.125rem; font-weight: 500; letter-spacing: -0.02em; line-height: 1.25; }
+.dsp-sub { margin: 0.125rem 0 0; font-size: 0.8125rem; line-height: 1.4; white-space: nowrap; color: var(--ink-soft); }
+.dsp-close { display: grid; flex: none; place-items: center; width: 2rem; height: 2rem; margin: -0.25rem -0.25rem 0 0; padding: 0; border: 0; border-radius: 50%; background: transparent; color: var(--ink-soft); cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease; }
+.dsp-close svg { width: 1rem; height: 1rem; }
+.dsp-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 1px; }
+.dsp-reset { flex: none; height: 1.75rem; margin-top: -0.125rem; padding: 0 0.625rem; border: 0; border-radius: 999px; background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink); font: inherit; font-size: 0.75rem; font-weight: 500; cursor: pointer; transition: background-color 0.15s ease, transform 0.16s var(--ease-out); }
+.dsp-reset[hidden] { display: none; }
+.dsp-reset:active { transform: scale(0.96); }
+.dsp-reset:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) {
+  .dsp-close:hover { background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink); }
+  .dsp-reset:hover { background: color-mix(in srgb, var(--ink) 12%, transparent); }
+}
+
+/* The three choices: a label on the left, a small segmented control on the
+   right. The chosen option is a raised white pill. */
+/* The lines between rows: fainter than the site's hairline. */
+.dsp-lines { --dsp-line: rgba(13, 13, 13, 0.06); margin-top: 0.875rem; border-top: 1px solid var(--dsp-line); }
+:root[data-theme="dark"] .dsp-lines { --dsp-line: rgba(255, 255, 255, 0.08); }
+.dsp-line { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; min-height: 3rem; border-bottom: 1px solid var(--dsp-line); }
+.dsp-line-label { font-size: 0.875rem; font-weight: 500; }
+.dsp-seg { display: inline-flex; gap: 0.125rem; padding: 0.1875rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 6%, transparent); }
+.dsp-opt { position: relative; display: inline-flex; align-items: center; justify-content: center; gap: 0.3125rem; min-width: 2.25rem; height: 1.875rem; padding: 0 0.625rem; border-radius: 999px; color: var(--ink-soft); font-size: 0.8125rem; font-weight: 500; cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
+.dsp-opt input { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; opacity: 0; cursor: pointer; }
+.dsp-opt svg { width: 1.125rem; height: 1.125rem; flex: none; }
+.dsp-opt:has(input:checked) { background: var(--bg); color: var(--ink); box-shadow: 0 1px 2px rgba(13, 13, 13, 0.12), 0 0 0 0.5px rgba(13, 13, 13, 0.08); }
+:root[data-theme="dark"] .dsp-opt:has(input:checked) { background: #3a3a3d; box-shadow: none; }
+.dsp-opt:has(input:focus-visible) { outline: 2px solid var(--ink); outline-offset: 1px; }
+@media (hover: hover) and (pointer: fine) { .dsp-opt:hover { color: var(--ink); } }
+/* Text size: three A's that grow. */
+.dsp-a { display: block; font-weight: 600; line-height: 1; text-box: trim-both cap alphabetic; }
+.dsp-a0 { font-size: 0.75rem; }
+.dsp-a1 { font-size: 0.9375rem; }
+.dsp-a2 { font-size: 1.125rem; }
+/* Motion icons: sparkles for Lively, a stack of balanced stones for Calm.
+   Pointing at Lively makes its sparkles twinkle in turn (it shows what the
+   choice means); the stones never move, and nothing moves when motion is
+   reduced. */
+.dsp-spark { transform-box: fill-box; transform-origin: center; }
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .dsp-opt:hover .dsp-spark-a { animation: dsp-twinkle 0.9s cubic-bezier(0.77, 0, 0.175, 1) infinite alternate; }
+  .dsp-opt:hover .dsp-spark-b { animation: dsp-twinkle 0.9s cubic-bezier(0.77, 0, 0.175, 1) -0.45s infinite alternate; }
+}
+@keyframes dsp-twinkle { from { transform: scale(0.75) rotate(-12deg); } to { transform: scale(1.05) rotate(8deg); } }
+
+/* The toggles: icon tiles in two columns. On, they turn ink. */
+.dsp-chips { display: grid; grid-template-columns: 1fr 1fr; gap: 0.375rem; margin-top: 0.875rem; }
+.dsp-chip { display: flex; align-items: center; gap: 0.5rem; min-height: 2.75rem; padding: 0.5rem 0.625rem; border: 0; border-radius: 0.5rem; background: color-mix(in srgb, var(--ink) 5%, transparent); color: var(--ink); font: inherit; font-size: 0.8125rem; font-weight: 500; line-height: 1.2; text-align: left; cursor: pointer; transition: background-color 0.15s ease, color 0.15s ease, transform 0.16s var(--ease-out); }
+.dsp-chip svg { width: 1.125rem; height: 1.125rem; flex: none; }
+/* On: the palette's Dark Gray (#202020), white text. In the dark theme
+   it stays the light fill so it still stands out. */
+.dsp-chip[aria-pressed="true"] { background: #202020; color: #fff; }
+:root[data-theme="dark"] .dsp-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+.dsp-chip:active { transform: scale(0.97); }
+.dsp-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .dsp-chip[aria-pressed="false"]:hover { background: color-mix(in srgb, var(--ink) 9%, transparent); } }
+
+/* One line that explains whatever is pointed at or focused. Two lines tall,
+   so the panel never jumps as it changes. */
+.dsp-hint { min-height: 2.5em; margin: 0.625rem 0.125rem 0; font-size: 0.75rem; line-height: 1.25; color: var(--ink-soft); }
+
+/* Music: one row. A round play button (the equaliser), the name and what
+   it's doing, and a slim volume slider. */
+.dsp-music { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.625rem; padding: 0.5rem 0.75rem 0.5rem 0.5rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 5%, transparent); }
+.dsp-music[hidden] { display: none; }
+.dsp-music { cursor: pointer; }
+.dsp-vol-range { cursor: pointer; }
+@media (hover: hover) and (pointer: fine) { .dsp-music:hover { background: color-mix(in srgb, var(--ink) 8%, transparent); } }
+.dsp-music-slot { flex: none; display: grid; }
+/* A black round play button with the equaliser in it. */
+.dsp .sound-toggle { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; margin: 0; padding: 0; border-radius: 50%; background: #202020; color: #fff; }
+:root[data-theme="dark"] .dsp .sound-toggle { background: var(--ink); color: var(--bg); }
+.dsp .sound-toggle[hidden] { display: none; }
+.dsp .sound-toggle .snd-eq { height: 12px; }
+.dsp .sound-toggle:active { transform: scale(0.94); }
+.dsp .sound-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .dsp .sound-toggle:hover { opacity: 0.88; } }
+.dsp-music-text { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.dsp-music-name { font-size: 0.8125rem; font-weight: 500; line-height: 1.3; }
+.dsp-music-state { font-size: 0.75rem; line-height: 1.3; color: var(--ink-soft); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* A quiet slider: a hairline track that fills in grey up to a small dot. */
+.dsp-vol-range { --vol: #202020; --v: 35%; flex: none; width: 4.5rem; height: 1.25rem; margin: 0; background: transparent; cursor: pointer; appearance: none; -webkit-appearance: none; }
+.dsp-vol-range::-webkit-slider-runnable-track { height: 3px; border-radius: 99px; background: linear-gradient(to right, var(--vol) var(--v), color-mix(in srgb, var(--ink) 14%, transparent) var(--v)); }
+.dsp-vol-range::-moz-range-track { height: 3px; border-radius: 99px; background: color-mix(in srgb, var(--ink) 14%, transparent); }
+.dsp-vol-range::-moz-range-progress { height: 3px; border-radius: 99px; background: var(--vol); }
+.dsp-vol-range::-webkit-slider-thumb { width: 0.5625rem; height: 0.5625rem; margin-top: calc(1.5px - 0.28125rem); border: 0; border-radius: 50%; background: var(--vol); appearance: none; -webkit-appearance: none; transition: transform 0.15s var(--ease-out); }
+.dsp-vol-range::-moz-range-thumb { width: 0.5625rem; height: 0.5625rem; border: 0; border-radius: 50%; background: var(--vol); }
+.dsp-vol-range:active::-webkit-slider-thumb { transform: scale(1.3); }
+:root[data-theme="dark"] .dsp-vol-range { --vol: var(--ink); }
+.dsp-vol-range:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.25rem; }
+
+/* Phones: an action sheet. It lines up with the nav bar's edges, sits
+   flush on the bottom of the screen (rounded only on top, clear of the
+   home indicator), and rises out of the bottom edge. */
+@media (max-width: 640px) {
+  .dsp { left: var(--pad) !important; right: var(--pad) !important; top: auto !important; bottom: 0; width: auto; max-height: min(88vh, 40rem); padding: 1rem 1rem max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem)); border-bottom: 0; border-radius: 0.875rem 0.875rem 0 0; transform-origin: bottom center; }
+  @keyframes dsp-in { from { transform: translateY(100%); } }
+  .dsp.is-opening { animation-duration: 0.3s; animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1); }
+}
+@media (forced-colors: active) {
+  .dsp, .dsp-chip, .dsp-seg, .dsp-reset, .dsp-music { border: 1px solid CanvasText; }
+  .dsp-opt:has(input:checked) { outline: 2px solid Highlight; }
+  .dsp-chip[aria-pressed="true"] { forced-color-adjust: none; background: Highlight; color: HighlightText; }
+}
+/* Larger text on small phones: the Works sticker moves inside the start of
+   "My work, explained for", and the filter labels keep their normal size,
+   so neither runs off the screen. */
+@media (max-width: 420px) {
+  html[data-text] .rd-pick-lead { padding-left: 1.95em; }
+  html[data-text] .hs-talk { left: 0; }
+  html[data-text] .wk-seg { padding-inline: 0.5rem; font-size: calc(var(--fs-body) / var(--text-scale)); }
+}
+/* Larger text on small phones: the nav keeps its normal size (there is no
+   room for it to grow), so it still fits on one line. */
+@media (max-width: 420px) { html[data-text] .nav { zoom: calc(1 / var(--text-scale)); } }
+/* Very small phones: with the display settings button there can be four
+   controls in the nav, so the gaps tighten and labels stay on one line. */
+@media (max-width: 380px) {
+  .nav-links { gap: 0.875rem; }
+  .nav-ctrls { gap: 0.5rem; }
+  .nav-home, .nav-links a { white-space: nowrap; }
+}
+

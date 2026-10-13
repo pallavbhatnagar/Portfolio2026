@@ -16,10 +16,12 @@
 <link rel="preload" href="/assets/fonts/Manrope-Light.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
+<script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}if(s.text)d.setAttribute("data-text",String(s.text));["read","contrast","links","focus","plain","quiet"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261303" />
-<link rel="stylesheet" href="/css/hero.css?v=20261303" />
+<link rel="stylesheet" href="/css/style.css?v=20261359" />
+<link rel="stylesheet" href="/css/hero.css?v=20261359" />
+<script src="/js/motion-css.js?v=20261359"></script>
 </head>
 <body>
 
@@ -103,31 +105,31 @@
   </header>
 
   <div class="vx">
-    <div class="vx-list" role="tablist" aria-label="What I bring" aria-orientation="vertical">
-      <div class="vx-item is-active" role="presentation">
-        <button class="vx-trigger" type="button" role="tab" id="vx-t0" aria-selected="true" aria-controls="vx-p0" tabindex="0">Research that shapes decisions</button>
+    <div class="vx-list" role="group" aria-label="What I bring">
+      <div class="vx-item is-active">
+        <button class="vx-trigger" type="button" id="vx-t0" aria-pressed="true" aria-controls="vx-p0">Research that shapes decisions</button>
         <span class="vx-bar" aria-hidden="true"><i></i></span>
       </div>
-      <div class="vx-item" role="presentation">
-        <button class="vx-trigger" type="button" role="tab" id="vx-t1" aria-selected="false" aria-controls="vx-p1" tabindex="-1">Clarity in complex flows</button>
+      <div class="vx-item">
+        <button class="vx-trigger" type="button" id="vx-t1" aria-pressed="false" aria-controls="vx-p1">Clarity in complex flows</button>
         <span class="vx-bar" aria-hidden="true"><i></i></span>
       </div>
-      <div class="vx-item" role="presentation">
-        <button class="vx-trigger" type="button" role="tab" id="vx-t2" aria-selected="false" aria-controls="vx-p2" tabindex="-1">Interfaces that ship</button>
+      <div class="vx-item">
+        <button class="vx-trigger" type="button" id="vx-t2" aria-pressed="false" aria-controls="vx-p2">Interfaces that ship</button>
         <span class="vx-bar" aria-hidden="true"><i></i></span>
       </div>
-      <div class="vx-item" role="presentation">
-        <button class="vx-trigger" type="button" role="tab" id="vx-t3" aria-selected="false" aria-controls="vx-p3" tabindex="-1">Iteration backed by data</button>
+      <div class="vx-item">
+        <button class="vx-trigger" type="button" id="vx-t3" aria-pressed="false" aria-controls="vx-p3">Iteration backed by data</button>
         <span class="vx-bar" aria-hidden="true"><i></i></span>
       </div>
-      <div class="vx-item" role="presentation">
-        <button class="vx-trigger" type="button" role="tab" id="vx-t4" aria-selected="false" aria-controls="vx-p4" tabindex="-1">Alignment across the team</button>
+      <div class="vx-item">
+        <button class="vx-trigger" type="button" id="vx-t4" aria-pressed="false" aria-controls="vx-p4">Alignment across the team</button>
         <span class="vx-bar" aria-hidden="true"><i></i></span>
       </div>
     </div>
 
     <div class="vx-card">
-      <div class="vx-panel is-on" role="tabpanel" id="vx-p0" aria-labelledby="vx-t0" tabindex="0">
+      <div class="vx-panel is-on" role="region" id="vx-p0" aria-labelledby="vx-t0">
         <p class="value-text">I run interviews and usability tests early, so the team debates evidence instead of opinions. Findings arrive as short, prioritised insights people actually read.</p>
         <dl class="value-meta">
           <div><dt>You get</dt><dd>Interview guides, usability reports, journey maps</dd></div>
@@ -135,7 +137,7 @@
         </dl>
         <p class="value-stat"><span class="value-num" data-to="-34" data-suffix="%">-34%</span><span class="value-cap">less rework after two rounds of testing</span></p>
       </div>
-      <div class="vx-panel" role="tabpanel" id="vx-p1" aria-labelledby="vx-t1" tabindex="0" aria-hidden="true">
+      <div class="vx-panel" role="region" id="vx-p1" aria-labelledby="vx-t1" aria-hidden="true">
         <p class="value-text">I map the whole journey before drawing a single screen. Information architecture, flows and wireframes remove confusion at the root instead of patching it with copy.</p>
         <dl class="value-meta">
           <div><dt>You get</dt><dd>Flow diagrams, site maps, wireframes</dd></div>
@@ -143,7 +145,7 @@
         </dl>
         <p class="value-stat"><span class="value-num" data-to="-41" data-suffix="%">-41%</span><span class="value-cap">fewer drop-offs in a redesigned checkout</span></p>
       </div>
-      <div class="vx-panel" role="tabpanel" id="vx-p2" aria-labelledby="vx-t2" tabindex="0" aria-hidden="true">
+      <div class="vx-panel" role="region" id="vx-p2" aria-labelledby="vx-t2" aria-hidden="true">
         <p class="value-text">Polished UI backed by a lean component system, with specs and handoff notes that engineers can build from without booking another meeting.</p>
         <dl class="value-meta">
           <div><dt>You get</dt><dd>UI kits, design tokens, handoff specs</dd></div>
@@ -151,7 +153,7 @@
         </dl>
         <p class="value-stat"><span class="value-num" data-to="2" data-suffix="x">2x</span><span class="value-cap">faster builds with a shared component library</span></p>
       </div>
-      <div class="vx-panel" role="tabpanel" id="vx-p3" aria-labelledby="vx-t3" tabindex="0" aria-hidden="true">
+      <div class="vx-panel" role="region" id="vx-p3" aria-labelledby="vx-t3" aria-hidden="true">
         <p class="value-text">I agree on success metrics up front, instrument the flows and read the numbers with you. Every release teaches the next one what to fix.</p>
         <dl class="value-meta">
           <div><dt>You get</dt><dd>Success metrics, A/B test plans, dashboards</dd></div>
@@ -159,7 +161,7 @@
         </dl>
         <p class="value-stat"><span class="value-num" data-to="+23" data-suffix="%">+23%</span><span class="value-cap">task completion across three release cycles</span></p>
       </div>
-      <div class="vx-panel" role="tabpanel" id="vx-p4" aria-labelledby="vx-t4" tabindex="0" aria-hidden="true">
+      <div class="vx-panel" role="region" id="vx-p4" aria-labelledby="vx-t4" aria-hidden="true">
         <p class="value-text">Workshops, design critiques and clear storytelling keep product, engineering and leadership pulling in the same direction.</p>
         <dl class="value-meta">
           <div><dt>You get</dt><dd>Kickoff workshops, design reviews, decision logs</dd></div>
@@ -299,11 +301,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261303" defer></script>
-<script src="/js/projects.js?v=20261303" defer></script>
-<script src="/js/render.js?v=20261303" defer></script>
-<script src="/js/script.js?v=20261303" defer></script>
-<script src="/js/hero.js?v=20261303" defer></script>
+<script src="/js/content.js?v=20261359" defer></script>
+<script src="/js/projects.js?v=20261359" defer></script>
+<script src="/js/render.js?v=20261359" defer></script>
+<script src="/js/script.js?v=20261359" defer></script>
+<script src="/js/hero.js?v=20261359" defer></script>
 </body>
 </html>
 
