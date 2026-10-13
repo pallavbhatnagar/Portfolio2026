@@ -3470,9 +3470,11 @@ html[data-read] p + p { margin-top: 0.9em; }
 
 /* Calm: the site treats it exactly like a device asking for reduced motion
    (js/motion-css.js applies every reduced-motion rule, and scripts read Calm
-   through the same question). As a safety net, any animation that still
-   runs finishes at once, in its final state. */
-html[data-motion="calm"] *, html[data-motion="calm"] *::before, html[data-motion="calm"] *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+   through the same question). As a safety net, nothing moves at all: any
+   animation finishes at once in its final state, and changes happen
+   instantly (transitions off; a tiny duration would instead turn on the
+   default "all" transition everywhere). */
+html[data-motion="calm"] *, html[data-motion="calm"] *::before, html[data-motion="calm"] *::after { animation-duration: 0.01ms !important; animation-delay: 0s !important; animation-iteration-count: 1 !important; transition: none !important; scroll-behavior: auto !important; }
 
 /* Higher contrast: the same values the site uses when a device asks for more. */
 html[data-contrast] { --ink-soft: #3a3a3a; --line: #7a7a7a; --hairline: rgba(13, 13, 13, 0.4); }
@@ -3592,7 +3594,9 @@ html[data-plain] :is(.hs, .im-doodle, .pxdog) { display: none !important; }
 
 /* One line that explains whatever is pointed at or focused. Two lines tall,
    so the panel never jumps as it changes. */
-.dsp-hint { min-height: 2.5em; margin: 0.625rem 0.125rem 0; font-size: 0.75rem; line-height: 1.25; color: var(--ink-soft); }
+.dsp-hint { height: 2.5em; margin: 0.625rem 0.125rem 0; overflow: hidden; font-size: 0.75rem; line-height: 1.25; color: var(--ink-soft); }
+/* (Easier reading spaces out the rest of the site, not this fixed line.) */
+html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important; word-spacing: 0 !important; }
 
 /* Music: one row. A round play button (the equaliser), the name and what
    it's doing, and a slim volume slider. */
@@ -3628,6 +3632,8 @@ html[data-plain] :is(.hs, .im-doodle, .pxdog) { display: none !important; }
    flush on the bottom of the screen (rounded only on top, clear of the
    home indicator), and rises out of the bottom edge. */
 @media (max-width: 640px) {
+  .dsp, :root[data-theme="dark"] .dsp { background: var(--bg); }
+  :root[data-theme="dark"] .dsp { background: #1c1c1e; }
   .dsp { left: var(--pad) !important; right: var(--pad) !important; top: auto !important; bottom: 0; width: auto; max-height: min(88vh, 40rem); padding: 1rem 1rem max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem)); border-bottom: 0; border-radius: 0.875rem 0.875rem 0 0; transform-origin: bottom center; }
   @keyframes dsp-in { from { transform: translateY(100%); } }
   .dsp.is-opening { animation-duration: 0.3s; animation-timing-function: cubic-bezier(0.32, 0.72, 0, 1); }

@@ -1646,7 +1646,7 @@
     const section = lfRow.closest(".ab-life");
     const BASE = 0.03;          // px per ms, the slow run
     let x = 0;                  // distance moved to the left, in px
-    let v = BASE;               // current speed
+    let v = reduce.matches ? 0 : BASE; // current speed
     let setW = 0;
     let hover = false;
     let drag = null;
@@ -1663,8 +1663,10 @@
       last = now;
       if (!drag && !(section && section.classList.contains("is-offscreen"))) {
         const want = reduce.matches ? 0 : hover ? BASE * 0.35 : BASE;
-        v += (want - v) * Math.min(1, dt / 420); // ease back to the slow run
-        if (!want && Math.abs(v) < 0.002) v = 0; // and come to a full stop when still
+        // Calm (reduced motion): no movement at all. Otherwise ease back to
+        // the slow run.
+        if (reduce.matches) v = 0;
+        else v += (want - v) * Math.min(1, dt / 420);
         x += v * dt;
         wrap();
         draw();
@@ -1711,7 +1713,7 @@
       const a = d.hist[0];
       const b = d.hist[d.hist.length - 1];
       const fling = b[1] > a[1] ? -(b[0] - a[0]) / (b[1] - a[1]) : 0;
-      v = Math.max(-3, Math.min(3, fling)); // carries on, then eases back
+      v = reduce.matches ? 0 : Math.max(-3, Math.min(3, fling)); // carries on, then eases back
       last = 0;
     };
     lfRow.addEventListener("pointerup", endDrag);
@@ -1851,8 +1853,8 @@
         last = now;
         if (!drag) {
           const target = reduce.matches || held ? 0 : -DRIFT;
-          vel += (target - vel) * Math.min(1, dt / 600);
-          if (!target && Math.abs(vel) < 0.002) vel = 0; // a full stop when still
+          if (reduce.matches) vel = 0; // Calm: no movement at all
+          else vel += (target - vel) * Math.min(1, dt / 600);
           pos += vel * dt;
           wrap();
           track.style.transform = `translate3d(${pos}px, 0, 0)`;
@@ -2507,6 +2509,8 @@
     };
     abPath.classList.add("is-armed");
     const run = () => {
+      // Calm (or reduced motion) chosen since the page loaded: show it all.
+      if (reduce.matches) { [...nodes, ring, next, ...jobs].forEach(lit); finish(); return; }
       if (!svg || !line || getComputedStyle(svg).display === "none") {
         jobs.forEach((li, i) => setTimeout(() => lit(li), 90 * i));
         setTimeout(finish, 90 * jobs.length + 500);
@@ -2705,12 +2709,23 @@
       if (!host) return HINT;
       return host.querySelector('input[name="dsp-motion"]') ? motionHint() : host.dataset.hint;
     };
+    // The line shows the prompt whenever nothing is being pointed at,
+    // focused with the keyboard or just tapped. Pointing shows an option's
+    // line while the pointer is on it; a tap shows it for a few seconds;
+    // keyboard focus shows it while the option has focus.
     let hintTimer = 0;
+    let lastTouch = false;
     const showHint = (el) => { clearTimeout(hintTimer); hintEl.textContent = hintFor(el); };
-    panel.addEventListener("pointerover", (e) => showHint(e.target));
-    // Keyboard focus explains too (not the focus a mouse click leaves behind).
-    panel.addEventListener("focusin", (e) => { let kb = false; try { kb = e.target.matches(":focus-visible"); } catch (x) { /* old browser */ } if (kb) showHint(e.target); });
-    panel.addEventListener("pointerleave", () => { hintTimer = setTimeout(() => { if (!panel.contains(document.activeElement) || document.activeElement === panel) showHint(null); else showHint(document.activeElement); }, 150); });
+    const kbFocus = () => { const a = document.activeElement; if (!a || !panel.contains(a)) return null; try { return a.matches(":focus-visible") ? a : null; } catch (x) { return null; } };
+    const restHint = (ms) => { clearTimeout(hintTimer); hintTimer = setTimeout(() => { hintEl.textContent = hintFor(kbFocus()); }, ms); };
+    panel.addEventListener("pointerover", (e) => { if (e.pointerType === "mouse" || e.pointerType === "pen") showHint(e.target); });
+    panel.addEventListener("pointerdown", (e) => {
+      lastTouch = e.pointerType === "touch";
+      if (lastTouch) { showHint(e.target); if (!e.target.closest("[data-hint]")) restHint(0); else restHint(3000); }
+    });
+    panel.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse" || e.pointerType === "pen") restHint(120); });
+    panel.addEventListener("focusin", () => { const a = kbFocus(); if (a) showHint(a); });
+    panel.addEventListener("focusout", () => { if (!lastTouch) restHint(0); });
 
     // Background music: the music button moves into the panel as a round
     // play button, with a line saying what it's doing and a volume slider.
@@ -2791,7 +2806,8 @@
         if (t.value === "on") { prefs.clicks = 1; delete prefs.quiet; if (window.siteSfx) window.siteSfx.load("click.mp3"); } else delete prefs.clicks;
       }
       apply();
-      showHint(t);
+      // The motion line changes with the choice; a tap's line still fades back.
+      if (t.name === "dsp-motion") { showHint(t); if (lastTouch) restHint(3000); }
     });
     panel.querySelectorAll(".dsp-chip").forEach((c) => c.addEventListener("click", () => {
       const k = c.dataset.key;
@@ -2835,8 +2851,35 @@
     btn.addEventListener("click", () => (panel.hidden ? open() : close(true)));
     panel.querySelector(".dsp-close").addEventListener("click", () => close(true));
     document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !panel.hidden) { e.preventDefault(); close(true); } });
-    document.addEventListener("pointerdown", (e) => { if (!panel.hidden && !panel.contains(e.target) && !btn.contains(e.target)) close(false); });
+    // A click or tap outside closes it. On touch, only a tap does: a swipe
+    // above the sheet just scrolls the page, and the sheet stays open.
+    let outsideAt = null;
+    document.addEventListener("pointerdown", (e) => {
+      if (panel.hidden || panel.contains(e.target) || btn.contains(e.target)) { outsideAt = null; return; }
+      if (e.pointerType === "touch") outsideAt = [e.clientX, e.clientY];
+      else close(false);
+    });
+    document.addEventListener("pointerup", (e) => {
+      if (!outsideAt) return;
+      const moved = Math.hypot(e.clientX - outsideAt[0], e.clientY - outsideAt[1]);
+      outsideAt = null;
+      if (moved < 10) close(false);
+    });
+    document.addEventListener("pointercancel", () => { outsideAt = null; });
     window.addEventListener("resize", () => { if (!panel.hidden) place(); });
+    let touchY = 0;
+    panel.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });
+    panel.addEventListener("touchmove", (e) => {
+      if (e.target.closest(".dsp-vol-range")) return; // the volume slider drags sideways
+      const dy = e.touches[0].clientY - touchY;
+      const canScroll = panel.scrollHeight > panel.clientHeight + 1;
+      const atTop = panel.scrollTop <= 0, atEnd = panel.scrollTop + panel.clientHeight >= panel.scrollHeight - 1;
+      if (!canScroll || (dy > 0 && atTop) || (dy < 0 && atEnd)) e.preventDefault();
+    }, { passive: false });
+    panel.addEventListener("wheel", (e) => {
+      const canScroll = panel.scrollHeight > panel.clientHeight + 1;
+      if (!canScroll) e.preventDefault();
+    }, { passive: false });
     apply();
   }
 })();
