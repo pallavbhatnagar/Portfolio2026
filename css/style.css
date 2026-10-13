@@ -3061,9 +3061,6 @@ main.ab:has(.ab-table) { overflow-x: visible; }
   .ab-track { display: flex; align-items: flex-start; gap: 1rem; width: max-content; padding-right: 1rem; touch-action: pan-y; cursor: grab; will-change: transform; }
   /* A tapped snapshot: straight, on top, with its line open. */
   .ab-snap { transition: rotate 0.35s var(--ease-out); }
-  .ab-snap.is-open { z-index: 50; rotate: 0deg; }
-  .ab-snap.is-open .ab-snap-more { grid-template-rows: 1fr; }
-  .ab-snap.is-open .ab-snap-more > span { opacity: 1; padding-top: 0.25rem; }
   .ab-track:active { cursor: grabbing; }
   .ab-snap { position: relative; left: auto; top: auto; flex: none; width: 10.5rem; rotate: calc(var(--r) * 0.6deg); }
 }
@@ -3291,7 +3288,6 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 /* The spread: a snapshot under the mouse, or just tapped, sits on top. */
 @media (min-width: 1024px) {
   .ab-snap { transition: scale 0.25s var(--ease-out), rotate 0.35s var(--ease-out), box-shadow 0.25s ease; }
-  .ab-snap.is-top { z-index: 50; scale: 1.04; }
 }
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .ab-snap:hover { z-index: 50; scale: 1.04; }
@@ -3415,3 +3411,9 @@ html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
 .ab-side.is-shown { opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0s; }
 .ab-story, .ab-path, .ab-glance, .ab-pr, .ab-impact, .ab-now, .ab-off, .ab-life, .ab-faq { scroll-margin-top: 5.25rem; }
 @media (prefers-reduced-motion: reduce) { .ab-side, .ab-side.is-shown { transition: none; } }
+
+/* A tapped snapshot (touch screens, strip or spread): straight, on top,
+   with its line open. */
+.ab-snap.is-open { z-index: 50; rotate: 0deg; }
+.ab-snap.is-open .ab-snap-more { grid-template-rows: 1fr; }
+.ab-snap.is-open .ab-snap-more > span { opacity: 1; padding-top: 0.25rem; }

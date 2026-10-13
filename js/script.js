@@ -1773,14 +1773,26 @@
           el.style.top = `${Math.round(y)}px`;
         });
       };
-      let topTimer = 0;
+      // Touch screens on the spread (iPad landscape): a tap straightens a
+      // snapshot, brings it to the top and opens its line, as hovering does
+      // with a mouse; tapping it again, or anywhere else, closes it.
+      let tapAt = null;
       pile.addEventListener("pointerdown", (e) => {
+        tapAt = e.pointerType === "mouse" || narrow.matches ? null : [e.clientX, e.clientY];
+      });
+      pile.addEventListener("pointerup", (e) => {
+        if (!tapAt || narrow.matches) return;
+        const moved = Math.hypot(e.clientX - tapAt[0], e.clientY - tapAt[1]) > 10;
+        tapAt = null;
         const el = e.target.closest(".ab-snap");
-        if (!el || e.pointerType === "mouse" || narrow.matches) return;
-        pile.querySelectorAll(".ab-snap.is-top").forEach((x) => x.classList.remove("is-top"));
-        el.classList.add("is-top");
-        clearTimeout(topTimer);
-        topTimer = setTimeout(() => el.classList.remove("is-top"), 2500);
+        if (moved || !el) return;
+        const wasOpen = el.classList.contains("is-open");
+        pile.querySelectorAll(".ab-snap.is-open").forEach((x) => x.classList.remove("is-open"));
+        if (!wasOpen) el.classList.add("is-open");
+      });
+      document.addEventListener("pointerdown", (e) => {
+        if (narrow.matches || e.pointerType === "mouse" || e.target.closest(".ab-pile .ab-snap")) return;
+        pile.querySelectorAll(".ab-snap.is-open").forEach((x) => x.classList.remove("is-open"));
       });
       const track = document.createElement("div");
       track.className = "ab-track";
