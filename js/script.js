@@ -1730,17 +1730,26 @@
     });
   }
 
-  // "Pallav" on About: clicking it says the name out loud, always in the
-  // browser's default voice, slowed a little.
-  const sayBtn = document.querySelector("button.say");
-  if (sayBtn && "speechSynthesis" in window) {
+  // Names you can hear: "Pallav" in the About title and "Pallav Bhatnagar"
+  // above the Home title. Clicking one plays its recording (data-say), from
+  // the start each time. It loads when the pointer comes near or the name
+  // gets focus, so it's ready by the click. It plays even with "Quiet
+  // sounds" on, since it only ever plays when someone asks for it.
+  document.querySelectorAll("button.say[data-say]").forEach((sayBtn) => {
+    let say = null;
+    const ready = () => {
+      if (!say) { say = new Audio(sayBtn.dataset.say); say.preload = "auto"; }
+      return say;
+    };
+    sayBtn.addEventListener("pointerenter", ready, { once: true });
+    sayBtn.addEventListener("focus", ready, { once: true });
     sayBtn.addEventListener("click", () => {
-      speechSynthesis.cancel();
-      const u = new SpeechSynthesisUtterance("Puh-luv");
-      u.rate = 0.8;
-      speechSynthesis.speak(u);
+      const a = ready();
+      a.pause();
+      a.currentTime = 0;
+      a.play().catch(() => {});
     });
-  }
+  });
 
   // 15) About hero, "the table": the snapshots drop onto the table one
   //     after another once the page shows (after the loader). CSS does the
@@ -2762,18 +2771,19 @@
     }
 
     const PRESSABLE = "a[href], button, [role='button'], summary, label, input[type='checkbox'], input[type='radio'], .project, .wk-card, .tq-card, .bcv, .ab-snap";
-    const clickSound = () => { if (prefs.clicks && window.siteSfx) window.siteSfx.play("click.mp3", 0.5); };
+    // (Not on the names you can hear: their recording plays instead.)
+    const clickSound = (e) => { if (prefs.clicks && window.siteSfx && !(e && e.target.closest && e.target.closest(".say"))) window.siteSfx.play("click.mp3", 0.5); };
     // Mouse and pen: on press, so it lands with the click. Touch: on the tap
     // itself, because iPhone and iPad Safari only allow sound to start from a
     // completed tap. Keyboard presses (Enter, Space) arrive as clicks too.
     let lastPointer = "mouse";
     document.addEventListener("pointerdown", (e) => {
       lastPointer = e.pointerType;
-      if (e.pointerType !== "touch" && e.button === 0 && e.target.closest && e.target.closest(PRESSABLE)) clickSound();
+      if (e.pointerType !== "touch" && e.button === 0 && e.target.closest && e.target.closest(PRESSABLE)) clickSound(e);
     }, true);
     document.addEventListener("click", (e) => {
       const keyboard = e.detail === 0;
-      if ((keyboard || lastPointer === "touch") && e.target.closest && e.target.closest(PRESSABLE)) clickSound();
+      if ((keyboard || lastPointer === "touch") && e.target.closest && e.target.closest(PRESSABLE)) clickSound(e);
     }, true);
     if (prefs.clicks && window.siteSfx) window.siteSfx.load("click.mp3");
     const resetBtn = panel.querySelector(".dsp-reset");

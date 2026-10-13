@@ -40,6 +40,14 @@
 /* Opening signature: Pallav's photo, name and role. */
 .hc-sign { display: inline-flex; align-items: center; gap: 0.875rem; margin: 0 0 2rem; text-align: left; }
 .hc-sign img { flex: none; width: 3.25rem; height: 3.25rem; border-radius: 0.8125rem; }
+/* Pointing at the photo swaps it for a second one, instantly. Not with
+   reduced motion or Calm, and not on touch screens. */
+.hc-dp { position: relative; flex: none; display: block; width: 3.25rem; height: 3.25rem; }
+.hc-dp img { display: block; }
+.hc-dp-alt { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {
+  .hc-dp:hover .hc-dp-alt { opacity: 1; }
+}
 .hc-sign b { display: block; font-size: 1.0625rem; font-weight: 600; color: var(--ink); }
 .hc-sign span span { display: block; margin-top: 0.0625rem; font-size: 0.9375rem; color: var(--ink-soft); }
 
