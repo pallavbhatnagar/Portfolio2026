@@ -1852,6 +1852,7 @@
         if (!drag) {
           const target = reduce.matches || held ? 0 : -DRIFT;
           vel += (target - vel) * Math.min(1, dt / 600);
+          if (!target && Math.abs(vel) < 0.002) vel = 0; // a full stop when still
           pos += vel * dt;
           wrap();
           track.style.transform = `translate3d(${pos}px, 0, 0)`;
@@ -2629,6 +2630,10 @@
     const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } };
     const save = (o) => { try { if (Object.keys(o).length) localStorage.setItem(KEY, JSON.stringify(o)); else localStorage.removeItem(KEY); } catch (e) { /* private mode */ } };
     let prefs = load();
+    // Tablets (touch screens 641px and wider) start at the middle text size;
+    // everything else at the smallest. Only a different choice is saved.
+    const textDefault = window.matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches ? 1 : 0;
+    const textNow = () => (prefs.text != null ? prefs.text : textDefault);
     const deviceCalm = () => { const m = html.getAttribute("data-motion"); html.removeAttribute("data-motion"); const r = window.matchMedia("(prefers-reduced-motion: reduce)").matches; if (m) html.setAttribute("data-motion", m); return r; };
     const ic = (d, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra}>${d}</svg>`;
     const TOGGLES = [
@@ -2724,6 +2729,8 @@
           : sndBtn.classList.contains("is-held") ? "Tap anywhere to carry on"
           : "Click to play";
         btn.classList.toggle("is-music", playing);
+        // (Deferred: on the first check, the panel isn't fully set up yet.)
+        if (playing && prefs.quiet) setTimeout(() => { delete prefs.quiet; apply(); }, 0);
       };
       // The whole row plays (or pauses) the music, not just the round button;
       // the volume slider keeps to itself.
@@ -2739,7 +2746,7 @@
       range.addEventListener("input", () => { fill(); if (window.__ambientVolume) window.__ambientVolume(Number(range.value) / 100); });
     }
 
-    const PRESSABLE = "a[href], button, [role='button'], summary, label, input[type='checkbox'], input[type='radio'], .project, .wk-card, .tq-card, .bcv";
+    const PRESSABLE = "a[href], button, [role='button'], summary, label, input[type='checkbox'], input[type='radio'], .project, .wk-card, .tq-card, .bcv, .ab-snap";
     const clickSound = () => { if (prefs.clicks && window.siteSfx) window.siteSfx.play("click.mp3", 0.5); };
     // Mouse and pen: on press, so it lands with the click. Touch: on the tap
     // itself, because iPhone and iPad Safari only allow sound to start from a
@@ -2756,14 +2763,14 @@
     if (prefs.clicks && window.siteSfx) window.siteSfx.load("click.mp3");
     const resetBtn = panel.querySelector(".dsp-reset");
     const apply = () => {
-      if (prefs.text) html.setAttribute("data-text", String(prefs.text)); else html.removeAttribute("data-text");
+      if (textNow()) html.setAttribute("data-text", String(textNow())); else html.removeAttribute("data-text");
       TOGGLES.forEach(([k]) => { if (prefs[k]) html.setAttribute("data-" + k, ""); else html.removeAttribute("data-" + k); });
       const before = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (prefs.motion) html.setAttribute("data-motion", prefs.motion); else html.removeAttribute("data-motion");
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches !== before) (window.__motionHooks || []).forEach((f) => f());
       // Reflect the state in the panel.
       const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      panel.querySelectorAll('input[name="dsp-text"]').forEach((r) => { r.checked = r.value === String(prefs.text || 0); });
+      panel.querySelectorAll('input[name="dsp-text"]').forEach((r) => { r.checked = r.value === String(textNow()); });
       panel.querySelectorAll('input[name="dsp-motion"]').forEach((r) => { r.checked = r.value === (calm ? "calm" : "lively"); });
       panel.querySelectorAll('input[name="dsp-clicks"]').forEach((r) => { r.checked = r.value === (prefs.clicks ? "on" : "off"); });
       panel.querySelectorAll(".dsp-chip").forEach((c) => c.setAttribute("aria-pressed", String(!!prefs[c.dataset.key])));
@@ -2774,7 +2781,7 @@
     };
     panel.addEventListener("change", (e) => {
       const t = e.target;
-      if (t.name === "dsp-text") { if (t.value === "0") delete prefs.text; else prefs.text = Number(t.value); }
+      if (t.name === "dsp-text") { if (Number(t.value) === textDefault) delete prefs.text; else prefs.text = Number(t.value); }
       else if (t.name === "dsp-motion") {
         // Only remember a choice that differs from what the device asks for.
         if ((t.value === "calm") === deviceCalm()) delete prefs.motion; else prefs.motion = t.value;
@@ -2789,7 +2796,11 @@
     panel.querySelectorAll(".dsp-chip").forEach((c) => c.addEventListener("click", () => {
       const k = c.dataset.key;
       if (prefs[k]) delete prefs[k]; else prefs[k] = 1;
-      if (k === "quiet" && prefs.quiet) delete prefs.clicks;
+      if (k === "quiet" && prefs.quiet) {
+        delete prefs.clicks;
+        const snd = document.querySelector(".sound-toggle");
+        if (snd && snd.getAttribute("aria-pressed") === "true") snd.click();
+      }
       apply();
     }));
     resetBtn.addEventListener("click", () => {

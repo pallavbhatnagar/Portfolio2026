@@ -258,7 +258,10 @@
   for (const [name, list] of Object.entries(POSES)) SPRITES[name] = list.map(render);
 
   // ---------- on the page ----------
-  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  // Reduced motion (the device setting, or Calm in the display settings) is
+  // checked live: switching it sends him to sit still, or lets him roam again.
+  const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  let still = false;
   const el = document.createElement("div");
   el.className = "pxdog";
   el.setAttribute("aria-hidden", "true");
@@ -335,21 +338,13 @@
   window.addEventListener("resize", markStale);
   if ("ResizeObserver" in window) new ResizeObserver(markStale).observe(host);
 
-  if (reduce) {
-    // Reduced motion: he sits still above the last section, re-measured
-    // whenever the page settles or resizes (fonts and images move it).
-    const lastSection = Array.from(host.querySelectorAll(":scope > section")).pop();
-    if (!lastSection) return;
-    el.classList.add("is-on");
-    draw(SPRITES.front[0]);
-    const settle = () => { const s = span(lastSection); x = s.right - 8; y = perchY(lastSection); place(); };
-    settle();
-    window.addEventListener("load", settle);
-    window.addEventListener("resize", settle);
-    if ("ResizeObserver" in window) new ResizeObserver(settle).observe(host);
-    el.addEventListener("click", heart);
-    return;
-  }
+  // Reduced motion: he sits still above the last section, re-measured
+  // whenever the page settles or resizes (fonts and images move it).
+  const lastSection = Array.from(host.querySelectorAll(":scope > section")).pop();
+  const settle = () => { if (!still || !lastSection) return; const s = span(lastSection); x = s.right - 8; y = perchY(lastSection); place(); };
+  window.addEventListener("load", settle);
+  window.addEventListener("resize", settle);
+  if ("ResizeObserver" in window) new ResizeObserver(settle).observe(host);
 
   const rand = (a, b) => a + Math.random() * (b - a);
   const pick = (list) => list[Math.floor(Math.random() * list.length)];
@@ -369,6 +364,7 @@
   // then run off the nearer edge.
   let steps = [], step = null, t0 = 0, last = 0, frameI = 0, frameT = 0, busy = false, lostFor = 0;
   function plan() {
+    if (still) return;
     if (document.hidden) return later(3000);
     // Now and then, peek over a card instead of running in.
     const cards = peeks().filter((s) => onScreen(s, 0.15, 0.85));
@@ -417,7 +413,7 @@
   }
 
   function tick(now) {
-    if (!busy) return;
+    if (!busy || still) return;
     if (!step) {
       step = steps.shift();
       t0 = now; last = now; frameI = 0; frameT = 0;
@@ -493,6 +489,7 @@
   // you. Peeking, he pops up and stays a while longer.
   el.addEventListener("click", (e) => {
     heart(e);
+    if (still) return;
     if (step && step.peek) {
       const age = performance.now() - t0;
       step.ms = Math.max(step.ms, age - 380 + 1600);
@@ -504,7 +501,25 @@
     steps.unshift({ hop: true }, step);
     step = null;
   });
-  document.addEventListener("visibilitychange", () => { if (!document.hidden && !busy) later(2000); });
+  document.addEventListener("visibilitychange", () => { if (!document.hidden && !busy && !still) later(2000); });
 
-  later(3500);
+  const sitStill = () => {
+    still = true;
+    busy = false;
+    clearTimeout(timer);
+    step = null; steps = []; jumpY = 0;
+    el.style.clipPath = "";
+    if (!lastSection) { el.classList.remove("is-on"); return; }
+    el.classList.add("is-on");
+    draw(SPRITES.front[0]);
+    settle();
+  };
+  const roam = () => {
+    still = false;
+    el.classList.remove("is-on");
+    later(2500);
+  };
+  const onMotion = () => { if (reduceMq.matches) { if (!still) sitStill(); } else if (still) roam(); };
+  if (reduceMq.addEventListener) reduceMq.addEventListener("change", onMotion); else if (reduceMq.addListener) reduceMq.addListener(onMotion);
+  if (reduceMq.matches) sitStill(); else later(3500);
 })();
