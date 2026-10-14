@@ -2645,10 +2645,16 @@
 
     const PRESSABLE = "a[href], button, [role='button'], summary, label, input[type='checkbox'], input[type='radio'], .project, .wk-card, .tq-card, .bcv, .ab-snap";
     // (Not on the names you can hear: their recording plays instead. On
-    // desktop widths, not on the About book covers or the hero polaroids
-    // either: there they only react to the pointer; phones keep the tap.)
+    // desktop widths, not on the About book covers, the hero polaroids or
+    // the Home testimonial cards either: there they only react to the
+    // pointer; phones keep the tap. Buttons and links inside them, like a
+    // video's play and sound buttons, still click.)
     const wideMq = window.matchMedia("(min-width: 641px)");
-    const silent = (el) => el.closest(".say") || (wideMq.matches && el.closest(".bcv, .ab-snap"));
+    const silent = (el) => {
+      if (el.closest(".say")) return true;
+      const hit = el.closest(PRESSABLE);
+      return wideMq.matches && !!hit && hit.matches(".bcv, .ab-snap, .tq-card");
+    };
     const clickSound = (e) => { if (prefs.clicks && window.siteSfx && !(e && e.target.closest && silent(e.target))) window.siteSfx.play("click.mp3", 0.5); };
     // Mouse and pen: on press, so it lands with the click. Touch: on the tap
     // itself, because iPhone and iPad Safari only allow sound to start from a
