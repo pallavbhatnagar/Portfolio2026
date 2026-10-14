@@ -2528,7 +2528,7 @@
       ["links", "Underline links", "Every link underlined, so links never hide in the text.", ic('<path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-.8.8M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l.8-.8"/><path d="M4 21.5h16"/>')],
       ["focus", "Bold focus", "Press Tab to move around; a thick, bright outline shows where you are.", ic('<rect x="7" y="7" width="10" height="10" rx="2"/><rect x="3" y="3" width="18" height="18" rx="4.5" stroke-width="2.6"/>')],
       ["plain", "Hide stickers", "Hides the stickers, doodles and the dog. Just the words and the work.", ic('<path d="M14.5 3.5H6A2.5 2.5 0 0 0 3.5 6v12A2.5 2.5 0 0 0 6 20.5h12a2.5 2.5 0 0 0 2.5-2.5V9.5z"/><path d="M14.5 3.5v4a2 2 0 0 0 2 2h4M4 4l16 16"/>')],
-      ["quiet", "Quiet sounds", "Turns off the little sound effects, like the dog's bark and the chat chime.", ic('<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>')],
+      ["quiet", "Quiet sounds", "Turns off the little sound effects, like the dog's bark, and mutes anything playing.", ic('<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>')],
     ];
     // On touch screens there's nothing to point with, so the prompt says tap.
     const HINT = window.matchMedia("(hover: none)").matches ? "Tap an option to see what it does." : "Point at an option to see what it does.";
@@ -2644,8 +2644,12 @@
     }
 
     const PRESSABLE = "a[href], button, [role='button'], summary, label, input[type='checkbox'], input[type='radio'], .project, .wk-card, .tq-card, .bcv, .ab-snap";
-    // (Not on the names you can hear: their recording plays instead.)
-    const clickSound = (e) => { if (prefs.clicks && window.siteSfx && !(e && e.target.closest && e.target.closest(".say"))) window.siteSfx.play("click.mp3", 0.5); };
+    // (Not on the names you can hear: their recording plays instead. On
+    // desktop widths, not on the About book covers or the hero polaroids
+    // either: there they only react to the pointer; phones keep the tap.)
+    const wideMq = window.matchMedia("(min-width: 641px)");
+    const silent = (el) => el.closest(".say") || (wideMq.matches && el.closest(".bcv, .ab-snap"));
+    const clickSound = (e) => { if (prefs.clicks && window.siteSfx && !(e && e.target.closest && silent(e.target))) window.siteSfx.play("click.mp3", 0.5); };
     // Mouse and pen: on press, so it lands with the click. Touch: on the tap
     // itself, because iPhone and iPad Safari only allow sound to start from a
     // completed tap. Keyboard presses (Enter, Space) arrive as clicks too.
@@ -2709,6 +2713,15 @@
         delete prefs.clicks;
         const snd = document.querySelector(".sound-toggle");
         if (snd && snd.getAttribute("aria-pressed") === "true") snd.click();
+        // Switching it on also hushes whatever is playing with sound right
+        // now: the site's videos, and embedded Vimeo and SoundCloud players.
+        // Each can be unmuted again as usual; it isn't kept muted.
+        document.querySelectorAll("video, audio").forEach((m) => { if (!m.paused && !m.muted) m.muted = true; });
+        document.querySelectorAll('iframe[src^="https://player.vimeo.com/"], iframe[src^="https://w.soundcloud.com/"]').forEach((f) => {
+          const vimeo = f.src.startsWith("https://player.vimeo.com/");
+          const msg = { method: "setVolume", value: 0 };
+          try { f.contentWindow.postMessage(vimeo ? msg : JSON.stringify(msg), vimeo ? "https://player.vimeo.com" : "https://w.soundcloud.com"); } catch (e) { /* not loaded yet */ }
+        });
       }
       apply();
     }));
