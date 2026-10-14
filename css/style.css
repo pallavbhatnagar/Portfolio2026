@@ -3574,8 +3574,8 @@ html[data-plain] :is(.hs, .im-doodle, .pxdog) { display: none !important; }
 /* Text size: three A's that grow. */
 .dsp-a { display: block; font-weight: 600; line-height: 1; text-box: trim-both cap alphabetic; }
 .dsp-a0 { font-size: 0.75rem; }
-.dsp-a1 { font-size: 0.9375rem; }
-.dsp-a2 { font-size: 1.125rem; }
+.dsp-a1 { font-size: 1rem; }
+.dsp-a2 { font-size: 1.3125rem; }
 /* Motion icons: sparkles for Lively, a stack of balanced stones for Calm.
    Pointing at Lively makes its sparkles twinkle in turn (it shows what the
    choice means); the stones never move, and nothing moves when motion is
