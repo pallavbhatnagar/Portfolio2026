@@ -33,8 +33,8 @@
   mask-image: radial-gradient(60% 55% at 50% 45%, #000 0%, transparent 75%);
   opacity: 0.55;
 }
-/* Fades the sky into the page below. */
-.hc-sky::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 30%; background: linear-gradient(transparent, var(--bg)); }
+/* The dots fade out through their own mask (above), so nothing is painted
+   over the page here and its film grain carries on unbroken. */
 
 /* ---------- Words ---------- */
 /* Opening signature: Pallav's photo, name and role. */

@@ -240,171 +240,6 @@
     }, { passive: true });
   }
 
-  // 3) Hero desire path. The line draws (CSS) while the dot follows it (SVG
-  //    motion) once, then rests at Done; it replays when scrolled back to.
-  //    Reduced motion: the finished line, no dot travel, no replay.
-  const trail = document.querySelector(".trail");
-  const trailSvg = document.querySelector(".trail-svg");
-  // Phones get their own drawing (.trail-svg-m); both run on one schedule.
-  const trailSvgs = Array.from(document.querySelectorAll(".trail-svg"));
-  const eachSvg = (fn) => trailSvgs.forEach(fn);
-  // The phone drawing runs on one clock (requestAnimationFrame) instead of
-  // mixing SVG and CSS timers, which browsers start at different moments
-  // (Safari starts the SVG one late), so every part stays in step. Times in
-  // seconds: draw in 0.3-1.6, straighten 1.6-3.2, the dot runs 3.2-6.4,
-  // each name appears as the dot reaches its marker, Done at 6.4.
-  const untangle = (svg) => {
-    const line = svg.querySelector(".um-line");
-    const ghost = svg.querySelector(".um-ghost");
-    const dot = svg.querySelector(".um-dot");
-    const ticks = Array.from(svg.querySelectorAll(".um-tick"));
-    const labs = Array.from(svg.querySelectorAll(".um-lab"));
-    const done = svg.querySelector(".um-done");
-    const from = line.getAttribute("d");
-    const num = /-?\d+(?:\.\d+)?/g;
-    const A = from.match(num).map(Number);
-    const B = line.dataset.to.match(num).map(Number);
-    const shape = (k) => { let n = 0; return from.replace(num, () => { const v = A[n] + (B[n] - A[n]) * k; n++; return v.toFixed(2); }); };
-    const x0 = Number(dot.getAttribute("cx"));
-    const x1 = Number(dot.dataset.to);
-    const hits = ticks.map((t) => 3.2 + 3.2 * (Number(t.getAttribute("cx")) - x0) / (x1 - x0));
-    const bezier = (p1x, p1y, p2x, p2y) => (x) => {
-      if (x <= 0) return 0;
-      if (x >= 1) return 1;
-      let lo = 0, hi = 1, t = x;
-      for (let k = 0; k < 24; k++) {
-        t = (lo + hi) / 2;
-        const bx = 3 * (1 - t) * (1 - t) * t * p1x + 3 * (1 - t) * t * t * p2x + t * t * t;
-        if (bx < x) lo = t; else hi = t;
-      }
-      return 3 * (1 - t) * (1 - t) * t * p1y + 3 * (1 - t) * t * t * p2y + t * t * t;
-    };
-    const easeOut = bezier(0.23, 1, 0.32, 1);
-    const easeIO = bezier(0.77, 0, 0.175, 1);
-    const part = (t, start, dur) => Math.min(1, Math.max(0, (t - start) / dur));
-    let len = 0;
-    const measure = () => {
-      line.setAttribute("d", from);
-      try { len = line.getTotalLength(); } catch (e) { len = 0; }
-    };
-    const render = (t) => {
-      const drawn = easeOut(part(t, 0.3, 1.3));
-      const m = easeIO(part(t, 1.6, 1.6));
-      line.setAttribute("d", m > 0 ? shape(m) : from);
-      // Before it starts (held under the loading screen) nothing is drawn.
-      line.style.visibility = drawn > 0 || len ? "" : "hidden";
-      if (drawn < 1 && len) {
-        line.style.strokeDasharray = `${len} ${len}`;
-        line.style.strokeDashoffset = String(len * (1 - drawn));
-      } else {
-        line.style.strokeDasharray = "";
-        line.style.strokeDashoffset = "";
-      }
-      ghost.style.strokeOpacity = String(t < 1.4 ? 0 : 0.22 * (1 - part(t, 2.96, 1.04)));
-      dot.style.opacity = String(part(t, 3.05, 0.2));
-      dot.setAttribute("cx", (x0 + (x1 - x0) * part(t, 3.2, 3.2)).toFixed(2));
-      ticks.forEach((tick, n) => {
-        tick.style.opacity = String(easeOut(part(t, 3 + n * 0.06, 0.4)));
-        tick.style.fill = t >= hits[n] ? "" : "var(--bg)";
-      });
-      labs.forEach((lab, n) => {
-        const k = easeOut(part(t, hits[n] - 0.05, 0.5));
-        lab.style.opacity = String(k);
-        lab.setAttribute("transform", `translate(0 ${((1 - k) * 5).toFixed(2)})`);
-      });
-      const k = easeOut(part(t, 6.4, 0.5));
-      done.style.opacity = String(k);
-      done.setAttribute("transform", `translate(0 ${((1 - k) * 5).toFixed(2)})`);
-    };
-    let raf = 0, t0 = 0;
-    const frame = (now) => {
-      const t = (now - t0) / 1000;
-      render(t);
-      raf = t < 7 ? requestAnimationFrame(frame) : 0;
-    };
-    const stop = () => { cancelAnimationFrame(raf); raf = 0; };
-    return {
-      // Not on screen (wider windows hide it): show it finished instead.
-      play() {
-        stop();
-        if (!svg.getClientRects().length) { render(99); return; }
-        measure();
-        t0 = performance.now();
-        render(0);
-        raf = requestAnimationFrame(frame);
-      },
-      hold() { stop(); if (svg.getClientRects().length) measure(); render(0); },
-      stop,
-      finish() { stop(); render(99); }
-    };
-  };
-  const trailM = document.querySelector(".trail-svg-m");
-  const um = trailM ? untangle(trailM) : null;
-  if (trail && trailSvg) {
-    // On phones the drawing shrinks, so the dot and nodes get larger radii
-    // (style.css does the same with the CSS r property, which some Safari
-    // versions ignore; setting the attribute works in every browser).
-    const smallMq = window.matchMedia("(max-width: 640px)");
-    const sizeTrail = () => {
-      const small = smallMq.matches;
-      trailSvg.querySelectorAll(".trail-dot").forEach((c) => c.setAttribute("r", small ? "16" : "7"));
-      trailSvg.querySelectorAll(".trail-node").forEach((c) => c.setAttribute("r", small ? "12" : "6"));
-    };
-    sizeTrail();
-    if (smallMq.addEventListener) smallMq.addEventListener("change", sizeTrail);
-    if (reduce.matches) {
-      eachSvg((svg) => svg.querySelectorAll("animateMotion").forEach((m) => m.remove()));
-      const dot = trailSvg.querySelector(".trail-dot");
-      dot.setAttribute("cx", "990");
-      dot.setAttribute("cy", "100");
-      if (um) um.finish();
-    } else {
-      // It plays once when the page opens, then rests on the finished
-      // drawing (at Done). It plays again only when the visitor comes back
-      // to it: scrolls away and back, or returns to the page with Back.
-      // The dot's SVG motion keeps the browser redrawing while its clock
-      // runs, so the clock is paused as soon as each run is done.
-      const runTime = 7100;
-      let restTimer = 0, away = false;
-      const rest = () => { clearTimeout(restTimer); restTimer = setTimeout(() => eachSvg((svg) => svg.pauseAnimations()), Math.max(0, runTime - trailSvg.getCurrentTime() * 1000)); };
-      const replay = () => {
-        trail.classList.remove("is-run", "is-paused");
-        void trail.offsetWidth;
-        trail.classList.add("is-run");
-        eachSvg((svg) => { svg.setCurrentTime(0); svg.unpauseAnimations(); });
-        if (um) um.play();
-        rest();
-      };
-      document.addEventListener("preloader:leaving", () => replay());
-      // The first run starts with the page, or, on a visit that opens with
-      // the loader, held at its very first frame (nothing drawn yet) and
-      // started the moment the loader begins to lift.
-      if (document.documentElement.classList.contains("is-preloading")) {
-        trail.classList.add("is-paused");
-        eachSvg((svg) => { svg.pauseAnimations(); svg.setCurrentTime(0); });
-        if (um) um.hold();
-      } else {
-        if (um) um.play();
-        rest();
-      }
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(([en]) => {
-          if (!en.isIntersecting) {
-            // Gone from the screen: stop where it is; it starts over on return.
-            away = true;
-            clearTimeout(restTimer);
-            eachSvg((svg) => svg.pauseAnimations());
-            if (um) um.stop();
-            trail.classList.add("is-paused");
-          } else if (away && en.intersectionRatio >= 0.35) {
-            away = false;
-            replay();
-          }
-        }, { threshold: [0, 0.35] }).observe(trail);
-      }
-      addEventListener("pageshow", (e) => { if (e.persisted) replay(); });
-    }
-  }
   // 6) Back-to-top button appears only while the footer is on screen
   //    the end of the page (start of the footer reveal) is on screen.
   const toTop = document.querySelector(".to-top");
@@ -1530,20 +1365,10 @@
     rdLines.addEventListener("pointercancel", endSwipe);
   }
 
-  // 15c) About playlist card: the waveform's played part (lime) stops at a
-  //      random point on each visit, as if the playlist were already under
-  //      way somewhere (between about a sixth and five-sixths of the way).
-  const waveBars = document.querySelectorAll(".om-wave i");
-  if (waveBars.length) {
-    const n = waveBars.length;
-    const upTo = Math.round(n * (0.15 + Math.random() * 0.7));
-    waveBars.forEach((bar, i) => bar.classList.toggle("is-played", i < upTo));
-  }
-
   // 15a) About: the looping animations (the career path's pulsing ring, the
-  //      playlist card's vinyl and waveform, the book shelf) pause while
-  //      their section is off screen, so they cost nothing while you read
-  //      elsewhere. CSS: .is-offscreen.
+  //      music card, the book shelf) pause while their section is off
+  //      screen, so they cost nothing while you read elsewhere. CSS:
+  //      .is-offscreen.
   const loops = document.querySelectorAll(".ab-path, .off-music, .off-books, .ab-life");
   if (loops.length && "IntersectionObserver" in window) {
     const io = new IntersectionObserver((entries) => {
@@ -2004,18 +1829,12 @@
     paint();
   }
 
-  // 18) About, music. The dark card is a facade for the SoundCloud playlist in
-  //     data-sc-src (an api.soundcloud.com playlist/track/user URL, or a
-  //     soundcloud.com profile URL). Pressing play swaps in the real embed with
-  //     the visual player, then loads SoundCloud's Widget API so the card
-  //     reacts: the disc spins, the waveform and equaliser move, and the
-  //     "now playing" line shows the current track. Nothing third-party loads
-  //     before the click.
-  // The sound video, like the Home testimonial video: plays silently on a
-  // loop while on screen (never on its own for reduced motion), with play /
-  // pause and sound buttons in the corner. Turning the sound on the first
-  // time starts it from the beginning; clicking the silent video turns the
-  // sound on too. Without the file, a placeholder shows instead.
+  // 18) About, music: the sound video. Like the Home testimonial video, it
+  //     plays silently on a loop while on screen (never on its own for
+  //     reduced motion), with play / pause and sound buttons in the corner.
+  //     Turning the sound on the first time starts it from the beginning;
+  //     clicking the silent video turns the sound on too. Without the file,
+  //     a placeholder shows instead.
   const omVid = document.querySelector(".om-vid");
   if (omVid) {
     const box = omVid.closest(".om-video");
@@ -2059,6 +1878,60 @@
     omVid.addEventListener("play", syncPlay);
     omVid.addEventListener("pause", syncPlay);
     syncPlay();
+
+    // More than one video (.om-list): the arrows, a sideways swipe on the
+    // video, or the arrow keys move to the next or previous one, wrapping
+    // round. The arrows sit in the controls (previous, play, next, sound).
+    // The new one picks up where the card was: playing (silently, or with
+    // sound if it was on) or paused. The caption ("1 / 3", title) follows.
+    const items = Array.from(box.querySelectorAll(".om-list li"));
+    if (items.length > 1) {
+      const screen = box.querySelector(".om-screen");
+      const tag = box.querySelector(".om-vid-tag");
+      const prev = box.querySelector(".om-prev");
+      const next = box.querySelector(".om-next");
+      box.classList.add("has-list");
+      prev.hidden = false; next.hidden = false;
+      let at = 0;
+      // The caption: "2 / 3" above the title and credit.
+      const showTag = () => { tag.innerHTML = `<span class="om-count">${at + 1} / ${items.length}</span>` + items[at].innerHTML; };
+      showTag();
+      const go = (step) => {
+        at = (at + step + items.length) % items.length;
+        const it = items[at];
+        const wasPlaying = !omVid.paused;
+        box.classList.remove("is-empty");
+        omVid.poster = it.dataset.poster || "";
+        omVid.setAttribute("aria-label", it.dataset.label || "");
+        if (src) src.src = it.dataset.src; else omVid.src = it.dataset.src;
+        omVid.preload = "auto";
+        omVid.load();
+        showTag();
+        if (wasPlaying || (!omVid.muted && !userPaused)) omVid.play().catch(() => {});
+        syncPlay();
+      };
+      prev.addEventListener("click", () => go(-1));
+      next.addEventListener("click", () => go(1));
+      screen.addEventListener("keydown", (e) => {
+        if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
+        else if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
+      });
+      // Swipe: a mostly sideways drag of 40px or more on a touch screen.
+      let sx = 0, sy = 0, tracking = false, swiped = false;
+      screen.addEventListener("pointerdown", (e) => {
+        if (e.pointerType === "mouse" || e.target.closest("button")) return;
+        tracking = true; swiped = false; sx = e.clientX; sy = e.clientY;
+      });
+      screen.addEventListener("pointerup", (e) => {
+        if (!tracking) return;
+        tracking = false;
+        const dx = e.clientX - sx, dy = e.clientY - sy;
+        if (Math.abs(dx) >= 40 && Math.abs(dx) > Math.abs(dy) * 1.5) { swiped = true; go(dx < 0 ? 1 : -1); }
+      });
+      // The tap that ends a swipe is not a "turn the sound on" tap.
+      omVid.addEventListener("click", (e) => { if (swiped) { swiped = false; e.stopImmediatePropagation(); } }, true);
+      screen.addEventListener("pointercancel", () => { tracking = false; });
+    }
   }
 
   // 20) Works page.

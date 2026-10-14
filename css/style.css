@@ -15,19 +15,44 @@
    Shape lock: buttons 10px radius, status pill fully round.
    ========================================================= */
 :root {
+  /* Primitives: one blue scale (500 is the brand blue, #3965fa) and a
+     neutral grey scale (pure greys, no tint). Semantic tokens below point at these. */
+  --blue-50: #f2f4fd;
+  --blue-100: #e4e9fb;
+  --blue-200: #c3cff9;
+  --blue-300: #9cb1f7;
+  --blue-400: #6d8df8;
+  --blue-500: #3965fa;
+  --blue-600: #1244ed;
+  --blue-700: #143bbd;
+  --blue-800: #143194;
+  --blue-900: #122569;
+  --blue-950: #0c173b;
+  --gray-50: #f4f4f4;
+  --gray-100: #f2f1ee;
+  --gray-200: #dcdcdc;
+  --gray-300: #d6d6d6;
+  --gray-400: #8f8f8f;
+  --gray-500: #767676;
+  --gray-600: #666666;
+  --gray-700: #444444;
+  --gray-800: #272727;
+  --gray-850: #202020;
+  --gray-900: #141414;
+  --gray-950: #0d0d0d;
   --bg: #ffffff;
-  --ink: #0d0d0d;
-  --ink-soft: #666666; /* passes 4.5:1 on white and on every project tint */
-  --line: #dcdcdc;
+  --ink: var(--gray-950);
+  --ink-soft: var(--gray-600); /* passes 4.5:1 on white and on every project tint */
+  --line: var(--gray-200);
   --hairline: rgba(13, 13, 13, 0.1);
   --dot: #2b7a3b;
-  --surface: #f4f4f4; /* palette Light Gray (#EDEDED) at 60% on white */
+  --surface: var(--gray-50); /* palette Light Gray (#EDEDED) at 60% on white */
   --surface-2: #ffffff;
   --fill: var(--ink);
   --fill-ink: #ffffff;
-  --fade: #d6d6d6;
-  --control-edge: #8f8f8f; /* 3.3:1 on white: outlines of form fields */
-  --ink-dim: #767676; /* lightest grey that keeps 4.5:1 on white */
+  --fade: var(--gray-300);
+  --control-edge: var(--gray-400); /* 3.3:1 on white: outlines of form fields */
+  --ink-dim: var(--gray-500); /* lightest grey that keeps 4.5:1 on white */
   --radius-btn: 0.375rem;
   --font: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
   --font-mono: var(--font);
@@ -40,19 +65,19 @@
      Secondary hues (green, coral, teal) and navy appear only as very light card tints
      (8% of the hue on white), never as fills, so they don't compete with the
      blue. Each family: a card tint (-bg), a slightly deeper panel and a deep
-     ink for tags and numbers (6:1 or more on its tint). Family names are
-     historical: mint is green, lilac navy grey, rose coral, sky pale blue, sand
-     teal. */
-  --c-blue: #3965fa;
+     ink for tags and numbers (9:1 or more on its tint). Each family is one
+     hue scale (50 tint, 100 panel, 900 ink): mint green, lilac violet, rose
+     coral, sky blue, sand warm ochre. */
+  --c-blue: var(--blue-500);
   --c-navy: #1b1b39;
-  --mint-bg: #f6faf0;  --mint-panel: #f0f8e6;  --mint-ink: #215452;
-  --lilac-bg: #efeff1; --lilac-panel: #e4e4e7; --lilac-ink: #1b1b39;
-  --rose-bg: #fff3f0;  --rose-panel: #ffece7;  --rose-ink: #6f3432;
-  --sky-bg: #f7f9ff;   --sky-panel: #f2f6ff;   --sky-ink: #1b1b39;
-  --sand-bg: #edf1f1;  --sand-panel: #e2e9e9;  --sand-ink: #215452;
+  --mint-bg: #f6faf4;  --mint-panel: #eef6ea;  --mint-ink: #2b4c1a;
+  --lilac-bg: #f6f4fb; --lilac-panel: #ede9f6; --lilac-ink: #27194d;
+  --rose-bg: #fcf4f3;  --rose-panel: #f8e9e7;  --rose-ink: #57190f;
+  --sky-bg: #f3f7fc;   --sky-panel: #e7f0f9;   --sky-ink: #0e3458;
+  --sand-bg: #fbf8f4;  --sand-panel: #f7f2e9;  --sand-ink: #503b16;
   --lime-bg: #effbdd;  --lime-ink: #2f5a12; /* pale lime (#E0FFB7) softened on white */
-  --blue-bg: #e9effe;  --blue-ink: #2a47c8; /* Soft Blue (#99B7FC) at 22%: a testimonial tint */
-  --cta-bg: #202020;
+  --blue-bg: var(--blue-50);  --blue-ink: var(--blue-600); /* a testimonial tint */
+  --cta-bg: var(--gray-850);
   --cta-ink: #ffffff;
   --ai-accent: var(--c-blue);
   /* Type scale: headings at medium weight with tight tracking, the same
@@ -83,30 +108,30 @@
    ========================================================= */
 :root[data-theme="dark"] {
   color-scheme: dark;
-  --bg: #141414;
-  --ink: #f2f1ee;
+  --bg: var(--gray-900);
+  --ink: var(--gray-100);
   --ink-soft: #9a9a9a;
   --line: #333333;
   --hairline: rgba(255, 255, 255, 0.12);
-  --surface: #202020; /* palette Dark Gray */
-  --surface-2: #272727; /* Dark Gray lifted 3% toward white */
-  --fill: #f2f1ee;
-  --fill-ink: #0d0d0d;
+  --surface: var(--gray-850); /* palette Dark Gray */
+  --surface-2: var(--gray-800); /* Dark Gray lifted 3% toward white */
+  --fill: var(--gray-100);
+  --fill-ink: var(--gray-950);
   --fade: #3a3a3a;
   --control-edge: #6b6b6b; /* 3.4:1 on the dark ground */
-  --ink-dim: #808080; /* lightest grey that keeps 4.5:1 on the dark ground */
+  --ink-dim: #888888; /* 5.2:1 on the dark ground, 4.6:1 on the dark surface */
   /* Dark: about 12% of each hue on the dark ground; inks are the hue
      lifted toward white (7.5:1 or more on their tint). */
-  --mint-bg: #222919;  --mint-panel: #28321b;  --mint-ink: #c3e88f;
-  --lilac-bg: #272b34; --lilac-panel: #2c313e; --lilac-ink: #c9d2fd;
-  --rose-bg: #301f1a;  --rose-panel: #3c231d;  --rose-ink: #ffb39e;
-  --sky-bg: #242830;   --sky-panel: #2b303b;   --sky-ink: #c9d7fd;
-  --sand-bg: #161c1b;  --sand-panel: #161f1f;  --sand-ink: #8fc9c4;
+  --mint-bg: #21271e;  --mint-panel: #283024;  --mint-ink: #d9ecd0;
+  --lilac-bg: #201d27; --lilac-panel: #272431; --lilac-ink: #d7cfec;
+  --rose-bg: #291d1c;  --rose-panel: #332421;  --rose-ink: #f2cfca;
+  --sky-bg: #1b2329;   --sky-panel: #212a33;   --sky-ink: #c9def2;
+  --sand-bg: #28241d;  --sand-panel: #312c23;  --sand-ink: #eee2ce;
   --lime-bg: #1d2617;  --lime-ink: #b6e37b;
-  --blue-bg: #191f34;  --blue-ink: #99b7fc;
-  --cta-bg: #f2f1ee;
-  --cta-ink: #202020;
-  --ai-accent: #5f86fb; /* Purposium blue 60% + Soft Blue 40%: brighter on the dark ground */
+  --blue-bg: #191f34;  --blue-ink: var(--blue-300);
+  --cta-bg: var(--gray-100);
+  --cta-ink: var(--gray-850);
+  --ai-accent: var(--blue-400); /* a step lighter than the brand: 6:1 on the dark ground */
 }
 :root[data-theme="dark"] .project { --card: var(--mint-bg); --ink-tag: var(--mint-ink); }
 :root[data-theme="dark"] .project[data-theme="lilac"] { --card: var(--lilac-bg); --ink-tag: var(--lilac-ink); }
@@ -313,25 +338,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   position: relative;
   padding: var(--hero-top) var(--pad) 5.875rem;
 }
-.hero-copy { position: relative; z-index: 1; display: flex; flex-direction: column; align-items: flex-start; }
-.hero-title {
-  font-size: var(--hero-fs);
-  font-weight: 500;
-  letter-spacing: -0.024em;
-  line-height: 1.1;
-}
 .hl, .hl > span { display: block; }
 .hl:last-child { font-weight: 300; }
-.hero-lede {
-  margin-top: 2rem;
-  max-width: 46em;
-  font-size: 1.1875rem;
-  font-weight: 400;
-  line-height: 1.65;
-  color: var(--ink-soft);
-}
 /* The name stands out from the intro: heavier and full ink. */
-.hero-name { font-weight: 600; color: var(--ink); }
 .hero-actions { display: flex; gap: 0.625rem; flex-wrap: wrap; margin-top: 2.75rem; }
 .btn {
   display: inline-flex;
@@ -389,118 +398,25 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .btn-secondary:hover { border-color: var(--ink); }
 }
 
-.trail { position: absolute; z-index: 0; top: calc(var(--hero-top) + var(--hero-fs) * 1.1); left: calc(var(--pad) + var(--hero-fs) * 5.2); right: var(--pad); transform: translateY(-52.6%); pointer-events: none; }
-.trail-stage { position: relative; }
-.trail-svg { display: block; width: 100%; height: auto; overflow: visible; }
-.trail-ghost { fill: none; stroke: url(#ghostGrad); stroke-width: 1.8; stroke-dasharray: 2 8; stroke-linecap: round; }
-.trail-line { fill: none; stroke: url(#trailGrad); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: 1; stroke-dashoffset: 0; }
-.trail-dot { fill: var(--ink); }
-
 /* About: looping animations pause while their section is off screen (script.js). */
 .is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
-/* Off screen, the drawing pauses (script.js) so it costs nothing while you read. */
-.trail.is-paused, .trail.is-paused * { animation-play-state: paused !important; }
-.trail-node { fill: var(--bg); stroke: var(--ink); stroke-width: 2.2; }
-/* Phase labels and the Done capsule: small caps-style labels, widely
-   tracked so the capitals breathe. */
-.trail-lab { position: absolute; font-size: 0.8125rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); white-space: nowrap; }
-.trail-lab { left: var(--x); transform: translateX(-50%); }
-.trail-lab.up { top: 28%; }
-.trail-lab.down { top: 64%; }
-.trail-done {
-  position: absolute;
-  right: 0;
-  top: 22%;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.25rem 0.5rem 0.25rem 0.4375rem;
-  border-radius: 0.3125rem;
-  background: var(--mint-bg);
-  color: var(--mint-ink);
-  font-size: 0.8125rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .trail.is-run .trail-line { stroke-dashoffset: 1; animation: trail-draw 4.2s cubic-bezier(0.55, 0, 0.2, 1) 0.5s forwards; }
-  .trail.is-run .trail-node { opacity: 0; animation: fade-in 0.6s var(--hero-ease) forwards; }
-  .trail.is-run .n1 { animation-delay: 2.7s; }
-  .trail.is-run .n2 { animation-delay: 3.1s; }
-  .trail.is-run .n3 { animation-delay: 3.5s; }
-  .trail.is-run .n4 { animation-delay: 3.9s; }
-  .trail.is-run .trail-lab { opacity: 0; animation: label-in-c 0.7s var(--hero-ease) forwards; }
-  .trail.is-run .trail-done { opacity: 0; animation: label-in 0.7s var(--hero-ease) forwards; }
-  .trail.is-run .t1 { animation-delay: 2.8s; }
-  .trail.is-run .t2 { animation-delay: 3.2s; }
-  .trail.is-run .t3 { animation-delay: 3.6s; }
-  .trail.is-run .t4 { animation-delay: 4s; }
-  .trail.is-run .trail-done { animation-delay: 4.6s; }
-}@keyframes label-in-c { from { opacity: 0; transform: translate(-50%, 0.3125rem); } to { opacity: 1; transform: translateX(-50%); } }
 @keyframes fade-in { to { opacity: 1; } }
 @keyframes trail-draw { to { stroke-dashoffset: 0; } }
-@keyframes label-in { from { opacity: 0; transform: translateY(0.3125rem); } to { opacity: 1; transform: none; } }
 
 @media (max-width: 900px) {
-  .br-d { display: none; }
   .hero { --hero-top: calc(var(--pad) + 7.125rem); }
-  .trail { position: relative; top: auto; left: auto; right: auto; transform: none; margin-top: 1.125rem; }
-  .trail-lab, .trail-done { font-size: 0.6875rem; }
 }
-/* Phones: the line drawing comes first, then the headline on one line,
-   the intro and the buttons. */
+/* Phones: the hero stacks. */
 @media (max-width: 640px) {
   .hero { display: flex; flex-direction: column; }
-  /* Phones show their own drawing (.trail-m), at its real size. */
-  .trail { order: -1; margin: 0 0 1.75rem; }
-  .trail-stage { display: none; }
-  .trail-m { display: block; }
-  /* Sized to fit one line; allowed to wrap only if a reading tool adds
-     letter spacing (WCAG 1.4.12), instead of running off the screen. */
-  .hero-title { font-size: clamp(1.5rem, 7.75vw, 2.375rem); }
   /* Phones keep their own intro spacing (the wider screens get more air). */
-  .hero-lede { margin-top: 1.5rem; font-size: 1.25rem; line-height: 1.5; }
   .hero-actions { margin-top: 2.75rem; }
-  .hero-title .hl, .hero-title .hl > span { display: inline-block; }
 }
 @media (max-width: 480px) {
   /* Phones: the two hero buttons share a row, so with extra text spacing a
      label wraps onto a second line rather than spilling out. */
   .btn { min-width: 0; flex: 1; padding: 0.375rem 0.75rem; white-space: normal; text-align: center; }
   .hero-actions { width: 100%; }
-  /* All four phase labels stay; to make room, "Done" shrinks to its check
-     mark in a small circle at the end of the line. */
-  .trail-done { font-size: 0; gap: 0; padding: 0.25rem; }
-  /* Labels keep a fixed gap from the line (at 52.6% of the drawing's
-     height), so they clear it however narrow the screen gets. */
-  .trail-lab.up { top: auto; bottom: calc(47.4% + 0.4375rem); }
-  .trail-lab.down { top: calc(52.6% + 0.4375rem); }
-  .trail-done svg { width: 0.625rem; height: 0.625rem; }
-}
-/* Phone drawing (<=640px): the route untangles. It draws in as a knot,
-   pulls itself straight across the width, then a dot runs the straight
-   line past four markers; each phase name appears as the dot reaches its
-   marker and stays, and it ends on Done. One script clock drives every
-   part (script.js 3), so it plays the same in every browser; these styles
-   are the finished drawing, which is also what reduced motion shows. */
-@media (min-width: 641px) { .trail-m { display: none; } }
-/* Edge to edge across the phone screen. */
-.trail-m { margin-inline: calc(var(--pad) * -1); }
-.um-ghost { fill: none; stroke: var(--ink); stroke-opacity: 0; stroke-width: 1.3; stroke-dasharray: 2 6; stroke-linecap: round; }
-.um-line { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
-.um-tick { fill: var(--ink); stroke: var(--ink); stroke-width: 1.8; }
-.um-dot { fill: var(--ink); }
-.um-lab { font-size: 10.25px; font-weight: 600; letter-spacing: 1px; text-anchor: middle; fill: var(--ink-soft); }
-.um-done rect { fill: var(--mint-bg); }
-.um-done path { fill: none; stroke: var(--mint-ink); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
-.um-done text { font-size: 10.25px; font-weight: 700; letter-spacing: 1px; fill: var(--mint-ink); }
-@media (forced-colors: active) {
-  .um-line, .um-ghost, .um-tick { stroke: CanvasText; }
-  .um-dot, .um-tick, .um-lab, .um-done text { fill: CanvasText; }
-  .um-done rect { fill: Canvas; stroke: CanvasText; }
-  .um-done path { stroke: CanvasText; }
 }
 /* Shared keyframes (page sections and nav) */
 @keyframes rise { to { opacity: 1; transform: none; } }
@@ -599,7 +515,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   letter-spacing: var(--track-heading);
   line-height: 1.08;
 }
-.proj-stack .project-desc { margin-top: 0.375rem; max-width: 45ch; font-size: var(--fs-body); line-height: 1.45; color: #444; }
+.proj-stack .project-desc { margin-top: 0.375rem; max-width: 45ch; font-size: var(--fs-body); line-height: 1.45; color: #444444; }
 /* Metrics: the number first, its label under it, a hairline between the
    two (dt stays first in the markup; flex puts it underneath). */
 .proj-stack .metrics { display: flex; gap: 1.75rem; margin-top: auto; padding-top: 1.125rem; }
@@ -1040,7 +956,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 :root[data-theme="dark"] .tq-arrow { background: var(--surface-2); }
 @media (hover: hover) and (pointer: fine) {
   .tq-arrow:not(:disabled):hover { background: #e6e6e6; }
-  :root[data-theme="dark"] .tq-arrow:not(:disabled):hover { background: #333; }
+  :root[data-theme="dark"] .tq-arrow:not(:disabled):hover { background: #333333; }
 }
 .testi-head h2 {
   font-size: var(--fs-h2);
@@ -1459,9 +1375,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 
 
 /* =========================================================
-   Outside the brief: two full-width cards. Music: a dark player card whose
-   disc, waveform and equaliser react to the real SoundCloud playlist once it
-   plays. Books and comics: a slow marquee. Transform, opacity and colour
+   Outside the brief: two full-width cards. Music: the words and a sound
+   video (scenes I scored, with a link to SoundCloud). Books and comics: a
+   slow marquee. Transform, opacity and colour
    only; off or static for reduced motion.
    ========================================================= */
 .ab-off-head p { max-width: none; margin-top: 0.3125rem; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
@@ -1472,67 +1388,32 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .off-p { margin: 0.4375rem 0 0; max-width: 44ch; font-size: var(--fs-body); line-height: 1.5; color: color-mix(in srgb, var(--ink) 68%, transparent); }
 .off-p strong { font-weight: 500; color: var(--ink); }
 
-/* Music: Dark Gray (#202020) card, the player a step lighter, and the
+/* Music: Dark Gray (#202020) card and the
    soft lime (#B6E37B: palette bright green #8CC63E and pale lime #E0FFB7, half and half) for the accents. */
-/* The copy fills the card's height: title and description at the top, the
-   play status, genres and links pushed to the bottom (margin-top: auto). */
+/* The copy fills the card's height: title and description at the top,
+   genres and the link pushed to the bottom (margin-top: auto). */
 .om-copy { display: flex; flex-direction: column; align-items: flex-start; align-self: stretch; }
 /* Music: copy starts in the top-left corner, like the Books card. */
 .off-music { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-4); align-items: start; padding: 1.125rem 1.125rem 1.25rem; background: #202020; color: #fff; }
 :root[data-theme="dark"] .off-music { background: #202020; }
 .off-music .off-tag { color: #b6e37b; }
 .off-music .off-p { margin-bottom: 1rem; color: rgba(255, 255, 255, 0.62); }
-.om-now { display: inline-flex; align-items: center; gap: 0.4375rem; margin: auto 0 0; padding: 0.3125rem 0.5rem 0.3125rem 0.5rem; border-radius: 999px; background: rgba(255, 255, 255, 0.07); font-size: 0.875rem; font-weight: 500; color: rgba(255, 255, 255, 0.85); }
-.eq { display: inline-flex; align-items: flex-end; gap: 3px; height: 0.625rem; }
-.eq i { display: block; width: 3px; height: 100%; border-radius: 2px; background: #b6e37b; transform-origin: bottom; transform: scaleY(0.3); }
 .om-genres { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin: 0.875rem 0 0; padding: 0; list-style: none; }
 .om-genres li { padding: 0.1875rem 0.4375rem; border: 1px solid rgba(255, 255, 255, 0.16); border-radius: 0.25rem; font-size: 0.875rem; font-weight: 500; color: rgba(255, 255, 255, 0.72); }
-.om-player { min-height: 17.375rem; overflow: hidden; border-radius: 0.375rem; background: #2a2a2a; }
-.om-player iframe { display: block; width: 100%; height: 17.375rem; border: 0; }
-.om-facade { position: relative; display: grid; grid-template-columns: auto minmax(0, 1fr); grid-template-rows: auto 1fr auto; column-gap: 1rem; row-gap: 1rem; align-items: center; min-height: 17.375rem; padding: 1.125rem 1.125rem 1.125rem; background: radial-gradient(110% 90% at 0% 0%, rgba(182, 227, 123, 0.14), transparent 62%); }
-.om-disc { grid-row: 1; width: 6.875rem; height: 6.875rem; border-radius: 50%; box-shadow: 0 0.875rem 1.875rem rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.06); }
-.om-disc svg { display: block; width: 100%; height: 100%; }
-.om-kind { margin: 0; font-size: 0.875rem; font-weight: 500; color: #b6e37b; }
-.om-title { margin: 0.1875rem 0 0; font-size: 1.625rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.05; }
-.om-sub { margin: 0.25rem 0 0; font-size: 1rem; color: rgba(255, 255, 255, 0.5); }
-.om-wave { grid-column: 1 / -1; display: flex; align-items: center; gap: 3px; height: 3.75rem; }
-.om-wave i { flex: 1; height: var(--h); min-width: 2px; border-radius: 2px; background: rgba(255, 255, 255, 0.24); transform-origin: center; }
 /* The played part (lime): a random point on each visit (script.js marks
    the bars); without the script, the first 16. */
-html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: #b6e37b; }
-.om-play { grid-column: 1 / -1; display: inline-flex; align-items: center; gap: 0.5rem; justify-self: start; padding: 0.1875rem 0.75rem 0.1875rem 0.1875rem; border: 0; border-radius: 999px; background: #fff; color: #202020; font-family: inherit; font-size: var(--fs-body); font-weight: 500; cursor: pointer; transition: transform 0.3s var(--ease-out); }
-.om-ic { position: relative; display: grid; place-items: center; width: 1.75rem; height: 1.75rem; border-radius: 50%; background: #b6e37b; }
-.om-ic::after { content: ""; position: absolute; inset: 0; border-radius: 50%; border: 2px solid #b6e37b; opacity: 0; }
-.om-play:focus-visible { outline: 2px solid #b6e37b; outline-offset: 3px; }
-.om-play:active { transform: scale(0.97); }
-@media (hover: hover) and (pointer: fine) { .om-play:hover { transform: translateY(-2px); } }
-.is-playing .eq i { transform: scaleY(1); }
 
 @media (prefers-reduced-motion: no-preference) {
   /* music */
-  .om-wave i { animation: wave 1.9s ease-in-out infinite; animation-delay: var(--d); }
-  .om-disc { animation: spin 26s linear infinite; }
-  .off-music.is-playing .om-disc { animation-duration: 3.4s; }
-  .off-music.is-playing .om-wave i { animation-duration: 0.9s; }
-  .om-ic::after { animation: ring 2.4s ease-out infinite; }
-  .eq i { animation: eq-idle 2.2s ease-in-out infinite; }
-  .eq i:nth-child(2) { animation-delay: 0.25s; } .eq i:nth-child(3) { animation-delay: 0.5s; } .eq i:nth-child(4) { animation-delay: 0.75s; }
-  .is-playing .eq i { animation: eq-play 0.5s ease-in-out infinite alternate; }
-  .is-playing .eq i:nth-child(2) { animation-duration: 0.42s; } .is-playing .eq i:nth-child(3) { animation-duration: 0.6s; } .is-playing .eq i:nth-child(4) { animation-duration: 0.47s; }
   .js .off-grid:not(.is-in) .off-card { opacity: 0; transform: translateY(0.875rem); }
   .off-card { transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
-  .js .off-grid:not(.is-in) .om-wave i { transform: scaleY(0.05); }
 }
-@keyframes wave { 0%, 100% { transform: scaleY(0.45); } 50% { transform: scaleY(1); } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes ring { 0% { transform: scale(1); opacity: 0.6; } 100% { transform: scale(1.6); opacity: 0; } }
-@keyframes eq-idle { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(0.7); } }
-@keyframes eq-play { from { transform: scaleY(0.3); } to { transform: scaleY(1); } }
 
 @media (max-width: 640px) {
   .off-music { grid-template-columns: 1fr; gap: var(--space-3); padding: 1.125rem; }
 }
-@media (max-width: 560px) { .om-facade { grid-template-columns: 1fr; } .om-disc { width: 5.25rem; height: 5.25rem; } }
 
 /* Books and comics: a slow marquee of covers (pauses on hover and focus).
    The heading has an "edit": one word is struck through and its
@@ -1611,8 +1492,8 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 /* =========================================================
    About: Where I've been, What I believe, Now, Questions people ask.
    ========================================================= */
-.ab { --accent: #2a47c8; }
-:root[data-theme="dark"] .ab { --accent: #99b7fc; }
+.ab { --accent: #1244ed; }
+:root[data-theme="dark"] .ab { --accent: #9cb1f7; }
 .ab-sub { margin: 0.3125rem 0 0; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
 
 /* Where I've been: the home page's line, tangled at the start and straight
@@ -1685,6 +1566,8 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 
 /* Questions people ask */
 .faq-side p { max-width: 34ch; margin: 0.625rem 0 0; font-size: var(--fs-body); line-height: 1.5; color: var(--ink-soft); }
+/* Phones: the line under "Questions people ask" on one line. */
+@media (max-width: 640px) { .faq-side p { max-width: none; } }
 /* After the last question: a closing line and the chat button. */
 .faq-more { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.75rem 1.5rem; padding-top: 2.5rem; }
 .faq-more p { margin: 0; font-size: var(--fs-body); font-weight: 500; color: var(--ink); }
@@ -1726,9 +1609,6 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
    ========================================================= */
 .wk { --ease-io: cubic-bezier(0.77, 0, 0.175, 1); max-width: 60.125rem; margin: 0 auto; padding: 0 var(--pad) 7.5rem; }
 .wk-hero { padding: calc(var(--pad) + 5.625rem) 0 0; }
-.wk-count { margin: 0; font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); }
-.wk-title { margin: 0.5rem 0 0; font-size: clamp(1.75rem, 5.47vw, 2.75rem); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
-.wk-lede { max-width: 72ch; margin: 1rem 0 0; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-soft); }
 
 /* Chip style shared with the chat's suggested questions. */
 .wk-chip { padding: 0.3125rem 0.625rem; border: 1px solid var(--line); border-radius: 999px; background: var(--bg); color: var(--ink-soft); font-family: inherit; font-size: var(--fs-small); font-weight: 500; cursor: pointer; transition: background-color 0.25s var(--ease-out), color 0.25s var(--ease-out), border-color 0.25s var(--ease-out); }
@@ -1826,7 +1706,7 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 .wk-cat { color: var(--tint-ink); }
 .wk-year { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
 .wk-name { margin: 1rem 0 0; font-size: var(--fs-h3); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.08; }
-.wk-what { margin: 0.625rem 0 0; max-width: 52ch; font-size: var(--fs-body); line-height: 1.6; color: #444; }
+.wk-what { margin: 0.625rem 0 0; max-width: 52ch; font-size: var(--fs-body); line-height: 1.6; color: #444444; }
 .wk-meta { display: flex; flex-wrap: wrap; gap: 0.25rem 0.625rem; margin-top: auto; padding-top: 1.125rem; border-top: 1px solid rgba(13, 13, 13, 0.1); font-size: var(--fs-small); color: var(--ink-soft); }
 .wk-meta span:first-child { font-weight: 500; color: var(--ink); }
 
@@ -1926,7 +1806,7 @@ html:not(.js) .om-wave i:nth-child(-n + 16), .om-wave i.is-played { background: 
 .ag-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr)); gap: 0.5rem; }
 .ag-card { display: block; padding: 0.75rem 0.875rem; border-radius: 0.5rem; background: var(--tint); color: inherit; text-decoration: none; }
 .ag-card-top b { font-size: 1rem; font-weight: 500; letter-spacing: var(--track-heading); }
-.ag-card p { margin: 0.3125rem 0 0; font-size: 0.875rem; line-height: 1.4; color: #444; }
+.ag-card p { margin: 0.3125rem 0 0; font-size: 0.875rem; line-height: 1.4; color: #444444; }
 .ag-card-metric { display: block; margin-top: 0.4375rem; padding-top: 0.375rem; border-top: 1px solid rgba(13, 13, 13, 0.1); font-size: 0.875rem; color: var(--tint-ink); }
 .ag-card-metric b { display: block; font-size: 1.25rem; font-weight: 500; letter-spacing: var(--track-heading); }
 .ag-card-one { max-width: 20rem; }
@@ -2633,10 +2513,7 @@ body.ask-open .cs-side { display: none; }
    colour, and selected states get an outline or underline instead of a
    colour. Canvas, CanvasText and Highlight are the visitor's system colours. */
 @media (forced-colors: active) {
-  .proj-stack .project, .wk-card, .cs-cover, .cs-insight, .cs-quad, .cs-side-card, .cs-testimonial, .cs-gate,
-  .im-card, .off-card, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv,
-  .btn, .cs-ask, .wk-chip, .wk-badge, .cs-cover-tag, .shot-lock, .trail-done,
-  .cs-tags li, .cs-quad-items li, .cs-tools li {
+  .proj-stack .project, .wk-card, .cs-cover, .cs-insight, .cs-quad, .cs-side-card, .cs-testimonial, .cs-gate, .im-card, .off-card, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv, .btn, .cs-ask, .wk-chip, .wk-badge, .cs-cover-tag, .shot-lock, .cs-tags li, .cs-quad-items li, .cs-tools li {
     border: 1px solid CanvasText;
   }
   /* Selected states. */
@@ -2647,10 +2524,6 @@ body.ask-open .cs-side { display: none; }
   /* Footer icons are black image files: full strength, and flipped to light
      when the contrast theme has a dark background. */
   .footer-links img, .copy-mail { opacity: 1 !important; filter: none !important; }
-  /* The hero line drawing, in the system text colour. */
-  .trail-line, .trail-ghost { stroke: CanvasText; }
-  .trail-node { fill: Canvas; stroke: CanvasText; }
-  .trail-dot { fill: CanvasText; }
 }
 @media (forced-colors: active) and (prefers-color-scheme: dark) {
   .footer-links img { filter: invert(1) !important; }
@@ -2755,7 +2628,7 @@ body.ask-open .cs-side { display: none; }
 .ask-glow i {
   position: absolute; top: 50%; left: 50%; width: 40rem; height: 40rem; margin: -20rem 0 0 -20rem;
   border-radius: 50%;
-  background: conic-gradient(from 0deg, #3965fa, #8fb0ff, #ff8cc4, #f2369a, #ff8cc4, #8fb0ff, #3965fa);
+  background: conic-gradient(from 0deg, #3965fa, #9cb1f7, #ff8cc4, #f2369a, #ff8cc4, #9cb1f7, #3965fa);
 }
 @media (prefers-reduced-motion: no-preference) {
   /* The wheel always keeps its angle: it pauses rather than resetting when
@@ -2826,9 +2699,6 @@ html.is-preloading.pl-ready::before { display: none; }
    to start with, each in its own project tint. All sentences share one grid
    cell, so the page below never jumps when the role changes. On a change,
    the new sentence's words come into focus one after another. */
-.wk-reader .wk-count { margin: 0; }
-.rd-roles { display: flex; flex-wrap: wrap; gap: 0.25rem 1.375rem; }
-html:not(.js) .rd-roles { display: none; }
 /* Grey and regular until chosen; the chosen role is ink and heavier. Each
    button reserves the width of its heavier self, so nothing shifts. */
 .rd-role { display: inline-flex; flex-direction: column; align-items: flex-start; min-height: 24px; padding: 0.25rem 0; border: 0; background: none; color: var(--ink-dim); font: inherit; font-size: var(--fs-body); font-weight: 400; cursor: pointer; transition: color 0.2s ease; }
@@ -2857,12 +2727,8 @@ html:not(.js) .rd-roles { display: none; }
 @media (prefers-reduced-motion: no-preference) { .rd-start.is-in .rd-chip { animation: rd-word 0.5s var(--ease-out) both; animation-delay: calc(0.25s + var(--i) * 70ms); } }
 /* The chosen role is underlined; the line glides to the new one (script.js
    15d). Phones restyle it below, on the swipeable row. */
-.rd-roles { position: relative; }
 .rd-ind { position: absolute; top: 0; left: 0; width: 0; height: 2px; border-radius: 2px; background: var(--ink); pointer-events: none; }
 html:not(.js) .rd-ind { display: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .rd-roles.is-ready .rd-ind { transition: transform 0.35s var(--ease-io), width 0.35s var(--ease-io); }
-}
 @media (max-width: 640px) { .rd-line { max-width: none; } }
 
 /* Phones: the roles as one row you swipe sideways, edge to edge. The page's
@@ -2871,33 +2737,10 @@ html:not(.js) .rd-ind { display: none; }
    ink underline slides to the chosen role (script.js 15d), and the
    sentence below can be swiped for the next or previous reader. */
 @media (max-width: 640px) {
-  .rd-roles {
-    --fl: 0px;
-    --fr: 0px;
-    position: relative;
-    flex-wrap: nowrap;
-    gap: 1.25rem;
-    margin-inline: calc(var(--pad) * -1);
-    padding: 0 var(--pad) 0.5rem;
-    border-bottom: 1px solid var(--hairline);
-    overflow-x: auto;
-    scroll-padding-inline: var(--pad);
-    scrollbar-width: none;
-    overscroll-behavior-x: contain;
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent);
-    mask-image: linear-gradient(to right, transparent, #000 var(--fl), #000 calc(100% - var(--fr)), transparent);
-  }
-  .rd-roles::-webkit-scrollbar { display: none; }
-  .rd-roles.is-more-l { --fl: 2.25rem; }
-  .rd-roles.is-more-r { --fr: 2.25rem; }
   .rd-role { flex: none; white-space: nowrap; }
   .rd-role:active { opacity: 0.6; }
   .rd-ind { top: auto; bottom: 0; }
   .rd-lines { touch-action: pan-y; }
-}
-
-@media (max-width: 640px) and (prefers-reduced-motion: no-preference) {
-  .rd-roles.is-ready .rd-ind { transition: transform 0.35s var(--ease-io), width 0.35s var(--ease-io); }
 }
 
 
@@ -2922,11 +2765,6 @@ html:not(.js) .rd-ind { display: none; }
   .ab-lede { margin-top: 2.5rem; line-height: 1.4; }
 }
 
-/* Home in the nav is Pallav's photo, the whole square with softly rounded
-   corners (it reads as "Home" to screen readers). */
-.nav-dp { display: inline-grid; place-items: center; padding: 0; border-radius: 0.5rem; }
-.nav-dp img { display: block; width: 2.375rem; height: 2.375rem; border-radius: 0.5rem; }
-.nav-dp:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; }
 
 
 /* =========================================================
@@ -3185,9 +3023,8 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 
 /* =========================================================
    About, Music: kept simple, like the other cards on this page. The
-   site's own card, the words and genres, and one button that opens the
-   SoundCloud player in place. The button carries a small record that
-   turns while it's hovered.
+   site's own card, the words and genres, a link to SoundCloud, and the
+   sound video (script.js 18).
    ========================================================= */
 .off-music.om-s, :root[data-theme="dark"] .off-music.om-s { display: flex; flex-direction: column; align-items: flex-start; gap: 0; background: var(--surface); color: var(--ink); }
 .om-s .off-tag { color: var(--ink-soft); }
@@ -3195,25 +3032,12 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 .om-s .off-p { margin-bottom: 0; color: var(--ink-soft); }
 .om-s .om-genres { margin-top: 1rem; }
 .om-s .om-genres li { border-color: var(--hairline); color: var(--ink-soft); }
-.om-s .om-player { align-self: stretch; min-height: 0; margin-top: auto; padding-top: 1.5rem; overflow: visible; border-radius: 0; background: none; }
-.om-s .om-player iframe { border-radius: 0.75rem; }
-.om-s .om-play { display: flex; align-items: center; gap: 0.875rem; width: auto; max-width: 100%; padding: 0.5rem 1.25rem 0.5rem 0.5rem; border: 0; border-radius: 999px; background: var(--ink); color: var(--bg); font: inherit; text-align: left; cursor: pointer; transition: transform 0.2s var(--ease-out); }
-.om-vinyl { position: relative; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: repeating-radial-gradient(circle, #111 0 1.5px, #262626 1.5px 3px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
+.om-vinyl { position: relative; flex: none; width: 2.5rem; height: 2.5rem; border-radius: 50%; background: repeating-radial-gradient(circle, #111111 0 1.5px, #262626 1.5px 3px); box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12); }
 .om-vinyl::after { content: ""; position: absolute; inset: 34%; border-radius: 50%; background: var(--bg); box-shadow: 0 0 0 3px #d4d0f2; }
 :root[data-theme="dark"] .om-vinyl { background: repeating-radial-gradient(circle, #e7e5e0 0 1.5px, #d4d1ca 1.5px 3px); }
-.om-play-t { display: flex; flex-direction: column; line-height: 1.2; }
-.om-play-t b { font-size: 1rem; font-weight: 600; }
-.om-play-t span { margin-top: 0.125rem; font-size: 0.8125rem; opacity: 0.7; }
-.om-play-ic { flex: none; margin-left: 0.5rem; }
-.om-s .om-play:active { transform: scale(0.98); }
-.om-s .om-play:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-@media (hover: hover) and (pointer: fine) { .om-s .om-play:hover { transform: translateY(-2px); } }
 @media (prefers-reduced-motion: no-preference) {
   .om-vinyl { transition: rotate 0s; }
-  .om-s .om-play:hover .om-vinyl { animation: spin 1.6s linear infinite; }
 }
-@media (max-width: 640px) { .om-s .om-play { width: 100%; } .om-play-ic { margin-left: auto; } }
-@media (forced-colors: active) { .om-s .om-play { border: 1px solid CanvasText; } }
 /* Music, two columns: the words on the left, the sound video on the
    right (a screen with a caption and a link to SoundCloud). */
 @media (min-width: 641px) {
@@ -3223,9 +3047,9 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 }
 .om-video { margin: 0; }
 @media (max-width: 640px) { .om-video { margin-top: 1.5rem; } }
-.om-screen { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 0.375rem; background: #111; box-shadow: 0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.55); }
+.om-screen { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 0.375rem; background: #111111; box-shadow: 0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.55); }
 .om-vid { display: block; width: 100%; height: 100%; object-fit: contain; }
-.om-vid-empty { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; background: radial-gradient(120% 90% at 50% 0%, #2a2a2e, #111); color: rgba(255, 255, 255, 0.7); font-size: var(--fs-small); font-weight: 500; }
+.om-vid-empty { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center; justify-content: center; gap: 0.75rem; background: radial-gradient(120% 90% at 50% 0%, #2a2a2e, #111111); color: rgba(255, 255, 255, 0.7); font-size: var(--fs-small); font-weight: 500; }
 .om-video.is-empty .om-vid-empty { display: flex; }
 .om-video.is-empty .om-vid { display: none; }
 .om-vid-empty .om-vinyl { width: 3rem; height: 3rem; }
@@ -3271,11 +3095,9 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 }
 .rd-pick-lead { position: relative; }
 .hs-talk { left: -2.1em; top: -0.55em; width: 1.8em; height: 1.8em; --hr: -10deg; }
-.hs-talk path { fill: #c4d6fb; }
+.hs-talk path { fill: #c3cff9; }
 .hs-talk circle { fill: #1b1b39; }
 .hs-host { position: relative; display: inline-block; }
-@media (prefers-reduced-motion: no-preference) {
-  .is-in }
 @media (max-width: 640px) {
   .hs-talk { left: -1.7em; top: -0.45em; width: 1.45em; height: 1.45em; }
   }
@@ -3283,7 +3105,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 .ab-h2 .hs-host { position: relative; display: inline-block; }
 .hs-quote { right: -1em; top: -0.42em; width: 0.82em; height: 0.82em; border-radius: 50%; background: #d4d0f2; color: #1b1b39; --hr: -10deg; }
 .hs-quote span { display: block; height: 0.5em; font-size: 1.5em; font-weight: 800; line-height: 1; translate: 0 -0.02em; }
-.hs-ask { right: -0.95em; top: -0.38em; width: 0.8em; height: 0.8em; border-radius: 0.22em; background: #c4d6fb; color: #1b1b39; --hr: 10deg; }
+.hs-ask { right: -0.95em; top: -0.38em; width: 0.8em; height: 0.8em; border-radius: 0.22em; background: #c3cff9; color: #1b1b39; --hr: 10deg; }
 .hs-ask span { font-size: 0.6em; font-weight: 800; line-height: 1; }
 /* Home headline: an app window on "products". */
 .hs-app { left: -0.9em; top: 0.08em; width: 0.74em; height: 0.6em; --hr: -9deg; }
@@ -3295,7 +3117,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 .hs-plus span { font-size: 0.9em; font-weight: 800; line-height: 1; translate: 0 -0.04em; }
 .hs-heart { right: -0.95em; top: -0.3em; width: 0.8em; height: 0.8em; --hr: -10deg; }
 .hs-steps { right: -1em; top: -0.32em; width: 0.84em; height: 0.84em; border-radius: 50%; background: #cfe7b0; padding: 0.16em; --hr: -8deg; }
-.hs-hand { position: relative; right: auto; top: auto; display: inline-grid; vertical-align: 0.05em; margin-left: 0.25em; width: 1.08em; height: 1.08em; border-radius: 50%; background: #c4d6fb; --hr: 10deg; }
+.hs-hand { position: relative; right: auto; top: auto; display: inline-grid; vertical-align: 0.05em; margin-left: 0.25em; width: 1.08em; height: 1.08em; border-radius: 50%; background: #c3cff9; --hr: 10deg; }
 .hs-hand span { font-size: 0.68em; line-height: 1; }
 @media (prefers-reduced-motion: no-preference) {
   .is-in .hs-heart { animation: hs-beat 1.4s ease-in-out 1s 2; }
@@ -3391,7 +3213,7 @@ button.say { padding: 0; border: 0; background-color: transparent; font: inherit
 
 /* The spread: hovering a snapshot straightens it and opens a line about it. */
 .ab-snap-more { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s var(--ease-out); }
-.ab-snap-more > span { overflow: hidden; display: block; padding-top: 0; font-size: 0.75rem; font-weight: 400; line-height: 1.35; color: #555; opacity: 0; transition: opacity 0.25s ease, padding-top 0.35s var(--ease-out); }
+.ab-snap-more > span { overflow: hidden; display: block; padding-top: 0; font-size: 0.75rem; font-weight: 400; line-height: 1.35; color: #555555; opacity: 0; transition: opacity 0.25s ease, padding-top 0.35s var(--ease-out); }
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) {
   .ab-snap:hover { rotate: 0deg; }
   .ab-snap:hover .ab-snap-more { grid-template-rows: 1fr; }
@@ -3414,7 +3236,7 @@ button.say { padding: 0; border: 0; background-color: transparent; font: inherit
 .lf-track { display: flex; gap: 0.75rem; width: max-content; margin: 0; padding: 0; list-style: none; }
 .lf-card { flex: none; width: clamp(12.5rem, 19vw, 15.5rem); }
 .lf-fig { margin: 0; }
-.lf-pic { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 0.5rem; background: #ddd; }
+.lf-pic { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 0.5rem; background: #dddddd; }
 .lf-pic > svg, .lf-pic > img, .lf-pic > video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .lf-label { position: absolute; left: 0.875rem; top: 0.75rem; z-index: 1; font-size: 1rem; font-weight: 500; color: #fff; text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35); }
 .lf-fig figcaption { margin-top: 0.75rem; padding-right: 0.5rem; font-size: 0.875rem; line-height: 1.45; color: var(--ink-soft); }
@@ -3668,4 +3490,23 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
   .nav-ctrls { gap: 0.5rem; }
   .nav-home, .nav-links a { white-space: nowrap; }
 }
+
+
+/* Music: more than one video. Previous and next sit in the video controls
+   (previous, play, next, sound); "1 / 3" is a small line above the title.
+   A sideways swipe on the video does the same as the arrows, so the video
+   keeps horizontal drags (pan-y). */
+.om-video.has-list .om-screen { touch-action: pan-y; }
+.om-video.has-list .om-screen:focus { outline: none; }
+.tctl .tbtn[hidden] { display: none; }
+.om-vid-tag .om-count { margin-bottom: 0.25rem; font-size: 0.75rem; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.02em; color: rgba(255, 255, 255, 0.7); }
+
+/* "Questions people ask": one line wherever there are two columns (its
+   column grows just enough to hold it), and its "?" sticker sits a little
+   higher than the other headings' stickers. */
+@media (min-width: 641px) {
+  .ab-faq { grid-template-columns: minmax(min-content, 0.8fr) minmax(0, 1.2fr); }
+  #faq-title { white-space: nowrap; }
+}
+#faq-title .hs-host .hs-ask { top: -0.72em; }
 
