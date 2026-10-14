@@ -2786,6 +2786,16 @@
       if ((keyboard || lastPointer === "touch") && e.target.closest && e.target.closest(PRESSABLE)) clickSound(e);
     }, true);
     if (prefs.clicks && window.siteSfx) window.siteSfx.load("click.mp3");
+    document.addEventListener("click", (e) => {
+      if (!prefs.clicks || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      const a = e.target.closest && e.target.closest("a[href]");
+      if (!a || (a.target && a.target !== "_self") || a.hasAttribute("download")) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin) return;
+      if (url.pathname === location.pathname && url.search === location.search && url.hash) return; // same page
+      e.preventDefault();
+      setTimeout(() => { location.href = url.href; }, 130);
+    });
     const resetBtn = panel.querySelector(".dsp-reset");
     const apply = () => {
       if (textNow()) html.setAttribute("data-text", String(textNow())); else html.removeAttribute("data-text");
