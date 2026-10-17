@@ -1469,6 +1469,22 @@
   const lfTrack = lfRow && lfRow.querySelector(".lf-track");
   if (lfTrack) {
     const section = lfRow.closest(".ab-life");
+    // The videos in the strip play silently, each only while its card is on
+    // screen (the strip moves, so they start and stop as cards pass), and
+    // load only then. Reduced motion (or Calm) leaves them on their still.
+    const lfVideos = Array.from(lfTrack.querySelectorAll("video[data-life-video]"));
+    if (lfVideos.length && "IntersectionObserver" in window) {
+      const lfSeen = new Set();
+      const lfSync = (vid) => {
+        if (lfSeen.has(vid) && !reduce.matches) { vid.muted = true; vid.play().catch(() => {}); }
+        else if (!vid.paused) vid.pause();
+      };
+      const lfIo = new IntersectionObserver((entries) => {
+        entries.forEach((en) => { if (en.isIntersecting) lfSeen.add(en.target); else lfSeen.delete(en.target); lfSync(en.target); });
+      }, { rootMargin: "0px 160px" });
+      lfVideos.forEach((vid) => lfIo.observe(vid));
+      if (reduce.addEventListener) reduce.addEventListener("change", () => lfVideos.forEach(lfSync));
+    }
     const BASE = 0.03;          // px per ms, the slow run
     let x = 0;                  // distance moved to the left, in px
     let v = reduce.matches ? 0 : BASE; // current speed
@@ -1598,6 +1614,17 @@
       // spot and turned its own way; the strip on phones gets the new order.
       const snaps = Array.from(pile.querySelectorAll(".ab-snap"));
       for (let i = snaps.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [snaps[i], snaps[j]] = [snaps[j], snaps[i]]; }
+      // Real photos always make the table: a photo that lands among the
+      // spares (see below) swaps with a drawn card that's on the table.
+      const SHOWN = 7;
+      const isPhoto = (el) => !!el.querySelector(".ab-snap-pic img");
+      for (let i = SHOWN; i < snaps.length; i++) {
+        if (!isPhoto(snaps[i])) continue;
+        const drawn = snaps.slice(0, SHOWN).map((el, k) => (isPhoto(el) ? -1 : k)).filter((k) => k >= 0);
+        if (!drawn.length) break;
+        const j = drawn[Math.floor(Math.random() * drawn.length)];
+        [snaps[i], snaps[j]] = [snaps[j], snaps[i]];
+      }
       const jitter = (n) => (Math.random() * 2 - 1) * n;
       snaps.forEach((el, i) => {
         el.dataset.jy = jitter(1).toFixed(3);
@@ -1605,7 +1632,7 @@
         el.style.setProperty("--i", String(i));
         // Eight fit around the words on the table; the ninth shows only in
         // the strip on phones.
-        el.classList.toggle("is-spare", i >= 7);
+        el.classList.toggle("is-spare", i >= SHOWN);
         pile.append(el);
       });
       // On the table (tablets and desktops) the snapshots hug the words: two
@@ -1759,8 +1786,20 @@
       marks.forEach((m, i) => m.classList.toggle("is-on", i === best));
     };
     pathGrid.addEventListener("scroll", mark, { passive: true });
-    window.addEventListener("resize", mark);
+    // Keyboard: while the row scrolls sideways (phones) it takes focus, so
+    // the arrow keys can move it; where it doesn't scroll, no extra stop.
+    const reach = () => {
+      if (pathGrid.scrollWidth > pathGrid.clientWidth + 1) {
+        pathGrid.tabIndex = 0;
+        pathGrid.setAttribute("aria-label", "Where I've been: swipe, or use the arrow keys to move through the jobs");
+      } else {
+        pathGrid.removeAttribute("tabindex");
+        pathGrid.removeAttribute("aria-label");
+      }
+    };
+    window.addEventListener("resize", () => { mark(); reach(); });
     mark();
+    reach();
   }
 
   // 17) About story: a reading highlight that moves line by line. Words are

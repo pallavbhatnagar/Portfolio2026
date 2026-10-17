@@ -2090,7 +2090,9 @@ body.ask-open .shell-scrollbar {
    the first person so it reads like the designer explaining the project, not
    a spec sheet: who was on the team, what Pallav owned, how long it took and
    what it was made with. */
-.cs-context { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 3.5rem; margin-top: 1.625rem; padding-top: 1.625rem; border-top: 1px solid var(--hairline); }
+/* Team, tools, role and timeline: after the cover and the metrics, below a
+   divider, so the page opens on the work and its results. */
+.cs-context { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.75rem 3.5rem; margin-top: 2.75rem; padding-top: 2.25rem; border-top: 1px solid var(--hairline); }
 .cs-ctx-block + .cs-ctx-block { margin-top: 1.75rem; }
 .cs-ctx-h { font-size: var(--fs-body); font-weight: 600; letter-spacing: 0; line-height: 1.3; color: var(--ink); }
 .cs-ctx-block p { max-width: 52ch; margin-top: 0.5rem; font-size: var(--fs-body); line-height: 1.6; color: var(--ink-soft); }
@@ -2120,11 +2122,11 @@ body.ask-open .shell-scrollbar {
 .cs-cover-media { position: absolute; inset: 0; }
 .cs-cover-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
-/* Outcomes: three results, big and quiet, divided by hairlines. */
-/* Outcomes: three results side by side, no rules or dividers. */
-.cs-outcomes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; margin-top: 3rem; }
+/* Outcomes: three results side by side, no rules or dividers, set close
+   under the cover so they read as its caption. */
+.cs-outcomes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; margin-top: 1.75rem; }
 .cs-out { padding: 0; }
-.cs-num { font-size: 1.75rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; color: var(--tint-ink); }
+.cs-num { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; font-variant-numeric: tabular-nums; color: var(--tint-ink); }
 .cs-out-label { max-width: 26ch; margin-top: 0.5rem; font-size: 1rem; line-height: 1.45; color: var(--ink-soft); }
 
 /* Body: the spine on the left, the chapters on the right. */
@@ -3510,3 +3512,13 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 }
 #faq-title .hs-host .hs-ask { top: -0.72em; }
 
+
+/* Wave 2.0, "One app, many brokers": the Hairline dock figure (js/wave-dock.js).
+   A plate in the page's own line and ground; the figure's plates take the
+   page's background, and its strokes follow the theme by html[data-theme]. */
+.wd { margin: 1.5rem 0 0; }
+.wd-plate { position: relative; border: 1px solid var(--line); border-radius: 0.875rem; overflow: hidden; background: var(--bg); --hairline-plate: var(--bg); }
+.wd-read { position: absolute; top: 0.875rem; right: 1rem; z-index: 1; font-size: var(--fs-small); color: var(--ink-soft); font-variant-numeric: tabular-nums; pointer-events: none; }
+.wd-stage { max-width: 40rem; margin: 0 auto; }
+/* "Where I've been" on phones takes keyboard focus while it scrolls (script.js 15b). */
+.path-grid:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.5rem; }

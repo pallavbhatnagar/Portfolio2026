@@ -19,8 +19,8 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","quiet"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261407" />
-<script src="/js/motion-css.js?v=20261407"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261419" />
+<script src="/js/motion-css.js?v=20261419"></script>
 </head>
 <body>
 
@@ -88,17 +88,15 @@
       </figure>
       <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 12.5; --y: 24; --r: 6; --i: 1">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-2.jpg" alt="One roll a month"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="40" r="30"/><circle cx="40" cy="40" r="19"/><circle cx="40" cy="40" r="8"/></svg>
+          <img src="/assets/images/about/photo-2.jpg" alt="A fluffy white dog sitting on old stone steps" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>One roll a month<span class="ab-snap-more"><span>One roll of film, 36 frames. No retakes, so every shot counts.</span></span></figcaption>
+        <figcaption>The office manager<span class="ab-snap-more"><span>Supervises from the steps. Strict about walks, relaxed about deadlines.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--rose-bg); --tone: var(--rose-ink); --x: 2; --y: 46; --r: 4; --i: 2">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-3.jpg" alt="Pour-over, slowly"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 30h42v18a16 16 0 01-16 16h-10a16 16 0 01-16-16z"/><path d="M56 34h6a8 8 0 010 16h-6"/><path d="M26 14c-3 4 3 6 0 10M38 14c-3 4 3 6 0 10" opacity=".6"/></svg>
+          <img src="/assets/images/about/photo-3.jpg" alt="Pallav smiling in a selfie with two women in kimono, one giving a thumbs up" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>Pour-over, slowly<span class="ab-snap-more"><span>The first quiet ten minutes of the day, before any screen.</span></span></figcaption>
+        <figcaption>Kimono day<span class="ab-snap-more"><span>Braids, a thumbs up and a lot of smiling, somewhere in Japan.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 12.5; --y: 66; --r: -6; --i: 3">
         <div class="ab-snap-pic">
@@ -109,8 +107,7 @@
       </figure>
       <figure class="ab-snap" style="--tint: var(--sand-bg); --tone: var(--sand-ink); --x: 85; --y: 0; --r: 7; --i: 4">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-5.jpg" alt="Patch cables"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="24" cy="26" r="10"/><circle cx="56" cy="26" r="10"/><path d="M24 20v6M56 20v6"/><path d="M12 56h56M12 66h56" opacity=".6"/></svg>
+          <img src="/assets/images/about/photo-5.jpg" alt="A modular synthesiser in a wooden case, with patch cables and a keyboard in front" width="800" height="800" loading="lazy" decoding="async">
         </div>
         <figcaption>Patch cables<span class="ab-snap-more"><span>Synths on the desk, and music for short films.</span></span></figcaption>
       </figure>
@@ -407,168 +404,440 @@
   <section id="life" class="ab-life" aria-labelledby="life-title">
     <div class="ab-life-head">
       <h2 class="ab-h2" id="life-title"><span class="hs-host">Life, lately<span class="hs hs-cam" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8"/><path d="M8.5 7l1.5-2.5h4L15.5 7" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#fff" stroke="#5c3d0b" stroke-width="1.8"/></svg></span></span></h2>
-      <p class="ab-sub">Trips, weekends and whatever has my attention lately.</p>
+      <p class="ab-sub">Trips, weekends and whatever has my attention lately. Most recently, Japan.</p>
     </div>
     <div class="lf-row" role="region" aria-label="Life, lately: photos and videos. Use the left and right arrow keys to move." tabindex="0">
       <ul class="lf-track">
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/1.jpg" alt="Spiti Valley"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Spiti Valley"><defs><linearGradient id="s500" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb38a"/><stop offset="1" stop-color="#7b5ea7"/></linearGradient></defs><rect width="400" height="500" fill="url(#s500)"/><circle cx="290" cy="190" r="34" fill="#ffe2b8" opacity=".9"/><path d="M0 330 110 190 170 260 250 150 400 320V500H0z" fill="#4a3f6b"/><path d="M0 380 90 300 180 360 290 260 400 350V500H0z" fill="#2f2a4a"/><path d="M220 190 250 150 280 190 262 182 250 196 238 184z" fill="#fff" opacity=".85"/></svg>
-              <span class="lf-label">Spiti Valley</span>
+              <img src="/assets/images/life/jp-04.jpg" alt="Kinkaku-ji: The Golden Pavilion, doubled in its pond" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Kinkaku-ji</span>
             </span>
-            <figcaption>Ten days at altitude with no signal. The quiet stays with you long after.</figcaption>
+            <figcaption>The Golden Pavilion, doubled in its pond.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="video">
-              <!-- Replace with <img src="/assets/images/life/2.jpg" alt="Goa">, or for a video: <video src="/assets/videos/life/2.mp4" autoplay muted loop playsinline></video> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Goa"><defs><linearGradient id="s501" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7e5f"/><stop offset="1" stop-color="#feb47b"/></linearGradient></defs><rect width="400" height="500" fill="url(#s501)"/><circle cx="200" cy="270" r="60" fill="#ffe0a3"/><rect y="290" width="400" height="210" fill="#2b5876"/><g stroke="#ffe0a3" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M150 320h100M170 345h60M185 368h30"/></g><path d="M0 440c80-20 160 10 240-8s120 6 160 0V500H0z" fill="#f3d9a4"/></svg>
-              <span class="lf-label">Goa</span>
+              <video data-life-video src="/assets/videos/life/jp-v4.mp4" poster="/assets/videos/life/jp-v4.jpg" muted loop playsinline preload="none" aria-label="Fushimi Inari: Walking through the tunnel of torii gates"></video>
+              <span class="lf-label">Fushimi Inari</span>
             </span>
-            <figcaption>Golden hour on a weekday, the beach almost empty.</figcaption>
+            <figcaption>Walking through the tunnel of torii gates.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/3.jpg" alt="Mumbai"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Mumbai"><defs><linearGradient id="s502" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2027"/><stop offset="1" stop-color="#2c5364"/></linearGradient></defs><rect width="400" height="500" fill="url(#s502)"/><g fill="#0b141a"><rect x="10" y="250" width="60" height="250"/><rect x="80" y="190" width="70" height="310"/><rect x="160" y="280" width="50" height="220"/><rect x="220" y="150" width="80" height="350"/><rect x="310" y="230" width="80" height="270"/></g><g fill="#ffd36e"><rect x="20" y="170" width="6" height="8" opacity="0.5"/><rect x="105" y="207" width="6" height="8" opacity="0.7"/><rect x="196" y="244" width="6" height="8" opacity="0.9"/><rect x="271" y="281" width="6" height="8" opacity="0.5"/><rect x="334" y="318" width="6" height="8" opacity="0.7"/><rect x="45" y="355" width="6" height="8" opacity="0.9"/><rect x="130" y="392" width="6" height="8" opacity="0.5"/><rect x="181" y="429" width="6" height="8" opacity="0.7"/><rect x="256" y="466" width="6" height="8" opacity="0.9"/><rect x="359" y="203" width="6" height="8" opacity="0.5"/><rect x="30" y="240" width="6" height="8" opacity="0.7"/><rect x="115" y="277" width="6" height="8" opacity="0.9"/><rect x="206" y="314" width="6" height="8" opacity="0.5"/><rect x="241" y="351" width="6" height="8" opacity="0.7"/><rect x="344" y="388" width="6" height="8" opacity="0.9"/><rect x="55" y="425" width="6" height="8" opacity="0.5"/><rect x="100" y="462" width="6" height="8" opacity="0.7"/><rect x="191" y="199" width="6" height="8" opacity="0.9"/><rect x="266" y="236" width="6" height="8" opacity="0.5"/><rect x="329" y="273" width="6" height="8" opacity="0.7"/><rect x="40" y="310" width="6" height="8" opacity="0.9"/><rect x="125" y="347" width="6" height="8" opacity="0.5"/><rect x="176" y="384" width="6" height="8" opacity="0.7"/><rect x="251" y="421" width="6" height="8" opacity="0.9"/><rect x="354" y="458" width="6" height="8" opacity="0.5"/><rect x="25" y="195" width="6" height="8" opacity="0.7"/><rect x="110" y="232" width="6" height="8" opacity="0.9"/><rect x="201" y="269" width="6" height="8" opacity="0.5"/><rect x="236" y="306" width="6" height="8" opacity="0.7"/><rect x="339" y="343" width="6" height="8" opacity="0.9"/><rect x="50" y="380" width="6" height="8" opacity="0.5"/><rect x="95" y="417" width="6" height="8" opacity="0.7"/><rect x="186" y="454" width="6" height="8" opacity="0.9"/><rect x="261" y="191" width="6" height="8" opacity="0.5"/><rect x="324" y="228" width="6" height="8" opacity="0.7"/><rect x="35" y="265" width="6" height="8" opacity="0.9"/><rect x="120" y="302" width="6" height="8" opacity="0.5"/><rect x="171" y="339" width="6" height="8" opacity="0.7"/><rect x="246" y="376" width="6" height="8" opacity="0.9"/><rect x="349" y="413" width="6" height="8" opacity="0.5"/></g></svg>
-              <span class="lf-label">Mumbai</span>
+              <img src="/assets/images/life/jp-15.jpg" alt="Chureito Pagoda: Mount Fuji behind the five-storey pagoda" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Chureito Pagoda</span>
             </span>
-            <figcaption>The city right after the first heavy rain of the season.</figcaption>
+            <figcaption>Mount Fuji behind the five-storey pagoda.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/4.jpg" alt="Sunday mornings"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Sunday mornings"><defs><linearGradient id="s503" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e7e9"/><stop offset="1" stop-color="#e3eeff"/></linearGradient></defs><rect width="400" height="500" fill="url(#s503)"/><ellipse cx="200" cy="360" rx="130" ry="26" fill="#d9cbbd"/><path d="M120 230h160v90a50 50 0 0 1-50 50h-60a50 50 0 0 1-50-50z" fill="#fff"/><path d="M280 255h22a28 28 0 0 1 0 56h-22" fill="none" stroke="#fff" stroke-width="16"/><ellipse cx="200" cy="232" rx="78" ry="12" fill="#6f4e37"/><path d="M175 200c-10-20 10-30 0-50M215 200c-10-20 10-30 0-50" stroke="#b9a99a" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
-              <span class="lf-label">Sunday mornings</span>
+              <img src="/assets/images/life/jp-08.jpg" alt="Lantern lane: Red lanterns down a narrow lane after dark" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Lantern lane</span>
             </span>
-            <figcaption>A slow pour-over before any screen gets switched on.</figcaption>
-          </figure>
-        </li>
-        <li class="lf-card">
-          <figure class="lf-fig">
-            <span class="lf-pic" data-type="video">
-              <!-- Replace with <img src="/assets/images/life/5.jpg" alt="Bengaluru">, or for a video: <video src="/assets/videos/life/5.mp4" autoplay muted loop playsinline></video> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Bengaluru"><rect width="400" height="500" fill="#120b26"/><g opacity=".75"><path d="M80 0 30 500h100z" fill="#ff3cac"/><path d="M200 0 150 500h100z" fill="#784ba0"/><path d="M320 0 270 500h100z" fill="#2b86c5"/></g><g fill="#0a0614"><circle cx="20" cy="430" r="22"/><circle cx="66" cy="440" r="26"/><circle cx="112" cy="430" r="30"/><circle cx="158" cy="440" r="22"/><circle cx="204" cy="430" r="26"/><circle cx="250" cy="440" r="30"/><circle cx="296" cy="430" r="22"/><circle cx="342" cy="440" r="26"/><circle cx="388" cy="430" r="30"/><rect y="440" width="400" height="60"/></g></svg>
-              <span class="lf-label">Bengaluru</span>
-            </span>
-            <figcaption>Front row at a gig. Mostly here for the sound design.</figcaption>
+            <figcaption>Red lanterns down a narrow lane after dark.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/6.jpg" alt="Jaisalmer"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Jaisalmer"><defs><linearGradient id="s505" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/></linearGradient></defs><rect width="400" height="500" fill="url(#s505)"/><circle cx="110" cy="170" r="40" fill="#fff4d6"/><path d="M0 330c90-40 170-30 250 0s110 20 150 0V500H0z" fill="#e2955f"/><path d="M0 400c120-50 220-20 400-30V500H0z" fill="#c8733f"/><path d="M290 300v-40m0 15h-14v-12m14 22h14v-14" stroke="#7a4a2a" stroke-width="7" stroke-linecap="round" fill="none"/></svg>
-              <span class="lf-label">Jaisalmer</span>
+              <img src="/assets/images/life/jp-10.jpg" alt="Unicorn Gundam: The life-size Gundam in Odaiba, towering over the crowd" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Unicorn Gundam</span>
             </span>
-            <figcaption>Dunes at dusk, and a sky that took over the whole frame.</figcaption>
-          </figure>
-        </li>
-        <li class="lf-card">
-          <figure class="lf-fig">
-            <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/7.jpg" alt="Coorg"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Coorg"><defs><linearGradient id="s506" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4fc79"/><stop offset="1" stop-color="#96e6a1"/></linearGradient></defs><rect width="400" height="500" fill="url(#s506)"/><g fill="#2d6a4f"><path d="M30 200 -20 420 h100z"/><path d="M110 230 60 420 h100z"/><path d="M190 200 140 420 h100z"/><path d="M270 230 220 420 h100z"/><path d="M350 200 300 420 h100z"/></g><g fill="#1b4332"><path d="M70 260 15 500 h110z"/><path d="M150 280 95 500 h110z"/><path d="M230 260 175 500 h110z"/><path d="M310 280 255 500 h110z"/></g></svg>
-              <span class="lf-label">Coorg</span>
-            </span>
-            <figcaption>A long trail through coffee estates and a lot of mist.</figcaption>
+            <figcaption>The life-size Gundam in Odaiba, towering over the crowd.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="video">
-              <!-- Replace with <img src="/assets/images/life/8.jpg" alt="Ladakh">, or for a video: <video src="/assets/videos/life/8.mp4" autoplay muted loop playsinline></video> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Ladakh"><defs><linearGradient id="s507" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020111"/><stop offset="1" stop-color="#20202c"/></linearGradient></defs><rect width="400" height="500" fill="url(#s507)"/><g fill="#fff"><circle cx="0" cy="0" r="0.6" opacity="0.4"/><circle cx="97" cy="53" r="1.1" opacity="0.52"/><circle cx="194" cy="106" r="1.6" opacity="0.64"/><circle cx="291" cy="159" r="2.1" opacity="0.76"/><circle cx="388" cy="212" r="0.6" opacity="0.88"/><circle cx="85" cy="265" r="1.1" opacity="0.4"/><circle cx="182" cy="318" r="1.6" opacity="0.52"/><circle cx="279" cy="11" r="2.1" opacity="0.64"/><circle cx="376" cy="64" r="0.6" opacity="0.76"/><circle cx="73" cy="117" r="1.1" opacity="0.88"/><circle cx="170" cy="170" r="1.6" opacity="0.4"/><circle cx="267" cy="223" r="2.1" opacity="0.52"/><circle cx="364" cy="276" r="0.6" opacity="0.64"/><circle cx="61" cy="329" r="1.1" opacity="0.76"/><circle cx="158" cy="22" r="1.6" opacity="0.88"/><circle cx="255" cy="75" r="2.1" opacity="0.4"/><circle cx="352" cy="128" r="0.6" opacity="0.52"/><circle cx="49" cy="181" r="1.1" opacity="0.64"/><circle cx="146" cy="234" r="1.6" opacity="0.76"/><circle cx="243" cy="287" r="2.1" opacity="0.88"/><circle cx="340" cy="340" r="0.6" opacity="0.4"/><circle cx="37" cy="33" r="1.1" opacity="0.52"/><circle cx="134" cy="86" r="1.6" opacity="0.64"/><circle cx="231" cy="139" r="2.1" opacity="0.76"/><circle cx="328" cy="192" r="0.6" opacity="0.88"/><circle cx="25" cy="245" r="1.1" opacity="0.4"/><circle cx="122" cy="298" r="1.6" opacity="0.52"/><circle cx="219" cy="351" r="2.1" opacity="0.64"/><circle cx="316" cy="44" r="0.6" opacity="0.76"/><circle cx="13" cy="97" r="1.1" opacity="0.88"/><circle cx="110" cy="150" r="1.6" opacity="0.4"/><circle cx="207" cy="203" r="2.1" opacity="0.52"/><circle cx="304" cy="256" r="0.6" opacity="0.64"/><circle cx="1" cy="309" r="1.1" opacity="0.76"/><circle cx="98" cy="2" r="1.6" opacity="0.88"/><circle cx="195" cy="55" r="2.1" opacity="0.4"/><circle cx="292" cy="108" r="0.6" opacity="0.52"/><circle cx="389" cy="161" r="1.1" opacity="0.64"/><circle cx="86" cy="214" r="1.6" opacity="0.76"/><circle cx="183" cy="267" r="2.1" opacity="0.88"/><circle cx="280" cy="320" r="0.6" opacity="0.4"/><circle cx="377" cy="13" r="1.1" opacity="0.52"/><circle cx="74" cy="66" r="1.6" opacity="0.64"/><circle cx="171" cy="119" r="2.1" opacity="0.76"/><circle cx="268" cy="172" r="0.6" opacity="0.88"/><circle cx="365" cy="225" r="1.1" opacity="0.4"/><circle cx="62" cy="278" r="1.6" opacity="0.52"/><circle cx="159" cy="331" r="2.1" opacity="0.64"/><circle cx="256" cy="24" r="0.6" opacity="0.76"/><circle cx="353" cy="77" r="1.1" opacity="0.88"/><circle cx="50" cy="130" r="1.6" opacity="0.4"/><circle cx="147" cy="183" r="2.1" opacity="0.52"/><circle cx="244" cy="236" r="0.6" opacity="0.64"/><circle cx="341" cy="289" r="1.1" opacity="0.76"/><circle cx="38" cy="342" r="1.6" opacity="0.88"/><circle cx="135" cy="35" r="2.1" opacity="0.4"/><circle cx="232" cy="88" r="0.6" opacity="0.52"/><circle cx="329" cy="141" r="1.1" opacity="0.64"/><circle cx="26" cy="194" r="1.6" opacity="0.76"/><circle cx="123" cy="247" r="2.1" opacity="0.88"/><circle cx="220" cy="300" r="0.6" opacity="0.4"/><circle cx="317" cy="353" r="1.1" opacity="0.52"/><circle cx="14" cy="46" r="1.6" opacity="0.64"/><circle cx="111" cy="99" r="2.1" opacity="0.76"/><circle cx="208" cy="152" r="0.6" opacity="0.88"/><circle cx="305" cy="205" r="1.1" opacity="0.4"/><circle cx="2" cy="258" r="1.6" opacity="0.52"/><circle cx="99" cy="311" r="2.1" opacity="0.64"/><circle cx="196" cy="4" r="0.6" opacity="0.76"/><circle cx="293" cy="57" r="1.1" opacity="0.88"/></g><path d="M40 60c120 40 220 90 330 220" stroke="#9fb8ff" stroke-width="2" opacity=".5" fill="none"/><path d="M0 430c100-30 200-10 400-40V500H0z" fill="#07070d"/></svg>
-              <span class="lf-label">Ladakh</span>
+              <video data-life-video src="/assets/videos/life/jp-v1.mp4" poster="/assets/videos/life/jp-v1.jpg" muted loop playsinline preload="none" aria-label="Itsukushima: The floating torii, with the tide all the way in"></video>
+              <span class="lf-label">Itsukushima</span>
             </span>
-            <figcaption>A night-sky timelapse shot from a tripod outside the tent.</figcaption>
+            <figcaption>The floating torii, with the tide all the way in.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-02.jpg" alt="The long climb: Stone steps straight up into the trees" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">The long climb</span>
+            </span>
+            <figcaption>Stone steps straight up into the trees.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-13.jpg" alt="Temple pond: A temple hall reflected in still water" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Temple pond</span>
+            </span>
+            <figcaption>A temple hall reflected in still water.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v2.mp4" poster="/assets/videos/life/jp-v2.jpg" muted loop playsinline preload="none" aria-label="Shinkansen: A bullet train sliding into the platform"></video>
+              <span class="lf-label">Shinkansen</span>
+            </span>
+            <figcaption>A bullet train sliding into the platform.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-12.jpg" alt="Osaka Castle: The castle catching the last of the light" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Osaka Castle</span>
+            </span>
+            <figcaption>The castle catching the last of the light.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-16.jpg" alt="Fuji at sunset: Fuji glowing pink behind a corner Lawson" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Fuji at sunset</span>
+            </span>
+            <figcaption>Fuji glowing pink behind a corner Lawson.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-07.jpg" alt="After dark: Wooden fronts and paper lamps on a quiet street" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">After dark</span>
+            </span>
+            <figcaption>Wooden fronts and paper lamps on a quiet street.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v5.mp4" poster="/assets/videos/life/jp-v5.jpg" muted loop playsinline preload="none" aria-label="Ine Bay: Boathouses along the water, under a hill of trees"></video>
+              <span class="lf-label">Ine Bay</span>
+            </span>
+            <figcaption>Boathouses along the water, under a hill of trees.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-01.jpg" alt="Temple lanterns: Rows of paper lanterns under a red temple roof" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Temple lanterns</span>
+            </span>
+            <figcaption>Rows of paper lanterns under a red temple roof.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-14.jpg" alt="Pikachu sign: A Pikachu sign by the road, out of nowhere" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Pikachu sign</span>
+            </span>
+            <figcaption>A Pikachu sign by the road, out of nowhere.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v3.mp4" poster="/assets/videos/life/jp-v3.jpg" muted loop playsinline preload="none" aria-label="Rainy walk: Umbrellas up, and the city kept going"></video>
+              <span class="lf-label">Rainy walk</span>
+            </span>
+            <figcaption>Umbrellas up, and the city kept going.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-11.jpg" alt="Tokyo Station: The red-brick station, between the glass towers" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Tokyo Station</span>
+            </span>
+            <figcaption>The red-brick station, between the glass towers.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v7.mp4" poster="/assets/videos/life/jp-v7.jpg" muted loop playsinline preload="none" aria-label="Amit Trivedi, live: In the crowd for Amit Trivedi, lights and all"></video>
+              <span class="lf-label">Amit Trivedi, live</span>
+            </span>
+            <figcaption>In the crowd for Amit Trivedi, lights and all.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-03.jpg" alt="Stone guardian: A mossy statue keeping watch at the foot of the steps" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Stone guardian</span>
+            </span>
+            <figcaption>A mossy statue keeping watch at the foot of the steps.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v6.mp4" poster="/assets/videos/life/jp-v6.jpg" muted loop playsinline preload="none" aria-label="Night drive: City lights through the rain at night"></video>
+              <span class="lf-label">Night drive</span>
+            </span>
+            <figcaption>City lights through the rain at night.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-05.jpg" alt="Shrine fence: Vermilion fences between the old trees" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Shrine fence</span>
+            </span>
+            <figcaption>Vermilion fences between the old trees.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-09.jpg" alt="Corner shop: Flowers, a vending machine and a small shop front" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Corner shop</span>
+            </span>
+            <figcaption>Flowers, a vending machine and a small shop front.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-17.jpg" alt="Ferrari F1: A Ferrari Formula 1 car on display, up close" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Ferrari F1</span>
+            </span>
+            <figcaption>A Ferrari Formula 1 car on display, up close.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-06.jpg" alt="Blue hour: Street lights coming on as the city heads home" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Blue hour</span>
+            </span>
+            <figcaption>Street lights coming on as the city heads home.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/1.jpg" alt="Spiti Valley"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s400" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffb38a"/><stop offset="1" stop-color="#7b5ea7"/></linearGradient></defs><rect width="400" height="500" fill="url(#s400)"/><circle cx="290" cy="190" r="34" fill="#ffe2b8" opacity=".9"/><path d="M0 330 110 190 170 260 250 150 400 320V500H0z" fill="#4a3f6b"/><path d="M0 380 90 300 180 360 290 260 400 350V500H0z" fill="#2f2a4a"/><path d="M220 190 250 150 280 190 262 182 250 196 238 184z" fill="#fff" opacity=".85"/></svg>
-              <span class="lf-label">Spiti Valley</span>
+              <img src="/assets/images/life/jp-04.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Kinkaku-ji</span>
             </span>
-            <figcaption>Ten days at altitude with no signal. The quiet stays with you long after.</figcaption>
+            <figcaption>The Golden Pavilion, doubled in its pond.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="video">
-              <!-- Replace with <img src="/assets/images/life/2.jpg" alt="Goa">, or for a video: <video src="/assets/videos/life/2.mp4" autoplay muted loop playsinline></video> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s401" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff7e5f"/><stop offset="1" stop-color="#feb47b"/></linearGradient></defs><rect width="400" height="500" fill="url(#s401)"/><circle cx="200" cy="270" r="60" fill="#ffe0a3"/><rect y="290" width="400" height="210" fill="#2b5876"/><g stroke="#ffe0a3" stroke-width="4" stroke-linecap="round" opacity=".7"><path d="M150 320h100M170 345h60M185 368h30"/></g><path d="M0 440c80-20 160 10 240-8s120 6 160 0V500H0z" fill="#f3d9a4"/></svg>
-              <span class="lf-label">Goa</span>
+              <video data-life-video src="/assets/videos/life/jp-v4.mp4" poster="/assets/videos/life/jp-v4.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Fushimi Inari</span>
             </span>
-            <figcaption>Golden hour on a weekday, the beach almost empty.</figcaption>
+            <figcaption>Walking through the tunnel of torii gates.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/3.jpg" alt="Mumbai"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s402" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0f2027"/><stop offset="1" stop-color="#2c5364"/></linearGradient></defs><rect width="400" height="500" fill="url(#s402)"/><g fill="#0b141a"><rect x="10" y="250" width="60" height="250"/><rect x="80" y="190" width="70" height="310"/><rect x="160" y="280" width="50" height="220"/><rect x="220" y="150" width="80" height="350"/><rect x="310" y="230" width="80" height="270"/></g><g fill="#ffd36e"><rect x="20" y="170" width="6" height="8" opacity="0.5"/><rect x="105" y="207" width="6" height="8" opacity="0.7"/><rect x="196" y="244" width="6" height="8" opacity="0.9"/><rect x="271" y="281" width="6" height="8" opacity="0.5"/><rect x="334" y="318" width="6" height="8" opacity="0.7"/><rect x="45" y="355" width="6" height="8" opacity="0.9"/><rect x="130" y="392" width="6" height="8" opacity="0.5"/><rect x="181" y="429" width="6" height="8" opacity="0.7"/><rect x="256" y="466" width="6" height="8" opacity="0.9"/><rect x="359" y="203" width="6" height="8" opacity="0.5"/><rect x="30" y="240" width="6" height="8" opacity="0.7"/><rect x="115" y="277" width="6" height="8" opacity="0.9"/><rect x="206" y="314" width="6" height="8" opacity="0.5"/><rect x="241" y="351" width="6" height="8" opacity="0.7"/><rect x="344" y="388" width="6" height="8" opacity="0.9"/><rect x="55" y="425" width="6" height="8" opacity="0.5"/><rect x="100" y="462" width="6" height="8" opacity="0.7"/><rect x="191" y="199" width="6" height="8" opacity="0.9"/><rect x="266" y="236" width="6" height="8" opacity="0.5"/><rect x="329" y="273" width="6" height="8" opacity="0.7"/><rect x="40" y="310" width="6" height="8" opacity="0.9"/><rect x="125" y="347" width="6" height="8" opacity="0.5"/><rect x="176" y="384" width="6" height="8" opacity="0.7"/><rect x="251" y="421" width="6" height="8" opacity="0.9"/><rect x="354" y="458" width="6" height="8" opacity="0.5"/><rect x="25" y="195" width="6" height="8" opacity="0.7"/><rect x="110" y="232" width="6" height="8" opacity="0.9"/><rect x="201" y="269" width="6" height="8" opacity="0.5"/><rect x="236" y="306" width="6" height="8" opacity="0.7"/><rect x="339" y="343" width="6" height="8" opacity="0.9"/><rect x="50" y="380" width="6" height="8" opacity="0.5"/><rect x="95" y="417" width="6" height="8" opacity="0.7"/><rect x="186" y="454" width="6" height="8" opacity="0.9"/><rect x="261" y="191" width="6" height="8" opacity="0.5"/><rect x="324" y="228" width="6" height="8" opacity="0.7"/><rect x="35" y="265" width="6" height="8" opacity="0.9"/><rect x="120" y="302" width="6" height="8" opacity="0.5"/><rect x="171" y="339" width="6" height="8" opacity="0.7"/><rect x="246" y="376" width="6" height="8" opacity="0.9"/><rect x="349" y="413" width="6" height="8" opacity="0.5"/></g></svg>
-              <span class="lf-label">Mumbai</span>
+              <img src="/assets/images/life/jp-15.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Chureito Pagoda</span>
             </span>
-            <figcaption>The city right after the first heavy rain of the season.</figcaption>
+            <figcaption>Mount Fuji behind the five-storey pagoda.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/4.jpg" alt="Sunday mornings"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s403" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3e7e9"/><stop offset="1" stop-color="#e3eeff"/></linearGradient></defs><rect width="400" height="500" fill="url(#s403)"/><ellipse cx="200" cy="360" rx="130" ry="26" fill="#d9cbbd"/><path d="M120 230h160v90a50 50 0 0 1-50 50h-60a50 50 0 0 1-50-50z" fill="#fff"/><path d="M280 255h22a28 28 0 0 1 0 56h-22" fill="none" stroke="#fff" stroke-width="16"/><ellipse cx="200" cy="232" rx="78" ry="12" fill="#6f4e37"/><path d="M175 200c-10-20 10-30 0-50M215 200c-10-20 10-30 0-50" stroke="#b9a99a" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
-              <span class="lf-label">Sunday mornings</span>
+              <img src="/assets/images/life/jp-08.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Lantern lane</span>
             </span>
-            <figcaption>A slow pour-over before any screen gets switched on.</figcaption>
+            <figcaption>Red lanterns down a narrow lane after dark.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-10.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Unicorn Gundam</span>
+            </span>
+            <figcaption>The life-size Gundam in Odaiba, towering over the crowd.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="video">
-              <!-- Replace with <img src="/assets/images/life/5.jpg" alt="Bengaluru">, or for a video: <video src="/assets/videos/life/5.mp4" autoplay muted loop playsinline></video> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><rect width="400" height="500" fill="#120b26"/><g opacity=".75"><path d="M80 0 30 500h100z" fill="#ff3cac"/><path d="M200 0 150 500h100z" fill="#784ba0"/><path d="M320 0 270 500h100z" fill="#2b86c5"/></g><g fill="#0a0614"><circle cx="20" cy="430" r="22"/><circle cx="66" cy="440" r="26"/><circle cx="112" cy="430" r="30"/><circle cx="158" cy="440" r="22"/><circle cx="204" cy="430" r="26"/><circle cx="250" cy="440" r="30"/><circle cx="296" cy="430" r="22"/><circle cx="342" cy="440" r="26"/><circle cx="388" cy="430" r="30"/><rect y="440" width="400" height="60"/></g></svg>
-              <span class="lf-label">Bengaluru</span>
+              <video data-life-video src="/assets/videos/life/jp-v1.mp4" poster="/assets/videos/life/jp-v1.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Itsukushima</span>
             </span>
-            <figcaption>Front row at a gig. Mostly here for the sound design.</figcaption>
+            <figcaption>The floating torii, with the tide all the way in.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/6.jpg" alt="Jaisalmer"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s405" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f6d365"/><stop offset="1" stop-color="#fda085"/></linearGradient></defs><rect width="400" height="500" fill="url(#s405)"/><circle cx="110" cy="170" r="40" fill="#fff4d6"/><path d="M0 330c90-40 170-30 250 0s110 20 150 0V500H0z" fill="#e2955f"/><path d="M0 400c120-50 220-20 400-30V500H0z" fill="#c8733f"/><path d="M290 300v-40m0 15h-14v-12m14 22h14v-14" stroke="#7a4a2a" stroke-width="7" stroke-linecap="round" fill="none"/></svg>
-              <span class="lf-label">Jaisalmer</span>
+              <img src="/assets/images/life/jp-02.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">The long climb</span>
             </span>
-            <figcaption>Dunes at dusk, and a sky that took over the whole frame.</figcaption>
+            <figcaption>Stone steps straight up into the trees.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <!-- Replace with <img src="/assets/images/life/7.jpg" alt="Coorg"> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s406" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d4fc79"/><stop offset="1" stop-color="#96e6a1"/></linearGradient></defs><rect width="400" height="500" fill="url(#s406)"/><g fill="#2d6a4f"><path d="M30 200 -20 420 h100z"/><path d="M110 230 60 420 h100z"/><path d="M190 200 140 420 h100z"/><path d="M270 230 220 420 h100z"/><path d="M350 200 300 420 h100z"/></g><g fill="#1b4332"><path d="M70 260 15 500 h110z"/><path d="M150 280 95 500 h110z"/><path d="M230 260 175 500 h110z"/><path d="M310 280 255 500 h110z"/></g></svg>
-              <span class="lf-label">Coorg</span>
+              <img src="/assets/images/life/jp-13.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Temple pond</span>
             </span>
-            <figcaption>A long trail through coffee estates and a lot of mist.</figcaption>
+            <figcaption>A temple hall reflected in still water.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="video">
-              <!-- Replace with <img src="/assets/images/life/8.jpg" alt="Ladakh">, or for a video: <video src="/assets/videos/life/8.mp4" autoplay muted loop playsinline></video> -->
-              <svg viewBox="0 0 400 500" preserveAspectRatio="xMidYMid slice" ><defs><linearGradient id="s407" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#020111"/><stop offset="1" stop-color="#20202c"/></linearGradient></defs><rect width="400" height="500" fill="url(#s407)"/><g fill="#fff"><circle cx="0" cy="0" r="0.6" opacity="0.4"/><circle cx="97" cy="53" r="1.1" opacity="0.52"/><circle cx="194" cy="106" r="1.6" opacity="0.64"/><circle cx="291" cy="159" r="2.1" opacity="0.76"/><circle cx="388" cy="212" r="0.6" opacity="0.88"/><circle cx="85" cy="265" r="1.1" opacity="0.4"/><circle cx="182" cy="318" r="1.6" opacity="0.52"/><circle cx="279" cy="11" r="2.1" opacity="0.64"/><circle cx="376" cy="64" r="0.6" opacity="0.76"/><circle cx="73" cy="117" r="1.1" opacity="0.88"/><circle cx="170" cy="170" r="1.6" opacity="0.4"/><circle cx="267" cy="223" r="2.1" opacity="0.52"/><circle cx="364" cy="276" r="0.6" opacity="0.64"/><circle cx="61" cy="329" r="1.1" opacity="0.76"/><circle cx="158" cy="22" r="1.6" opacity="0.88"/><circle cx="255" cy="75" r="2.1" opacity="0.4"/><circle cx="352" cy="128" r="0.6" opacity="0.52"/><circle cx="49" cy="181" r="1.1" opacity="0.64"/><circle cx="146" cy="234" r="1.6" opacity="0.76"/><circle cx="243" cy="287" r="2.1" opacity="0.88"/><circle cx="340" cy="340" r="0.6" opacity="0.4"/><circle cx="37" cy="33" r="1.1" opacity="0.52"/><circle cx="134" cy="86" r="1.6" opacity="0.64"/><circle cx="231" cy="139" r="2.1" opacity="0.76"/><circle cx="328" cy="192" r="0.6" opacity="0.88"/><circle cx="25" cy="245" r="1.1" opacity="0.4"/><circle cx="122" cy="298" r="1.6" opacity="0.52"/><circle cx="219" cy="351" r="2.1" opacity="0.64"/><circle cx="316" cy="44" r="0.6" opacity="0.76"/><circle cx="13" cy="97" r="1.1" opacity="0.88"/><circle cx="110" cy="150" r="1.6" opacity="0.4"/><circle cx="207" cy="203" r="2.1" opacity="0.52"/><circle cx="304" cy="256" r="0.6" opacity="0.64"/><circle cx="1" cy="309" r="1.1" opacity="0.76"/><circle cx="98" cy="2" r="1.6" opacity="0.88"/><circle cx="195" cy="55" r="2.1" opacity="0.4"/><circle cx="292" cy="108" r="0.6" opacity="0.52"/><circle cx="389" cy="161" r="1.1" opacity="0.64"/><circle cx="86" cy="214" r="1.6" opacity="0.76"/><circle cx="183" cy="267" r="2.1" opacity="0.88"/><circle cx="280" cy="320" r="0.6" opacity="0.4"/><circle cx="377" cy="13" r="1.1" opacity="0.52"/><circle cx="74" cy="66" r="1.6" opacity="0.64"/><circle cx="171" cy="119" r="2.1" opacity="0.76"/><circle cx="268" cy="172" r="0.6" opacity="0.88"/><circle cx="365" cy="225" r="1.1" opacity="0.4"/><circle cx="62" cy="278" r="1.6" opacity="0.52"/><circle cx="159" cy="331" r="2.1" opacity="0.64"/><circle cx="256" cy="24" r="0.6" opacity="0.76"/><circle cx="353" cy="77" r="1.1" opacity="0.88"/><circle cx="50" cy="130" r="1.6" opacity="0.4"/><circle cx="147" cy="183" r="2.1" opacity="0.52"/><circle cx="244" cy="236" r="0.6" opacity="0.64"/><circle cx="341" cy="289" r="1.1" opacity="0.76"/><circle cx="38" cy="342" r="1.6" opacity="0.88"/><circle cx="135" cy="35" r="2.1" opacity="0.4"/><circle cx="232" cy="88" r="0.6" opacity="0.52"/><circle cx="329" cy="141" r="1.1" opacity="0.64"/><circle cx="26" cy="194" r="1.6" opacity="0.76"/><circle cx="123" cy="247" r="2.1" opacity="0.88"/><circle cx="220" cy="300" r="0.6" opacity="0.4"/><circle cx="317" cy="353" r="1.1" opacity="0.52"/><circle cx="14" cy="46" r="1.6" opacity="0.64"/><circle cx="111" cy="99" r="2.1" opacity="0.76"/><circle cx="208" cy="152" r="0.6" opacity="0.88"/><circle cx="305" cy="205" r="1.1" opacity="0.4"/><circle cx="2" cy="258" r="1.6" opacity="0.52"/><circle cx="99" cy="311" r="2.1" opacity="0.64"/><circle cx="196" cy="4" r="0.6" opacity="0.76"/><circle cx="293" cy="57" r="1.1" opacity="0.88"/></g><path d="M40 60c120 40 220 90 330 220" stroke="#9fb8ff" stroke-width="2" opacity=".5" fill="none"/><path d="M0 430c100-30 200-10 400-40V500H0z" fill="#07070d"/></svg>
-              <span class="lf-label">Ladakh</span>
+              <video data-life-video src="/assets/videos/life/jp-v2.mp4" poster="/assets/videos/life/jp-v2.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Shinkansen</span>
             </span>
-            <figcaption>A night-sky timelapse shot from a tripod outside the tent.</figcaption>
+            <figcaption>A bullet train sliding into the platform.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-12.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Osaka Castle</span>
+            </span>
+            <figcaption>The castle catching the last of the light.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-16.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Fuji at sunset</span>
+            </span>
+            <figcaption>Fuji glowing pink behind a corner Lawson.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-07.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">After dark</span>
+            </span>
+            <figcaption>Wooden fronts and paper lamps on a quiet street.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v5.mp4" poster="/assets/videos/life/jp-v5.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Ine Bay</span>
+            </span>
+            <figcaption>Boathouses along the water, under a hill of trees.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-01.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Temple lanterns</span>
+            </span>
+            <figcaption>Rows of paper lanterns under a red temple roof.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-14.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Pikachu sign</span>
+            </span>
+            <figcaption>A Pikachu sign by the road, out of nowhere.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v3.mp4" poster="/assets/videos/life/jp-v3.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Rainy walk</span>
+            </span>
+            <figcaption>Umbrellas up, and the city kept going.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-11.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Tokyo Station</span>
+            </span>
+            <figcaption>The red-brick station, between the glass towers.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v7.mp4" poster="/assets/videos/life/jp-v7.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Amit Trivedi, live</span>
+            </span>
+            <figcaption>In the crowd for Amit Trivedi, lights and all.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-03.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Stone guardian</span>
+            </span>
+            <figcaption>A mossy statue keeping watch at the foot of the steps.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/jp-v6.mp4" poster="/assets/videos/life/jp-v6.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Night drive</span>
+            </span>
+            <figcaption>City lights through the rain at night.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-05.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Shrine fence</span>
+            </span>
+            <figcaption>Vermilion fences between the old trees.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-09.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Corner shop</span>
+            </span>
+            <figcaption>Flowers, a vending machine and a small shop front.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-17.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Ferrari F1</span>
+            </span>
+            <figcaption>A Ferrari Formula 1 car on display, up close.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/jp-06.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Blue hour</span>
+            </span>
+            <figcaption>Street lights coming on as the city heads home.</figcaption>
           </figure>
         </li>
       </ul>
@@ -654,11 +923,11 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261407" defer></script>
-<script src="/js/projects.js?v=20261407" defer></script>
-<script src="/js/render.js?v=20261407" defer></script>
-<script src="/js/script.js?v=20261407" defer></script>
-<script src="/js/pixel-dog.js?v=20261407" defer></script>
+<script src="/js/content.js?v=20261419" defer></script>
+<script src="/js/projects.js?v=20261419" defer></script>
+<script src="/js/render.js?v=20261419" defer></script>
+<script src="/js/script.js?v=20261419" defer></script>
+<script src="/js/pixel-dog.js?v=20261419" defer></script>
 </body>
 </html>
 
