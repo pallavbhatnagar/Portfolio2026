@@ -19,8 +19,8 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","quiet"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261422" />
-<script src="/js/motion-css.js?v=20261422"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261423" />
+<script src="/js/motion-css.js?v=20261423"></script>
 </head>
 <body>
 
@@ -81,10 +81,9 @@
     <div class="ab-pile" role="group" aria-label="Snapshots from my life and work">
       <figure class="ab-snap" style="--tint: var(--mint-bg); --tone: var(--mint-ink); --x: 3; --y: 0; --r: -8; --i: 0">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-1.jpg" alt="Trail run, 21K"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 58c10-30 20 6 30-22s20 8 38-26"/><path d="M6 68h68" opacity=".5"/></svg>
+          <img src="/assets/images/about/photo-1.jpg" alt="Pallav and three friends on a forest trail, each holding a wooden walking stick" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>Trail run, 21K<span class="ab-snap-more"><span>Long Sunday runs. Most design problems untangle around kilometre 12.</span></span></figcaption>
+        <figcaption>Trek crew<span class="ab-snap-more"><span>Walking sticks up and still smiling, at the start of the Kheerganga trail.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 12.5; --y: 24; --r: 6; --i: 1">
         <div class="ab-snap-pic">
@@ -100,10 +99,9 @@
       </figure>
       <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 12.5; --y: 66; --r: -6; --i: 3">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-4.jpg" alt="Currently reading"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 62V22a4 4 0 014-4h40a4 4 0 014 4v40"/><path d="M12 62a4 4 0 014-4h44"/><path d="M24 30h28M24 40h20"/></svg>
+          <img src="/assets/images/about/photo-4.jpg" alt="Pallav making a peace sign beside an artist holding a Spider-Man print at Delhi Comic Con" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>Currently reading<span class="ab-snap-more"><span>Always one design book and one comic on the go.</span></span></figcaption>
+        <figcaption>Comic Con, Delhi<span class="ab-snap-more"><span>Always one design book and one comic on the go. This time the comic won.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--sand-bg); --tone: var(--sand-ink); --x: 85; --y: 0; --r: 7; --i: 4">
         <div class="ab-snap-pic">
@@ -113,10 +111,9 @@
       </figure>
       <figure class="ab-snap" style="--tint: var(--mint-bg); --tone: var(--mint-ink); --x: 75.5; --y: 22; --r: -5; --i: 5">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-6.jpg" alt="Team offsite, Goa"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="28" cy="30" r="8"/><circle cx="54" cy="30" r="8"/><path d="M12 62c1-12 8-18 16-18s15 6 16 18M38 62c1-12 8-18 16-18s15 6 16 18"/></svg>
+          <img src="/assets/images/about/photo-6.jpg" alt="Pallav grinning in a selfie, wearing tiny sunglasses printed with the word vibes" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>Team offsite, Goa<span class="ab-snap-more"><span>Three days, one whiteboard and a lot of coffee.</span></span></figcaption>
+        <figcaption>Vibes, mostly<span class="ab-snap-more"><span>The sunglasses said it first. I just agreed.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--lilac-bg); --tone: var(--lilac-ink); --x: 86; --y: 44; --r: -3; --i: 6">
         <div class="ab-snap-pic">
@@ -127,17 +124,15 @@
       </figure>
       <figure class="ab-snap" style="--tint: var(--rose-bg); --tone: var(--rose-ink); --x: 75.5; --y: 66; --r: 6; --i: 7">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-8.jpg" alt="Sketchbook Sundays"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 62l8-2 38-38-6-6-38 38z"/><path d="M50 14l6 6"/><path d="M14 70h52" opacity=".5"/></svg>
+          <img src="/assets/images/about/photo-8.jpg" alt="Pallav taking a selfie with three friends, one of them making a peace sign" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>Sketchbook Sundays<span class="ab-snap-more"><span>Pencil first, pixels later.</span></span></figcaption>
+        <figcaption>The usual suspects<span class="ab-snap-more"><span>Four people, one arm's length, everyone in frame.</span></span></figcaption>
       </figure>
       <figure class="ab-snap" style="--tint: var(--sky-bg); --tone: var(--sky-ink); --x: 30; --y: 86; --r: -4; --i: 8">
         <div class="ab-snap-pic">
-          <!-- Replace the icon with your photo: <img src="/assets/images/about/photo-9.jpg" alt="Mentoring hour"> -->
-          <svg viewBox="0 0 80 80" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="40" cy="26" r="10"/><path d="M20 66c2-16 10-24 20-24s18 8 20 24"/><path d="M60 18l6 6M66 18l-6 6" opacity=".6"/></svg>
+          <img src="/assets/images/about/photo-9.jpg" alt="Pallav standing on a narrow log bridge above a rushing mountain stream" width="800" height="800" loading="lazy" decoding="async">
         </div>
-        <figcaption>Mentoring hour<span class="ab-snap-more"><span>An hour a week with designers just starting out.</span></span></figcaption>
+        <figcaption>Crossing over<span class="ab-snap-more"><span>A log bridge over the river, on the way up to Kheerganga.</span></span></figcaption>
       </figure>
     </div>
   </section>
@@ -624,6 +619,42 @@
             <figcaption>Street lights coming on as the city heads home.</figcaption>
           </figure>
         </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-01.jpg" alt="Pine meadow: Sunlight through the pines, partway up to Kheerganga" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Pine meadow</span>
+            </span>
+            <figcaption>Sunlight through the pines, partway up to Kheerganga.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-02.jpg" alt="The trail up: A dirt path through the forest, climbing the whole way" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">The trail up</span>
+            </span>
+            <figcaption>A dirt path through the forest, climbing the whole way.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-03.jpg" alt="Base camp: The view from the tent door, with the bag finally down" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Base camp</span>
+            </span>
+            <figcaption>The view from the tent door, with the bag finally down.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-04.jpg" alt="Kheerganga top: The flag at the top, with the valley falling away below" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Kheerganga top</span>
+            </span>
+            <figcaption>The flag at the top, with the valley falling away below.</figcaption>
+          </figure>
+        </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
@@ -840,6 +871,42 @@
             <figcaption>Street lights coming on as the city heads home.</figcaption>
           </figure>
         </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-01.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Pine meadow</span>
+            </span>
+            <figcaption>Sunlight through the pines, partway up to Kheerganga.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-02.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">The trail up</span>
+            </span>
+            <figcaption>A dirt path through the forest, climbing the whole way.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-03.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Base camp</span>
+            </span>
+            <figcaption>The view from the tent door, with the bag finally down.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="photo">
+              <img src="/assets/images/life/kg-04.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Kheerganga top</span>
+            </span>
+            <figcaption>The flag at the top, with the valley falling away below.</figcaption>
+          </figure>
+        </li>
       </ul>
     </div>
   </section>
@@ -923,11 +990,11 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261422" defer></script>
-<script src="/js/projects.js?v=20261422" defer></script>
-<script src="/js/render.js?v=20261422" defer></script>
-<script src="/js/script.js?v=20261422" defer></script>
-<script src="/js/pixel-dog.js?v=20261422" defer></script>
+<script src="/js/content.js?v=20261423" defer></script>
+<script src="/js/projects.js?v=20261423" defer></script>
+<script src="/js/render.js?v=20261423" defer></script>
+<script src="/js/script.js?v=20261423" defer></script>
+<script src="/js/pixel-dog.js?v=20261423" defer></script>
 </body>
 </html>
 
