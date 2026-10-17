@@ -3522,3 +3522,6 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 .wd-stage { max-width: 40rem; margin: 0 auto; }
 /* "Where I've been" on phones takes keyboard focus while it scrolls (script.js 15b). */
 .path-grid:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.5rem; }
+/* The panel stays on its own layer, so nothing is redrawn when the opening
+   animation ends: without it, icons on half-pixel columns hopped once it settled. */
+.dsp { will-change: transform; }
