@@ -1616,7 +1616,7 @@
       for (let i = snaps.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [snaps[i], snaps[j]] = [snaps[j], snaps[i]]; }
       // Real photos always make the table: a photo that lands among the
       // spares (see below) swaps with a drawn card that's on the table.
-      const SHOWN = 7;
+      const SHOWN = 8;
       const isPhoto = (el) => !!el.querySelector(".ab-snap-pic img");
       for (let i = SHOWN; i < snaps.length; i++) {
         if (!isPhoto(snaps[i])) continue;
@@ -1656,7 +1656,7 @@
         const free = Math.max(0, H - h);
         const spotsXY = [
           [innerL - step, 0.02], [innerL, 0.3], [innerL - step, 0.62], [innerL, 0.94],
-          [innerR + step, 0.04], [innerR, 0.46], [innerR + step, 0.9],
+          [innerR + step, 0.04], [innerR, 0.32], [innerR + step, 0.64], [innerR, 0.94],
         ];
         Array.from(pile.querySelectorAll(".ab-snap:not(.is-copy):not(.is-spare)")).forEach((el, i) => {
           const [x, f] = spotsXY[i % spotsXY.length];
