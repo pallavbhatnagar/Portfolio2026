@@ -3441,7 +3441,9 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 .dsp .sound-toggle { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; margin: 0; padding: 0; border-radius: 50%; background: #202020; color: #fff; }
 :root[data-theme="dark"] .dsp .sound-toggle { background: var(--ink); color: var(--bg); }
 .dsp .sound-toggle[hidden] { display: none; }
-.dsp .sound-toggle .snd-eq { height: 12px; }
+.dsp .sound-toggle .snd-eq { height: 12px; gap: 1.5px; }
+/* In the round button the playing bars stay thick, so their rounded ends show. */
+.dsp .sound-toggle[aria-pressed="true"] .snd-eq, .dsp .sound-toggle.is-held .snd-eq { --eq-w: 2.5px; }
 .dsp .sound-toggle:active { transform: scale(0.94); }
 .dsp .sound-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) { .dsp .sound-toggle:hover { opacity: 0.88; } }
