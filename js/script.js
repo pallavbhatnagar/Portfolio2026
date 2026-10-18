@@ -1496,7 +1496,7 @@
       lfVideos.forEach((vid) => lfIo.observe(vid));
       if (reduce.addEventListener) reduce.addEventListener("change", () => lfVideos.forEach(lfSync));
     }
-    const BASE = 0.03;          // px per ms, the slow run
+    const BASE = 0.045;         // px per ms, the slow run
     let x = 0;                  // distance moved to the left, in px
     let v = reduce.matches ? 0 : BASE; // current speed
     let setW = 0;
