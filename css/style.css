@@ -1433,7 +1433,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .bk-new { position: absolute; left: 50%; bottom: 82%; font-size: 0.72em; font-weight: 600; letter-spacing: 0; white-space: nowrap; color: var(--edit); transform: translateX(-50%) rotate(-6deg); }
 .bm { position: relative; margin: 0.875rem -1.125rem -0.25rem; padding-top: 0.625rem; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .bm-track { display: flex; gap: 0.5rem; width: max-content; padding: 0.625rem 0 0.875rem; }
-.bcv { position: relative; display: flex; flex-direction: column; justify-content: flex-end; flex-shrink: 0; overflow: hidden; width: 9.75rem; height: 14.25rem; border-radius: 0.3125rem; background: var(--t); box-shadow: 0 0.625rem 1.125rem rgba(13, 13, 13, 0.12), 0 0 0 1px rgba(13, 13, 13, 0.05); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
+.bcv { position: relative; display: flex; flex-direction: column; justify-content: flex-end; flex-shrink: 0; overflow: hidden; width: 12.25rem; height: 17.875rem; border-radius: 0.3125rem; background: var(--t); box-shadow: 0 0.625rem 1.125rem rgba(13, 13, 13, 0.12), 0 0 0 1px rgba(13, 13, 13, 0.05); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
 .bcv img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; background: var(--t); }
 .bcv-meta { position: relative; z-index: 1; padding: 1.5rem 0.625rem 0.625rem; background: linear-gradient(to top, rgba(32, 32, 32, 0.9), rgba(32, 32, 32, 0.8) 56%, rgba(32, 32, 32, 0.36) 80%, rgba(32, 32, 32, 0)); padding-top: 2.75rem; }
 .bcv-a { display: block; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.88); }
@@ -3236,7 +3236,7 @@ button.say { padding: 0; border: 0; background-color: transparent; font: inherit
 .lf-row { overflow: hidden; outline: none; }
 .lf-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.5rem; }
 .lf-track { display: flex; gap: 0.75rem; width: max-content; margin: 0; padding: 0; list-style: none; }
-.lf-card { flex: none; width: clamp(12.5rem, 19vw, 15.5rem); }
+.lf-card { flex: none; width: clamp(14.25rem, 21.5vw, 17.75rem); }
 .lf-fig { margin: 0; }
 .lf-pic { position: relative; display: block; aspect-ratio: 3 / 4; overflow: hidden; border-radius: 0.5rem; background: #dddddd; }
 .lf-pic > svg, .lf-pic > img, .lf-pic > video { display: block; width: 100%; height: 100%; object-fit: cover; }
