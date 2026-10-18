@@ -1469,6 +1469,17 @@
   const lfTrack = lfRow && lfRow.querySelector(".lf-track");
   if (lfTrack) {
     const section = lfRow.closest(".ab-life");
+    // A new order on every visit; the hidden second set follows the same
+    // order, so the loop still has no seam.
+    {
+      const cards = Array.from(lfTrack.children);
+      const half = cards.length / 2;
+      const order = Array.from({ length: half }, (_, i) => i);
+      for (let i = order.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [order[i], order[j]] = [order[j], order[i]]; }
+      const frag = document.createDocumentFragment();
+      [0, 1].forEach((set) => order.forEach((i) => frag.appendChild(cards[set * half + i])));
+      lfTrack.appendChild(frag);
+    }
     // The videos in the strip play silently, each only while its card is on
     // screen (the strip moves, so they start and stop as cards pass), and
     // load only then. Reduced motion (or Calm) leaves them on their still.

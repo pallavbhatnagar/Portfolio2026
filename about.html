@@ -19,8 +19,8 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","quiet"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261429" />
-<script src="/js/motion-css.js?v=20261429"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261431" />
+<script src="/js/motion-css.js?v=20261431"></script>
 </head>
 <body>
 
@@ -399,7 +399,7 @@
   <section id="life" class="ab-life" aria-labelledby="life-title">
     <div class="ab-life-head">
       <h2 class="ab-h2" id="life-title"><span class="hs-host">Life, lately<span class="hs hs-cam" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8"/><path d="M8.5 7l1.5-2.5h4L15.5 7" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#fff" stroke="#5c3d0b" stroke-width="1.8"/></svg></span></span></h2>
-      <p class="ab-sub">Trips, weekends and whatever has my attention lately. Most recently, Japan.</p>
+      <p class="ab-sub">Trips, weekends and whatever has my attention lately.</p>
     </div>
     <div class="lf-row" role="region" aria-label="Life, lately: photos and videos. Use the left and right arrow keys to move." tabindex="0">
       <ul class="lf-track">
@@ -433,10 +433,10 @@
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-08.jpg" alt="Lantern lane: Red lanterns down a narrow lane after dark" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Lantern lane</span>
+              <img src="/assets/images/life/geisha-street-kyoto.jpg" alt="Geisha street, Kyoto: Red lanterns down the old geisha street after dark" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Geisha street, Kyoto</span>
             </span>
-            <figcaption>Red lanterns down a narrow lane after dark.</figcaption>
+            <figcaption>Red lanterns down the old geisha street after dark.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
@@ -532,8 +532,8 @@
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-14.jpg" alt="Pikachu sign: A Pikachu sign by the road, out of nowhere" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Pikachu sign</span>
+              <img src="/assets/images/life/nara.jpg" alt="Nara: A Pikachu sign by the road, out of nowhere" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Nara</span>
             </span>
             <figcaption>A Pikachu sign by the road, out of nowhere.</figcaption>
           </figure>
@@ -550,7 +550,7 @@
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-11.jpg" alt="Tokyo Station: The red-brick station, between the glass towers" width="600" height="800" loading="lazy" decoding="async">
+              <img src="/assets/images/life/tokyo-station.jpg" alt="Tokyo Station: The red-brick station, between the glass towers" width="600" height="800" loading="lazy" decoding="async">
               <span class="lf-label">Tokyo Station</span>
             </span>
             <figcaption>The red-brick station, between the glass towers.</figcaption>
@@ -604,17 +604,17 @@
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-17.jpg" alt="Ferrari F1: A Ferrari Formula 1 car on display, up close" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Ferrari F1</span>
+              <img src="/assets/images/life/ferrari-world.jpg" alt="Ferrari World: A Ferrari Formula 1 car in the pit lane, Abu Dhabi" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Ferrari World</span>
             </span>
-            <figcaption>A Ferrari Formula 1 car on display, up close.</figcaption>
+            <figcaption>A Ferrari Formula 1 car in the pit lane, Abu Dhabi.</figcaption>
           </figure>
         </li>
         <li class="lf-card">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-06.jpg" alt="Blue hour: Street lights coming on as the city heads home" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Blue hour</span>
+              <img src="/assets/images/life/kyoto.jpg" alt="Kyoto: Street lights coming on as the city heads home" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Kyoto</span>
             </span>
             <figcaption>Street lights coming on as the city heads home.</figcaption>
           </figure>
@@ -655,6 +655,78 @@
             <figcaption>The flag at the top, with the valley falling away below.</figcaption>
           </figure>
         </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-hans-delhi.mp4" poster="/assets/videos/life/lv-hans-delhi.jpg" muted loop playsinline preload="none" aria-label="Hans Zimmer, Delhi: A field of candles and a full orchestra, under the night sky"></video>
+              <span class="lf-label">Hans Zimmer, Delhi</span>
+            </span>
+            <figcaption>A field of candles and a full orchestra, under the night sky.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-hans-abudhabi.mp4" poster="/assets/videos/life/lv-hans-abudhabi.jpg" muted loop playsinline preload="none" aria-label="Hans Zimmer, Abu Dhabi: Phones up for the man himself, live on stage"></video>
+              <span class="lf-label">Hans Zimmer, Abu Dhabi</span>
+            </span>
+            <figcaption>Phones up for the man himself, live on stage.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-etihad-arena.mp4" poster="/assets/videos/life/lv-etihad-arena.jpg" muted loop playsinline preload="none" aria-label="Etihad Arena: Walking in before the lights went down"></video>
+              <span class="lf-label">Etihad Arena</span>
+            </span>
+            <figcaption>Walking in before the lights went down.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-harry-potter-tokyo.mp4" poster="/assets/videos/life/lv-harry-potter-tokyo.jpg" muted loop playsinline preload="none" aria-label="Harry Potter studio, Tokyo: The grand staircase, every portrait watching"></video>
+              <span class="lf-label">Harry Potter studio, Tokyo</span>
+            </span>
+            <figcaption>The grand staircase, every portrait watching.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-mumbai.mp4" poster="/assets/videos/life/lv-mumbai.jpg" muted loop playsinline preload="none" aria-label="Mumbai: A packed street, and a lot going on at once"></video>
+              <span class="lf-label">Mumbai</span>
+            </span>
+            <figcaption>A packed street, and a lot going on at once.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-pattaya.mp4" poster="/assets/videos/life/lv-pattaya.jpg" muted loop playsinline preload="none" aria-label="Pattaya: Sunset on the beach, jet skis bobbing in the shallows"></video>
+              <span class="lf-label">Pattaya</span>
+            </span>
+            <figcaption>Sunset on the beach, jet skis bobbing in the shallows.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-phiphi-bay.mp4" poster="/assets/videos/life/lv-phiphi-bay.jpg" muted loop playsinline preload="none" aria-label="Phi Phi bay: Longtail boats on water that colour"></video>
+              <span class="lf-label">Phi Phi bay</span>
+            </span>
+            <figcaption>Longtail boats on water that colour.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-phiphi.mp4" poster="/assets/videos/life/lv-phiphi.jpg" muted loop playsinline preload="none" aria-label="Phi Phi: Palm trees, cliffs and a short walk to the beach"></video>
+              <span class="lf-label">Phi Phi</span>
+            </span>
+            <figcaption>Palm trees, cliffs and a short walk to the beach.</figcaption>
+          </figure>
+        </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
@@ -685,10 +757,10 @@
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-08.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Lantern lane</span>
+              <img src="/assets/images/life/geisha-street-kyoto.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Geisha street, Kyoto</span>
             </span>
-            <figcaption>Red lanterns down a narrow lane after dark.</figcaption>
+            <figcaption>Red lanterns down the old geisha street after dark.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
@@ -784,8 +856,8 @@
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-14.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Pikachu sign</span>
+              <img src="/assets/images/life/nara.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Nara</span>
             </span>
             <figcaption>A Pikachu sign by the road, out of nowhere.</figcaption>
           </figure>
@@ -802,7 +874,7 @@
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-11.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <img src="/assets/images/life/tokyo-station.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
               <span class="lf-label">Tokyo Station</span>
             </span>
             <figcaption>The red-brick station, between the glass towers.</figcaption>
@@ -856,17 +928,17 @@
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-17.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Ferrari F1</span>
+              <img src="/assets/images/life/ferrari-world.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Ferrari World</span>
             </span>
-            <figcaption>A Ferrari Formula 1 car on display, up close.</figcaption>
+            <figcaption>A Ferrari Formula 1 car in the pit lane, Abu Dhabi.</figcaption>
           </figure>
         </li>
         <li class="lf-card" aria-hidden="true">
           <figure class="lf-fig">
             <span class="lf-pic" data-type="photo">
-              <img src="/assets/images/life/jp-06.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
-              <span class="lf-label">Blue hour</span>
+              <img src="/assets/images/life/kyoto.jpg" alt="" width="600" height="800" loading="lazy" decoding="async">
+              <span class="lf-label">Kyoto</span>
             </span>
             <figcaption>Street lights coming on as the city heads home.</figcaption>
           </figure>
@@ -905,6 +977,78 @@
               <span class="lf-label">Kheerganga top</span>
             </span>
             <figcaption>The flag at the top, with the valley falling away below.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-hans-delhi.mp4" poster="/assets/videos/life/lv-hans-delhi.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Hans Zimmer, Delhi</span>
+            </span>
+            <figcaption>A field of candles and a full orchestra, under the night sky.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-hans-abudhabi.mp4" poster="/assets/videos/life/lv-hans-abudhabi.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Hans Zimmer, Abu Dhabi</span>
+            </span>
+            <figcaption>Phones up for the man himself, live on stage.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-etihad-arena.mp4" poster="/assets/videos/life/lv-etihad-arena.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Etihad Arena</span>
+            </span>
+            <figcaption>Walking in before the lights went down.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-harry-potter-tokyo.mp4" poster="/assets/videos/life/lv-harry-potter-tokyo.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Harry Potter studio, Tokyo</span>
+            </span>
+            <figcaption>The grand staircase, every portrait watching.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-mumbai.mp4" poster="/assets/videos/life/lv-mumbai.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Mumbai</span>
+            </span>
+            <figcaption>A packed street, and a lot going on at once.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-pattaya.mp4" poster="/assets/videos/life/lv-pattaya.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Pattaya</span>
+            </span>
+            <figcaption>Sunset on the beach, jet skis bobbing in the shallows.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-phiphi-bay.mp4" poster="/assets/videos/life/lv-phiphi-bay.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Phi Phi bay</span>
+            </span>
+            <figcaption>Longtail boats on water that colour.</figcaption>
+          </figure>
+        </li>
+        <li class="lf-card" aria-hidden="true">
+          <figure class="lf-fig">
+            <span class="lf-pic" data-type="video">
+              <video data-life-video src="/assets/videos/life/lv-phiphi.mp4" poster="/assets/videos/life/lv-phiphi.jpg" muted loop playsinline preload="none"></video>
+              <span class="lf-label">Phi Phi</span>
+            </span>
+            <figcaption>Palm trees, cliffs and a short walk to the beach.</figcaption>
           </figure>
         </li>
       </ul>
@@ -990,11 +1134,11 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261429" defer></script>
-<script src="/js/projects.js?v=20261429" defer></script>
-<script src="/js/render.js?v=20261429" defer></script>
-<script src="/js/script.js?v=20261429" defer></script>
-<script src="/js/pixel-dog.js?v=20261429" defer></script>
+<script src="/js/content.js?v=20261431" defer></script>
+<script src="/js/projects.js?v=20261431" defer></script>
+<script src="/js/render.js?v=20261431" defer></script>
+<script src="/js/script.js?v=20261431" defer></script>
+<script src="/js/pixel-dog.js?v=20261431" defer></script>
 </body>
 </html>
 
