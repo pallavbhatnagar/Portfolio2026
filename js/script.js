@@ -1397,6 +1397,10 @@
     const frag = document.createDocumentFragment();
     [0, 1].forEach((set) => order.forEach((i) => { if (set) all[set * half + i].classList.add("is-loop"); frag.appendChild(all[set * half + i]); }));
     shelf.appendChild(frag);
+    // Books are not all one height: each gets its own size (the same in
+    // both sets, so the loop stays seamless).
+    const SIZES = [1, 0.92, 0.97, 0.89, 0.95];
+    all.forEach((b) => b.style.setProperty("--s", String(SIZES[Number(b.dataset.book) % SIZES.length])));
   }
   const readingEl = document.querySelector("[data-reading]");
   if (shelf && readingEl) {

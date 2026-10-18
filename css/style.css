@@ -1431,15 +1431,26 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 :root[data-theme="dark"] .bk-edit { --edit: #ff3b30; } /* bright red: 4.6:1 on the dark card */
 .bk-strike path { fill: none; stroke: var(--edit); stroke-width: 2.5; stroke-linecap: round; vector-effect: non-scaling-stroke; stroke-dasharray: 1; stroke-dashoffset: 0; }
 .bk-new { position: absolute; left: 50%; bottom: 82%; font-size: 0.72em; font-weight: 600; letter-spacing: 0; white-space: nowrap; color: var(--edit); transform: translateX(-50%) rotate(-6deg); }
-.bm { position: relative; margin: 0.875rem -1.125rem -0.25rem; padding-top: 0.625rem; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
-.bm-track { display: flex; gap: 0.5rem; width: max-content; padding: 0.625rem 0 0.875rem; }
-.bcv { position: relative; display: flex; flex-direction: column; justify-content: flex-end; flex-shrink: 0; overflow: hidden; width: 12.25rem; height: 17.875rem; border-radius: 0.3125rem; background: var(--t); box-shadow: 0 0.625rem 1.125rem rgba(13, 13, 13, 0.12), 0 0 0 1px rgba(13, 13, 13, 0.05); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
-.bcv img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; background: var(--t); }
-.bcv-meta { position: relative; z-index: 1; padding: 1.5rem 0.625rem 0.625rem; background: linear-gradient(to top, rgba(32, 32, 32, 0.9), rgba(32, 32, 32, 0.8) 56%, rgba(32, 32, 32, 0.36) 80%, rgba(32, 32, 32, 0)); padding-top: 2.75rem; }
+.bm { position: relative; margin: 0.875rem -1.125rem -0.875rem; padding-top: 0.625rem; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+/* Each cover is a hardback standing on the shelf: a hinge crease down the
+   spine, a little sheen, a sliver of pages on the open edge and a soft
+   shadow under it. The books are a little different in height (--s, set
+   per book in script.js) and stand on one line. The space after each book
+   is a margin, not a gap, so the two sets in the loop are exactly the
+   same width and the scroll never jumps. */
+.bm-track { display: flex; align-items: flex-end; width: max-content; padding: 0.75rem 0 1.125rem; }
+.bcv { --s: 1; --pages: 2px 0 0 -1px #f4efe5, 3px 0 0 -1px #ddd5c5, 5px 0 0 -2px #f4efe5, 6px 0 0 -2px #d2c9b8; position: relative; flex-shrink: 0; width: calc(12.25rem * var(--s)); height: calc(17.875rem * var(--s)); margin-right: 1rem; border-radius: 0.125rem 0.375rem 0.375rem 0.125rem; background: var(--t); box-shadow: var(--pages), 0 0.875rem 1rem -0.625rem rgba(13, 13, 13, 0.5), 0 0.25rem 0.5rem -0.125rem rgba(13, 13, 13, 0.16); transition: transform 0.5s var(--ease-out), box-shadow 0.5s var(--ease-out); }
+.bcv img { position: absolute; inset: 0; z-index: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; background: var(--t); }
+/* The hinge: dark at the spine, a highlight on the fold, then the board. */
+.bcv::before { content: ""; position: absolute; z-index: 1; top: 0; bottom: 0; left: 0; width: 9%; border-radius: 0.125rem 0 0 0.125rem; background: linear-gradient(90deg, rgba(0, 0, 0, 0.34), rgba(0, 0, 0, 0.1) 32%, rgba(255, 255, 255, 0.26) 50%, rgba(255, 255, 255, 0) 64%, rgba(0, 0, 0, 0.16) 80%, rgba(0, 0, 0, 0)); pointer-events: none; }
+/* Sheen across the board, and a hairline edge so light covers hold their shape. */
+.bcv::after { content: ""; position: absolute; z-index: 1; inset: 0; border-radius: inherit; background: linear-gradient(112deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0) 40%); box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.09); pointer-events: none; }
+/* Title and author on the cover, over a dark band at its foot. */
+.bcv-meta { position: absolute; z-index: 2; left: 0; right: 0; bottom: 0; padding: 2.75rem 0.75rem 0.75rem 0.875rem; border-radius: 0 0 0.375rem 0.125rem; background: linear-gradient(to top, rgba(32, 32, 32, 0.9), rgba(32, 32, 32, 0.8) 56%, rgba(32, 32, 32, 0.36) 80%, rgba(32, 32, 32, 0)); }
 .bcv-a { display: block; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.03em; color: rgba(255, 255, 255, 0.88); }
 .bcv-t { display: block; margin-top: 0.125rem; font-size: 0.9375rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.15; color: #fff; }
-.bcv-tag { position: absolute; z-index: 2; top: 0.4375rem; right: 0.4375rem; padding: 0.125rem 0.375rem; border-radius: 0.1875rem; background: var(--fill); color: var(--fill-ink); font-size: 0.625rem; font-weight: 500; }
-@media (hover: hover) and (pointer: fine) { .bcv:hover { transform: translateY(-0.4375rem) scale(1.04); box-shadow: 0 1rem 1.625rem rgba(13, 13, 13, 0.2), 0 0 0 1px rgba(13, 13, 13, 0.06); } }
+.bcv-tag { position: absolute; z-index: 2; top: 0.5rem; right: 0.5rem; padding: 0.125rem 0.375rem; border-radius: 0.1875rem; background: var(--fill); color: var(--fill-ink); font-size: 0.625rem; font-weight: 500; }
+@media (hover: hover) and (pointer: fine) { .bcv:hover { transform: translateY(-0.625rem) rotate(-1deg); box-shadow: var(--pages), 0 1.25rem 1.25rem -0.75rem rgba(13, 13, 13, 0.45), 0 0.375rem 0.75rem -0.25rem rgba(13, 13, 13, 0.2); } }
 @media (prefers-reduced-motion: no-preference) {
   .bm-track { animation: bm 120s linear infinite; }
   .bm:focus-visible .bm-track { animation-play-state: paused; } /* keyboard focus pauses it; hover does not */
