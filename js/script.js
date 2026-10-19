@@ -2560,6 +2560,52 @@
     });
   }
 
+  // 24b) Theme reveal: switching light and dark uncovers the new theme as a
+  //      circle growing out of the control you pressed (the toggle, or your
+  //      choice in the display settings panel) until it fills the screen.
+  //      View Transitions snapshot the page, the switch above runs
+  //      unchanged inside it, and the new look shows through the circle
+  //      (CSS: html.theme-revealing). Reduced motion or Calm, checked at the
+  //      moment of the click, or a browser without View Transitions: the
+  //      theme switches at once.
+  if (themeToggle && typeof document.startViewTransition === "function") {
+    const root = document.documentElement;
+    const still = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    let pressAt = null;
+    document.addEventListener("pointerdown", (e) => { pressAt = [e.clientX, e.clientY]; }, true);
+    const reveal = (change, el) => {
+      if (still()) { change(); return; }
+      let [x, y] = pressAt || [innerWidth, 0];
+      if (!pressAt && el && el.getBoundingClientRect) { const r = el.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; }
+      pressAt = null;
+      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
+      root.classList.add("theme-revealing");
+      const vt = document.startViewTransition(change);
+      vt.ready.then(() => {
+        root.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 800, easing: "cubic-bezier(0.65, 0, 0.35, 1)", pseudoElement: "::view-transition-new(root)", fill: "both" } // easeInOutCubic: an even sweep
+        );
+      }).catch(() => {});
+      vt.finished.finally(() => root.classList.remove("theme-revealing"));
+    };
+    // Catch the toggle's click first, then let its own handler run inside the transition.
+    let passing = false;
+    document.addEventListener("click", (e) => {
+      const btn = e.target.closest && e.target.closest(".theme-toggle");
+      if (!btn || passing || still()) return;
+      e.stopImmediatePropagation();
+      e.preventDefault();
+      reveal(() => { passing = true; btn.click(); passing = false; }, btn);
+    }, true);
+    const setTheme = window.__setTheme;
+    window.__setTheme = (mode) => {
+      const after = mode === "dark" || (mode === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : null;
+      if (root.getAttribute("data-theme") === after) { setTheme(mode); return; }
+      reveal(() => setTheme(mode), document.activeElement);
+    };
+  }
+
   // Display settings, "Make it comfortable": the accessibility figure in
   // the nav opens a compact panel. Three one-line choices (text size,
   // motion, click sounds), six toggles in a grid with one shared line explaining

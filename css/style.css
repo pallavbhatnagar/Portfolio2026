@@ -3536,3 +3536,9 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
    fills as you read down Home, Works, About and the case studies. */
 .scroll-line { position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 2px; background: var(--ink); opacity: 0.85; transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
 @media print { .scroll-line { display: none; } }
+
+/* Theme reveal (script.js 24b): the old theme stays still underneath and the
+   new one is uncovered through the growing circle, so neither snapshot fades
+   or blends; the page's own colour transitions wait while it runs. */
+::view-transition-old(root), ::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.theme-revealing *, html.theme-revealing *::before, html.theme-revealing *::after { transition: none !important; }
