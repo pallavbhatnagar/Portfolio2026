@@ -397,11 +397,16 @@
         if (vid.preload === "none") { vid.preload = "auto"; vid.load(); }
         vid.play().catch(() => {});
       };
+      // "Seen" means in view in the carousel and the carousel on screen, so
+      // the film neither loads nor plays until you scroll down to it.
       if ("IntersectionObserver" in window) {
-        new IntersectionObserver(([en]) => {
-          seen = en.isIntersecting;
+        let inRow = false, onPage = false;
+        const update = () => {
+          seen = inRow && onPage;
           if (seen) play(); else vid.pause();
-        }, { root: tqView, threshold: 0.5 }).observe(vCard);
+        };
+        new IntersectionObserver(([en]) => { inRow = en.isIntersecting; update(); }, { root: tqView, threshold: 0.5 }).observe(vCard);
+        new IntersectionObserver(([en]) => { onPage = en.isIntersecting; update(); }, { threshold: 0.25 }).observe(vCard);
       }
       const syncMute = () => {
         muteBtn.setAttribute("aria-pressed", String(vid.muted));
@@ -1645,7 +1650,7 @@
         el.dataset.jy = jitter(1).toFixed(3);
         el.style.setProperty("--r", ((i % 2 ? 1 : -1) * (3 + Math.random() * 6)).toFixed(1));
         el.style.setProperty("--i", String(i));
-        // Eight fit around the words on the table; the ninth shows only in
+        // Eight fit around the words on the table; any more show only in
         // the strip on phones.
         el.classList.toggle("is-spare", i >= SHOWN);
         pile.append(el);

@@ -32,7 +32,7 @@ window.CASE_STUDIES = [
     year: "2021",
     tint: "mint",
     locked: false,
-    thumbnail: "/assets/projects/wealthbasket/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/wealthbasket/images/thumbnail.webp",
     thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
       order: 2,
@@ -65,7 +65,7 @@ window.CASE_STUDIES = [
     year: "2024",
     tint: "lilac",
     locked: true,
-    thumbnail: "/assets/projects/wayfarer/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/wayfarer/images/thumbnail.webp",
     thumbAlt: "Wayfarer Health mobile screen",
     home: {
       order: 3,
@@ -98,7 +98,7 @@ window.CASE_STUDIES = [
     year: "2024",
     tint: "rose",
     locked: true,
-    thumbnail: "/assets/projects/parcelo/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/parcelo/images/thumbnail.webp",
     thumbAlt: "Parcelo dashboard on a laptop",
     home: {
       order: 4,
@@ -131,7 +131,7 @@ window.CASE_STUDIES = [
     year: "2023",
     tint: "sky",
     locked: false,
-    thumbnail: "/assets/projects/lumen/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/lumen/images/thumbnail.webp",
     thumbAlt: "Lumen Learn onboarding screen",
     works: {
       text: "Onboarding and lesson flow for an online learning platform, tested across three rounds of usability sessions with real students. The biggest fix was quiet: fewer choices on the first screen.",
@@ -150,7 +150,7 @@ window.CASE_STUDIES = [
     year: "2021",
     tint: "sand",
     locked: false,
-    thumbnail: "/assets/projects/wave/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/wave/images/thumbnail.webp",
     thumbAlt: "Wave 2.0 trading screen on a phone",
     home: {
       order: 1,
@@ -183,7 +183,7 @@ window.CASE_STUDIES = [
     year: "2021",
     tint: "mint",
     locked: false,
-    thumbnail: "/assets/projects/jda/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/jda/images/thumbnail.webp",
     thumbAlt: "JDA Infra website on a laptop",
     works: {
       text: "A website concept for an infrastructure firm that leads with finished projects instead of service lists, so prospective clients see the proof before the pitch.",

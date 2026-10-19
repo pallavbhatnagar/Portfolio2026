@@ -23,14 +23,14 @@
 <meta property="og:image" content="https://pallavbhatnagar.in/assets/projects/wealthbasket/images/cover.jpg" />
 <meta property="og:image:alt" content="WealthBasket on Paytm Money: a phone showing the WealthBasket logo" />
 <meta name="twitter:card" content="summary_large_image" />
-<link rel="preload" href="/assets/fonts/Manrope-Light.ttf" as="font" type="font/ttf" crossorigin />
-<link rel="preload" href="/assets/fonts/Manrope-Regular.ttf" as="font" type="font/ttf" crossorigin />
-<link rel="preload" href="/assets/fonts/Manrope-Medium.ttf" as="font" type="font/ttf" crossorigin />
+<link rel="preload" href="/assets/fonts/Manrope-Light.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/assets/fonts/Manrope-Medium.woff2" as="font" type="font/woff2" crossorigin />
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","quiet"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261443" />
-<script src="/js/motion-css.js?v=20261443"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261445" />
+<script src="/js/motion-css.js?v=20261445"></script>
 </head>
 <body>
 
@@ -99,7 +99,7 @@
         <!-- Video: plays the Vimeo film (605510281) from a play button, once the
              video is public or allows embedding on this site (case.js checks;
              until then the still image shows with no button). -->
-        <div class="cs-cover-media" data-vimeo="605510281" data-vimeo-title="WealthBasket introduction"><img src="/assets/projects/wealthbasket/images/cover.jpg" alt="WealthBasket on Paytm Money: a phone showing the WealthBasket logo, with the line: finding and investing in curated stock portfolios becomes a cakewalk" fetchpriority="high"><button class="cs-play" type="button" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
+        <div class="cs-cover-media" data-vimeo="605510281" data-vimeo-title="WealthBasket introduction"><img src="/assets/projects/wealthbasket/images/cover.webp" alt="WealthBasket on Paytm Money: a phone showing the WealthBasket logo, with the line: finding and investing in curated stock portfolios becomes a cakewalk" fetchpriority="high"><button class="cs-play" type="button" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
       </figure>
 
       <section class="cs-outcomes ab-r" aria-label="Outcomes">
@@ -186,7 +186,7 @@
             <p class="cs-lead ab-r">After the workshop, my team and I turned the discussions into a set of work packages and a recommended scope. From there the work ran as a series of sprints, with research and testing between them.</p>
             
       <figure class="cs-figure ab-r">
-        <div class="cs-figure-media"><img src="/assets/projects/wealthbasket/images/journey.jpg" alt="A line drawing of the project path: scoping workshop, exploratory user research, interaction design, UI design, UX patterns, presentation, concept sprint and user testing, with loops where work went back for another pass" loading="lazy" width="1560" height="631"></div>
+        <div class="cs-figure-media"><img src="/assets/projects/wealthbasket/images/journey.webp" alt="A line drawing of the project path: scoping workshop, exploratory user research, interaction design, UI design, UX patterns, presentation, concept sprint and user testing, with loops where work went back for another pass" loading="lazy" width="1560" height="631"></div>
         <figcaption>The project's path: from the scoping workshop through research, design and concept sprints to user testing, with loops back wherever testing sent us.</figcaption>
       </figure>
             <ol class="cs-steps">
@@ -197,7 +197,7 @@
             <div class="cs-rows"><div class="cs-row ab-r" style="--i:0"><h3>Tasks</h3><p>Everything planned for the week.</p></div><div class="cs-row ab-r" style="--i:1"><h3>Active sprint</h3><p>What was being worked on that day.</p></div><div class="cs-row ab-r" style="--i:2"><h3>Sprint backlog</h3><p>Anything carried over from the previous sprint.</p></div><div class="cs-row ab-r" style="--i:3"><h3>Done</h3><p>Finished and reviewed.</p></div></div>
             
       <figure class="cs-figure is-photo ab-r">
-        <div class="cs-figure-media"><img src="/assets/projects/wealthbasket/images/whiteboard.jpg" alt="A whiteboard covered in early flow sketches, screen boxes and notes from a working session" loading="lazy" width="1600" height="1200"></div>
+        <div class="cs-figure-media"><img src="/assets/projects/wealthbasket/images/whiteboard.webp" alt="A whiteboard covered in early flow sketches, screen boxes and notes from a working session" loading="lazy" width="1600" height="1200"></div>
         <figcaption>Early flows on the whiteboard. Wireframes showed quickly which layouts and components worked before anything went to visual design.</figcaption>
       </figure>
           </section>
@@ -207,15 +207,15 @@
             <p class="cs-lead ab-r">I sketched and prototyped several ideas for each flow, then refined them through internal critiques, user testing and technical checks. Three decisions shaped the product most.</p>
             <div class="cs-decisions">
               <article class="cs-decision ab-r">
-                <div class="cs-crop is-crop"><img src="/assets/projects/wealthbasket/images/onboarding-01.jpg" alt="" loading="lazy" style="object-position: 50% 42%; transform-origin: 50% 42%"></div>
+                <div class="cs-crop is-crop"><img src="/assets/projects/wealthbasket/images/onboarding-01.webp" alt="" loading="lazy" style="object-position: 50% 42%; transform-origin: 50% 42%"></div>
                 <div class="cs-decision-copy"><h3>A guided first run instead of a form</h3><p>Onboarding introduces baskets through a friendly guide and a trial investment, game-like and step by step, so a first-timer understands what they're buying before being asked for anything.</p><ul class="cs-tags cs-impact"><li style="--t:0">Builds trust</li><li style="--t:1">Plain language</li><li style="--t:2">Learn by doing</li></ul></div>
               </article>
               <article class="cs-decision ab-r">
-                <div class="cs-crop is-crop"><img src="/assets/projects/wealthbasket/images/purchase-02.jpg" alt="" loading="lazy" style="object-position: 96% 38%; transform-origin: 96% 38%"></div>
+                <div class="cs-crop is-crop"><img src="/assets/projects/wealthbasket/images/purchase-02.webp" alt="" loading="lazy" style="object-position: 96% 38%; transform-origin: 96% 38%"></div>
                 <div class="cs-decision-copy"><h3>Know the investor before suggesting a basket</h3><p>A short risk profile and a clear choice of advisory plan come before the first purchase, so the baskets people see match how much risk they're comfortable with.</p><ul class="cs-tags cs-impact"><li style="--t:0">Better-fit baskets</li><li style="--t:1">Transparency</li><li style="--t:2">Fewer surprises</li></ul></div>
               </article>
               <article class="cs-decision ab-r">
-                <div class="cs-crop is-crop"><img src="/assets/projects/wealthbasket/images/sip-02.jpg" alt="" loading="lazy" style="object-position: 50% 38%; transform-origin: 50% 38%"></div>
+                <div class="cs-crop is-crop"><img src="/assets/projects/wealthbasket/images/sip-02.webp" alt="" loading="lazy" style="object-position: 50% 38%; transform-origin: 50% 38%"></div>
                 <div class="cs-decision-copy"><h3>A monthly SIP in three steps</h3><p>For everyday investors, a systematic investment plan takes an amount, a frequency and a start date on one screen, then a confirmation. Regular investing becomes a habit, not a chore.</p><ul class="cs-tags cs-impact"><li style="--t:0">Fewer taps</li><li style="--t:1">Repeat investing</li><li style="--t:2">Built for regulars</li></ul></div>
               </article>
             </div>
@@ -235,9 +235,9 @@
           </div>
         </div>
         <div class="cs-flow-track" tabindex="0" role="region" aria-label="Onboarding: 3 sets of screens, scroll sideways">
-          <img src="/assets/projects/wealthbasket/images/onboarding-01.jpg" alt="Onboarding, part 1: a guide explains that anyone can invest in portfolios built by expert advisers, then offers a trial investment in a WealthBasket" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/onboarding-02.jpg" alt="Onboarding, part 2: a confetti celebration after the trial, then confirmation screens saying the investor is up to date and invested" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/onboarding-03.jpg" alt="Onboarding, part 3: an introduction to investing in WealthBaskets and the first basket's details" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/onboarding-01.webp" alt="Onboarding, part 1: a guide explains that anyone can invest in portfolios built by expert advisers, then offers a trial investment in a WealthBasket" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/onboarding-02.webp" alt="Onboarding, part 2: a confetti celebration after the trial, then confirmation screens saying the investor is up to date and invested" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/onboarding-03.webp" alt="Onboarding, part 3: an introduction to investing in WealthBaskets and the first basket's details" loading="lazy" width="1336" height="768">
         </div>
       </figure>
             
@@ -251,10 +251,10 @@
           </div>
         </div>
         <div class="cs-flow-track" tabindex="0" role="region" aria-label="Buying a basket: 4 sets of screens, scroll sideways">
-          <img src="/assets/projects/wealthbasket/images/purchase-01.jpg" alt="First purchase, part 1: exploring a WealthBasket and entering personal details" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/purchase-02.jpg" alt="First purchase, part 2: reviewing details and completing a short risk profile" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/purchase-03.jpg" alt="First purchase, part 3: the risk result, choosing an advisory plan and confirming it with a one-time password" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/purchase-04.jpg" alt="First purchase, part 4: paying the advisory fee and the payment success screen" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/purchase-01.webp" alt="First purchase, part 1: exploring a WealthBasket and entering personal details" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/purchase-02.webp" alt="First purchase, part 2: reviewing details and completing a short risk profile" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/purchase-03.webp" alt="First purchase, part 3: the risk result, choosing an advisory plan and confirming it with a one-time password" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/purchase-04.webp" alt="First purchase, part 4: paying the advisory fee and the payment success screen" loading="lazy" width="1336" height="768">
         </div>
       </figure>
             
@@ -268,9 +268,9 @@
           </div>
         </div>
         <div class="cs-flow-track" tabindex="0" role="region" aria-label="Monthly SIP: 3 sets of screens, scroll sideways">
-          <img src="/assets/projects/wealthbasket/images/sip-01.jpg" alt="SIP, part 1: the portfolio overview with returns, the list of WealthBaskets and a basket's detail page" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/sip-02.jpg" alt="SIP, part 2: entering an amount, choosing a monthly frequency and picking a start date" loading="lazy" width="1336" height="768">
-          <img src="/assets/projects/wealthbasket/images/sip-03.jpg" alt="SIP, part 3: confirming the SIP and the payment success screen" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/sip-01.webp" alt="SIP, part 1: the portfolio overview with returns, the list of WealthBaskets and a basket's detail page" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/sip-02.webp" alt="SIP, part 2: entering an amount, choosing a monthly frequency and picking a start date" loading="lazy" width="1336" height="768">
+          <img src="/assets/projects/wealthbasket/images/sip-03.webp" alt="SIP, part 3: confirming the SIP and the payment success screen" loading="lazy" width="1336" height="768">
         </div>
       </figure>
           </section>
@@ -291,8 +291,8 @@
         <div class="cs-flow-track" tabindex="0" role="region" aria-label="Web app: 4 sets of screens, scroll sideways">
           <img src="/assets/projects/wealthbasket/images/web-01.png" alt="Web app: the portfolio overview with invested amount, current value and basket distribution" loading="lazy" width="1366" height="720">
           <img src="/assets/projects/wealthbasket/images/web-02.png" alt="Web app: the list of the investor's WealthBaskets" loading="lazy" width="1366" height="720">
-          <img src="/assets/projects/wealthbasket/images/web-03.png" alt="Web app: a basket's detail page with performance and holdings" loading="lazy" width="1366" height="720">
-          <img src="/assets/projects/wealthbasket/images/web-04.png" alt="Web app: entering how much to invest" loading="lazy" width="1366" height="720">
+          <img src="/assets/projects/wealthbasket/images/web-03.webp" alt="Web app: a basket's detail page with performance and holdings" loading="lazy" width="1366" height="720">
+          <img src="/assets/projects/wealthbasket/images/web-04.webp" alt="Web app: entering how much to invest" loading="lazy" width="1366" height="720">
         </div>
       </figure>
           </section>
@@ -309,7 +309,7 @@
             <!-- Video: plays the Vimeo film (605509955) once it is available; see the cover. -->
             
       <figure class="cs-figure is-photo ab-r">
-        <div class="cs-figure-media" data-vimeo="605509955" data-vimeo-title="Paytm Money WealthBasket campaign film"><img src="/assets/projects/wealthbasket/images/campaign.jpg" alt="Paytm Money's WealthBasket campaign artwork: an illustrated investment expert surrounded by money bags" loading="lazy" width="1140" height="713"><button class="cs-play" type="button" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
+        <div class="cs-figure-media" data-vimeo="605509955" data-vimeo-title="Paytm Money WealthBasket campaign film"><img src="/assets/projects/wealthbasket/images/campaign.webp" alt="Paytm Money's WealthBasket campaign artwork: an illustrated investment expert surrounded by money bags" loading="lazy" width="1140" height="713"><button class="cs-play" type="button" hidden><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
         <figcaption>Paytm Money's launch artwork for WealthBasket.</figcaption>
       </figure>
             <p class="cs-note ab-r">Some details are left out because the work is confidential. My role was to help frame the product's long-term direction, run the research and make sure the design held up. If you'd like to know more, email me and we can talk it through on a call.</p>
@@ -399,10 +399,10 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
-<script src="/js/content.js?v=20261443" defer></script>
-<script src="/js/projects.js?v=20261443" defer></script>
-<script src="/js/case.js?v=20261443" defer></script>
-<script src="/js/render.js?v=20261443" defer></script>
-<script src="/js/script.js?v=20261443" defer></script>
+<script src="/js/content.js?v=20261445" defer></script>
+<script src="/js/projects.js?v=20261445" defer></script>
+<script src="/js/case.js?v=20261445" defer></script>
+<script src="/js/render.js?v=20261445" defer></script>
+<script src="/js/script.js?v=20261445" defer></script>
 </body>
 </html>
