@@ -2848,8 +2848,53 @@
     }, { passive: false });
     apply();
   }
+
+  // 26) Scroll line and hero depth (Home, Works, About and the case studies).
+  //     A thin line along the top of the window fills as you read down the
+  //     page. Leaving the top of Home or About, the hero sinks a touch
+  //     slower than the page and fades; on Home its stickers float up at
+  //     their own speeds and turn, and on About (1024px and up) the
+  //     snapshots rise a touch faster than the page. Reduced motion (or
+  //     Calm): no line, and the hero holds still.
+  if (document.querySelector(".hero.hc, .wk-hero, .ab-table, main.cs")) {
+    const line = document.createElement("div");
+    line.className = "scroll-line";
+    line.setAttribute("aria-hidden", "true");
+    document.body.appendChild(line);
+    const heroFade = document.querySelector(".hero.hc, .ab-table-copy");
+    const heroStickers = Array.from(document.querySelectorAll(".hero.hc .hs"));
+    const pile = document.querySelector(".ab-pile");
+    const wideDepth = window.matchMedia("(min-width: 1024px)");
+    const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
+    let queued = false;
+    const draw = () => {
+      queued = false;
+      const y = window.scrollY, vh = window.innerHeight;
+      const max = document.documentElement.scrollHeight - vh;
+      const still = reduce.matches;
+      line.hidden = still;
+      line.style.transform = `scaleX(${clampN(max > 0 ? y / max : 0, 0, 1).toFixed(4)})`;
+      if (y > vh * 1.4 && !still) return; // the hero is long gone
+      if (heroFade) {
+        heroFade.style.translate = still ? "" : `0 ${(y * 0.12).toFixed(1)}px`;
+        heroFade.style.opacity = still ? "" : clampN(1 - y / (vh * 0.75), 0, 1).toFixed(3);
+      }
+      heroStickers.forEach((el, i) => {
+        const depth = 0.35 + (i % 3) * 0.18, turn = (i % 2 ? 1 : -1) * (0.04 + (i % 3) * 0.02);
+        el.style.translate = still ? "" : `0 ${(-y * depth).toFixed(1)}px`;
+        el.style.rotate = still ? "" : `calc(var(--hr, 0deg) + ${(y * turn).toFixed(2)}deg)`; // on top of its own tilt
+      });
+      if (pile) {
+        const on = !still && wideDepth.matches;
+        pile.querySelectorAll(".ab-snap:not(.is-spare):not(.is-copy)").forEach((el, i) => {
+          el.style.translate = on ? `0 ${(-y * (0.05 + ((i * 37) % 5) * 0.03)).toFixed(1)}px` : "";
+        });
+      }
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    if (reduce.addEventListener) reduce.addEventListener("change", queue);
+    draw();
+  }
 })();
-
-
-
-

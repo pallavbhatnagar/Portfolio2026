@@ -3526,15 +3526,13 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 #faq-title .hs-host .hs-ask { top: -0.72em; }
 
 
-/* Wave 2.0, "One app, many brokers": the Hairline dock figure (js/wave-dock.js).
-   A plate in the page's own line and ground; the figure's plates take the
-   page's background, and its strokes follow the theme by html[data-theme]. */
-.wd { margin: 1.5rem 0 0; }
-.wd-plate { position: relative; border: 1px solid var(--line); border-radius: 0.875rem; overflow: hidden; background: var(--bg); --hairline-plate: var(--bg); }
-.wd-read { position: absolute; top: 0.875rem; right: 1rem; z-index: 1; font-size: var(--fs-small); color: var(--ink-soft); font-variant-numeric: tabular-nums; pointer-events: none; }
-.wd-stage { max-width: 40rem; margin: 0 auto; }
 /* "Where I've been" on phones takes keyboard focus while it scrolls (script.js 15b). */
 .path-grid:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.5rem; }
 /* The panel stays on its own layer, so nothing is redrawn when the opening
    animation ends: without it, icons on half-pixel columns hopped once it settled. */
 .dsp { will-change: transform; }
+
+/* Scroll line (script.js 26): a thin line along the top of the window that
+   fills as you read down Home, Works, About and the case studies. */
+.scroll-line { position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 2px; background: var(--ink); opacity: 0.85; transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
+@media print { .scroll-line { display: none; } }
