@@ -2236,6 +2236,7 @@
         const extra = typeof content === "object" && content.render ? content.render() : "";
         body.innerHTML = `<p>${text}</p>${extra}`;
         turn.appendChild(body);
+        streamReply(body);
       } else {
         const bubble = document.createElement("div");
         bubble.className = "ag-bubble";
@@ -2246,10 +2247,56 @@
       scrollAsk();
       return turn;
     };
-    const addAskTyping = () => {
+    // Thinking: the AI spark (its own copy of the Bloom gradient, as in 0)
+    // beside a short line that fits the question (CSS .ag-think-*).
+    const THINK_LINES = [ // first match wins, so the specific questions come first
+      [/worked|experience|career|years?|job|role|compan|resume|cv|where have you/i, "Checking the timeline"],
+      [/how do you|process|approach|research|workflow|method/i, "Walking through the process"],
+      [/contact|email|hire|available|reach|call|rate|salary/i, "Finding the best way to reach me"],
+      [/music|film|book|comic|hobby|travel|life|outside/i, "Looking outside the brief"],
+      [/case stud|project|work|portfolio|ship|built|wave|wealth|parcelo|wayfarer|lumen|jda/i, "Opening the case studies"],
+    ];
+    let thinkN = 0;
+    const thinkSpark = () => {
+      const id = `ag-think-grad-${thinkN++}`;
+      return `<svg class="ag-think-spark" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient class="ai-spark" id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#3965fa"/><stop offset="0.4" stop-color="#8a62e0"/><stop offset="0.7" stop-color="#c454c4"/><stop offset="1" stop-color="#f2369a"/></linearGradient></defs><path fill="url(#${id})" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg>`;
+    };
+    // Answering: the reply's words arrive one after another (about 0.6s in
+    // all, never slower than 28ms a word), then any cards follow. Only text
+    // is split, so links keep working. Reduced motion (or Calm): at once.
+    function streamReply(body) {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+      const p = body.querySelector("p");
+      if (!p) return;
+      const texts = [];
+      const walk = document.createTreeWalker(p, NodeFilter.SHOW_TEXT);
+      while (walk.nextNode()) texts.push(walk.currentNode);
+      const count = texts.reduce((s, t) => s + (t.textContent.match(/\S+/g) || []).length, 0);
+      const step = Math.min(28, 600 / Math.max(1, count));
+      let i = 0;
+      texts.forEach((t) => {
+        const frag = document.createDocumentFragment();
+        t.textContent.split(/(\s+)/).forEach((part) => {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+          const w = document.createElement("span");
+          w.className = "ag-w";
+          w.style.animationDelay = `${Math.round(i++ * step)}ms`;
+          w.textContent = part;
+          frag.appendChild(w);
+        });
+        t.replaceWith(frag);
+      });
+      Array.from(body.children).filter((el) => el !== p).forEach((el, k) => {
+        el.classList.add("ag-after");
+        el.style.animationDelay = `${Math.round(i * step + 60 + k * 60)}ms`;
+      });
+    }
+    const addAskTyping = (question) => {
       const turn = document.createElement("div");
       turn.className = "ag-turn from-agent ag-typing";
-      turn.innerHTML = '<span class="ag-who">Guide</span><div class="ag-content" aria-hidden="true"><i></i><i></i><i></i></div>';
+      const line = (THINK_LINES.find(([re]) => re.test(question || "")) || [null, "Thinking"])[1];
+      turn.innerHTML = `<span class="ag-who">Guide</span><div class="ag-content" aria-hidden="true">${thinkSpark()}<span class="ag-think-label">${line}</span></div>`;
       askThread.appendChild(turn);
       scrollAsk();
       return turn;
@@ -2284,7 +2331,7 @@
       askSend.disabled = true;
       addAskMessage("user", clean);
       askInput.value = "";
-      const typing = addAskTyping();
+      const typing = addAskTyping(clean);
       glowOn();
       const delay = reduce.matches ? 100 : 500 + Math.random() * 400;
       setTimeout(() => {
@@ -2560,34 +2607,19 @@
     });
   }
 
-  // 24b) Theme reveal: switching light and dark uncovers the new theme as a
-  //      circle growing out of the control you pressed (the toggle, or your
-  //      choice in the display settings panel) until it fills the screen.
-  //      View Transitions snapshot the page, the switch above runs
-  //      unchanged inside it, and the new look shows through the circle
-  //      (CSS: html.theme-revealing). Reduced motion or Calm, checked at the
-  //      moment of the click, or a browser without View Transitions: the
-  //      theme switches at once.
+  // 24b) Theme fade: switching light and dark crossfades the whole page to
+  //      the new theme in 0.3s (CSS: ::view-transition-new(root)). View
+  //      Transitions snapshot the page and the switch above runs unchanged
+  //      inside it. Reduced motion or Calm, checked at the moment of the
+  //      click, or a browser without View Transitions: the theme switches
+  //      at once.
   if (themeToggle && typeof document.startViewTransition === "function") {
     const root = document.documentElement;
     const still = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    let pressAt = null;
-    document.addEventListener("pointerdown", (e) => { pressAt = [e.clientX, e.clientY]; }, true);
-    const reveal = (change, el) => {
+    const fade = (change) => {
       if (still()) { change(); return; }
-      let [x, y] = pressAt || [innerWidth, 0];
-      if (!pressAt && el && el.getBoundingClientRect) { const r = el.getBoundingClientRect(); x = r.left + r.width / 2; y = r.top + r.height / 2; }
-      pressAt = null;
-      const radius = Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y));
-      root.classList.add("theme-revealing");
-      const vt = document.startViewTransition(change);
-      vt.ready.then(() => {
-        root.animate(
-          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
-          { duration: 800, easing: "cubic-bezier(0.65, 0, 0.35, 1)", pseudoElement: "::view-transition-new(root)", fill: "both" } // easeInOutCubic: an even sweep
-        );
-      }).catch(() => {});
-      vt.finished.finally(() => root.classList.remove("theme-revealing"));
+      root.classList.add("theme-fading");
+      document.startViewTransition(change).finished.finally(() => root.classList.remove("theme-fading"));
     };
     // Catch the toggle's click first, then let its own handler run inside the transition.
     let passing = false;
@@ -2596,13 +2628,13 @@
       if (!btn || passing || still()) return;
       e.stopImmediatePropagation();
       e.preventDefault();
-      reveal(() => { passing = true; btn.click(); passing = false; }, btn);
+      fade(() => { passing = true; btn.click(); passing = false; });
     }, true);
     const setTheme = window.__setTheme;
     window.__setTheme = (mode) => {
       const after = mode === "dark" || (mode === "auto" && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : null;
       if (root.getAttribute("data-theme") === after) { setTheme(mode); return; }
-      reveal(() => setTheme(mode), document.activeElement);
+      fade(() => setTheme(mode));
     };
   }
 
