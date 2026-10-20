@@ -138,6 +138,19 @@
 :root[data-theme="dark"] .project[data-theme="rose"]  { --card: var(--rose-bg);   --ink-tag: var(--rose-ink); }
 :root[data-theme="dark"] .project[data-theme="sky"]   { --card: var(--sky-bg);     --ink-tag: var(--sky-ink); }
 :root[data-theme="dark"] .project[data-theme="sand"]  { --card: var(--sand-bg);   --ink-tag: var(--sand-ink); }
+/* Home's project cards carry their colour more fully than the page tints:
+   each family's shade 100 for the card and shade 900 for its accent ink
+   (one hue per family; ink 9-13:1, body and grey text 4.8:1 or more). */
+.proj-stack .project { --card: #edf5ea; --ink-tag: #29481e; }
+.proj-stack .project[data-theme="lilac"] { --card: #edeaf6; --ink-tag: #281b4b; }
+.proj-stack .project[data-theme="rose"]  { --card: #f7ebe9; --ink-tag: #511f15; }
+.proj-stack .project[data-theme="sky"]   { --card: #e9f0f7; --ink-tag: #153351; }
+.proj-stack .project[data-theme="sand"]  { --card: #f6f1e9; --ink-tag: #4e3818; }
+:root[data-theme="dark"] .proj-stack .project { --card: #283225; --ink-tag: #dcebd6; }
+:root[data-theme="dark"] .proj-stack .project[data-theme="lilac"] { --card: #282433; --ink-tag: #dbd5ec; }
+:root[data-theme="dark"] .proj-stack .project[data-theme="rose"]  { --card: #342623; --ink-tag: #eed7d2; }
+:root[data-theme="dark"] .proj-stack .project[data-theme="sky"]   { --card: #232b34; --ink-tag: #d2e0ee; }
+:root[data-theme="dark"] .proj-stack .project[data-theme="sand"]  { --card: #332d24; --ink-tag: #ede3d4; }
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
@@ -438,11 +451,15 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   gap: var(--space-4);
   margin-bottom: var(--space-5);
 }
-.proj-intro h2 {
-  font-size: var(--fs-h2);
+/* Home reads as a story: each section opens with a line of it, set large
+   (the work, what I bring, the kind words share one style). */
+.proj-intro h2, .value-head h2, .testi-head h2 {
+  max-width: 26ch;
+  font-size: clamp(1.625rem, 3.1vw, 2.5rem);
   font-weight: 500;
-  letter-spacing: var(--track-heading);
-  line-height: 1.08;
+  letter-spacing: -0.025em;
+  line-height: 1.06;
+  text-wrap: balance;
 }
 /* "View all work": a quiet text link at the end of the description, to the
    Works page. Grey like the description; ink and underlined on hover. */
@@ -455,9 +472,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .proj-all { flex: none; }
 }
 .proj-intro p {
-  max-width: 64ch;
-  margin-top: 0.5rem;
-  font-size: 1rem;
+  max-width: 52ch;
+  margin-top: 1rem;
+  font-size: 1.125rem;
   line-height: 1.5;
   color: var(--ink-soft);
 }
@@ -715,16 +732,10 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   padding: 2.75rem max(var(--pad), calc((100% - 60.125rem) / 2 + var(--pad)));
 }
 .value-head { margin-bottom: var(--space-5); }
-.value-head h2 {
-  font-size: var(--fs-h2);
-  font-weight: 500;
-  letter-spacing: var(--track-heading);
-  line-height: 1.08;
-}
 .value-head p {
   max-width: 52ch;
-  margin-top: 0.3125rem;
-  font-size: 1rem;
+  margin-top: 1rem;
+  font-size: 1.125rem;
   line-height: 1.5;
   color: var(--ink-soft);
 }
@@ -958,16 +969,10 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .tq-arrow:not(:disabled):hover { background: #e6e6e6; }
   :root[data-theme="dark"] .tq-arrow:not(:disabled):hover { background: #333333; }
 }
-.testi-head h2 {
-  font-size: var(--fs-h2);
-  font-weight: 500;
-  letter-spacing: var(--track-heading);
-  line-height: 1.08;
-}
 .testi-head p {
   max-width: 52ch;
-  margin-top: 0.3125rem;
-  font-size: 1rem;
+  margin-top: 1rem;
+  font-size: 1.125rem;
   line-height: 1.5;
   color: var(--ink-soft);
 }
@@ -3558,3 +3563,32 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 ::view-transition-new(root) { animation: theme-fade-in 0.3s ease both; mix-blend-mode: normal; }
 @keyframes theme-fade-in { from { opacity: 0; } }
 html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { transition: none !important; }
+
+/* Home's two-line story headings: the sticker rides at the end of the last
+   word, inline, instead of the far edge of the wrapped heading. */
+#value-title .hs-host, #testi-title .hs-host { display: inline; padding-right: 0; }
+#value-title .hs-host .hs, #testi-title .hs-host .hs { position: relative; right: auto; top: -0.12em; display: inline-grid; margin-left: 0.18em; vertical-align: middle; font-size: 0.85em; }
+
+/* Home's closing chapter (index.html .next-ch): where the story is now, and
+   three ways to start the next part. The heading shares the story style. */
+.next-ch { position: relative; max-width: 60.125rem; margin: clamp(5rem, 11vw, 8rem) auto clamp(4rem, 8vw, 6rem); padding: 0 var(--pad); }
+/* Where I am now, as a small badge above the line, tilted like the site's
+   stickers; it drifts against the scroll (script.js 25c). Still in Calm. */
+.next-ch .next-badge { display: inline-flex; max-width: none; align-items: center; gap: 0.5rem; margin: 0 0 1.25rem; padding: 0.375rem 0.875rem 0.375rem 0.75rem; border-radius: 999px; background: var(--mint-panel); color: var(--mint-ink); font-size: 0.9375rem; font-weight: 600; rotate: -3deg; will-change: translate; }
+.next-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #2f9e44; box-shadow: 0 0 0 3px color-mix(in srgb, #2f9e44 25%, transparent); }
+:root[data-theme="dark"] .next-dot { background: #5bd17a; box-shadow: 0 0 0 3px color-mix(in srgb, #5bd17a 25%, transparent); }
+@media (prefers-reduced-motion: no-preference) { .next-dot { animation: next-pulse 2.4s ease-in-out infinite; } }
+@keyframes next-pulse { 50% { box-shadow: 0 0 0 6px color-mix(in srgb, #2f9e44 0%, transparent); } }
+
+.next-ch h2 { max-width: 38ch; font-size: clamp(1.5rem, 2.7vw, 2.125rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.22; text-wrap: balance; }
+.next-ch p { max-width: 52ch; margin-top: 1rem; font-size: 1.125rem; line-height: 1.5; color: var(--ink-soft); }
+.next-actions { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 2rem; }
+/* "Ask my portfolio" is the closing chapter's main action: a soft wash of
+   the AI colours (Bloom, blue into pink) with a violet edge, ink text and the
+   gradient spark; the wash deepens a little on hover. Follows the theme
+   through var(--bg). */
+.btn.nav-ai.next-ask { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); color: var(--ink); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
+@media (hover: hover) and (pointer: fine) {
+  .btn.nav-ai.next-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
+}
+@media (forced-colors: active) { .btn.nav-ai.next-ask { background: ButtonFace; color: ButtonText; border: 1px solid ButtonText; } }

@@ -29,8 +29,8 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","quiet"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded")&&!matchMedia("(prefers-reduced-motion: reduce)").matches)d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261449" />
-<script src="/js/motion-css.js?v=20261449"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261469" />
+<script src="/js/motion-css.js?v=20261469"></script>
 </head>
 <body>
 
@@ -282,10 +282,10 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
-<script src="/js/content.js?v=20261449" defer></script>
-<script src="/js/projects.js?v=20261449" defer></script>
-<script src="/js/case.js?v=20261449" defer></script>
-<script src="/js/render.js?v=20261449" defer></script>
-<script src="/js/script.js?v=20261449" defer></script>
+<script src="/js/content.js?v=20261469" defer></script>
+<script src="/js/projects.js?v=20261469" defer></script>
+<script src="/js/case.js?v=20261469" defer></script>
+<script src="/js/render.js?v=20261469" defer></script>
+<script src="/js/script.js?v=20261469" defer></script>
 </body>
 </html>

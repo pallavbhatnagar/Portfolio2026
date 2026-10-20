@@ -2137,7 +2137,7 @@
   // Work history, newest first. Keep it in step with "Where I've been" on
   // the About page.
   const EXPERIENCE = [
-    { co: "Akash", role: "Senior UX designer", years: "2023 – now", tint: "mint" },
+    { co: "Resilinc", role: "Senior UX designer", years: "2023 – now", tint: "mint" },
     { co: "Wave", role: "Product designer", years: "2020 – 2023", tint: "lilac" },
     { co: "Pixelcraft", role: "UI designer", years: "2018 – 2020", tint: "rose" },
     { co: "Studio Nine", role: "Design intern", years: "2017", tint: "sky" }
@@ -2932,19 +2932,36 @@
     apply();
   }
 
+  // 25c) Home's closing chapter: the "Now at" badge drifts against the
+  //      scroll as the section passes, a gentle parallax. Calm: still.
+  const nextBadge = document.querySelector("[data-next-badge]");
+  if (nextBadge) {
+    let nbQueued = false;
+    const nbDraw = () => {
+      nbQueued = false;
+      if (reduce.matches) { nextBadge.style.translate = ""; return; }
+      const r = nextBadge.parentElement.getBoundingClientRect(), vh = window.innerHeight;
+      if (r.bottom < 0 || r.top > vh) return;
+      const off = Math.max(-1, Math.min(1, (r.top + r.height / 2 - vh / 2) / vh));
+      nextBadge.style.translate = `${(off * -18).toFixed(1)}px ${(off * 46).toFixed(1)}px`;
+    };
+    const nbQueue = () => { if (!nbQueued) { nbQueued = true; requestAnimationFrame(nbDraw); } };
+    window.addEventListener("scroll", nbQueue, { passive: true });
+    window.addEventListener("resize", nbQueue);
+    nbDraw();
+  }
+
   // 26) Scroll line and hero depth (Home, Works, About and the case studies).
   //     A thin line along the top of the window fills as you read down the
-  //     page. Leaving the top of Home or About, the hero sinks a touch
-  //     slower than the page and fades; on Home its stickers float up at
-  //     their own speeds and turn, and on About (1024px and up) the
-  //     snapshots rise a touch faster than the page. Reduced motion (or
-  //     Calm): no line, and the hero holds still.
+  //     page. Leaving the top of Home, the hero stickers float up at their
+  //     own speeds and turn; on About (1024px and up) the snapshots rise a
+  //     touch faster than the page. The hero words stay put. Reduced motion
+  //     (or Calm): no line, and the hero holds still.
   if (document.querySelector(".hero.hc, .wk-hero, .ab-table, main.cs")) {
     const line = document.createElement("div");
     line.className = "scroll-line";
     line.setAttribute("aria-hidden", "true");
     document.body.appendChild(line);
-    const heroFade = document.querySelector(".hero.hc, .ab-table-copy");
     const heroStickers = Array.from(document.querySelectorAll(".hero.hc .hs"));
     const pile = document.querySelector(".ab-pile");
     const wideDepth = window.matchMedia("(min-width: 1024px)");
@@ -2958,10 +2975,6 @@
       line.hidden = still;
       line.style.transform = `scaleX(${clampN(max > 0 ? y / max : 0, 0, 1).toFixed(4)})`;
       if (y > vh * 1.4 && !still) return; // the hero is long gone
-      if (heroFade) {
-        heroFade.style.translate = still ? "" : `0 ${(y * 0.12).toFixed(1)}px`;
-        heroFade.style.opacity = still ? "" : clampN(1 - y / (vh * 0.75), 0, 1).toFixed(3);
-      }
       heroStickers.forEach((el, i) => {
         const depth = 0.35 + (i % 3) * 0.18, turn = (i % 2 ? 1 : -1) * (0.04 + (i % 3) * 0.02);
         el.style.translate = still ? "" : `0 ${(-y * depth).toFixed(1)}px`;
