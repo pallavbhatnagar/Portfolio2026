@@ -132,8 +132,8 @@
   .js .hc:not(.is-in) .hc-rise { opacity: 0; transform: translateY(0.875rem); filter: blur(6px); }
   .hc-rise { transition: opacity 0.9s var(--hc-out), transform 0.9s var(--hc-out), filter 0.9s var(--hc-out); transition-delay: calc(var(--d, 0) * 1ms); }
   /* "complicated": each letter starts out of line, then snaps straight. */
-  .js .hc:not(.is-in) .hc-mess .ch { transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) rotate(calc(var(--r) * 1deg)); }
-  .hc-mess .ch { transition: transform 1.1s var(--hc-io); transition-delay: calc(700ms + var(--i) * 70ms); }
+  .js .hc:not(.mess-go) .hc-mess .ch { transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) rotate(calc(var(--r) * 1deg)); }
+  .hc-mess .ch { transition: transform 1.1s var(--hc-io); transition-delay: calc(var(--mess-delay, 700ms) + var(--i) * 70ms); }
 }
 
 @media (max-width: 640px) {

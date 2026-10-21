@@ -443,6 +443,9 @@
   //     still waiting is re-checked against final layout.
   const revealSelector = ".ab-r, .ab-facts, .im-grid, .off-grid, .ab-life, .wk-list, .tq-view, .proj-head";
   if ("IntersectionObserver" in window) {
+    // In as soon as its top edge is a little way into the window. (It used
+    // to wait for a fifth of the block to show, which a tall block, like
+    // Outside the brief on a phone, reached far too late.)
     const io = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -450,7 +453,7 @@
           io.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0, rootMargin: "0px 0px -8% 0px" });
     const observeUnrevealed = () => {
       document.querySelectorAll(revealSelector).forEach((el) => {
         if (!el.classList.contains("is-in")) io.observe(el);
@@ -2961,6 +2964,66 @@
     const line = document.createElement("div");
     line.className = "scroll-line";
     line.setAttribute("aria-hidden", "true");
+    // A lightsaber: the hilt waits at the left edge and the blade fills
+    // out of its emitter as you read down the page.
+    line.innerHTML = `<svg class="sb-hilt" viewBox="0 0 96 16"><defs><linearGradient id="sbChrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#dfe3e7"/><stop offset=".55" stop-color="#8b9299"/><stop offset=".78" stop-color="#c9ced3"/><stop offset="1" stop-color="#565c63"/></linearGradient><linearGradient id="sbSteel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa0a7"/><stop offset=".5" stop-color="#4a4f55"/><stop offset="1" stop-color="#23262a"/></linearGradient><linearGradient id="sbGrip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4e54"/><stop offset=".35" stop-color="#1b1d20"/><stop offset="1" stop-color="#0a0b0c"/></linearGradient><linearGradient id="sbRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d727a"/><stop offset=".4" stop-color="#2a2d31"/><stop offset="1" stop-color="#111214"/></linearGradient><linearGradient id="sbBrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".45" stop-color="#d6a94c"/><stop offset="1" stop-color="#6e4f17"/></linearGradient></defs><g stroke="rgba(0,0,0,.35)" stroke-width=".35"><path d="M1.6 4.6h1.6v6.8H1.6a1.1 1.1 0 0 1-1.1-1.1V5.7a1.1 1.1 0 0 1 1.1-1.1z" fill="url(#sbSteel)"/><rect x="3.2" y="3.4" width="9" height="9.2" rx=".9" fill="url(#sbChrome)"/><rect x="12.2" y="5" width="2.2" height="6" fill="url(#sbSteel)"/><rect x="14.4" y="4.1" width="24" height="7.8" rx=".5" fill="url(#sbGrip)"/><g fill="url(#sbRib)"><rect x="16" y="3.5" width="1.7" height="9" rx=".5"/><rect x="19.3" y="3.5" width="1.7" height="9" rx=".5"/><rect x="22.6" y="3.5" width="1.7" height="9" rx=".5"/><rect x="25.9" y="3.5" width="1.7" height="9" rx=".5"/><rect x="29.2" y="3.5" width="1.7" height="9" rx=".5"/><rect x="32.5" y="3.5" width="1.7" height="9" rx=".5"/><rect x="35.8" y="3.5" width="1.7" height="9" rx=".5"/></g><rect x="38.4" y="3.2" width="2" height="9.6" rx=".4" fill="url(#sbChrome)"/><rect x="40.4" y="4" width="16" height="8" fill="url(#sbChrome)"/><rect x="43.6" y="1.4" width="9.6" height="3" rx=".6" fill="url(#sbGrip)"/><rect x="56.4" y="4.4" width="4" height="7.2" fill="url(#sbBrass)"/><rect x="60.4" y="5.2" width="2" height="5.6" fill="url(#sbSteel)"/><path d="M62.4 3.2h15.6l3 -1.2v12l-3 -1.2H62.4z" fill="url(#sbChrome)"/><rect x="81" y="3.6" width="2.2" height="8.8" rx=".4" fill="url(#sbSteel)"/></g><g fill="#1a1c1f"><rect x="66" y="5.2" width="1.3" height="5.6" rx=".4"/><rect x="69" y="5.2" width="1.3" height="5.6" rx=".4"/><rect x="72" y="5.2" width="1.3" height="5.6" rx=".4"/></g><circle cx="46.3" cy="2.9" r=".9" fill="#e0453a"/><circle cx="49.6" cy="2.9" r=".55" fill="#d6a94c"/><circle cx="51.6" cy="2.9" r=".55" fill="#d6a94c"/><path d="M5.4 3.6v8.8M8.3 3.6v8.8" stroke="rgba(0,0,0,.28)" stroke-width=".5"/><path d="M42.4 4v8M54.4 4v8" stroke="rgba(0,0,0,.25)" stroke-width=".45"/><rect x="44" y="7" width="9" height="2.4" rx=".6" fill="#2a2d31"/><path d="M62.4 4.1h15.6" stroke="rgba(255,255,255,.75)" stroke-width=".5"/><path d="M14.4 5h24" stroke="rgba(255,255,255,.14)" stroke-width=".4"/></svg><span class="sb-track"><span class="sb-blade"></span></span>`;
+    const blade = line.querySelector(".sb-blade");
+    // A plain line by default; a double-click (or double-tap) on it lights
+    // the saber, and another puts it back. The choice is remembered.
+    let saber = false;
+    try { saber = localStorage.getItem("saber") === "1"; } catch (e) { /* private mode */ }
+    // A small tip under the pointer says what a double-click does.
+    const tip = document.createElement("span");
+    tip.className = "sb-tip";
+    line.appendChild(tip);
+    // Two lines, like the site's other tips: what happens, then how. A tiny
+    // saber beside them shows the state you'd switch to. Touch screens (and
+    // a finger on an iPad) read "Double-tap"; a mouse or trackpad, "Double-click".
+    let touchy = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+    const setTip = () => {
+      const verb = touchy ? "Double-tap" : "Double-click";
+      tip.innerHTML = `<svg class="sb-tip-ic" viewBox="0 0 28 8" aria-hidden="true"><rect x="0.5" y="2.5" width="9" height="3" rx="1" fill="currentColor" opacity=".55"/><rect x="2.5" y="2" width="1.2" height="4" rx=".4" fill="currentColor"/><rect x="9.5" y="1.8" width="2.4" height="4.4" rx=".6" fill="currentColor"/>${saber ? "" : '<rect class="sb-tip-blade" x="12.5" y="3" width="15" height="2" rx="1"/>'}</svg><span class="sb-tip-text"><span>${saber ? "Back to a plain line" : "Light the saber"}</span><span class="sb-tip-hint">${verb} to switch it ${saber ? "off" : "on"}</span></span>`;
+    };
+    const placeTip = (e) => {
+      const r = line.getBoundingClientRect();
+      const x = e.clientX - r.left, half = tip.offsetWidth / 2 + 8;
+      tip.style.left = `${Math.min(Math.max(x, half), r.width - half)}px`;
+      tip.style.setProperty("--arrow", `${Math.round(x - Math.min(Math.max(x, half), r.width - half) + tip.offsetWidth / 2)}px`);
+    };
+    line.addEventListener("pointermove", placeTip);
+    line.classList.toggle("is-saber", saber);
+    setTip();
+    // The ignition sound (sound-effects/lightsaber.mp3), when it lights only;
+    // fetched once the pointer or a finger reaches the line.
+    const warm = () => sfx.load("lightsaber.mp3");
+    line.addEventListener("pointerenter", warm, { once: true });
+    line.addEventListener("pointerdown", warm, { once: true });
+    const toggleSaber = () => {
+      saber = !saber;
+      setTip();
+      line.classList.toggle("is-saber", saber);
+      if (saber) warm().then(() => { if (saber) sfx.play("lightsaber.mp3", 0.6); });
+      try { localStorage.setItem("saber", saber ? "1" : "0"); } catch (e) { /* private mode */ }
+    };
+    // Touch: phones don't all send a double-click for a double-tap, so two
+    // taps close together count here, and a tap shows the tip for a moment
+    // (there's no hover to show it).
+    let lastTap = 0, tipTimer = 0, lastType = "";
+    line.addEventListener("pointerdown", (e) => {
+      lastType = e.pointerType;
+      const t = e.pointerType !== "mouse";
+      if (t !== touchy) { touchy = t; setTip(); }
+    });
+    line.addEventListener("pointerup", (e) => {
+      if (e.pointerType === "mouse") return;
+      const now = performance.now();
+      if (now - lastTap < 400) { lastTap = 0; toggleSaber(); } else lastTap = now;
+      placeTip(e);
+      line.classList.add("tip-on");
+      clearTimeout(tipTimer);
+      tipTimer = setTimeout(() => line.classList.remove("tip-on"), 2400);
+    });
+    line.addEventListener("dblclick", () => { if (lastType === "mouse" || !lastType) toggleSaber(); });
     document.body.appendChild(line);
     const heroStickers = Array.from(document.querySelectorAll(".hero.hc .hs"));
     const pile = document.querySelector(".ab-pile");
@@ -2983,7 +3046,12 @@
       const { y, max } = readScroll();
       const still = reduce.matches;
       line.hidden = still;
-      line.style.transform = `scaleX(${clampN(max > 0 ? y / max : 0, 0, 1).toFixed(4)})`;
+      const fill = clampN(max > 0 ? y / max : 0, 0, 1);
+      // Never quite empty: a short stub at the left shows where the line
+      // lives, so there's something to hover or double-tap from the start.
+      const shown = Math.max(fill, Math.min(1, 28 / (blade.offsetWidth || 1)));
+      blade.style.transform = `translateX(${((shown - 1) * 100).toFixed(2)}%)`;
+      line.classList.toggle("is-lit", fill > 0.002);
       if (y > vh * 1.4 && !still) return; // the hero is long gone
       heroStickers.forEach((el, i) => {
         const depth = 0.35 + (i % 3) * 0.18, turn = (i % 2 ? 1 : -1) * (0.04 + (i % 3) * 0.02);

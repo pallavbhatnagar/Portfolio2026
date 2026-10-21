@@ -3056,7 +3056,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
   .om-s .om-copy { display: flex; flex-direction: column; align-items: flex-start; }
   .om-s .om-video { align-self: center; }
 }
-.om-video { margin: 0; }
+.om-video { margin: 0; width: 100%; align-self: stretch; } /* full width from the start, not the video's own size until it loads */
 @media (max-width: 640px) { .om-video { margin-top: 1.5rem; } }
 .om-screen { position: relative; overflow: hidden; aspect-ratio: 16 / 9; border-radius: 0.375rem; background: #111111; box-shadow: 0 1.25rem 2.5rem -1.5rem rgba(0, 0, 0, 0.55); }
 .om-vid { display: block; width: 100%; height: 100%; object-fit: contain; }
@@ -3533,13 +3533,56 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 
 /* Scroll line (script.js 26): a thin line along the top of the window that
    fills as you read down Home, Works, About and the case studies. */
-.scroll-line { position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 2px; background: var(--ink); opacity: 0.85; transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
+/* Reading progress as a lightsaber (script.js 26): the hilt sits at the
+   top-left edge and the blade slides out of its emitter as you scroll.
+   Light theme: a white core in a deep blue tube, so it holds on white.
+   Dark theme: a white-hot core in a cyan haze. The haze breathes slowly. */
+.scroll-line { --sb-core: #ffffff; --sb-glow-1: #1677ff; --sb-glow-2: rgba(22, 119, 255, 0.55); --sb-glow-3: rgba(22, 119, 255, 0.22);
+  position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 14px; display: flex; align-items: center; padding-left: 6px; cursor: default; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
+:root[data-theme="dark"] .scroll-line { --sb-core: #f4feff; --sb-glow-1: #6fd8ff; --sb-glow-2: rgba(41, 182, 255, 0.7); --sb-glow-3: rgba(41, 182, 255, 0.3); }
+.sb-hilt { position: relative; z-index: 1; flex: none; width: 69px; height: 11.5px; filter: drop-shadow(0 0.75px 0.75px rgba(0, 0, 0, 0.3)); }
+:root[data-theme="dark"] .sb-hilt { filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.35)); }
+.sb-track { position: relative; flex: 1; height: 14px; margin-left: -17px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8px); mask-image: linear-gradient(90deg, transparent 0, #000 8px); }
+.sb-blade { position: absolute; left: 0; right: 8px; top: 50%; height: 2.25px; margin-top: -1.125px; border-radius: 999px; background: var(--sb-core);
+  box-shadow: 0 0 1px 0.5px var(--sb-glow-1), 0 0 2.5px 0.75px var(--sb-glow-1); transform: translateX(-100%); will-change: transform; }
+/* The haze, on its own layer so the hum only fades opacity. */
+.sb-blade::before { content: ""; position: absolute; inset: -1px 0; border-radius: inherit; box-shadow: 0 0 4px 1px var(--sb-glow-2), 0 0 8px 1.5px var(--sb-glow-3); }
+.scroll-line.is-saber.is-lit .sb-blade::before { animation: sb-hum 2.6s ease-in-out infinite; }
+@keyframes sb-hum { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .scroll-line.is-lit .sb-blade::before { animation: none; } }
+@media (forced-colors: active) { .sb-blade { background: CanvasText; box-shadow: none; } .sb-blade::before { display: none; } }
 /* With the chat open beside the page, the line spans the page only, moving
    in step with the panel; when the chat covers the page, it steps aside. */
 .scroll-line { transition: left 0.4s var(--ease-out), right 0.4s var(--ease-out), opacity 0.2s ease; }
 @media (min-width: 1300px) { body.ask-open .scroll-line { left: var(--ask-gap); right: var(--ask-panel-w); } }
 @media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .scroll-line { transition: none; } }
+/* The plain line (default): the page's ink, 2px, from the very left edge,
+   no hilt, no haze. A double-click swaps it for the saber (.is-saber). */
+.scroll-line:not(.is-saber) { padding-left: 0; }
+.scroll-line:not(.is-saber) .sb-hilt { display: none; }
+.scroll-line:not(.is-saber) .sb-track { margin-left: 0; -webkit-mask-image: none; mask-image: none; }
+.scroll-line:not(.is-saber) .sb-blade { right: 0; height: 4px; margin-top: -2px; border-radius: 999px; background: var(--ink); opacity: 0.85; box-shadow: none; }
+.scroll-line:not(.is-saber) .sb-blade::before { display: none; }
+.scroll-line.is-saber .sb-hilt { animation: sb-draw 0.25s var(--ease-out); }
+@keyframes sb-draw { from { opacity: 0; transform: translateX(-6px); } }
+@media (prefers-reduced-motion: reduce) { .scroll-line.is-saber .sb-hilt { animation: none; } }
+/* The tip, in the site's tooltip style, just under the line by the pointer. */
+.sb-tip { position: absolute; top: calc(100% + 0.5rem); left: 50%; display: flex; align-items: center; gap: 0.625rem; padding: 0.5rem 0.75rem 0.5rem 0.625rem; border-radius: 0.625rem; background: var(--ink); color: var(--bg); white-space: nowrap; pointer-events: none; box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.35); opacity: 0; transform: translate(-50%, -3px); transition: opacity 0.15s ease, transform 0.15s var(--ease-out); }
+/* The small arrow points up at the line, right where the pointer is. */
+.sb-tip::before { content: ""; position: absolute; top: -4px; left: var(--arrow, 50%); width: 8px; height: 8px; margin-left: -4px; background: inherit; border-radius: 1.5px; transform: rotate(45deg); }
+.sb-tip-ic { flex: none; width: 28px; height: 8px; }
+.sb-tip-blade { fill: #4aa8ff; filter: drop-shadow(0 0 1.5px #4aa8ff); }
+.sb-tip-text { display: flex; flex-direction: column; gap: 0.125rem; }
+.sb-tip-text > span { font-size: 0.8125rem; font-weight: 600; line-height: 1.2; }
+.sb-tip-text > .sb-tip-hint { font-size: 0.75rem; font-weight: 500; opacity: 0.7; }
+@media (hover: hover) and (pointer: fine) { .scroll-line:hover .sb-tip { opacity: 1; transform: translate(-50%, 0); transition-delay: 0.3s; } }
+.scroll-line.tip-on .sb-tip { opacity: 1; transform: translate(-50%, 0); }
+@media (prefers-reduced-motion: reduce) { .sb-tip { transform: translate(-50%, 0); } }
+@media (forced-colors: active) { .sb-tip { border: 1px solid CanvasText; } }
+.scroll-line[hidden] { display: none; }
+/* Not over the hello screen; it fades in as that lifts away. */
+html.is-preloading .scroll-line { opacity: 0; }
 @media print { .scroll-line { display: none; } }
 
 /* Theme fade (script.js 24b): the new theme fades in over the old one, a
@@ -3577,6 +3620,19 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 .btn.nav-ai.ask-cta { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); color: var(--ink); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) {
   .btn.nav-ai.ask-cta:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
+}
+/* Dark theme: mixing the brand hues into near-black turned them muddy (navy
+   into maroon). Here the wash sits on a violet-tinted base, the hues glow
+   through at higher strength, a light lilac edge and a hairline of top light
+   lift it off the page, and the label stays white. */
+:root[data-theme="dark"] .btn.nav-ai.ask-cta, :root[data-theme="dark"] .cs-ask {
+  background: linear-gradient(115deg, rgba(76, 116, 255, 0.16), rgba(155, 98, 224, 0.13) 55%, rgba(242, 54, 154, 0.11)), #1b1a21;
+  border-color: rgba(176, 150, 255, 0.32); color: #f2f0f7;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+@media (hover: hover) and (pointer: fine) {
+  :root[data-theme="dark"] .btn.nav-ai.ask-cta:hover, :root[data-theme="dark"] .cs-ask:hover {
+    background: linear-gradient(115deg, rgba(76, 116, 255, 0.23), rgba(155, 98, 224, 0.19) 55%, rgba(242, 54, 154, 0.16)), #1d1c24;
+    border-color: rgba(176, 150, 255, 0.48); }
 }
 @media (forced-colors: active) { .btn.nav-ai.ask-cta { background: ButtonFace; color: ButtonText; border: 1px solid ButtonText; } }
 /* The closing chapter's buttons and the AI call to action don't lift on

@@ -19,9 +19,17 @@
     }).join("");
   }
 
-  const enter = () => requestAnimationFrame(() => requestAnimationFrame(() => hc.classList.add("is-in")));
-  if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", enter, { once: true });
-  else enter();
+  // The words rise as the hello screen starts to lift; the scattered word
+  // waits until it has fully gone (.mess-go), so its letters snap straight
+  // where you can see them. Without the hello screen, both go together.
+  const raf2 = (fn) => requestAnimationFrame(() => requestAnimationFrame(fn));
+  const enter = () => raf2(() => hc.classList.add("is-in"));
+  const straighten = () => raf2(() => hc.classList.add("mess-go"));
+  if (document.documentElement.classList.contains("is-preloading")) {
+    hc.style.setProperty("--mess-delay", "150ms");
+    document.addEventListener("preloader:leaving", enter, { once: true });
+    document.addEventListener("preloader:done", straighten, { once: true });
+  } else { enter(); straighten(); }
 
   // Example questions turning in the box (hints only).
   const ask = hc.querySelector(".hc-ask");
