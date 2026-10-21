@@ -1506,7 +1506,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 @keyframes pxdog-heart-fade { from { opacity: 1; } to { opacity: 0; } }
 
 /* =========================================================
-   About: Where I've been, What I believe, Now, Questions people ask.
+   About: Where I've been, Now, Questions people ask.
    ========================================================= */
 .ab { --accent: #1244ed; }
 :root[data-theme="dark"] .ab { --accent: #9cb1f7; }
@@ -1544,26 +1544,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-path.is-armed .pl-next.is-lit { opacity: 0.35; }
 .ab-path.is-done .pl-ring { animation: ring 2.4s ease-out 0.4s infinite; }
 
-/* What I believe: one line per row, and the whole row links to the part
-   of the case study that shows it. Hovering (or focusing) a row brings it
-   forward: the other rows fade back and its link nudges up and right. */
-.pr-list { margin: var(--space-4) 0 0; padding: 0; list-style: none; border-top: 1px solid var(--hairline); }
-.pr-list li { border-bottom: 1px solid var(--hairline); }
-.pr-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1.5rem; padding: 1.125rem 0; color: inherit; text-decoration: none; }
-.pr-q { max-width: 36ch; font-size: clamp(1.125rem, 2vw, 1.4375rem); font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.2; color: var(--ink); transition: color 0.25s ease; }
-.pr-link { display: inline-flex; align-items: center; gap: 0.4375rem; flex: none; font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); white-space: nowrap; transition: color 0.2s ease; }
-.pr-link::before { content: ""; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: var(--k); }
-.pr-link svg { opacity: 0; transform: translate(-4px, 4px); transition: opacity 0.2s var(--ease-out), transform 0.2s var(--ease-out); }
-.pr-row:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
-.pr-row:focus-visible .pr-link, .pr-row:focus-visible .pr-link svg { color: var(--ink); opacity: 1; transform: none; }
-@media (hover: hover) and (pointer: fine) {
-  .pr-list:hover li:not(:hover) .pr-q { color: var(--ink-dim); }
-  .pr-row:hover .pr-link { color: var(--ink); }
-  .pr-row:hover .pr-link svg { opacity: 1; transform: none; }
-}
-/* Touch screens have no hover: show the arrow all the time. */
-@media (hover: none) { .pr-link svg { opacity: 1; transform: none; } }
-@media (prefers-reduced-motion: reduce) { .pr-link svg { transition: none; transform: none; } }
 
 /* Now */
 .ab-now, .ab-faq { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
@@ -1610,7 +1590,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .path-grid li::before { content: ""; position: absolute; left: -0.5rem; top: 0.125rem; box-sizing: border-box; width: 0.875rem; height: 0.875rem; border: 2px solid var(--ink); border-radius: 50%; background: var(--bg); }
   .path-grid li:last-child::before { background: var(--ink); }
   .ab-now, .ab-faq { grid-template-columns: 1fr; gap: var(--space-3); }
-  .pr-row { flex-direction: column; gap: 0.5rem; }
 }
 @media (max-width: 480px) { .now-list > div { grid-template-columns: 1fr; gap: 0.25rem; } }
 
@@ -3305,7 +3284,7 @@ html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
    case studies: wide screens only, and not while the chat is open. */
 .ab-side { margin-top: -1.25rem; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
 .ab-side.is-shown { opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0s; }
-.ab-story, .ab-path, .ab-glance, .ab-pr, .ab-impact, .ab-now, .ab-off, .ab-life, .ab-faq { scroll-margin-top: 5.25rem; }
+.ab-story, .ab-path, .ab-glance, .ab-impact, .ab-now, .ab-off, .ab-life, .ab-faq { scroll-margin-top: 5.25rem; }
 @media (prefers-reduced-motion: reduce) { .ab-side, .ab-side.is-shown { transition: none; } }
 
 /* A tapped snapshot (touch screens, strip or spread): straight, on top,
@@ -3596,3 +3575,31 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 /* The closing chapter's buttons and the AI call to action don't lift on
    hover; their colour still answers. */
 @media (hover: hover) and (pointer: fine) { .next-actions .btn:hover, .btn.ask-cta:hover { transform: none; } }
+
+/* A rule I keep coming back to (was "What I believe" on About): each case
+   study carries the one it shows, as a pull-quote at the start of the part
+   that shows it. A panel in the project's own tint, a large quote mark, the
+   rule set large and the label as its caption. */
+.cs-belief { position: relative; margin: 1.75rem 0 2rem; padding: 1.5rem 1.75rem 1.375rem 4.25rem; border-radius: 0.75rem; background: var(--tint-panel, var(--surface)); }
+.cs-belief::before { content: "\201C" / ""; position: absolute; left: 1.375rem; top: 0.875rem; font-size: 3.75rem; font-weight: 600; line-height: 1; color: var(--tint-ink, var(--ink)); opacity: 0.55; }
+.cs-belief blockquote { margin: 0; }
+.cs-belief blockquote p { max-width: 30ch; font-size: clamp(1.375rem, 2.8vw, 1.875rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.18; color: var(--ink); text-wrap: balance; }
+.cs-belief figcaption { margin-top: 0.75rem; font-size: var(--fs-small); color: var(--ink-soft); }
+@media (max-width: 640px) {
+  .cs-belief { padding: 1.25rem 1.25rem 1.125rem 3.25rem; }
+  .cs-belief::before { left: 1rem; top: 0.75rem; font-size: 2.75rem; }
+}
+@media (forced-colors: active) { .cs-belief { border: 1px solid CanvasText; } }
+
+/* The case studies' "Ask AI about this project" matches the AI call to
+   action on Home and About (.ask-cta): the same soft AI wash, violet edge and
+   weight, deepening on hover, with no lift. */
+.cs-ask { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
+@media (hover: hover) and (pointer: fine) {
+  .cs-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
+}
+
+/* Now, inside Outside the brief: a smaller heading and some room above,
+   after the music and books cards. */
+.off-now-block { margin-top: var(--space-6, 4.5rem); }
+.off-now-block .now-h { font-size: clamp(1.375rem, 2.6vw, 1.75rem); }
