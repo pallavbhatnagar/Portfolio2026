@@ -3583,12 +3583,16 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 .next-ch h2 { max-width: 38ch; font-size: clamp(1.5rem, 2.7vw, 2.125rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.22; text-wrap: balance; }
 .next-ch p { max-width: 52ch; margin-top: 1rem; font-size: 1.125rem; line-height: 1.5; color: var(--ink-soft); }
 .next-actions { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 2rem; }
-/* "Ask my portfolio" is the closing chapter's main action: a soft wash of
+/* The AI call to action ("Ask my portfolio" on Home, "Ask me anything" on
+   About, .ask-cta): a soft wash of
    the AI colours (Bloom, blue into pink) with a violet edge, ink text and the
    gradient spark; the wash deepens a little on hover. Follows the theme
    through var(--bg). */
-.btn.nav-ai.next-ask { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); color: var(--ink); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
+.btn.nav-ai.ask-cta { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); color: var(--ink); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) {
-  .btn.nav-ai.next-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
+  .btn.nav-ai.ask-cta:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
 }
-@media (forced-colors: active) { .btn.nav-ai.next-ask { background: ButtonFace; color: ButtonText; border: 1px solid ButtonText; } }
+@media (forced-colors: active) { .btn.nav-ai.ask-cta { background: ButtonFace; color: ButtonText; border: 1px solid ButtonText; } }
+/* The closing chapter's buttons and the AI call to action don't lift on
+   hover; their colour still answers. */
+@media (hover: hover) and (pointer: fine) { .next-actions .btn:hover, .btn.ask-cta:hover { transform: none; } }
