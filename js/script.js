@@ -3066,14 +3066,15 @@
       }
     };
     const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
-    // It shows while the page moves and fades away a moment after it stops.
-    // Pointing at the strip (or tapping it) brings it back, so it can still
-    // be found and switched.
+    // It shows while the page moves and fades away a moment after it stops,
+    // except at the very top of the page, where it always stays. Pointing
+    // at the strip (or tapping it) brings it back, so it can still be found
+    // and switched.
     let idleTimer = 0;
     const wake = () => {
       line.classList.remove("is-idle");
       clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => line.classList.add("is-idle"), 1500);
+      idleTimer = setTimeout(() => { if (readScroll().y > 4) line.classList.add("is-idle"); }, 1500);
     };
     const onScroll = () => { queue(); wake(); };
     window.addEventListener("scroll", onScroll, { passive: true });
