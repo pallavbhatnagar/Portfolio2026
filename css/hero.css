@@ -159,7 +159,7 @@
    knot on "complicated", a lilac tick on "obvious". Sticker styles are
    shared site-wide (style.css, .hs).
    ========================================================= */
-.hc-title.hc-big { max-width: none; font-size: clamp(1.625rem, 6.3vw, 4.75rem); font-weight: 800; letter-spacing: -0.05em; line-height: 1; }
+.hc-title.hc-big { max-width: none; font-size: clamp(1.625rem, 6.3vw, 4.75rem); font-weight: 800; letter-spacing: -0.05em; word-spacing: 0.08em; line-height: 1; }
 .hc-big .hc-line { position: relative; display: block; width: fit-content; margin-inline: auto; white-space: nowrap; }
 .hs-knot { right: -0.78em; top: -0.32em; width: 0.86em; height: 0.86em; --hr: 10deg; }
 .hs-knot .hs-burst { fill: #c4d6fb; }
