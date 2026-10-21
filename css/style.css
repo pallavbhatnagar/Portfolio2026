@@ -3427,6 +3427,7 @@ html[data-plain] :is(.hs, .im-doodle, .pxdog) { display: none !important; }
 /* On: the palette's Dark Gray (#202020), white text. In the dark theme
    it stays the light fill so it still stands out. */
 .dsp-chip[aria-pressed="true"] { background: #202020; color: #fff; }
+.dsp-chip[aria-disabled="true"] { opacity: 0.45; cursor: not-allowed; }
 :root[data-theme="dark"] .dsp-chip[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
 .dsp-chip:active { transform: scale(0.97); }
 .dsp-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
@@ -3535,34 +3536,70 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
    fills as you read down Home, Works, About and the case studies. */
 /* Reading progress as a lightsaber (script.js 26): the hilt sits at the
    top-left edge and the blade slides out of its emitter as you scroll.
-   Light theme: a white core in a deep blue tube, so it holds on white.
-   Dark theme: a white-hot core in a cyan haze. The haze breathes slowly. */
-.scroll-line { --sb-core: #ffffff; --sb-glow-1: #1677ff; --sb-glow-2: rgba(22, 119, 255, 0.55); --sb-glow-3: rgba(22, 119, 255, 0.22);
-  position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 14px; display: flex; align-items: center; padding-left: 6px; cursor: default; user-select: none; -webkit-user-select: none; touch-action: manipulation; }
-:root[data-theme="dark"] .scroll-line { --sb-core: #f4feff; --sb-glow-1: #6fd8ff; --sb-glow-2: rgba(41, 182, 255, 0.7); --sb-glow-3: rgba(41, 182, 255, 0.3); }
-.sb-hilt { position: relative; z-index: 1; flex: none; width: 69px; height: 11.5px; filter: drop-shadow(0 0.75px 0.75px rgba(0, 0, 0, 0.3)); }
+   A red blade. Light theme: a white core in a deep red tube, so it holds
+   on white. Dark theme: a white-hot core in a red haze. The haze breathes. */
+.scroll-line { --sb-core: #ffffff; --sb-glow-1: #e0121f; --sb-glow-2: rgba(224, 18, 31, 0.55); --sb-glow-3: rgba(224, 18, 31, 0.22);
+  position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 16px; display: flex; align-items: center; padding-left: 6px; pointer-events: none; }
+:root[data-theme="dark"] .scroll-line { --sb-core: #fff4f4; --sb-glow-1: #ff3b3b; --sb-glow-2: rgba(255, 34, 34, 0.7); --sb-glow-3: rgba(255, 34, 34, 0.3); }
+.sb-hilt { position: relative; z-index: 1; flex: none; width: 78px; height: 13px; filter: drop-shadow(0 0.75px 0.75px rgba(0, 0, 0, 0.3)); }
 :root[data-theme="dark"] .sb-hilt { filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.35)); }
-.sb-track { position: relative; flex: 1; height: 14px; margin-left: -17px; overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8px); mask-image: linear-gradient(90deg, transparent 0, #000 8px); }
-.sb-blade { position: absolute; left: 0; right: 8px; top: 50%; height: 2.25px; margin-top: -1.125px; border-radius: 999px; background: var(--sb-core);
+.sb-track { position: relative; flex: 1; height: 48px; margin: -16px 0 -16px -20px; overflow: hidden; /* taller than the strip so a wide glow isn't cut off */ -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8px); mask-image: linear-gradient(90deg, transparent 0, #000 8px); }
+.sb-blade { position: absolute; left: 0; right: 8px; top: 50%; height: 2.5px; margin-top: -1.25px; border-radius: 999px; background: var(--sb-core);
   box-shadow: 0 0 1px 0.5px var(--sb-glow-1), 0 0 2.5px 0.75px var(--sb-glow-1); transform: translateX(-100%); will-change: transform; }
 /* The haze, on its own layer so the hum only fades opacity. */
 .sb-blade::before { content: ""; position: absolute; inset: -1px 0; border-radius: inherit; box-shadow: 0 0 4px 1px var(--sb-glow-2), 0 0 8px 1.5px var(--sb-glow-3); }
-.scroll-line.is-saber.is-lit .sb-blade::before { animation: sb-hum 2.6s ease-in-out infinite; }
-@keyframes sb-hum { 0%, 100% { opacity: 0.75; } 50% { opacity: 1; } }
-@media (prefers-reduced-motion: reduce) { .scroll-line.is-lit .sb-blade::before { animation: none; } }
-@media (forced-colors: active) { .sb-blade { background: CanvasText; box-shadow: none; } .sb-blade::before { display: none; } }
+/* The blade's unsteady glow, like a real saber's: the haze flickers in
+   brightness and swells and thins a little, at an uneven rhythm. */
+.scroll-line.is-saber .sb-blade::before { animation: sb-flicker 1.7s linear infinite; }
+/* Dark theme: a wider bloom that gathers as the blade grows (--sb-power,
+   0 to 1, set from the scroll in script.js 26). */
+:root[data-theme="dark"] .scroll-line.is-saber .sb-blade::after { content: ""; position: absolute; inset: -1px 0; border-radius: inherit; box-shadow: 0 0 10px 3px rgba(255, 34, 34, 0.5), 0 0 24px 7px rgba(255, 34, 34, 0.22); opacity: calc(0.15 + var(--sb-power, 0) * 0.85); }
+@keyframes sb-flicker {
+  0%, 100% { opacity: 0.86; transform: scaleY(1); }
+  7% { opacity: 1; transform: scaleY(1.14); }
+  11% { opacity: 0.76; transform: scaleY(0.95); }
+  19% { opacity: 0.95; transform: scaleY(1.06); }
+  31% { opacity: 0.82; transform: scaleY(1); }
+  39% { opacity: 1; transform: scaleY(1.16); }
+  45% { opacity: 0.88; transform: scaleY(0.97); }
+  58% { opacity: 0.97; transform: scaleY(1.07); }
+  66% { opacity: 0.79; transform: scaleY(1); }
+  75% { opacity: 1; transform: scaleY(1.12); }
+  83% { opacity: 0.85; transform: scaleY(0.96); }
+  92% { opacity: 0.96; transform: scaleY(1.05); }
+}
+@media (prefers-reduced-motion: reduce) { .scroll-line .sb-blade::before { animation: none; } }
+@media (forced-colors: active) { .sb-blade { background: CanvasText; box-shadow: none; } .sb-blade::before, .sb-blade::after { display: none; } }
 /* With the chat open beside the page, the line spans the page only, moving
    in step with the panel; when the chat covers the page, it steps aside. */
 .scroll-line { transition: left 0.4s var(--ease-out), right 0.4s var(--ease-out), opacity 0.2s ease; }
 /* Resting: the line and hilt fade out (slowly) once scrolling stops, and
-   come straight back on the next scroll, a hover or a tap. */
+   come straight back on the next scroll. */
 .sb-hilt, .sb-track { transition: opacity 0.2s ease; }
-.scroll-line.is-idle:not(:hover):not(.tip-on) > .sb-hilt, .scroll-line.is-idle:not(:hover):not(.tip-on) > .sb-track { opacity: 0; transition-duration: 0.6s; }
-@media (min-width: 1300px) { body.ask-open .scroll-line { left: var(--ask-gap); right: var(--ask-panel-w); } }
-@media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } }
+/* The hilt can be pressed (it hums again): the one part of the line that
+   takes the pointer. */
+.scroll-line.is-saber .sb-hilt { pointer-events: auto; cursor: pointer; }
+.scroll-line.is-saber .sb-hilt:active { transform: scale(0.96); }
+.scroll-line.is-idle .sb-hilt { pointer-events: none; }
+.scroll-line.is-idle > .sb-hilt, .scroll-line.is-idle > .sb-track { opacity: 0; transition-duration: 0.6s; }
+/* The saber's light on the page (script.js 26): a red wash fading down from
+   the blade, as wide as the lit blade, so whatever scrolls up under it
+   catches a red cast. Dark theme: it adds light (screen). Light theme: a
+   faint red tint (multiply). Stronger as the blade grows. */
+.sb-spill { position: fixed; z-index: 999; top: 0; left: 0; right: 0; height: 7.5rem; pointer-events: none; transform: scaleX(0); transform-origin: 0 0;
+  background: linear-gradient(180deg, rgba(255, 70, 70, 0.22), rgba(255, 70, 70, 0.08) 40%, rgba(255, 70, 70, 0) 100%); mix-blend-mode: multiply;
+  -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent); mask-image: linear-gradient(90deg, #000 85%, transparent);
+  opacity: var(--sb-p, 0); transition: left 0.4s var(--ease-out), right 0.4s var(--ease-out), opacity 0.2s ease; }
+:root[data-theme="dark"] .sb-spill { background: linear-gradient(180deg, rgba(255, 36, 36, 0.34), rgba(255, 36, 36, 0.12) 40%, rgba(255, 36, 36, 0) 100%); mix-blend-mode: screen; }
+.sb-spill[hidden] { display: none; }
+.sb-spill.is-idle { opacity: 0; transition-duration: 0.4s, 0.4s, 0.6s; }
+html.is-preloading .sb-spill { display: none; }
+@media print, (forced-colors: active) { .sb-spill { display: none; } }
+@media (min-width: 1300px) { body.ask-open .scroll-line, body.ask-open .sb-spill { left: var(--ask-gap); right: var(--ask-panel-w); } }
+@media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } body.ask-open .sb-spill { display: none; } }
 @media (prefers-reduced-motion: reduce) { .scroll-line { transition: none; } }
 /* The plain line (default): the page's ink, 2px, from the very left edge,
-   no hilt, no haze. A double-click swaps it for the saber (.is-saber). */
+   no hilt, no haze. "Lightsaber" in the display settings swaps it for the saber (.is-saber). */
 .scroll-line:not(.is-saber) { padding-left: 0; }
 .scroll-line:not(.is-saber) .sb-hilt { display: none; }
 .scroll-line:not(.is-saber) .sb-track { margin-left: 0; -webkit-mask-image: none; mask-image: none; }
@@ -3571,19 +3608,6 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 .scroll-line.is-saber .sb-hilt { animation: sb-draw 0.25s var(--ease-out); }
 @keyframes sb-draw { from { opacity: 0; transform: translateX(-6px); } }
 @media (prefers-reduced-motion: reduce) { .scroll-line.is-saber .sb-hilt { animation: none; } }
-/* The tip, in the site's tooltip style, just under the line by the pointer. */
-.sb-tip { position: absolute; top: calc(100% + 0.5rem); left: 50%; display: flex; align-items: center; gap: 0.625rem; padding: 0.5rem 0.75rem 0.5rem 0.625rem; border-radius: 0.625rem; background: var(--ink); color: var(--bg); white-space: nowrap; pointer-events: none; box-shadow: 0 6px 20px -6px rgba(0, 0, 0, 0.35); opacity: 0; transform: translate(-50%, -3px); transition: opacity 0.15s ease, transform 0.15s var(--ease-out); }
-/* The small arrow points up at the line, right where the pointer is. */
-.sb-tip::before { content: ""; position: absolute; top: -4px; left: var(--arrow, 50%); width: 8px; height: 8px; margin-left: -4px; background: inherit; border-radius: 1.5px; transform: rotate(45deg); }
-.sb-tip-ic { flex: none; width: 28px; height: 8px; }
-.sb-tip-blade { fill: #4aa8ff; filter: drop-shadow(0 0 1.5px #4aa8ff); }
-.sb-tip-text { display: flex; flex-direction: column; gap: 0.125rem; }
-.sb-tip-text > span { font-size: 0.8125rem; font-weight: 600; line-height: 1.2; }
-.sb-tip-text > .sb-tip-hint { font-size: 0.75rem; font-weight: 500; opacity: 0.7; }
-@media (hover: hover) and (pointer: fine) { .scroll-line:hover .sb-tip { opacity: 1; transform: translate(-50%, 0); transition-delay: 0.3s; } }
-.scroll-line.tip-on .sb-tip { opacity: 1; transform: translate(-50%, 0); }
-@media (prefers-reduced-motion: reduce) { .sb-tip { transform: translate(-50%, 0); } }
-@media (forced-colors: active) { .sb-tip { border: 1px solid CanvasText; } }
 .scroll-line[hidden] { display: none; }
 /* Not over the hello screen; it fades in as that lifts away. */
 html.is-preloading .scroll-line { opacity: 0; }

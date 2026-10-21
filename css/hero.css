@@ -137,7 +137,7 @@
 }
 
 @media (max-width: 640px) {
-  .hc { padding-top: calc(var(--pad) + 6rem); padding-bottom: 4rem; }
+  .hc { padding-top: calc(var(--pad) + 7.5rem); padding-bottom: 4rem; } /* a little more air under the nav */
   .hc-sign { gap: 0.75rem; margin-bottom: 1.75rem; }
   .hc-sign img { width: 3.25rem; height: 3.25rem; border-radius: 0.8125rem; }
   .hc-sign b { font-size: 1.0625rem; }

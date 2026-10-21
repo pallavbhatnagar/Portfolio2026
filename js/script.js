@@ -110,8 +110,6 @@
       return loads[name];
     };
     const play = (name, volume = 1) => {
-      // "Quiet sounds" in the display settings turns the effects off.
-      if (document.documentElement.hasAttribute("data-quiet")) return 0;
       const c = getCtx();
       const clip = loads[name] && loads[name].ready;
       if (c && clip) {
@@ -2656,6 +2654,8 @@
     const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || "{}") || {}; } catch (e) { return {}; } };
     const save = (o) => { try { if (Object.keys(o).length) localStorage.setItem(KEY, JSON.stringify(o)); else localStorage.removeItem(KEY); } catch (e) { /* private mode */ } };
     let prefs = load();
+    delete prefs.quiet; // the old "Quiet sounds" option, since replaced
+    try { if (localStorage.getItem("saber") === "1") prefs.saber = 1; localStorage.removeItem("saber"); } catch (e) { /* private mode */ }
     // Tablets (touch screens 641px and wider) start at the middle text size;
     // everything else at the smallest. Only a different choice is saved.
     const textDefault = window.matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches ? 1 : 0;
@@ -2668,7 +2668,8 @@
       ["links", "Underline links", "Every link underlined, so links never hide in the text.", ic('<path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-.8.8M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l.8-.8"/><path d="M4 21.5h16"/>')],
       ["focus", "Bold focus", "Press Tab to move around; a thick, bright outline shows where you are.", ic('<rect x="7" y="7" width="10" height="10" rx="2"/><rect x="3" y="3" width="18" height="18" rx="4.5" stroke-width="2.6"/>')],
       ["plain", "Hide stickers", "Hides the stickers, doodles and the dog. Just the words and the work.", ic('<path d="M14.5 3.5H6A2.5 2.5 0 0 0 3.5 6v12A2.5 2.5 0 0 0 6 20.5h12a2.5 2.5 0 0 0 2.5-2.5V9.5z"/><path d="M14.5 3.5v4a2 2 0 0 0 2 2h4M4 4l16 16"/>')],
-      ["quiet", "Quiet sounds", "Turns off the little sound effects, like the dog's bark, and mutes anything playing.", ic('<path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z"/><path d="M16 9.5l5 5M21 9.5l-5 5"/>')],
+      ["saber", "Lightsaber", "A red lightsaber for the reading progress. Lively motion only.", ic('<g stroke-width="1.6"><path d="M4.3 9.7V8.3C4.3 4.4 7.6 1.3 12 1.3s7.7 3.1 7.7 7v1.4l3.1 10.4c.2.6-.2 1.1-.8 1.2-3.2.8-6.6 1.2-10 1.2s-6.8-.4-10-1.2c-.6-.1-1-.6-.8-1.2z"/><path d="M12 1.3v8.4"/><path d="M2.5 21.3L5.8 12c.6-1.6 2-2.6 3.7-2.6.9 0 1.7.2 2.5.7.8-.5 1.6-.7 2.5-.7 1.7 0 3.1 1 3.7 2.6l3.3 9.3"/><path d="M7.3 13.6c.3-1.1 1.2-1.8 2.3-1.8h.6c.6 0 1 .4 1 1v.2c0 .6-.4 1-1 1H8c-.5 0-.8-.2-.7-.4zM16.7 13.6c-.3-1.1-1.2-1.8-2.3-1.8h-.6c-.6 0-1 .4-1 1v.2c0 .6.4 1 1 1H16c.5 0 .8-.2.7-.4z" fill="currentColor" stroke-width="1"/><path d="M12 15.2l-3.6 4.4h7.2z"/><path d="M8.4 19.6l3.6 2.6 3.6-2.6M5.8 16.4l2.4 3.4M18.2 16.4l-2.4 3.4"/></g>')],
+
     ];
     // On touch screens there's nothing to point with, so the prompt says tap.
     const HINT = window.matchMedia("(hover: none)").matches ? "Tap an option to see what it does." : "Point at an option to see what it does.";
@@ -2726,9 +2727,15 @@
     const motionHint = () => (window.matchMedia("(prefers-reduced-motion: reduce)").matches
       ? (prefs.motion ? "Calm: carousels, pop-ins and videos stay still until you press them." : "Your device asks for less motion, so the site keeps still.")
       : "Lively: carousels drift, stickers pop in and videos play on their own.");
+    // Pointing at Lively or Calm itself describes that choice.
+    const MOTION_HINTS = { lively: "Lively: carousels drift, stickers pop in and videos play on their own.", calm: "Calm is reduced motion: carousels, pop-ins and videos keep still." };
     const hintFor = (el) => {
+      const opt = el && el.closest(".dsp-opt");
+      const motionInput = opt && opt.querySelector('input[name="dsp-motion"]');
+      if (motionInput) return MOTION_HINTS[motionInput.value];
       const host = el && el.closest("[data-hint]");
       if (!host) return HINT;
+      if (host.dataset.key === "saber" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "Needs Lively motion: Calm hides the reading progress.";
       return host.querySelector('input[name="dsp-motion"]') ? motionHint() : host.dataset.hint;
     };
     // The line shows the prompt whenever nothing is being pointed at,
@@ -2766,8 +2773,6 @@
           : sndBtn.classList.contains("is-held") ? "Tap anywhere to carry on"
           : "Click to play";
         btn.classList.toggle("is-music", playing);
-        // (Deferred: on the first check, the panel isn't fully set up yet.)
-        if (playing && prefs.quiet) setTimeout(() => { delete prefs.quiet; apply(); }, 0);
       };
       // The whole row plays (or pauses) the music, not just the round button;
       // the volume slider keeps to itself.
@@ -2832,6 +2837,9 @@
       panel.querySelectorAll('input[name="dsp-motion"]').forEach((r) => { r.checked = r.value === (calm ? "calm" : "lively"); });
       panel.querySelectorAll('input[name="dsp-clicks"]').forEach((r) => { r.checked = r.value === (prefs.clicks ? "on" : "off"); });
       panel.querySelectorAll(".dsp-chip").forEach((c) => c.setAttribute("aria-pressed", String(!!prefs[c.dataset.key])));
+      // The lightsaber is the reading line, which Calm hides: off limits then.
+      const saberChip = panel.querySelector('.dsp-chip[data-key="saber"]');
+      if (saberChip) { if (calm) saberChip.setAttribute("aria-disabled", "true"); else saberChip.removeAttribute("aria-disabled"); }
       const custom = Object.keys(prefs).length > 0;
       btn.classList.toggle("is-custom", custom);
       resetBtn.hidden = !custom;
@@ -2844,9 +2852,7 @@
         // Only remember a choice that differs from what the device asks for.
         if ((t.value === "calm") === deviceCalm()) delete prefs.motion; else prefs.motion = t.value;
       } else if (t.name === "dsp-clicks") {
-        // Clicks and "Quiet sounds" can't both be on: turning one on turns
-        // the other off, so the choice always does what it says.
-        if (t.value === "on") { prefs.clicks = 1; delete prefs.quiet; if (window.siteSfx) window.siteSfx.load("click.mp3"); } else delete prefs.clicks;
+        if (t.value === "on") { prefs.clicks = 1; if (window.siteSfx) window.siteSfx.load("click.mp3"); } else delete prefs.clicks;
       }
       apply();
       // The motion line changes with the choice; a tap's line still fades back.
@@ -2854,21 +2860,8 @@
     });
     panel.querySelectorAll(".dsp-chip").forEach((c) => c.addEventListener("click", () => {
       const k = c.dataset.key;
+      if (c.getAttribute("aria-disabled") === "true") { showHint(c); return; }
       if (prefs[k]) delete prefs[k]; else prefs[k] = 1;
-      if (k === "quiet" && prefs.quiet) {
-        delete prefs.clicks;
-        const snd = document.querySelector(".sound-toggle");
-        if (snd && snd.getAttribute("aria-pressed") === "true") snd.click();
-        // Switching it on also hushes whatever is playing with sound right
-        // now: the site's videos, and embedded Vimeo and SoundCloud players.
-        // Each can be unmuted again as usual; it isn't kept muted.
-        document.querySelectorAll("video, audio").forEach((m) => { if (!m.paused && !m.muted) m.muted = true; });
-        document.querySelectorAll('iframe[src^="https://player.vimeo.com/"], iframe[src^="https://w.soundcloud.com/"]').forEach((f) => {
-          const vimeo = f.src.startsWith("https://player.vimeo.com/");
-          const msg = { method: "setVolume", value: 0 };
-          try { f.contentWindow.postMessage(vimeo ? msg : JSON.stringify(msg), vimeo ? "https://player.vimeo.com" : "https://w.soundcloud.com"); } catch (e) { /* not loaded yet */ }
-        });
-      }
       apply();
     }));
     resetBtn.addEventListener("click", () => {
@@ -2964,67 +2957,42 @@
     const line = document.createElement("div");
     line.className = "scroll-line";
     line.setAttribute("aria-hidden", "true");
-    // A lightsaber: the hilt waits at the left edge and the blade fills
-    // out of its emitter as you read down the page.
-    line.innerHTML = `<svg class="sb-hilt" viewBox="0 0 96 16"><defs><linearGradient id="sbChrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#dfe3e7"/><stop offset=".55" stop-color="#8b9299"/><stop offset=".78" stop-color="#c9ced3"/><stop offset="1" stop-color="#565c63"/></linearGradient><linearGradient id="sbSteel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa0a7"/><stop offset=".5" stop-color="#4a4f55"/><stop offset="1" stop-color="#23262a"/></linearGradient><linearGradient id="sbGrip" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4a4e54"/><stop offset=".35" stop-color="#1b1d20"/><stop offset="1" stop-color="#0a0b0c"/></linearGradient><linearGradient id="sbRib" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6d727a"/><stop offset=".4" stop-color="#2a2d31"/><stop offset="1" stop-color="#111214"/></linearGradient><linearGradient id="sbBrass" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2c4"/><stop offset=".45" stop-color="#d6a94c"/><stop offset="1" stop-color="#6e4f17"/></linearGradient></defs><g stroke="rgba(0,0,0,.35)" stroke-width=".35"><path d="M1.6 4.6h1.6v6.8H1.6a1.1 1.1 0 0 1-1.1-1.1V5.7a1.1 1.1 0 0 1 1.1-1.1z" fill="url(#sbSteel)"/><rect x="3.2" y="3.4" width="9" height="9.2" rx=".9" fill="url(#sbChrome)"/><rect x="12.2" y="5" width="2.2" height="6" fill="url(#sbSteel)"/><rect x="14.4" y="4.1" width="24" height="7.8" rx=".5" fill="url(#sbGrip)"/><g fill="url(#sbRib)"><rect x="16" y="3.5" width="1.7" height="9" rx=".5"/><rect x="19.3" y="3.5" width="1.7" height="9" rx=".5"/><rect x="22.6" y="3.5" width="1.7" height="9" rx=".5"/><rect x="25.9" y="3.5" width="1.7" height="9" rx=".5"/><rect x="29.2" y="3.5" width="1.7" height="9" rx=".5"/><rect x="32.5" y="3.5" width="1.7" height="9" rx=".5"/><rect x="35.8" y="3.5" width="1.7" height="9" rx=".5"/></g><rect x="38.4" y="3.2" width="2" height="9.6" rx=".4" fill="url(#sbChrome)"/><rect x="40.4" y="4" width="16" height="8" fill="url(#sbChrome)"/><rect x="43.6" y="1.4" width="9.6" height="3" rx=".6" fill="url(#sbGrip)"/><rect x="56.4" y="4.4" width="4" height="7.2" fill="url(#sbBrass)"/><rect x="60.4" y="5.2" width="2" height="5.6" fill="url(#sbSteel)"/><path d="M62.4 3.2h15.6l3 -1.2v12l-3 -1.2H62.4z" fill="url(#sbChrome)"/><rect x="81" y="3.6" width="2.2" height="8.8" rx=".4" fill="url(#sbSteel)"/></g><g fill="#1a1c1f"><rect x="66" y="5.2" width="1.3" height="5.6" rx=".4"/><rect x="69" y="5.2" width="1.3" height="5.6" rx=".4"/><rect x="72" y="5.2" width="1.3" height="5.6" rx=".4"/></g><circle cx="46.3" cy="2.9" r=".9" fill="#e0453a"/><circle cx="49.6" cy="2.9" r=".55" fill="#d6a94c"/><circle cx="51.6" cy="2.9" r=".55" fill="#d6a94c"/><path d="M5.4 3.6v8.8M8.3 3.6v8.8" stroke="rgba(0,0,0,.28)" stroke-width=".5"/><path d="M42.4 4v8M54.4 4v8" stroke="rgba(0,0,0,.25)" stroke-width=".45"/><rect x="44" y="7" width="9" height="2.4" rx=".6" fill="#2a2d31"/><path d="M62.4 4.1h15.6" stroke="rgba(255,255,255,.75)" stroke-width=".5"/><path d="M14.4 5h24" stroke="rgba(255,255,255,.14)" stroke-width=".4"/></svg><span class="sb-track"><span class="sb-blade"></span></span>`;
+    // A lightsaber (Vader's: D-ring, black grip bands, the clamp with its
+    // control box, a flared emitter): the hilt waits at the left edge and
+    // the blade fills out of its emitter as you read down the page.
+    line.innerHTML = `<svg class="sb-hilt" viewBox="0 0 96 16"><defs><linearGradient id="sbChrome" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ffffff"/><stop offset=".28" stop-color="#dfe3e7"/><stop offset=".55" stop-color="#8b9299"/><stop offset=".78" stop-color="#c9ced3"/><stop offset="1" stop-color="#565c63"/></linearGradient><linearGradient id="sbSteel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9aa0a7"/><stop offset=".5" stop-color="#4a4f55"/><stop offset="1" stop-color="#23262a"/></linearGradient><linearGradient id="sbBlack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#55595f"/><stop offset=".35" stop-color="#1c1e21"/><stop offset="1" stop-color="#08090a"/></linearGradient></defs><circle cx="2.4" cy="8" r="1.9" fill="none" stroke="#7d838a" stroke-width=".9"/><g stroke="rgba(0,0,0,.35)" stroke-width=".35"><rect x="3.8" y="3.6" width="7" height="8.8" rx="1" fill="url(#sbChrome)"/><rect x="10.8" y="4.1" width="29" height="7.8" fill="url(#sbChrome)"/><g fill="url(#sbBlack)"><rect x="12.6" y="3.4" width="2.3" height="9.2" rx=".5"/><rect x="16.6" y="3.4" width="2.3" height="9.2" rx=".5"/><rect x="20.6" y="3.4" width="2.3" height="9.2" rx=".5"/><rect x="24.6" y="3.4" width="2.3" height="9.2" rx=".5"/><rect x="28.6" y="3.4" width="2.3" height="9.2" rx=".5"/><rect x="32.6" y="3.4" width="2.3" height="9.2" rx=".5"/><rect x="36.6" y="3.4" width="2.3" height="9.2" rx=".5"/></g><rect x="39.8" y="3.3" width="18" height="9.4" rx=".6" fill="url(#sbChrome)"/><rect x="43" y="1" width="11.6" height="3.4" rx=".7" fill="url(#sbBlack)"/><rect x="45" y="12.6" width="8" height="1.6" rx=".5" fill="url(#sbSteel)"/><rect x="57.8" y="5" width="3" height="6" fill="url(#sbSteel)"/><path d="M60.8 4.2h3l1-1.4h15.4l2.6 -.8v12l-2.6-.8H64.8l-1-1.4h-3z" fill="url(#sbChrome)"/><rect x="82.6" y="2.6" width="1.8" height="10.8" rx=".4" fill="url(#sbBlack)"/></g><rect x="44.6" y="1.8" width="2.6" height="1.6" rx=".4" fill="#e0453a"/><circle cx="49.6" cy="2.6" r=".75" fill="#d7dade"/><circle cx="52.4" cy="2.6" r=".75" fill="#d7dade"/><path d="M41.8 3.6v8.8M55.8 3.6v8.8" stroke="rgba(0,0,0,.28)" stroke-width=".45"/><path d="M66.5 3.4v9.2M69.5 3.4v9.2M77.5 3.2v9.6" stroke="rgba(0,0,0,.35)" stroke-width=".5"/><path d="M64.8 3.6h15.4" stroke="rgba(255,255,255,.75)" stroke-width=".45"/><path d="M5.8 3.8v8.4M8.6 3.8v8.4" stroke="rgba(0,0,0,.28)" stroke-width=".5"/></svg><span class="sb-track"><span class="sb-blade"></span></span>`;
     const blade = line.querySelector(".sb-blade");
-    // A plain line by default; a double-click (or double-tap) on it lights
-    // the saber, and another puts it back. The choice is remembered.
-    let saber = false;
-    try { saber = localStorage.getItem("saber") === "1"; } catch (e) { /* private mode */ }
-    // A small tip under the pointer says what a double-click does.
-    const tip = document.createElement("span");
-    tip.className = "sb-tip";
-    line.appendChild(tip);
-    // Two lines, like the site's other tips: what happens, then how. A tiny
-    // saber beside them shows the state you'd switch to. Touch screens (and
-    // a finger on an iPad) read "Double-tap"; a mouse or trackpad, "Double-click".
-    let touchy = window.matchMedia("(hover: none), (pointer: coarse)").matches;
-    const setTip = () => {
-      const verb = touchy ? "Double-tap" : "Double-click";
-      tip.innerHTML = `<svg class="sb-tip-ic" viewBox="0 0 28 8" aria-hidden="true"><rect x="0.5" y="2.5" width="9" height="3" rx="1" fill="currentColor" opacity=".55"/><rect x="2.5" y="2" width="1.2" height="4" rx=".4" fill="currentColor"/><rect x="9.5" y="1.8" width="2.4" height="4.4" rx=".6" fill="currentColor"/>${saber ? "" : '<rect class="sb-tip-blade" x="12.5" y="3" width="15" height="2" rx="1"/>'}</svg><span class="sb-tip-text"><span>${saber ? "Power down the saber" : "Light the saber"}</span><span class="sb-tip-hint">${verb} to switch it ${saber ? "off" : "on"}</span></span>`;
+    // The ignition sound is fetched early (when the settings button is
+    // reached, or once the page settles if the saber is already on), so it
+    // plays the moment the saber lights instead of after a download.
+    const SABER = "lightsaber.mp3";
+    const ignite_ = () => { sfx.load(SABER).then(() => { if (line.classList.contains("is-saber")) sfx.play(SABER, 0.6); }); };
+    const dspBtn = document.querySelector(".dsp-toggle");
+    if (dspBtn) ["pointerenter", "pointerdown", "focus"].forEach((ev) => dspBtn.addEventListener(ev, () => sfx.load(SABER), { once: true }));
+    if (document.documentElement.hasAttribute("data-saber")) (window.requestIdleCallback || setTimeout)(() => sfx.load(SABER));
+    // Pressing the hilt plays it again.
+    line.querySelector(".sb-hilt").addEventListener("click", ignite_);
+    // A plain line by default; "Lightsaber" in the display settings lights
+    // the saber (html[data-saber]), with its ignition sound
+    // (sound-effects/lightsaber.mp3) as it lights, not on page load.
+    const syncSaber = (ignite) => {
+      const on = document.documentElement.hasAttribute("data-saber");
+      if (on === line.classList.contains("is-saber")) return;
+      line.classList.toggle("is-saber", on);
+      if (on && ignite) ignite_();
     };
-    const placeTip = (e) => {
-      const r = line.getBoundingClientRect();
-      const x = e.clientX - r.left, half = tip.offsetWidth / 2 + 8;
-      tip.style.left = `${Math.min(Math.max(x, half), r.width - half)}px`;
-      tip.style.setProperty("--arrow", `${Math.round(x - Math.min(Math.max(x, half), r.width - half) + tip.offsetWidth / 2)}px`);
-    };
-    line.addEventListener("pointermove", placeTip);
-    line.classList.toggle("is-saber", saber);
-    setTip();
-    // The ignition sound (sound-effects/lightsaber.mp3), when it lights only;
-    // fetched once the pointer or a finger reaches the line.
-    const warm = () => sfx.load("lightsaber.mp3");
-    line.addEventListener("pointerenter", warm, { once: true });
-    line.addEventListener("pointerdown", warm, { once: true });
-    const toggleSaber = () => {
-      saber = !saber;
-      setTip();
-      line.classList.toggle("is-saber", saber);
-      if (saber) warm().then(() => { if (saber) sfx.play("lightsaber.mp3", 0.6); });
-      try { localStorage.setItem("saber", saber ? "1" : "0"); } catch (e) { /* private mode */ }
-    };
-    // Touch: phones don't all send a double-click for a double-tap, so two
-    // taps close together count here, and a tap shows the tip for a moment
-    // (there's no hover to show it).
-    let lastTap = 0, tipTimer = 0, lastType = "";
-    line.addEventListener("pointerdown", (e) => {
-      lastType = e.pointerType;
-      const t = e.pointerType !== "mouse";
-      if (t !== touchy) { touchy = t; setTip(); }
-    });
-    line.addEventListener("pointerup", (e) => {
-      if (e.pointerType === "mouse") return;
-      const now = performance.now();
-      if (now - lastTap < 400) { lastTap = 0; toggleSaber(); } else lastTap = now;
-      placeTip(e);
-      line.classList.add("tip-on");
-      clearTimeout(tipTimer);
-      tipTimer = setTimeout(() => line.classList.remove("tip-on"), 2400);
-    });
-    line.addEventListener("dblclick", () => { if (lastType === "mouse" || !lastType) toggleSaber(); });
+    syncSaber(false);
+    // (Redrawn on a switch: the stub is longer with the saber on.)
+    new MutationObserver(() => { syncSaber(true); queue(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-saber"] });
     document.body.appendChild(line);
+    // The saber's light on the page: a red wash under the lit part of the
+    // blade that the content scrolls through. Its own layer on <body>, so
+    // its blend reaches the page (inside the line it would only blend with
+    // the line). Only with the saber on; it rests and wakes with the line.
+    const spill = document.createElement("div");
+    spill.className = "sb-spill";
+    spill.setAttribute("aria-hidden", "true");
+    document.body.appendChild(spill);
     const heroStickers = Array.from(document.querySelectorAll(".hero.hc .hs"));
     const pile = document.querySelector(".ab-pile");
     const wideDepth = window.matchMedia("(min-width: 1024px)");
@@ -3047,10 +3015,19 @@
       const still = reduce.matches;
       line.hidden = still;
       const fill = clampN(max > 0 ? y / max : 0, 0, 1);
-      // Never quite empty: a short stub at the left shows where the line
-      // lives, so there's something to hover or double-tap from the start.
-      const shown = Math.max(fill, Math.min(1, 28 / (blade.offsetWidth || 1)));
+      // Never quite empty: a small stub at the left (a short lit blade out of
+      // the emitter, with the saber on) shows the line is there.
+      const stub = line.classList.contains("is-saber") ? 24 : 12;
+      const shown = Math.max(fill, Math.min(1, stub / (blade.offsetWidth || 1)));
       blade.style.transform = `translateX(${((shown - 1) * 100).toFixed(2)}%)`;
+      blade.style.setProperty("--sb-power", fill.toFixed(3)); // the dark theme's bloom grows with the blade
+      const lit = line.classList.contains("is-saber") && !still;
+      spill.hidden = !lit;
+      if (lit) {
+        const lr = line.getBoundingClientRect(), br = blade.getBoundingClientRect();
+        spill.style.transform = `scaleX(${clampN((br.right - lr.left) / (lr.width || 1), 0, 1).toFixed(4)})`;
+        spill.style.setProperty("--sb-p", (0.25 + fill * 0.75).toFixed(3));
+      }
       line.classList.toggle("is-lit", fill > 0.002);
       if (y > vh * 1.4 && !still) return; // the hero is long gone
       heroStickers.forEach((el, i) => {
@@ -3067,14 +3044,13 @@
     };
     const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
     // It shows while the page moves and fades away a moment after it stops,
-    // except at the very top of the page, where it always stays. Pointing
-    // at the strip (or tapping it) brings it back, so it can still be found
-    // and switched.
+    // except at the very top of the page, where it always stays.
     let idleTimer = 0;
     const wake = () => {
       line.classList.remove("is-idle");
+      spill.classList.remove("is-idle");
       clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => { if (readScroll().y > 4) line.classList.add("is-idle"); }, 1500);
+      idleTimer = setTimeout(() => { if (readScroll().y > 4) { line.classList.add("is-idle"); spill.classList.add("is-idle"); } }, 1500);
     };
     const onScroll = () => { queue(); wake(); };
     window.addEventListener("scroll", onScroll, { passive: true });
