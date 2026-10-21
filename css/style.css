@@ -3432,9 +3432,10 @@ html[data-plain] :is(.hs, .im-doodle, .pxdog) { display: none !important; }
 .dsp-chip:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 @media (hover: hover) and (pointer: fine) { .dsp-chip[aria-pressed="false"]:hover { background: color-mix(in srgb, var(--ink) 9%, transparent); } }
 
-/* One line that explains whatever is pointed at or focused. Two lines tall,
-   so the panel never jumps as it changes. */
-.dsp-hint { height: 2.5em; margin: 0.625rem 0.125rem 0; overflow: hidden; font-size: 0.75rem; line-height: 1.25; color: var(--ink-soft); }
+/* One line that explains whatever is pointed at or focused. At least two
+   lines tall (in its own line height, which Easier reading and text size
+   change), so the panel never jumps as it changes and nothing is cut off. */
+.dsp-hint { min-height: 2.5em; min-height: 2lh; margin: 0.625rem 0.125rem 0; font-size: 0.75rem; line-height: 1.25; color: var(--ink-soft); }
 /* (Easier reading spaces out the rest of the site, not this fixed line.) */
 html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important; word-spacing: 0 !important; }
 
@@ -3533,6 +3534,12 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 /* Scroll line (script.js 26): a thin line along the top of the window that
    fills as you read down Home, Works, About and the case studies. */
 .scroll-line { position: fixed; z-index: 1000; left: 0; right: 0; top: 0; height: 2px; background: var(--ink); opacity: 0.85; transform: scaleX(0); transform-origin: 0 50%; pointer-events: none; }
+/* With the chat open beside the page, the line spans the page only, moving
+   in step with the panel; when the chat covers the page, it steps aside. */
+.scroll-line { transition: left 0.4s var(--ease-out), right 0.4s var(--ease-out), opacity 0.2s ease; }
+@media (min-width: 1300px) { body.ask-open .scroll-line { left: var(--ask-gap); right: var(--ask-panel-w); } }
+@media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .scroll-line { transition: none; } }
 @media print { .scroll-line { display: none; } }
 
 /* Theme fade (script.js 24b): the new theme fades in over the old one, a

@@ -2967,10 +2967,20 @@
     const wideDepth = window.matchMedia("(min-width: 1024px)");
     const clampN = (v, a, b) => Math.max(a, Math.min(b, v));
     let queued = false;
+    // Where the page is scrolled to, wherever it scrolls: in its own frame
+    // while the chat sits beside it, at the pinned offset while the chat
+    // covers it, otherwise the window. Reading the window alone, opening
+    // the chat sent the line back to nothing and jolted the stickers.
+    const readScroll = () => {
+      const vh = window.innerHeight;
+      if (inShellScroll()) return { y: shellScroll.scrollTop, max: shellScroll.scrollHeight - shellScroll.clientHeight };
+      if (document.body.style.position === "fixed") return { y: -parseFloat(document.body.style.top) || 0, max: document.body.scrollHeight - vh };
+      return { y: window.scrollY, max: document.documentElement.scrollHeight - vh };
+    };
     const draw = () => {
       queued = false;
-      const y = window.scrollY, vh = window.innerHeight;
-      const max = document.documentElement.scrollHeight - vh;
+      const vh = window.innerHeight;
+      const { y, max } = readScroll();
       const still = reduce.matches;
       line.hidden = still;
       line.style.transform = `scaleX(${clampN(max > 0 ? y / max : 0, 0, 1).toFixed(4)})`;
@@ -2989,6 +2999,7 @@
     };
     const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
     window.addEventListener("scroll", queue, { passive: true });
+    if (shellScroll) shellScroll.addEventListener("scroll", queue, { passive: true });
     window.addEventListener("resize", queue);
     if (reduce.addEventListener) reduce.addEventListener("change", queue);
     draw();
