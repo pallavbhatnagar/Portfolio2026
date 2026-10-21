@@ -2982,7 +2982,7 @@
     let touchy = window.matchMedia("(hover: none), (pointer: coarse)").matches;
     const setTip = () => {
       const verb = touchy ? "Double-tap" : "Double-click";
-      tip.innerHTML = `<svg class="sb-tip-ic" viewBox="0 0 28 8" aria-hidden="true"><rect x="0.5" y="2.5" width="9" height="3" rx="1" fill="currentColor" opacity=".55"/><rect x="2.5" y="2" width="1.2" height="4" rx=".4" fill="currentColor"/><rect x="9.5" y="1.8" width="2.4" height="4.4" rx=".6" fill="currentColor"/>${saber ? "" : '<rect class="sb-tip-blade" x="12.5" y="3" width="15" height="2" rx="1"/>'}</svg><span class="sb-tip-text"><span>${saber ? "Back to a plain line" : "Light the saber"}</span><span class="sb-tip-hint">${verb} to switch it ${saber ? "off" : "on"}</span></span>`;
+      tip.innerHTML = `<svg class="sb-tip-ic" viewBox="0 0 28 8" aria-hidden="true"><rect x="0.5" y="2.5" width="9" height="3" rx="1" fill="currentColor" opacity=".55"/><rect x="2.5" y="2" width="1.2" height="4" rx=".4" fill="currentColor"/><rect x="9.5" y="1.8" width="2.4" height="4.4" rx=".6" fill="currentColor"/>${saber ? "" : '<rect class="sb-tip-blade" x="12.5" y="3" width="15" height="2" rx="1"/>'}</svg><span class="sb-tip-text"><span>${saber ? "Power down the saber" : "Light the saber"}</span><span class="sb-tip-hint">${verb} to switch it ${saber ? "off" : "on"}</span></span>`;
     };
     const placeTip = (e) => {
       const r = line.getBoundingClientRect();
@@ -3066,8 +3066,19 @@
       }
     };
     const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
-    window.addEventListener("scroll", queue, { passive: true });
-    if (shellScroll) shellScroll.addEventListener("scroll", queue, { passive: true });
+    // It shows while the page moves and fades away a moment after it stops.
+    // Pointing at the strip (or tapping it) brings it back, so it can still
+    // be found and switched.
+    let idleTimer = 0;
+    const wake = () => {
+      line.classList.remove("is-idle");
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(() => line.classList.add("is-idle"), 1500);
+    };
+    const onScroll = () => { queue(); wake(); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    if (shellScroll) shellScroll.addEventListener("scroll", onScroll, { passive: true });
+    wake();
     window.addEventListener("resize", queue);
     if (reduce.addEventListener) reduce.addEventListener("change", queue);
     draw();

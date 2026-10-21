@@ -3554,6 +3554,10 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 /* With the chat open beside the page, the line spans the page only, moving
    in step with the panel; when the chat covers the page, it steps aside. */
 .scroll-line { transition: left 0.4s var(--ease-out), right 0.4s var(--ease-out), opacity 0.2s ease; }
+/* Resting: the line and hilt fade out (slowly) once scrolling stops, and
+   come straight back on the next scroll, a hover or a tap. */
+.sb-hilt, .sb-track { transition: opacity 0.2s ease; }
+.scroll-line.is-idle:not(:hover):not(.tip-on) > .sb-hilt, .scroll-line.is-idle:not(:hover):not(.tip-on) > .sb-track { opacity: 0; transition-duration: 0.6s; }
 @media (min-width: 1300px) { body.ask-open .scroll-line { left: var(--ask-gap); right: var(--ask-panel-w); } }
 @media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .scroll-line { transition: none; } }
