@@ -3017,7 +3017,8 @@
       const fill = clampN(max > 0 ? y / max : 0, 0, 1);
       // Never quite empty: a small stub at the left (a short lit blade out of
       // the emitter, with the saber on) shows the line is there.
-      const stub = line.classList.contains("is-saber") ? 24 : 12;
+      // (Longer on phones, where the screen's rounded corner sits close by.)
+      const stub = (line.classList.contains("is-saber") ? 24 : 12) + (window.innerWidth <= 640 ? 12 : 0);
       const shown = Math.max(fill, Math.min(1, stub / (blade.offsetWidth || 1)));
       blade.style.transform = `translateX(${((shown - 1) * 100).toFixed(2)}%)`;
       blade.style.setProperty("--sb-power", fill.toFixed(3)); // the dark theme's bloom grows with the blade
