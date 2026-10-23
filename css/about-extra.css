@@ -1,0 +1,35 @@
+/* =========================================================
+   About extras (about-extra.js): the local time, the career path that
+   follows the pointer, and snapshots that lean toward it.
+   ========================================================= */
+
+/* ---------- Local time ----------
+   A small line under the intro: the time in Bengaluru and a guess at what
+   I'm doing. The dot is green in working hours, amber outside them, and
+   breathes gently (Lively only). */
+.ab-now-time { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem; padding: 0.375rem 0.75rem 0.375rem 0.625rem; border: 1px solid var(--hairline); border-radius: 999px; background: color-mix(in srgb, var(--ink) 3%, var(--bg)); font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); }
+.ab-now-time b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+.ab-now-dot { position: relative; flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #1f9d55; }
+.ab-now-time.is-off .ab-now-dot { background: #d08a12; }
+@media (prefers-reduced-motion: no-preference) {
+  .ab-now-dot::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: inherit; animation: now-breathe 2.4s ease-out infinite; }
+}
+@keyframes now-breathe { from { transform: scale(1); opacity: 0.55; } to { transform: scale(2.6); opacity: 0; } }
+
+/* ---------- Career path ----------
+   Pointing at a job draws a bolder line along the path from
+   the start up to that job and lifts its dot; the other jobs step back. */
+.pl-trace { fill: none; stroke: var(--ink); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: var(--len, 0) 99999; transition: stroke-dasharray 0.6s cubic-bezier(0.23, 1, 0.32, 1); pointer-events: none; }
+.ab-path .pl-node.is-focus { transform: scale(1.45); }
+.ab-path.is-tracing .path-grid li { transition: opacity 0.25s ease; }
+.ab-path.is-tracing .path-grid li:not(.is-focus) { opacity: 0.45; }
+@media (prefers-reduced-motion: reduce) { .pl-trace { transition: none; } }
+
+/* ---------- Snapshots lean in ----------
+   On the wide table, each photo near the pointer drifts a few pixels
+   toward it and lifts a little (transform only; its own turn, size and
+   scroll depth live in rotate, scale and translate). */
+@media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .ab-pile .ab-snap.is-landed { transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease; }
+  .ab-pile .ab-snap.is-near { box-shadow: 0 0.25rem 0.5rem rgba(13, 13, 13, 0.08), 0 1.5rem 2.75rem -1rem rgba(13, 13, 13, 0.4); }
+}

@@ -62,7 +62,8 @@
   // ---------- Your details (js/content.js) ----------
   if (site.email) {
     document.querySelectorAll('a[href^="mailto:"]').forEach((a) => {
-      a.href = `mailto:${site.email}`;
+      const q = a.getAttribute("href").split("?")[1]; // keep a subject, if any
+      a.href = `mailto:${site.email}${q ? `?${q}` : ""}`;
       if (a.textContent.includes("@")) a.textContent = site.email;
     });
     document.querySelectorAll("[data-copy]").forEach((b) => { if (b.dataset.copy.includes("@")) b.dataset.copy = site.email; });

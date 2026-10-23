@@ -3640,6 +3640,9 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 .next-ch h2 { max-width: 38ch; font-size: clamp(1.5rem, 2.7vw, 2.125rem); font-weight: 500; letter-spacing: -0.02em; line-height: 1.22; text-wrap: balance; }
 .next-ch p { max-width: 52ch; margin-top: 1rem; font-size: 1.125rem; line-height: 1.5; color: var(--ink-soft); }
 .next-actions { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 2rem; }
+/* Both actions the same width, so "Book a call" holds its own beside "Ask my portfolio". */
+.next-actions .btn { min-width: 10rem; justify-content: center; }
+@media (min-width: 641px) { .next-actions { display: inline-grid; grid-auto-flow: column; grid-auto-columns: 1fr; } }
 /* The AI call to action ("Ask my portfolio" on Home, "Ask me anything" on
    About, .ask-cta): a soft wash of
    the AI colours (Bloom, blue into pink) with a violet edge, ink text and the

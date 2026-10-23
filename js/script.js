@@ -1174,7 +1174,7 @@
     // zero on his own?". Every claim is stated elsewhere on the site.
     const READERS = [
       ["anyone", "For anyone", "I make complicated products feel obvious, and I stay with them until they ship.", ["wave", "wealthbasket"]],
-      ["recruiters", "Recruiters", "Senior product designer, eight years in. Open to senior roles, remote or in Bengaluru, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
+      ["recruiters", "Recruiters", "Senior product designer, eight years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
       ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["lumen", "wave"]],
       ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["parcelo", "wayfarer"]],
       ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["wave", "jda"]],
