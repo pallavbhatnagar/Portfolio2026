@@ -38,6 +38,12 @@ html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-p
 .bp-toggle:active { transform: scale(0.97); }
 .bp-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media print { .bp-grid, .bp-box, .bp-toggle { display: none; } }
+/* Desktop only: no Designer's eye on tablets and phones, even if it was
+   left on. */
+@media (max-width: 1024px) {
+  .bp-grid, .bp-box, .bp-toggle { display: none; }
+  html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-panel, .hc-ask, .btn, .value-tabs, .value-panel, .tq-card, .next-ch, ul, ol) { outline: none; }
+}
 
 /* ---------- "messy", playable ----------
    Point at it (or tap it) and the letters scatter again, then spring back

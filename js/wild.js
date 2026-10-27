@@ -112,7 +112,7 @@
   };
   btn.addEventListener("click", () => setEye(!html.classList.contains("bp-on")));
   document.addEventListener("keydown", (e) => {
-    if (e.key !== "g" && e.key !== "G") return;
+    if ((e.key !== "g" && e.key !== "G") || document.documentElement.clientWidth <= 1024) return;
     if (e.metaKey || e.ctrlKey || e.altKey || e.target.closest("input, textarea, [contenteditable]")) return;
     setEye(!html.classList.contains("bp-on"));
   });
