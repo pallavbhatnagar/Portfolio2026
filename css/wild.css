@@ -39,9 +39,9 @@ html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-p
 .bp-toggle:active { transform: scale(0.97); }
 .bp-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media print { .bp-grid, .bp-box, .bp-toggle { display: none; } }
-/* Desktop only: no Designer's eye on tablets and phones, even if it was
-   left on. */
-@media (max-width: 1024px) {
+/* Desktop only: no Designer's eye on tablets and phones (by width, and on
+   any touch screen, so a landscape iPad is left out too). */
+@media (max-width: 1024px), (hover: none), (pointer: coarse) {
   .bp-grid, .bp-box, .bp-toggle { display: none; }
   html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-panel, .hc-ask, .btn, .value-tabs, .value-panel, .tq-card, .next-ch, ul, ol) { outline: none; }
 }

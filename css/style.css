@@ -928,7 +928,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    from the true viewport by --ask-gap and narrowed by the panel's width —
    re-anchor to its edges instead of the window's, or the button would
    float over the grey gap or the panel itself. */
-body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125rem); bottom: calc(var(--ask-gap) + 1.125rem); }
+body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125rem); bottom: calc(var(--ask-gap) + 4rem); } /* above the footer icons, which the narrower page brings close */
 .to-top:active { transform: scale(0.94); }
 /* Phones: the footer icons sit in the bottom-right corner, so the button
    stays above them instead of covering Dribbble. */
@@ -2072,7 +2072,7 @@ body.ask-open .shell-scrollbar {
   body.ask-open .shell-scroll { position: static; overflow: visible; }
   body.ask-open .site-header { position: fixed; }
   body.ask-open .shell-scrollbar { display: none; }
-  body.ask-open .to-top { right: 1.125rem; bottom: 1.125rem; }
+  body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: 4rem; } /* clear of the panel, above the footer icons */
   .app-row::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(13, 13, 13, 0.36); opacity: 0; pointer-events: none; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.4s var(--ease-out); }
   body.ask-open .app-row::after { opacity: 1; pointer-events: auto; }
 }
