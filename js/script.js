@@ -15,24 +15,34 @@
     path.classList.add("ai-spark-fill");
   });
 
-  // 0b) Preloader (CSS .preloader): on the first page of a visit, "Hello"
-  //     in a few languages, a little slower than a flicker, then the panel
-  //     lifts away. A click or any key skips to the end. The head script
+  // 0b) Preloader (CSS .preloader): on the first page of a visit, a cursor
+  //     designs the hello (a text box, "Hello" in a few languages, snapped
+  //     to centre), then the panel lifts away. A click or any key skips to the end. The head script
   //     decides whether it runs (html.is-preloading). As it starts to lift
   //     the page hears "preloader:leaving" (the hero starts drawing then),
   //     and once it's gone, "preloader:done".
   if (document.documentElement.classList.contains("is-preloading")) {
     const html = document.documentElement;
     try { sessionStorage.setItem("preloaded", "1"); } catch (e) { /* private mode */ }
-    const words = ["Hello", "नमस्ते", "Bonjour", "Hola", "Ciao", "こんにちは", "Olá", "Hallå", "ਸਤ ਸ੍ਰੀ ਅਕਾਲ"];
+    const words = ["Hello", "नमस्ते", "Bonjour", "Hola", "Ciao", "こんにちは", "Olá", "Hallå", "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "Hello"]; // round the world and back to hello
     const pl = document.createElement("div");
     pl.className = "preloader";
     pl.setAttribute("aria-hidden", "true");
-    pl.innerHTML = '<p class="pl-word"></p><div class="pl-curve"></div>';
+    pl.innerHTML = '<div class="pc-guide pc-gv"></div><div class="pc-guide pc-gh"></div>'
+      + '<div class="pc-box"><p class="pl-word is-on pc-word"></p><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><span class="pc-size"></span></div>'
+      + '<p class="pl-word is-on pc-word pc-measure" aria-hidden="true"></p>'
+      + '<div class="pc-cursor"><svg viewBox="0 0 16 20" aria-hidden="true"><path d="M1.2 1.2v15.6l4.3-4.1 2.9 6.3 2.6-1.2-2.8-6.2h6.1z"/></svg><span class="pc-tag">Pallav</span></div>'
+      + '<div class="pl-curve"></div>';
     document.body.appendChild(pl);
     html.classList.add("pl-ready");
-    const word = pl.querySelector(".pl-word");
-    let i = 0, timer = 0, done = false;
+    // The hello is designed in front of you: a cursor drags out a text box,
+    // types "Hello", resizes the box as the word goes through a few
+    // languages, nudges it to dead centre (the guides flash) and clicks,
+    // and the panel lifts. Positions are worked out from the window size.
+    const box = pl.querySelector(".pc-box"), word = pl.querySelector(".pc-box .pc-word");
+    const measurer = pl.querySelector(".pc-measure"), size = pl.querySelector(".pc-size");
+    const cursor = pl.querySelector(".pc-cursor");
+    let timer = 0, done = false;
     const finish = () => {
       if (done) return;
       done = true;
@@ -46,18 +56,60 @@
         document.dispatchEvent(new CustomEvent("preloader:done"));
       }, 1200);
     };
-    const show = () => {
-      // Each word eases in (a short fade and focus); "Hello" holds a moment,
-      // the rest pass at an easy pace, the last one lingers.
-      word.classList.remove("is-on");
-      word.textContent = words[i];
-      void word.offsetWidth;
-      word.classList.add("is-on");
-      const hold = i === 0 ? 1400 : i === words.length - 1 ? 900 : 360;
-      i += 1;
-      timer = setTimeout(i < words.length ? show : finish, hold);
+    const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
+    const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
+    const place = (el, x, y, ms) => { el.style.transition = ms ? `transform ${ms}ms ${EASE}` : "none"; el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; };
+    const frame = (x, y, w, h, ms) => {
+      box.style.transition = (ms ? `transform ${ms}ms ${EASE}, width ${ms}ms ${EASE}, height ${ms}ms ${EASE}, ` : "") + "opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.25s ease";
+      box.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      box.style.width = `${w.toFixed(1)}px`; box.style.height = `${h.toFixed(1)}px`;
     };
-    requestAnimationFrame(show);
+    // The size label follows the box while it changes.
+    const track = (ms) => { const end = performance.now() + ms + 40; const tick = () => { size.textContent = `${Math.round(box.offsetWidth)} × ${Math.round(box.offsetHeight)}`; if (performance.now() < end && !done) requestAnimationFrame(tick); }; tick(); };
+    const fit = (w) => { measurer.textContent = w; const pad = measurer.offsetHeight * 0.22; return [measurer.offsetWidth + pad * 2, measurer.offsetHeight + pad * 0.6]; };
+    const run = async () => {
+      const W = window.innerWidth, H = window.innerHeight, cx = W / 2, cy = H / 2;
+      const off = [Math.min(130, W * 0.09), Math.min(80, H * 0.08)];
+      let [bw, bh] = fit(words[0]);
+      let bx = cx + off[0] - bw / 2, by = cy + off[1] - bh / 2;
+      place(cursor, W * 0.82, H * 1.04, 0);
+      await wait(120);
+      pl.classList.add("pc-go");
+      place(cursor, bx, by, 520); await wait(560); if (done) return;
+      // Drag out the box.
+      frame(bx, by, 0, 0, 0); box.classList.add("is-on"); void box.offsetWidth;
+      frame(bx, by, bw, bh, 460); place(cursor, bx + bw, by + bh, 460); track(460);
+      await wait(490); if (done) return;
+      place(cursor, bx + bw + 22, by + bh + 16, 300);
+      // Type "Hello".
+      box.classList.add("is-typing");
+      for (let k = 1; k <= words[0].length; k++) { word.textContent = words[0].slice(0, k); await wait(75); if (done) return; }
+      await wait(380); box.classList.remove("is-typing"); if (done) return;
+      // Through the languages: the box resizes around each word, from its centre.
+      for (let n = 1; n < words.length; n++) {
+        const [w, h] = fit(words[n]); const mx = bx + bw / 2, my = by + bh / 2;
+        bw = w; bh = h; bx = mx - bw / 2; by = my - bh / 2;
+        word.textContent = words[n];
+        frame(bx, by, bw, bh, 200); place(cursor, bx + bw + 22, by + bh + 16, 200); track(200);
+        await wait(n === words.length - 1 ? 380 : 240); if (done) return;
+      }
+      // Grab it and nudge it to dead centre; the guides flash as it snaps.
+      place(cursor, bx + bw * 0.62, by + bh * 0.6, 380); await wait(440); if (done) return;
+      const tx = cx - bw / 2, ty = cy - bh / 2;
+      cursor.classList.add("is-down"); box.classList.add("is-grabbed");
+      await wait(160); if (done) return;
+      frame(tx, ty, bw, bh, 650); place(cursor, tx + bw * 0.62, ty + bh * 0.6, 650);
+      await wait(470); pl.classList.add("is-snap"); await wait(260); if (done) return;
+      cursor.classList.remove("is-down"); box.classList.remove("is-grabbed");
+      await wait(650); if (done) return;
+      // Click: the guides go, the box is deselected, a beat on the clean word, and away.
+      pl.classList.remove("is-snap");
+      cursor.classList.add("is-down"); await wait(170); if (done) return;
+      cursor.classList.remove("is-down"); box.classList.add("is-done");
+      place(cursor, tx + bw * 0.62 + 40, ty + bh * 0.6 + 60, 500);
+      await wait(520); finish();
+    };
+    requestAnimationFrame(() => { run(); });
     pl.addEventListener("pointerdown", finish);
     addEventListener("keydown", finish, { once: true });
   }
