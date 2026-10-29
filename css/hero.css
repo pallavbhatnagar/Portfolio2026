@@ -174,3 +174,32 @@
   .hs-knot { right: -0.5em; top: -0.5em; width: 0.7em; height: 0.7em; }
   .hs-tick { right: -0.6em; width: 0.48em; height: 0.48em; }
 }
+
+/* ---------- The visiting cursor (hero.js) ----------
+   A design-tool cursor with a name tag; the blue selection with handles and
+   its size; a dark floating toolbar with Tidy up; and a comment pin with a
+   note. All drawn inside the hero, above it, and never in the way. */
+.hcur { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; --hcur-me: #ff9a1f; --hcur-edge: #d97a06; --hcur-sel: #0d99ff; }
+.hcur.is-on { opacity: 1; }
+.hcur.is-gone { opacity: 0; }
+.hcur-cur { position: absolute; left: 0; top: 0; z-index: 3; transition: opacity 0.35s ease; }
+.hcur-cur.is-gone { opacity: 0; }
+.hcur-cur svg { display: block; width: 22px; height: 22px; fill: var(--hcur-me); stroke: var(--hcur-edge); stroke-width: 1.1; stroke-linejoin: round; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.25)); transform-origin: 3px 2px; transition: transform 0.12s ease-out; }
+.hcur-cur.is-down svg { transform: scale(0.86); }
+.hcur-cur span { position: absolute; left: 17px; top: 19px; padding: 3px 10px 4px; border: 1.5px solid var(--hcur-edge); border-radius: 999px; background: var(--hcur-me); color: #fff; font: 600 12px/1.25 var(--font), sans-serif; white-space: nowrap; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18); }
+.hcur-sel { position: absolute; left: 0; top: 0; border: 1px solid var(--hcur-sel); opacity: 0; transition: opacity 0.18s ease; }
+.hcur-sel.is-on { opacity: 1; }
+.hcur-sel i { position: absolute; width: 6px; height: 6px; border: 1px solid var(--hcur-sel); background: #fff; }
+.hcur-sel i:nth-child(1) { left: -3.5px; top: -3.5px; } .hcur-sel i:nth-child(2) { right: -3.5px; top: -3.5px; }
+.hcur-sel i:nth-child(3) { left: -3.5px; bottom: -3.5px; } .hcur-sel i:nth-child(4) { right: -3.5px; bottom: -3.5px; }
+.hcur-size { position: absolute; left: 50%; top: calc(100% + 7px); transform: translateX(-50%); padding: 1px 5px; border-radius: 3px; background: var(--hcur-sel); color: #fff; font: 600 10px/1.3 var(--font), sans-serif; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.hcur-bar { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 8px; border-radius: 8px; background: #1e1e1e; color: #fff; font: 600 12px/1 var(--font), sans-serif; white-space: nowrap; box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.45); opacity: 0; scale: 0.92; transform-origin: 50% 100%; transition: opacity 0.16s ease, scale 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.hcur-bar svg { width: 13px; height: 13px; fill: currentColor; }
+.hcur-bar.is-on { opacity: 1; scale: 1; }
+.hcur-pin { position: absolute; left: 0; top: 0; display: flex; align-items: flex-start; gap: 8px; opacity: 0; scale: 0.6; transform-origin: 0 100%; transition: opacity 0.2s ease, scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
+.hcur-pin.is-on { opacity: 1; scale: 1; }
+.hcur-pin.is-on.is-out { opacity: 0; transition: opacity 0.6s ease; }
+.hcur-av { display: grid; place-items: center; width: 28px; height: 28px; margin-top: -28px; border-radius: 50% 50% 50% 0; background: var(--hcur-me); color: #fff; font: 700 12px/1 var(--font), sans-serif; box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(0, 0, 0, 0.22); }
+.hcur-note { margin-top: -30px; padding: 7px 11px; border-radius: 10px; background: #fff; color: #1e1e1e; font: 500 13px/1.3 var(--font), sans-serif; white-space: nowrap; box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.06); }
+:root[data-theme="dark"] .hcur-note { background: #2c2c2e; color: #f2f2f2; box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08); }
+@media print { .hcur { display: none; } }

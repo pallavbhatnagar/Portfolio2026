@@ -1,6 +1,5 @@
 /* Home extras: Designer's eye (a blueprint view with a layout grid,
-   outlines and an inspector), the playable "messy" in the hero, and light
-   on the project cards. Styles in css/wild.css. */
+   outlines and an inspector), and light on the project cards. Styles in css/wild.css. */
 (() => {
   const html = document.documentElement;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -118,36 +117,6 @@
   window.addEventListener("resize", () => { if (html.classList.contains("bp-on")) layoutGrid(); });
   // Every visit starts with it off (it used to be remembered; clear that).
   try { localStorage.removeItem(KEY); } catch (e) { /* private mode */ }
-
-  // ---------- "messy", playable ----------
-  // Each visit to the word picks fresh positions for the letters, so it
-  // never scatters the same way twice.
-  const mess = document.querySelector(".hc-mess");
-  if (mess) {
-    const letters = () => Array.from(mess.querySelectorAll(".ch"));
-    let busy = false, settleTimer = 0;
-    const scatter = () => {
-      if (busy || reduce.matches || !document.querySelector(".hc.mess-go")) return;
-      busy = true;
-      clearTimeout(settleTimer);
-      letters().forEach((c) => {
-        c.style.setProperty("--x", ((Math.random() * 2 - 1) * 12).toFixed(1));
-        c.style.setProperty("--y", ((Math.random() * 2 - 1) * 28).toFixed(1));
-        c.style.setProperty("--r", ((Math.random() * 2 - 1) * 38).toFixed(1));
-      });
-      mess.classList.remove("is-settle");
-      mess.classList.add("is-scatter");
-    };
-    const settle = () => {
-      if (!busy) return;
-      mess.classList.remove("is-scatter");
-      mess.classList.add("is-settle");
-      settleTimer = setTimeout(() => { mess.classList.remove("is-settle"); busy = false; }, 1400);
-    };
-    mess.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") scatter(); });
-    mess.addEventListener("pointerleave", (e) => { if (e.pointerType === "mouse") setTimeout(settle, 180); });
-    mess.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") { scatter(); setTimeout(settle, 650); } });
-  }
 
   // ---------- Light on the project cards ----------
   const cards = Array.from(document.querySelectorAll(".proj-stack .project"));

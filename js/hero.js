@@ -25,11 +25,130 @@
   const raf2 = (fn) => requestAnimationFrame(() => requestAnimationFrame(fn));
   const enter = () => raf2(() => hc.classList.add("is-in"));
   const straighten = () => raf2(() => hc.classList.add("mess-go"));
+  // A visiting cursor (below) tidies "messy" itself, once a visit, on
+  // desktop; otherwise it straightens on its own as before.
+  let seen = false;
+  try { seen = sessionStorage.getItem("hero-cursor") === "1"; } catch (e) { /* private mode */ }
+  const visit = !reduce.matches && !seen && !!mess
+    && window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 900px)").matches;
+  const afterIntro = (fn) => {
+    if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:done", fn, { once: true });
+    else fn();
+  };
   if (document.documentElement.classList.contains("is-preloading")) {
     hc.style.setProperty("--mess-delay", "150ms");
     document.addEventListener("preloader:leaving", enter, { once: true });
-    document.addEventListener("preloader:done", straighten, { once: true });
-  } else { enter(); straighten(); }
+  } else enter();
+  if (visit) afterIntro(() => setTimeout(cursorVisit, 1400));
+  else afterIntro(straighten);
+
+  // ---------- The visiting cursor ----------
+  // A design-tool cursor ("Pallav") glides in, selects the scattered
+  // "messy", hits Tidy up (the letters snap into line, the selection
+  // tightening round them), and leaves a comment on the Ask box, fading
+  // away as it does; then the comment fades too.
+  // Decorative; scrolling the hero away sends it off at once.
+  function cursorVisit() {
+    try { sessionStorage.setItem("hero-cursor", "1"); } catch (e) { /* private mode */ }
+    const layer = document.createElement("div");
+    layer.className = "hcur";
+    layer.setAttribute("aria-hidden", "true");
+    layer.innerHTML = '<div class="hcur-sel"><i></i><i></i><i></i><i></i><span class="hcur-size"></span></div>'
+      + '<div class="hcur-bar"><svg viewBox="0 0 16 16"><circle cx="3.5" cy="3.5" r="1.6"/><circle cx="8" cy="3.5" r="1.6"/><circle cx="12.5" cy="3.5" r="1.6"/><circle cx="3.5" cy="8" r="1.6"/><circle cx="8" cy="8" r="1.6"/><circle cx="12.5" cy="8" r="1.6"/><circle cx="3.5" cy="12.5" r="1.6"/><circle cx="8" cy="12.5" r="1.6"/><circle cx="12.5" cy="12.5" r="1.6"/></svg>Tidy up</div>'
+      + '<div class="hcur-pin"><span class="hcur-av">P</span><span class="hcur-note">Ask me anything here.</span></div>'
+      + '<div class="hcur-cur"><svg viewBox="0 0 22 22"><path d="M3.2 2.4c-.5-.2-1 .3-.8.8l5.6 16c.2.6 1 .6 1.2 0l2.3-6.4 6.4-2.3c.6-.2.6-1 0-1.2z"/></svg><span>Pallav</span></div>';
+    hc.appendChild(layer);
+    const sel = layer.querySelector(".hcur-sel"), size = layer.querySelector(".hcur-size"), bar = layer.querySelector(".hcur-bar");
+    const pin = layer.querySelector(".hcur-pin"), cur = layer.querySelector(".hcur-cur");
+    let gone = false, raf = 0, at = null, timer = 0;
+    const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
+    const box = (el) => { const a = el.getBoundingClientRect(), b = hc.getBoundingClientRect(); return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height }; };
+    // The scattered letters, all of them (the word's own box ignores their tilt).
+    const wordBox = () => {
+      const rs = Array.from(mess.querySelectorAll(".ch")).map((c) => c.getBoundingClientRect()), b = hc.getBoundingClientRect();
+      const l = Math.min(...rs.map((r) => r.left)), t = Math.min(...rs.map((r) => r.top));
+      const R = Math.max(...rs.map((r) => r.right)), B = Math.max(...rs.map((r) => r.bottom));
+      return { x: l - b.left - 6, y: t - b.top - 4, w: R - l + 12, h: B - t + 8 };
+    };
+    const fitSel = () => {
+      const r = wordBox();
+      Object.assign(sel.style, { transform: `translate(${r.x}px, ${r.y}px)`, width: `${r.w}px`, height: `${r.h}px` });
+      size.textContent = `${Math.round(r.w)} × ${Math.round(r.h)}`;
+      return r;
+    };
+    // The cursor glides on a gentle arc, easing in and out, like a hand.
+    const glide = (x, y, ms) => new Promise((r) => {
+      cancelAnimationFrame(raf);
+      const from = at || [x, y]; at = [x, y];
+      const put = (px, py) => { cur.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px)`; };
+      if (!ms) { put(x, y); return r(); }
+      const dx = x - from[0], dy = y - from[1], d = Math.hypot(dx, dy) || 1, bend = Math.min(d * 0.16, 70);
+      const mx = (from[0] + x) / 2 - (dy / d) * bend, my = (from[1] + y) / 2 + (dx / d) * bend, t0 = performance.now();
+      const step = (now) => {
+        const k = Math.min(1, Math.max(0, now - t0) / ms), e = k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2, u = 1 - e;
+        put(u * u * from[0] + 2 * u * e * mx + e * e * x, u * u * from[1] + 2 * u * e * my + e * e * y);
+        if (k < 1 && !gone) raf = requestAnimationFrame(step); else r();
+      };
+      raf = requestAnimationFrame(step);
+    });
+    const press = async () => { cur.classList.add("is-down"); await wait(130); cur.classList.remove("is-down"); };
+    let safety = 0;
+    const leave = () => {
+      if (gone) return;
+      gone = true; clearTimeout(timer); clearTimeout(safety); cancelAnimationFrame(raf);
+      straighten();
+      layer.classList.add("is-gone");
+      setTimeout(() => layer.remove(), 400);
+    };
+    const onScroll = () => { if (hc.getBoundingClientRect().bottom < hc.offsetHeight * 0.55) leave(); };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    const shell = document.getElementById("shellScroll");
+    if (shell) shell.addEventListener("scroll", onScroll, { passive: true });
+    safety = setTimeout(leave, 16000);
+
+    (async () => {
+      const w0 = wordBox();
+      // In from the right, to the scattered word, and a click on it.
+      await glide(hc.clientWidth + 30, w0.y - 70, 0);
+      layer.classList.add("is-on");
+      await glide(w0.x + w0.w * 0.5, w0.y + w0.h * 0.88, 1000); if (gone) return;
+      await press(); if (gone) return;
+      fitSel(); sel.classList.add("is-on");
+      await wait(450); if (gone) return;
+      // The toolbar above the selection, then Tidy up.
+      const r = fitSel();
+      bar.style.transform = `translate(${(r.x + r.w / 2).toFixed(1)}px, ${(r.y - 12).toFixed(1)}px) translate(-50%, -100%)`;
+      bar.classList.add("is-on");
+      await wait(380); if (gone) return;
+      const bb = box(bar);
+      await glide(bb.x + bb.w * 0.62, bb.y + bb.h * 0.55, 520); if (gone) return;
+      await press(); if (gone) return;
+      hc.style.setProperty("--mess-delay", "0ms");
+      straighten();
+      bar.classList.remove("is-on");
+      // The selection tightens round the letters as they line up.
+      const t0 = performance.now();
+      const follow = () => { if (gone) return; fitSel(); if (performance.now() - t0 < 1900) requestAnimationFrame(follow); };
+      follow();
+      await glide(r.x + r.w + 34, r.y + r.h * 0.2, 600); // out of the way, to watch the letters line up
+      await wait(1500); if (gone) return;
+      sel.classList.remove("is-on");
+      // A comment on the Ask box.
+      const ask = hc.querySelector(".hc-ask");
+      if (ask) {
+        const a = box(ask), px = a.x + a.w - 6, py = a.y - 4;
+        await glide(px + 8, py + 6, 950); if (gone) return;
+        await press(); if (gone) return;
+        pin.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px)`;
+        // The comment is left, and the cursor fades away on the spot.
+        pin.classList.add("is-on"); cur.classList.add("is-gone");
+        await wait(2600); if (gone) return;
+        pin.classList.add("is-out"); // a plain, smooth fade
+        await wait(650);
+      }
+      leave();
+    })();
+  }
 
   // Example questions turning in the box (hints only).
   const ask = hc.querySelector(".hc-ask");

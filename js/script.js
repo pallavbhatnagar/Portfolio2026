@@ -15,14 +15,13 @@
     path.classList.add("ai-spark-fill");
   });
 
-  // 0b) Preloader (CSS .preloader): on the first page of a visit, a cursor
-  //     designs the hello (a text box snapped to centre, then the hello
-  //     alone in a few languages), then the panel lifts away. A click or
-  //     any key skips to the end. With motion reduced it is just a still
-  //     "Hello" for a moment. The head script decides whether it runs
-  //     (html.is-preloading). As it starts to lift
-  //     the page hears "preloader:leaving" (the hero starts drawing then),
-  //     and once it's gone, "preloader:done".
+  // 0b) Preloader (CSS .preloader): on the first page of a visit, "Hello"
+  //     in a few languages, a little slower than a flicker, then the panel
+  //     lifts away. A click or any key skips to the end. With motion reduced
+  //     it is just a still "Hello" for a moment. The head script decides
+  //     whether it runs (html.is-preloading). As it starts to lift the page
+  //     hears "preloader:leaving" (the hero starts drawing then), and once
+  //     it's gone, "preloader:done".
   if (document.documentElement.classList.contains("is-preloading")) {
     const html = document.documentElement;
     try { sessionStorage.setItem("preloaded", "1"); } catch (e) { /* private mode */ }
@@ -33,24 +32,11 @@
     const pl = document.createElement("div");
     pl.className = "preloader";
     pl.setAttribute("aria-hidden", "true");
-    pl.innerHTML = '<div class="pc-guide pc-gv"></div><div class="pc-guide pc-gh"></div>'
-      + '<div class="pc-box"><p class="pl-word is-on pc-word"></p><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><span class="pc-size"></span></div>'
-      + '<p class="pl-word is-on pc-word pc-measure" aria-hidden="true"></p>'
-      + '<div class="pc-cursor"><svg class="pc-rs" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M4 4h4M4 4v4M14 14h-4M14 14v-4"/></svg><svg class="pc-ar" viewBox="0 0 22 22" aria-hidden="true"><path d="M3.2 2.4c-.5-.2-1 .3-.8.8l5.6 16c.2.6 1 .6 1.2 0l2.3-6.4 6.4-2.3c.6-.2.6-1 0-1.2z"/></svg><span class="pc-tag">Pallav</span></div>'
-      + '<div class="pl-curve"></div>';
+    pl.innerHTML = '<p class="pl-word"></p><div class="pl-curve"></div>';
     document.body.appendChild(pl);
     html.classList.add("pl-ready");
-    // The hello is designed in front of you: a cursor drags out a text box
-    // somewhere on the screen, types a small hello, erases it, types "Off
-    // centre, huh!" instead, nudges it to
-    // dead centre (the guides flash) and scales it up to the hello size. Then
-    // the cursor and the box fade away, the hello goes round a few
-    // languages, and the panel lifts.
-    // Positions are worked out from the window size.
-    const box = pl.querySelector(".pc-box"), word = pl.querySelector(".pc-box .pc-word");
-    const measurer = pl.querySelector(".pc-measure"), size = pl.querySelector(".pc-size");
-    const cursor = pl.querySelector(".pc-cursor");
-    let timer = 0, done = false;
+    const word = pl.querySelector(".pl-word");
+    let i = 0, timer = 0, done = false;
     const finish = () => {
       if (done) return;
       done = true;
@@ -64,138 +50,23 @@
         document.dispatchEvent(new CustomEvent("preloader:done"));
       }, 1200);
     };
-    const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
-    // A frame-by-frame animation over ms, eased in and out; stops if skipped.
-    const tween = (ms, step) => new Promise((r) => {
-      const t0 = performance.now();
-      const tick = (now) => {
-        if (done) return r();
-        const k = Math.min(1, (now - t0) / ms);
-        step(k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
-        if (k < 1) requestAnimationFrame(tick); else r();
-      };
-      requestAnimationFrame(tick);
-    });
-    const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
-    const place = (el, x, y, ms) => { el.style.transition = (ms ? `transform ${ms}ms ${EASE}, ` : "") + "opacity 0.3s ease"; el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; };
-    const frame = (x, y, w, h, ms) => {
-      box.style.transition = (ms ? `transform ${ms}ms ${EASE}, width ${ms}ms ${EASE}, height ${ms}ms ${EASE}, ` : "") + "opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.25s ease";
-      box.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
-      box.style.width = `${w.toFixed(1)}px`; box.style.height = `${h.toFixed(1)}px`;
+    const show = () => {
+      // Each word eases in (a short fade and focus); "Hello" holds a moment,
+      // the rest pass at an easy pace, the last one lingers.
+      word.classList.remove("is-on");
+      word.textContent = words[i];
+      void word.offsetWidth;
+      word.classList.add("is-on");
+      const hold = i === 0 ? 1400 : i === words.length - 1 ? 900 : 360;
+      i += 1;
+      timer = setTimeout(i < words.length ? show : finish, hold);
     };
-    // The size label follows the box while it changes.
-    const track = (ms) => { const end = performance.now() + ms + 40; const tick = () => { size.textContent = `${Math.round(box.offsetWidth)} × ${Math.round(box.offsetHeight)}`; if (performance.now() < end && !done) requestAnimationFrame(tick); }; tick(); };
-    // Sizes the box for a word at a font size (the big hello size unless
-    // told otherwise).
-    let big = 0;
-    const fit = (w, size = big) => { measurer.style.fontSize = `${size}px`; measurer.textContent = w; const pad = measurer.offsetHeight * 0.22; return [measurer.offsetWidth + pad * 2, measurer.offsetHeight + pad * 0.6]; };
-    const run = async () => {
-      // Measured on the panel itself (on phones the window can be taller or
-      // shorter than what shows, as the browser's bars come and go).
-      const W = pl.clientWidth, H = pl.clientHeight, cx = W / 2, cy = H / 2;
-      // It starts out small, remarking on where it is; only once centred is
-      // it sized up for the hello.
-      big = parseFloat(getComputedStyle(measurer).fontSize);
-      const small = Math.max(15, big * 0.38);
-      const intro = "Off centre, huh!";
-      // A different starting spot every visit, anywhere clear of the centre
-      // (so the move to centre always shows) and far enough from the edges
-      // that the widest word still fits; the cursor comes in from a corner.
-      const widest = Math.max(fit(intro, small)[0], ...words.map((w) => fit(w)[0]));
-      const introBig = Math.min(big, big * (W - 32) / fit(intro)[0]); // its size once scaled up, kept inside the screen
-      let [bw, bh] = fit(intro, small);
-      const roomX = Math.max(0, (W - widest) / 2 - 16), roomY = Math.max(0, (H - fit("Hello")[1]) / 2 - 64);
-      const ang = Math.random() * Math.PI * 2, reach = 0.55 + Math.random() * 0.45;
-      const off = [Math.cos(ang) * roomX * reach, Math.sin(ang) * roomY * reach];
-      let bx = cx + off[0] - bw / 2, by = cy + off[1] - bh / 2;
-      const corner = [[W + 40, H + 40], [-40, H + 40], [W + 40, -40], [-40, -40]][(Math.random() * 4) | 0];
-      word.style.fontSize = `${small}px`;
-      place(cursor, corner[0], corner[1], 0);
-      await wait(120);
-      pl.classList.add("pc-go");
-      place(cursor, bx, by, 520); await wait(560); if (done) return;
-      // Drag out the box.
-      frame(bx, by, 0, 0, 0); box.classList.add("is-on"); void box.offsetWidth;
-      frame(bx, by, bw, bh, 420); place(cursor, bx + bw, by + bh, 420); track(420);
-      await wait(450); if (done) return;
-      place(cursor, bx + bw + 18, by + bh + 14, 300);
-      // Type a hello, think better of it and erase it, then remark on where
-      // the box is.
-      box.classList.add("is-typing");
-      await wait(200); if (done) return;
-      const first = "Hello";
-      for (let k = 1; k <= first.length; k++) { word.textContent = first.slice(0, k); await wait(100); if (done) return; }
-      await wait(650); if (done) return;
-      for (let k = first.length - 1; k >= 0; k--) { word.textContent = first.slice(0, k); await wait(65); if (done) return; }
-      await wait(350); if (done) return;
-      for (let k = 1; k <= intro.length; k++) { word.textContent = intro.slice(0, k); await wait(45); if (done) return; }
-      await wait(300); box.classList.remove("is-typing"); if (done) return;
-      // Grab it and nudge it to dead centre; the guides flash as it snaps.
-      place(cursor, bx + bw * 0.62, by + bh * 0.6, 360); await wait(400); if (done) return;
-      let tx = cx - bw / 2, ty = cy - bh / 2;
-      cursor.classList.add("is-down"); box.classList.add("is-grabbed");
-      await wait(140); if (done) return;
-      frame(tx, ty, bw, bh, 620); place(cursor, tx + bw * 0.62, ty + bh * 0.6, 620);
-      await wait(450); pl.classList.add("is-snap"); await wait(240); if (done) return;
-      cursor.classList.remove("is-down"); box.classList.remove("is-grabbed");
-      // Centred: the guides have done their job and fade away.
-      await wait(300); pl.classList.remove("is-snap"); if (done) return;
-      // Scale it up: the corner handle dragged out from the centre, the text
-      // growing with the box, up to the hello size; then it says hello.
-      place(cursor, tx + bw, ty + bh, 320); await wait(360); if (done) return;
-      // (One animation drives it all: each frame the text is set a little
-      // bigger, measured, and the box and the handle fitted round it, so the
-      // text never strays outside the box. The pointer is the resize one.)
-      cursor.classList.add("is-down", "is-resize");
-      word.style.transition = "none";
-      await tween(720, (e) => {
-        word.style.fontSize = `${(small + (introBig - small) * e).toFixed(2)}px`;
-        const pad = word.offsetHeight * 0.22, w = word.offsetWidth + pad * 2, h = word.offsetHeight + pad * 0.6;
-        frame(cx - w / 2, cy - h / 2, w, h, 0); place(cursor, cx + w / 2, cy + h / 2, 0);
-        size.textContent = `${Math.round(w)} × ${Math.round(h)}`;
-      });
-      if (done) return;
-      await wait(120); if (done) return;
-      cursor.classList.remove("is-down", "is-resize");
-      word.style.transition = ""; word.classList.remove("is-on");
-      await wait(220); if (done) return;
-      // The line is cleared and "Hello" is typed in at full size, with a
-      // pause on it before anything else moves.
-      [bw, bh] = fit("Hello"); tx = cx - bw / 2; ty = cy - bh / 2;
-      frame(tx, ty, bw, bh, 220); place(cursor, tx + bw + 18, ty + bh + 14, 300); track(220);
-      word.style.fontSize = ""; word.textContent = ""; void word.offsetWidth; word.classList.add("is-on");
-      box.classList.add("is-typing");
-      await wait(320); if (done) return;
-      for (let k = 1; k <= words[0].length; k++) { word.textContent = words[0].slice(0, k); await wait(120); if (done) return; }
-      await wait(700); box.classList.remove("is-typing"); if (done) return;
-      // Let go: the cursor, the box and the guides all fade away, leaving
-      // just the hello in the middle for a moment.
-      cursor.classList.add("is-gone"); box.classList.add("is-done");
-      await wait(380); pl.classList.remove("is-snap"); await wait(700); if (done) return;
-      // Then round the languages on its own, back to Hello.
-      for (let n = 1; n < words.length; n++) {
-        const [w, h] = fit(words[n]);
-        frame(cx - w / 2, cy - h / 2, w, h, 0); // the (now unseen) box keeps the word centred
-        word.classList.remove("is-on");
-        word.textContent = words[n];
-        void word.offsetWidth;
-        word.classList.add("is-on");
-        await wait(n === words.length - 1 ? 700 : 400); if (done) return; // slow enough to read each one
-      }
-      finish();
-    };
-    // Reduced motion (or Calm): just the word, a moment, and on to the
-    // page (the panel fades instead of lifting; see the CSS).
+    // Reduced motion (or Calm): just "Hello", still, for a moment, then on.
     if (reduce.matches) {
-      box.classList.add("is-on", "is-done");
       word.textContent = words[0];
-      requestAnimationFrame(() => {
-        big = parseFloat(getComputedStyle(measurer).fontSize);
-        const [w, h] = fit(words[0]);
-        frame((pl.clientWidth - w) / 2, (pl.clientHeight - h) / 2, w, h, 0);
-        timer = setTimeout(finish, 1300);
-      });
-    } else requestAnimationFrame(() => { run(); });
+      word.classList.add("is-on");
+      timer = setTimeout(finish, 1300);
+    } else requestAnimationFrame(show);
     pl.addEventListener("pointerdown", finish);
     addEventListener("keydown", finish, { once: true });
   }
@@ -1371,7 +1242,7 @@
     // zero on his own?". Every claim is stated elsewhere on the site.
     const READERS = [
       ["anyone", "For anyone", "I make complicated products feel obvious, and I stay with them until they ship.", ["wave", "wealthbasket"]],
-      ["recruiters", "Recruiters", "Senior product designer, eight years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
+      ["recruiters", "Recruiters", "Senior product designer, five years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
       ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["lumen", "wave"]],
       ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["parcelo", "wayfarer"]],
       ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["wave", "jda"]],
@@ -2374,7 +2245,7 @@
     { k: ["how do you work", "process", "approach", "sketch", "method"],
       text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.' },
     { k: ["worked", "experience", "companies", "career", "history", "resume", "cv"],
-      text: "Eight years across four teams, from a design internship to senior UX:", render: renderExperience },
+      text: "Five years across four teams, from a design internship to senior UX:", render: renderExperience },
     { k: ["freelance", "hire", "available", "open to work", "full-time", "contract"],
       text: "Open to full-time roles and selected freelance projects — he usually replies within two days.", render: renderContactCard },
     { k: ["contact", "email", "reach", "get in touch", "talk to"],
@@ -2388,7 +2259,7 @@
     // Greetings and "who are you" last, so a specific topic wins ("tell me
     // about your music" is about music, not about you).
     { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],
-      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with eight years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him." },
+      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with five years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him." },
   ];
   const fallback = { text: "I don't have a scripted answer for that one yet. Try a question about a project, how Pallav works, or reach him directly:", render: renderContactCard };
 
