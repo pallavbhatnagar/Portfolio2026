@@ -25,12 +25,12 @@
   const raf2 = (fn) => requestAnimationFrame(() => requestAnimationFrame(fn));
   const enter = () => raf2(() => hc.classList.add("is-in"));
   const straighten = () => raf2(() => hc.classList.add("mess-go"));
-  // A visiting cursor (below) tidies "messy" itself, once a visit, on
-  // desktop; otherwise it straightens on its own as before.
+  // A visiting cursor (below) tidies "messy" itself, once a visit, at
+  // every size; otherwise (Calm, or a later page in the visit) it
+  // straightens on its own as before.
   let seen = false;
   try { seen = sessionStorage.getItem("hero-cursor") === "1"; } catch (e) { /* private mode */ }
-  const visit = !reduce.matches && !seen && !!mess
-    && window.matchMedia("(hover: hover) and (pointer: fine) and (min-width: 900px)").matches;
+  const visit = !reduce.matches && !seen && !!mess;
   const afterIntro = (fn) => {
     if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:done", fn, { once: true });
     else fn();
@@ -63,12 +63,37 @@
     let gone = false, raf = 0, at = null, timer = 0;
     const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
     const box = (el) => { const a = el.getBoundingClientRect(), b = hc.getBoundingClientRect(); return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height }; };
-    // The scattered letters, all of them (the word's own box ignores their tilt).
+    // The box round the letters as they are drawn: each letter's ink (its
+    // glyph, measured from the font) through its own tilt and offset, so it
+    // hugs the word scattered or straight. Falls back to the letters' boxes
+    // where a browser can't measure glyphs.
+    const chars = Array.from(mess.querySelectorAll(".ch"));
+    const ink = document.createElement("canvas").getContext("2d");
+    const glyph = (c) => {
+      const cs = getComputedStyle(c);
+      ink.font = `${cs.fontStyle} ${cs.fontWeight} ${cs.fontSize} ${cs.fontFamily}`;
+      const m = ink.measureText(c.textContent);
+      if (m.fontBoundingBoxAscent === undefined || m.actualBoundingBoxAscent === undefined) return null;
+      const w = c.offsetWidth, h = c.offsetHeight, base = (h - (m.fontBoundingBoxAscent + m.fontBoundingBoxDescent)) / 2 + m.fontBoundingBoxAscent;
+      // Relative to the letter's centre.
+      return { x0: -m.actualBoundingBoxLeft - w / 2, x1: m.actualBoundingBoxRight - w / 2, y0: base - m.actualBoundingBoxAscent - h / 2, y1: base + m.actualBoundingBoxDescent - h / 2 };
+    };
+    const glyphs = chars.map(glyph);
     const wordBox = () => {
-      const rs = Array.from(mess.querySelectorAll(".ch")).map((c) => c.getBoundingClientRect()), b = hc.getBoundingClientRect();
-      const l = Math.min(...rs.map((r) => r.left)), t = Math.min(...rs.map((r) => r.top));
-      const R = Math.max(...rs.map((r) => r.right)), B = Math.max(...rs.map((r) => r.bottom));
-      return { x: l - b.left - 6, y: t - b.top - 4, w: R - l + 12, h: B - t + 8 };
+      const b = hc.getBoundingClientRect();
+      let l = Infinity, t = Infinity, R = -Infinity, B = -Infinity;
+      chars.forEach((c, i) => {
+        const r = c.getBoundingClientRect(), g = glyphs[i];
+        if (!g) { l = Math.min(l, r.left); t = Math.min(t, r.top); R = Math.max(R, r.right); B = Math.max(B, r.bottom); return; }
+        const tf = getComputedStyle(c).transform, m = new DOMMatrix(tf === "none" ? undefined : tf);
+        const cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+        [[g.x0, g.y0], [g.x1, g.y0], [g.x0, g.y1], [g.x1, g.y1]].forEach(([x, y]) => {
+          const X = cx + m.a * x + m.c * y, Y = cy + m.b * x + m.d * y;
+          l = Math.min(l, X); t = Math.min(t, Y); R = Math.max(R, X); B = Math.max(B, Y);
+        });
+      });
+      const pad = 4;
+      return { x: l - b.left - pad, y: t - b.top - pad, w: R - l + pad * 2, h: B - t + pad * 2 };
     };
     const fitSel = () => {
       const r = wordBox();
@@ -117,7 +142,8 @@
       await wait(450); if (gone) return;
       // The toolbar above the selection, then Tidy up.
       const r = fitSel();
-      bar.style.transform = `translate(${(r.x + r.w / 2).toFixed(1)}px, ${(r.y - 12).toFixed(1)}px) translate(-50%, -100%)`;
+      const barX = Math.max(bar.offsetWidth / 2 + 8, Math.min(hc.clientWidth - bar.offsetWidth / 2 - 8, r.x + r.w / 2));
+      bar.style.transform = `translate(${barX.toFixed(1)}px, ${(r.y - 12).toFixed(1)}px) translate(-50%, -100%)`;
       bar.classList.add("is-on");
       await wait(380); if (gone) return;
       const bb = box(bar);
@@ -136,7 +162,7 @@
       // A comment on the Ask box.
       const ask = hc.querySelector(".hc-ask");
       if (ask) {
-        const a = box(ask), px = a.x + a.w - 6, py = a.y - 4;
+        const a = box(ask), px = Math.max(8, Math.min(a.x + a.w - 6, hc.clientWidth - pin.offsetWidth - 8)), py = a.y - 4; // kept on screen
         await glide(px + 8, py + 6, 950); if (gone) return;
         await press(); if (gone) return;
         pin.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px)`;
