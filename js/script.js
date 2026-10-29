@@ -36,7 +36,7 @@
     pl.innerHTML = '<div class="pc-guide pc-gv"></div><div class="pc-guide pc-gh"></div>'
       + '<div class="pc-box"><p class="pl-word is-on pc-word"></p><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><span class="pc-size"></span></div>'
       + '<p class="pl-word is-on pc-word pc-measure" aria-hidden="true"></p>'
-      + '<div class="pc-cursor"><svg class="pc-rs" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h6.5L7.3 5.2l7.5 7.5 2.2-2.2V17h-6.5l2.2-2.2-7.5-7.5L3 9.5z"/></svg><svg class="pc-ar" viewBox="0 0 16 20" aria-hidden="true"><path d="M1.2 1.2v15.6l4.3-4.1 2.9 6.3 2.6-1.2-2.8-6.2h6.1z"/></svg><span class="pc-tag">Pallav</span></div>'
+      + '<div class="pc-cursor"><svg class="pc-rs" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M4 4h4M4 4v4M14 14h-4M14 14v-4"/></svg><svg class="pc-ar" viewBox="0 0 22 22" aria-hidden="true"><path d="M3.2 2.4c-.5-.2-1 .3-.8.8l5.6 16c.2.6 1 .6 1.2 0l2.3-6.4 6.4-2.3c.6-.2.6-1 0-1.2z"/></svg><span class="pc-tag">Pallav</span></div>'
       + '<div class="pl-curve"></div>';
     document.body.appendChild(pl);
     html.classList.add("pl-ready");
@@ -352,6 +352,56 @@
     const endDrag = () => { drag = null; shellScrollbar.classList.remove("is-dragging"); };
     shellScrollbar.addEventListener("pointerup", endDrag);
     shellScrollbar.addEventListener("pointercancel", endDrag);
+  }
+
+  // 2d) The page's own scrollbar, drawn the same way (CSS .page-scrollbar;
+  //     the native one is hidden so it never takes up width). Drag the
+  //     thumb, or press the track to jump there.
+  {
+    const bar = document.createElement("div");
+    bar.className = "page-scrollbar";
+    bar.setAttribute("aria-hidden", "true");
+    bar.innerHTML = '<div class="page-scrollbar-thumb"></div>';
+    document.body.appendChild(bar);
+    const thumb = bar.firstChild;
+    const root = document.scrollingElement || document.documentElement;
+    const metrics = () => { const trackH = bar.clientHeight, viewH = window.innerHeight, contentH = root.scrollHeight; return { trackH, viewH, contentH, max: contentH - viewH }; };
+    let queued = false;
+    const update = () => {
+      queued = false;
+      const m = metrics();
+      if (m.max <= 0) { thumb.style.height = "0px"; return; }
+      const h = Math.max((m.viewH / m.contentH) * m.trackH, 24);
+      thumb.style.height = `${h}px`;
+      thumb.style.top = `${(root.scrollTop / m.max) * (m.trackH - h)}px`;
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(update); } };
+    window.addEventListener("scroll", queue, { passive: true });
+    window.addEventListener("resize", queue);
+    if ("ResizeObserver" in window) new ResizeObserver(queue).observe(document.body);
+    update();
+    let drag = null;
+    bar.addEventListener("pointerdown", (e) => {
+      if (e.button !== 0) return;
+      e.preventDefault();
+      const m = metrics(), h = thumb.offsetHeight;
+      if (m.max <= 0) return;
+      if (e.target !== thumb) {
+        const y = e.clientY - bar.getBoundingClientRect().top - h / 2;
+        root.scrollTop = Math.max(0, Math.min(1, y / (m.trackH - h))) * m.max;
+      }
+      drag = { y: e.clientY, top: root.scrollTop };
+      bar.setPointerCapture(e.pointerId);
+      bar.classList.add("is-dragging");
+    });
+    bar.addEventListener("pointermove", (e) => {
+      if (!drag) return;
+      const m = metrics(), h = thumb.offsetHeight;
+      root.scrollTop = drag.top + (e.clientY - drag.y) * (m.max / Math.max(1, m.trackH - h));
+    });
+    const end = () => { drag = null; bar.classList.remove("is-dragging"); };
+    bar.addEventListener("pointerup", end);
+    bar.addEventListener("pointercancel", end);
   }
 
   // 2c) Reveal the scrollbar thumb on hover near the right edge too, not
@@ -2830,6 +2880,7 @@
     btn.setAttribute("aria-controls", "dsp");
     btn.innerHTML = figure;
     ctrls.insertBefore(btn, ctrls.querySelector(".theme-toggle"));
+    document.documentElement.classList.add("dsp-ready"); // its slot in the nav no longer needs holding
 
     // A row: a label, then a small segmented choice (radio buttons).
     const seg = (name, label, hint, opts) => `
@@ -2844,6 +2895,7 @@
     panel.setAttribute("role", "dialog");
     panel.setAttribute("aria-labelledby", "dsp-title");
     panel.innerHTML = `
+      <span class="dsp-grab" aria-hidden="true"></span>
       <div class="dsp-head">
         <div class="dsp-head-text">
           <h2 class="dsp-title" id="dsp-title">Make it comfortable</h2>
@@ -3037,6 +3089,8 @@
     const close = (back) => {
       if (panel.hidden) return;
       panel.hidden = true;
+      panel.classList.remove("is-dragging", "is-settling");
+      panel.style.transform = "";
       btn.setAttribute("aria-expanded", "false");
       if (back) btn.focus({ preventScroll: true });
     };
@@ -3058,6 +3112,42 @@
       if (moved < 10) close(false);
     });
     document.addEventListener("pointercancel", () => { outsideAt = null; });
+    // Phones: drag the sheet by its grab line (or heading). Down past a
+    // third of its height, or a quick flick, and it closes; otherwise it
+    // springs back. Upward it only gives a little.
+    let drag = null;
+    const sheet = () => window.matchMedia("(max-width: 640px)").matches;
+    panel.addEventListener("pointerdown", (e) => {
+      if (!sheet() || !e.target.closest(".dsp-grab, .dsp-head") || e.target.closest("button")) return;
+      drag = { y: e.clientY, t: performance.now(), dy: 0, id: e.pointerId, lastY: e.clientY, lastT: performance.now(), v: 0 };
+      panel.classList.remove("is-settling"); panel.classList.add("is-dragging");
+      try { panel.setPointerCapture(e.pointerId); } catch (err) { /* not capturable */ }
+    });
+    panel.addEventListener("pointermove", (e) => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const now = performance.now();
+      drag.v = (e.clientY - drag.lastY) / Math.max(1, now - drag.lastT);
+      drag.lastY = e.clientY; drag.lastT = now;
+      const raw = e.clientY - drag.y;
+      drag.dy = raw > 0 ? raw : -Math.sqrt(-raw) * 2.2; // resists going up
+      panel.style.transform = `translateY(${drag.dy.toFixed(1)}px)`;
+    });
+    const endDrag = (e) => {
+      if (!drag || (e && e.pointerId !== drag.id)) return;
+      const { dy, v } = drag; drag = null;
+      panel.classList.remove("is-dragging"); panel.classList.add("is-settling");
+      if (dy > panel.offsetHeight / 3 || (v > 0.5 && dy > 24)) {
+        panel.style.transform = "translateY(100%)";
+        const done = () => { panel.removeEventListener("transitionend", done); close(true); };
+        panel.addEventListener("transitionend", done);
+        setTimeout(done, 400);
+      } else {
+        panel.style.transform = "";
+        setTimeout(() => panel.classList.remove("is-settling"), 300);
+      }
+    };
+    panel.addEventListener("pointerup", endDrag);
+    panel.addEventListener("pointercancel", endDrag);
     window.addEventListener("resize", () => { if (!panel.hidden) place(); });
     let touchY = 0;
     panel.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });
