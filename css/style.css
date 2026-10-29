@@ -2751,7 +2751,8 @@ html.is-preloading.pl-ready::before { display: none; }
 .pc-cursor.is-resize.is-down .pc-rs { transform: none; }
 .pc-cursor.is-resize .pc-tag { left: 12px; top: 12px; }
 .pc-tag { position: absolute; left: 16px; top: 22px; padding: 3px 8px; border-radius: 4px 999px 999px 999px; background: var(--pc-me); color: #fff; font: 600 12px/1.3 var(--font), sans-serif; white-space: nowrap; }
-.pc-guide { background: var(--pc-guide); opacity: 0; transition: opacity 0.15s ease; }
+.pc-guide { background: var(--pc-guide); opacity: 0; transition: opacity 0.35s ease; }
+.preloader.is-snap .pc-guide { transition-duration: 0.15s; } /* in quickly, out gently */
 .pc-gv { left: 50%; width: 1px; height: 100%; }
 .pc-gh { top: 50%; width: 100%; height: 1px; }
 .preloader.is-snap .pc-guide { opacity: 1; }

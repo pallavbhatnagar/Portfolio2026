@@ -138,6 +138,8 @@
       frame(tx, ty, bw, bh, 620); place(cursor, tx + bw * 0.62, ty + bh * 0.6, 620);
       await wait(450); pl.classList.add("is-snap"); await wait(240); if (done) return;
       cursor.classList.remove("is-down"); box.classList.remove("is-grabbed");
+      // Centred: the guides have done their job and fade away.
+      await wait(300); pl.classList.remove("is-snap"); if (done) return;
       // Scale it up: the corner handle dragged out from the centre, the text
       // growing with the box, up to the hello size; then it says hello.
       place(cursor, tx + bw, ty + bh, 320); await wait(360); if (done) return;
