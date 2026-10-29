@@ -9,19 +9,24 @@
   // The time where I am (India), and what I'm probably doing at that hour.
   const lede = document.querySelector(".ab-lede");
   if (lede && window.Intl) {
-    const line = document.createElement("p");
-    line.className = "ab-now-time";
-    line.innerHTML = '<span class="ab-now-dot" aria-hidden="true"></span><span class="ab-now-text"></span>';
-    lede.after(line);
+    // The chip is in the page (so its space is kept from the first paint);
+    // older copies of the page get one made here.
+    let line = document.querySelector(".ab-now-time");
+    if (!line) {
+      line = document.createElement("p");
+      line.className = "ab-now-time";
+      line.innerHTML = '<span class="ab-now-dot" aria-hidden="true"></span><span class="ab-now-text"></span>';
+      lede.after(line);
+    }
     const text = line.querySelector(".ab-now-text");
     const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true });
     const hourOf = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false });
-    const doing = (h) => h < 7 ? "asleep" : h < 9 ? "on my first coffee" : h < 13 ? "deep in research and flows" : h < 14 ? "at lunch" : h < 18 ? "designing with the team" : h < 20 ? "out walking the dog" : h < 23 ? "making music" : "reading a comic";
+    const doing = (h) => h < 7 ? "asleep" : h < 9 ? "on my first coffee" : h < 13 ? "deep in research" : h < 14 ? "at lunch" : h < 18 ? "designing with the team" : h < 20 ? "walking the dog" : h < 23 ? "making music" : "reading a comic";
     const tick = () => {
       const now = new Date();
       const h = Number(hourOf.format(now)) % 24;
       const time = fmt.format(now).replace("AM", "am").replace("PM", "pm");
-      text.innerHTML = `It's <b>${time}</b> in New Delhi, so I'm probably ${doing(h)}.`;
+      text.innerHTML = `<b>${time}</b> in New Delhi, ${doing(h)}`;
       line.classList.toggle("is-off", h < 9 || h >= 18);
     };
     tick();
@@ -45,13 +50,20 @@
     // The curve loops back on itself in its first stretch, but never reaches
     // a later dot's x before arriving at that dot, so the first point along
     // it at that x is the dot.
-    const lengthAtX = (x) => {
+    // Measured once, in a single walk along the curve, on the first hover
+    // (walking it on load held the whole page up for a moment).
+    let stops = null;
+    const measure = () => {
+      const xs = nodes.map((n) => Number(n.getAttribute("cx")));
+      stops = xs.map((x) => (x <= 10 ? 0 : total));
       const step = total / 600;
-      for (let l = 0; l <= total; l += step) if (trace.getPointAtLength(l).x >= x - 0.5) return l;
-      return total;
+      for (let l = 0, left = xs.filter((x) => x > 10).length; l <= total && left; l += step) {
+        const px = trace.getPointAtLength(l).x;
+        xs.forEach((x, k) => { if (x > 10 && stops[k] === total && px >= x - 0.5) { stops[k] = l; left--; } });
+      }
     };
-    const stops = nodes.map((n) => { const x = Number(n.getAttribute("cx")); return x <= 10 ? 0 : lengthAtX(x); });
     const show = (i) => {
+      if (!stops) measure();
       path.classList.toggle("is-tracing", i >= 0);
       trace.style.setProperty("--len", i >= 0 ? `${stops[i] + 0.01}` : "0");
       nodes.forEach((n, k) => n.classList.toggle("is-focus", k === i));

@@ -8,6 +8,7 @@
    I'm doing. The dot is green in working hours, amber outside them, and
    breathes gently (Lively only). */
 .ab-now-time { display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.25rem; padding: 0.375rem 0.75rem 0.375rem 0.625rem; border: 1px solid var(--hairline); border-radius: 999px; background: color-mix(in srgb, var(--ink) 3%, var(--bg)); font-size: var(--fs-small); font-weight: 500; color: var(--ink-soft); }
+.ab-now-time:has(.ab-now-text:empty) { visibility: hidden; } /* its space is kept until the time is in */
 .ab-now-time b { font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
 .ab-now-dot { position: relative; flex: none; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #1f9d55; }
 .ab-now-time.is-off .ab-now-dot { background: #d08a12; }
@@ -32,4 +33,20 @@
 @media (min-width: 1024px) and (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   .ab-pile .ab-snap.is-landed { transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), box-shadow 0.4s ease; }
   .ab-pile .ab-snap.is-near { box-shadow: 0 0.25rem 0.5rem rgba(13, 13, 13, 0.08), 0 1.5rem 2.75rem -1rem rgba(13, 13, 13, 0.4); }
+}
+
+/* ---------- The first screen arrives as one ----------
+   The title, the intro and the time rise in one after another as the
+   snapshots start to drop (.ab-table.is-in), and the numbers and the story
+   just under them follow on the same beat, instead of the words showing at
+   once and the rest fading in a second later. */
+@media (prefers-reduced-motion: no-preference) {
+  .ab-table :is(.ab-title .hl, .ab-lede, .ab-now-time) { transition: opacity 0.8s var(--ease-out), translate 0.8s var(--ease-out); }
+  .js .ab-table:not(.is-in) :is(.ab-title .hl, .ab-lede, .ab-now-time) { opacity: 0; translate: 0 0.75rem; }
+  .ab-table .ab-title .hl:nth-child(2) { transition-delay: 80ms; }
+  .ab-table .ab-lede { transition-delay: 160ms; }
+  .ab-table .ab-now-time { transition-delay: 240ms; }
+  .ab-table ~ .ab-stats.ab-r { transition-delay: 320ms; }
+  .ab-table ~ .ab-story > .ab-h2.ab-r { transition-delay: 400ms; }
+  .ab-table ~ .ab-story > .ab-story-body.ab-r { transition-delay: 480ms; }
 }

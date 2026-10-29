@@ -3032,7 +3032,7 @@
       line.classList.toggle("is-lit", fill > 0.002);
       if (y > vh * 1.4 && !still) return; // the hero is long gone
       heroStickers.forEach((el, i) => {
-        const depth = 0.35 + (i % 3) * 0.18, turn = (i % 2 ? 1 : -1) * (0.04 + (i % 3) * 0.02);
+        const depth = 0.5 + (i % 3) * 0.25, turn = (i % 2 ? 1 : -1) * (0.06 + (i % 3) * 0.03);
         el.style.translate = still ? "" : `0 ${(-y * depth).toFixed(1)}px`;
         el.style.rotate = still ? "" : `calc(var(--hr, 0deg) + ${(y * turn).toFixed(2)}deg)`; // on top of its own tilt
       });

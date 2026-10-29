@@ -3500,9 +3500,14 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 @media (max-width: 420px) { html[data-text] .nav { zoom: calc(1 / var(--text-scale)); } }
 /* Very small phones: with the display settings button there can be four
    controls in the nav, so the gaps tighten and labels stay on one line. */
+/* The display settings button is added by script, a moment after the nav
+   is drawn; until then its slot is held open in front of the theme button,
+   so the links don't jump sideways when it arrives. */
+.js .nav-ctrls:not(:has(.dsp-toggle)) .theme-toggle { margin-left: calc(0.125rem + 1.875rem + 0.875rem); }
 @media (max-width: 380px) {
   .nav-links { gap: 0.875rem; }
   .nav-ctrls { gap: 0.5rem; }
+  .js .nav-ctrls:not(:has(.dsp-toggle)) .theme-toggle { margin-left: calc(0.125rem + 1.875rem + 0.5rem); }
   .nav-home, .nav-links a { white-space: nowrap; }
 }
 

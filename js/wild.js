@@ -95,7 +95,7 @@
   };
   const onScroll = () => { if (current) { const c = current; current = null; inspect(c); } };
 
-  const setEye = (on, remember = true) => {
+  const setEye = (on) => {
     html.classList.toggle("bp-on", on);
     btn.setAttribute("aria-pressed", String(on));
     if (on) {
@@ -108,7 +108,6 @@
       box.classList.remove("is-on");
       current = null;
     }
-    if (remember) { try { if (on) localStorage.setItem(KEY, "1"); else localStorage.removeItem(KEY); } catch (e) { /* private mode */ } }
   };
   btn.addEventListener("click", () => setEye(!html.classList.contains("bp-on")));
   document.addEventListener("keydown", (e) => {
@@ -117,9 +116,8 @@
     setEye(!html.classList.contains("bp-on"));
   });
   window.addEventListener("resize", () => { if (html.classList.contains("bp-on")) layoutGrid(); });
-  let saved = false;
-  try { saved = localStorage.getItem(KEY) === "1"; } catch (e) { /* private mode */ }
-  if (saved) setEye(true, false);
+  // Every visit starts with it off (it used to be remembered; clear that).
+  try { localStorage.removeItem(KEY); } catch (e) { /* private mode */ }
 
   // ---------- "messy", playable ----------
   // Each visit to the word picks fresh positions for the letters, so it
