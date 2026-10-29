@@ -2691,7 +2691,7 @@ html.is-preloading.pl-ready::before { display: none; }
    Other scripts fall back to each system's sans-serif. */
 .pl-word {
   margin: 0;
-  font-family: var(--font), "Nirmala UI", "Kohinoor Devanagari", "Noto Sans Devanagari", "Noto Sans Gurmukhi", "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", sans-serif;
+  font-family: var(--font), "Nirmala UI", "Kohinoor Devanagari", "Noto Sans Devanagari", "Noto Sans Gurmukhi", "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
   font-size: clamp(2.75rem, 6.5vw, 5rem);
   font-weight: 500;
   letter-spacing: -0.03em;
@@ -3581,6 +3581,9 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 :root[data-theme="dark"] .scroll-line { --sb-core: #fff4f4; --sb-glow-1: #ff3b3b; --sb-glow-2: rgba(255, 34, 34, 0.7); --sb-glow-3: rgba(255, 34, 34, 0.3); }
 .sb-hilt { position: relative; z-index: 1; flex: none; width: 78px; height: 13px; filter: drop-shadow(0 0.75px 0.75px rgba(0, 0, 0, 0.3)); }
 :root[data-theme="dark"] .sb-hilt { filter: drop-shadow(0 0 0.5px rgba(255, 255, 255, 0.35)); }
+/* The saber sits as high as the plain line: its blade on the same level,
+   the top of the hilt tucked just past the edge of the screen. */
+.scroll-line.is-saber { top: -4px; }
 .sb-track { position: relative; flex: 1; height: 48px; margin: -16px 0 -16px -20px; overflow: hidden; /* taller than the strip so a wide glow isn't cut off */ -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 8px); mask-image: linear-gradient(90deg, transparent 0, #000 8px); }
 .sb-blade { position: absolute; left: 0; right: 8px; top: 50%; height: 2.5px; margin-top: -1.25px; border-radius: 999px; background: var(--sb-core);
   box-shadow: 0 0 1px 0.5px var(--sb-glow-1), 0 0 2.5px 0.75px var(--sb-glow-1); transform: translateX(-100%); will-change: transform; }
@@ -3636,12 +3639,12 @@ html.is-preloading .sb-spill { display: none; }
 @media (min-width: 1300px) { body.ask-open .scroll-line, body.ask-open .sb-spill { left: var(--ask-gap); right: var(--ask-panel-w); } }
 @media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } body.ask-open .sb-spill { display: none; } }
 @media (prefers-reduced-motion: reduce) { .scroll-line { transition: none; } }
-/* The plain line (default): the page's ink, 2px, from the very left edge,
+/* The plain line (default): the page's ink, 2.5px, from the very left edge,
    no hilt, no haze. "Lightsaber" in the display settings swaps it for the saber (.is-saber). */
 .scroll-line:not(.is-saber) { padding-left: 0; }
 .scroll-line:not(.is-saber) .sb-hilt { display: none; }
 .scroll-line:not(.is-saber) .sb-track { margin-left: 0; -webkit-mask-image: none; mask-image: none; }
-.scroll-line:not(.is-saber) .sb-blade { right: 0; height: 4px; margin-top: -2px; border-radius: 999px; background: var(--ink); opacity: 0.85; box-shadow: none; }
+.scroll-line:not(.is-saber) .sb-blade { right: 0; height: 2.5px; margin-top: -5.25px; /* sits a little higher than the saber */  border-radius: 999px; background: var(--ink); opacity: 0.85; box-shadow: none; }
 .scroll-line:not(.is-saber) .sb-blade::before { display: none; }
 .scroll-line.is-saber .sb-hilt { animation: sb-draw 0.25s var(--ease-out); }
 @keyframes sb-draw { from { opacity: 0; transform: translateX(-6px); } }

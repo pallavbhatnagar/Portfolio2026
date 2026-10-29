@@ -16,15 +16,18 @@
   });
 
   // 0b) Preloader (CSS .preloader): on the first page of a visit, a cursor
-  //     designs the hello (a text box, "Hello" in a few languages, snapped
-  //     to centre), then the panel lifts away. A click or any key skips to the end. The head script
-  //     decides whether it runs (html.is-preloading). As it starts to lift
+  //     designs the hello (a text box snapped to centre, then the hello
+  //     alone in a few languages), then the panel lifts away. A click or
+  //     any key skips to the end. The head script decides whether it runs (html.is-preloading). As it starts to lift
   //     the page hears "preloader:leaving" (the hero starts drawing then),
   //     and once it's gone, "preloader:done".
   if (document.documentElement.classList.contains("is-preloading")) {
     const html = document.documentElement;
     try { sessionStorage.setItem("preloaded", "1"); } catch (e) { /* private mode */ }
-    const words = ["Hello", "नमस्ते", "Bonjour", "Hola", "Ciao", "こんにちは", "Olá", "Hallå", "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "Hello"]; // round the world and back to hello
+    // Home first (Hindi and Punjabi), then the biggest markets for UX work:
+    // the US, UK, Canada and Australia (English), Germany and the
+    // Netherlands, France and Canada, the UAE, Singapore and China, and Japan.
+    const words = ["Hello", "नमस्ते", "ਸਤ ਸ੍ਰੀ ਅਕਾਲ", "Hallo", "Bonjour", "مرحبا", "你好", "こんにちは", "Hello"];
     const pl = document.createElement("div");
     pl.className = "preloader";
     pl.setAttribute("aria-hidden", "true");
@@ -35,10 +38,13 @@
       + '<div class="pl-curve"></div>';
     document.body.appendChild(pl);
     html.classList.add("pl-ready");
-    // The hello is designed in front of you: a cursor drags out a text box,
-    // types "Hello", resizes the box as the word goes through a few
-    // languages, nudges it to dead centre (the guides flash) and clicks,
-    // and the panel lifts. Positions are worked out from the window size.
+    // The hello is designed in front of you: a cursor drags out a text box
+    // somewhere on the screen, types a small hello, erases it, types "Off
+    // centre, huh!" instead, nudges it to
+    // dead centre (the guides flash) and scales it up to the hello size. Then
+    // the cursor and the box fade away, the hello goes round a few
+    // languages, and the panel lifts.
+    // Positions are worked out from the window size.
     const box = pl.querySelector(".pc-box"), word = pl.querySelector(".pc-box .pc-word");
     const measurer = pl.querySelector(".pc-measure"), size = pl.querySelector(".pc-size");
     const cursor = pl.querySelector(".pc-cursor");
@@ -66,47 +72,92 @@
     };
     // The size label follows the box while it changes.
     const track = (ms) => { const end = performance.now() + ms + 40; const tick = () => { size.textContent = `${Math.round(box.offsetWidth)} × ${Math.round(box.offsetHeight)}`; if (performance.now() < end && !done) requestAnimationFrame(tick); }; tick(); };
-    const fit = (w) => { measurer.textContent = w; const pad = measurer.offsetHeight * 0.22; return [measurer.offsetWidth + pad * 2, measurer.offsetHeight + pad * 0.6]; };
+    // Sizes the box for a word at a font size (the big hello size unless
+    // told otherwise).
+    let big = 0;
+    const fit = (w, size = big) => { measurer.style.fontSize = `${size}px`; measurer.textContent = w; const pad = measurer.offsetHeight * 0.22; return [measurer.offsetWidth + pad * 2, measurer.offsetHeight + pad * 0.6]; };
     const run = async () => {
       const W = window.innerWidth, H = window.innerHeight, cx = W / 2, cy = H / 2;
-      const off = [Math.min(130, W * 0.09), Math.min(80, H * 0.08)];
-      let [bw, bh] = fit(words[0]);
+      // It starts out small, remarking on where it is; only once centred is
+      // it sized up for the hello.
+      big = parseFloat(getComputedStyle(measurer).fontSize);
+      const small = Math.max(15, big * 0.38);
+      const intro = "Off centre, huh!";
+      // A different starting spot every visit, anywhere clear of the centre
+      // (so the move to centre always shows) and far enough from the edges
+      // that the widest word still fits; the cursor comes in from a corner.
+      const widest = Math.max(fit(intro, small)[0], ...words.map((w) => fit(w)[0]));
+      const introBig = Math.min(big, big * (W - 32) / fit(intro)[0]); // its size once scaled up, kept inside the screen
+      let [bw, bh] = fit(intro, small);
+      const roomX = Math.max(0, (W - widest) / 2 - 16), roomY = Math.max(0, (H - fit("Hello")[1]) / 2 - 64);
+      const ang = Math.random() * Math.PI * 2, reach = 0.55 + Math.random() * 0.45;
+      const off = [Math.cos(ang) * roomX * reach, Math.sin(ang) * roomY * reach];
       let bx = cx + off[0] - bw / 2, by = cy + off[1] - bh / 2;
-      place(cursor, W * 0.82, H * 1.04, 0);
+      const corner = [[W + 40, H + 40], [-40, H + 40], [W + 40, -40], [-40, -40]][(Math.random() * 4) | 0];
+      word.style.fontSize = `${small}px`;
+      place(cursor, corner[0], corner[1], 0);
       await wait(120);
       pl.classList.add("pc-go");
       place(cursor, bx, by, 520); await wait(560); if (done) return;
       // Drag out the box.
       frame(bx, by, 0, 0, 0); box.classList.add("is-on"); void box.offsetWidth;
-      frame(bx, by, bw, bh, 460); place(cursor, bx + bw, by + bh, 460); track(460);
-      await wait(490); if (done) return;
-      place(cursor, bx + bw + 22, by + bh + 16, 300);
-      // Type "Hello".
+      frame(bx, by, bw, bh, 420); place(cursor, bx + bw, by + bh, 420); track(420);
+      await wait(450); if (done) return;
+      place(cursor, bx + bw + 18, by + bh + 14, 300);
+      // Type a hello, think better of it and erase it, then remark on where
+      // the box is.
       box.classList.add("is-typing");
-      for (let k = 1; k <= words[0].length; k++) { word.textContent = words[0].slice(0, k); await wait(75); if (done) return; }
-      await wait(380); box.classList.remove("is-typing"); if (done) return;
-      // Through the languages: the box resizes around each word, from its centre.
-      for (let n = 1; n < words.length; n++) {
-        const [w, h] = fit(words[n]); const mx = bx + bw / 2, my = by + bh / 2;
-        bw = w; bh = h; bx = mx - bw / 2; by = my - bh / 2;
-        word.textContent = words[n];
-        frame(bx, by, bw, bh, 200); place(cursor, bx + bw + 22, by + bh + 16, 200); track(200);
-        await wait(n === words.length - 1 ? 380 : 240); if (done) return;
-      }
-      // Grab it and nudge it to dead centre; the guides flash as it snaps.
-      place(cursor, bx + bw * 0.62, by + bh * 0.6, 380); await wait(440); if (done) return;
-      const tx = cx - bw / 2, ty = cy - bh / 2;
-      cursor.classList.add("is-down"); box.classList.add("is-grabbed");
-      await wait(160); if (done) return;
-      frame(tx, ty, bw, bh, 650); place(cursor, tx + bw * 0.62, ty + bh * 0.6, 650);
-      await wait(470); pl.classList.add("is-snap"); await wait(260); if (done) return;
-      // Let go: the cursor leaves the word to itself, then the guides go,
-      // the box is deselected, a beat on the clean word, and away.
-      cursor.classList.remove("is-down"); box.classList.remove("is-grabbed");
-      cursor.classList.add("is-gone");
+      await wait(200); if (done) return;
+      const first = "Hello";
+      for (let k = 1; k <= first.length; k++) { word.textContent = first.slice(0, k); await wait(100); if (done) return; }
       await wait(650); if (done) return;
-      pl.classList.remove("is-snap"); box.classList.add("is-done");
-      await wait(690); finish();
+      for (let k = first.length - 1; k >= 0; k--) { word.textContent = first.slice(0, k); await wait(65); if (done) return; }
+      await wait(350); if (done) return;
+      for (let k = 1; k <= intro.length; k++) { word.textContent = intro.slice(0, k); await wait(45); if (done) return; }
+      await wait(300); box.classList.remove("is-typing"); if (done) return;
+      // Grab it and nudge it to dead centre; the guides flash as it snaps.
+      place(cursor, bx + bw * 0.62, by + bh * 0.6, 360); await wait(400); if (done) return;
+      let tx = cx - bw / 2, ty = cy - bh / 2;
+      cursor.classList.add("is-down"); box.classList.add("is-grabbed");
+      await wait(140); if (done) return;
+      frame(tx, ty, bw, bh, 620); place(cursor, tx + bw * 0.62, ty + bh * 0.6, 620);
+      await wait(450); pl.classList.add("is-snap"); await wait(240); if (done) return;
+      cursor.classList.remove("is-down"); box.classList.remove("is-grabbed");
+      // Scale it up: the corner handle dragged out from the centre, the text
+      // growing with the box, up to the hello size; then it says hello.
+      place(cursor, tx + bw, ty + bh, 320); await wait(360); if (done) return;
+      cursor.classList.add("is-down");
+      [bw, bh] = fit(intro, introBig); tx = cx - bw / 2; ty = cy - bh / 2;
+      word.style.transition = `font-size 640ms ${EASE}`; word.style.fontSize = `${introBig}px`;
+      frame(tx, ty, bw, bh, 640); place(cursor, tx + bw, ty + bh, 640); track(640);
+      await wait(700); if (done) return;
+      cursor.classList.remove("is-down");
+      word.style.transition = ""; word.classList.remove("is-on");
+      await wait(220); if (done) return;
+      // The line is cleared and "Hello" is typed in at full size, with a
+      // pause on it before anything else moves.
+      [bw, bh] = fit("Hello"); tx = cx - bw / 2; ty = cy - bh / 2;
+      frame(tx, ty, bw, bh, 220); place(cursor, tx + bw + 18, ty + bh + 14, 300); track(220);
+      word.style.fontSize = ""; word.textContent = ""; void word.offsetWidth; word.classList.add("is-on");
+      box.classList.add("is-typing");
+      await wait(320); if (done) return;
+      for (let k = 1; k <= words[0].length; k++) { word.textContent = words[0].slice(0, k); await wait(120); if (done) return; }
+      await wait(700); box.classList.remove("is-typing"); if (done) return;
+      // Let go: the cursor, the box and the guides all fade away, leaving
+      // just the hello in the middle for a moment.
+      cursor.classList.add("is-gone"); box.classList.add("is-done");
+      await wait(380); pl.classList.remove("is-snap"); await wait(700); if (done) return;
+      // Then round the languages on its own, back to Hello.
+      for (let n = 1; n < words.length; n++) {
+        const [w, h] = fit(words[n]);
+        frame(cx - w / 2, cy - h / 2, w, h, 0); // the (now unseen) box keeps the word centred
+        word.classList.remove("is-on");
+        word.textContent = words[n];
+        void word.offsetWidth;
+        word.classList.add("is-on");
+        await wait(n === words.length - 1 ? 700 : 400); if (done) return; // slow enough to read each one
+      }
+      finish();
     };
     requestAnimationFrame(() => { run(); });
     pl.addEventListener("pointerdown", finish);
@@ -3033,8 +3084,10 @@
       if (on && ignite) ignite_();
     };
     syncSaber(false);
-    // (Redrawn on a switch: the stub is longer with the saber on.)
-    new MutationObserver(() => { syncSaber(true); queue(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-saber"] });
+    // (Redrawn on a switch: the stub is longer with the saber on. It shows
+    // straight away and stays a good 5 seconds before it rests; switching
+    // back to the plain line rests at the usual pace.)
+    new MutationObserver(() => { syncSaber(true); queue(); wake(line.classList.contains("is-saber") ? 5000 : 1500); }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-saber"] });
     document.body.appendChild(line);
     // The saber's light on the page: a red wash under the lit part of the
     // blade that the content scrolls through. Its own layer on <body>, so
@@ -3095,14 +3148,15 @@
       }
     };
     const queue = () => { if (!queued) { queued = true; requestAnimationFrame(draw); } };
-    // It shows while the page moves and fades away a moment after it stops,
-    // except at the very top of the page, where it always stays.
+    // It shows while the page moves and fades away a moment after it stops.
+    // The plain line stays put at the very top of the page (where it is
+    // empty anyway); the saber fades there too.
     let idleTimer = 0;
-    const wake = () => {
+    const wake = (stay = 1500) => {
       line.classList.remove("is-idle");
       spill.classList.remove("is-idle");
       clearTimeout(idleTimer);
-      idleTimer = setTimeout(() => { if (readScroll().y > 4) { line.classList.add("is-idle"); spill.classList.add("is-idle"); } }, 1500);
+      idleTimer = setTimeout(() => { if (readScroll().y > 4 || line.classList.contains("is-saber")) { line.classList.add("is-idle"); spill.classList.add("is-idle"); } }, stay);
     };
     const onScroll = () => { queue(); wake(); };
     window.addEventListener("scroll", onScroll, { passive: true });
