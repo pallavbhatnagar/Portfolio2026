@@ -2724,6 +2724,7 @@ html.is-preloading.pl-ready::before { display: none; }
 .pc-box.is-done :is(.pc-h, .pc-size) { opacity: 0; }
 .pc-cursor { z-index: 2; opacity: 0; pointer-events: none; }
 .preloader.pc-go .pc-cursor { opacity: 1; }
+.preloader.pc-go .pc-cursor.is-gone { opacity: 0; }
 .pc-cursor svg { display: block; width: 22px; height: 27px; fill: var(--pc-me); stroke: #fff; stroke-width: 1.2; stroke-linejoin: round; transform-origin: 2px 2px; transition: transform 0.12s ease-out; }
 .pc-cursor.is-down svg { transform: scale(0.86); }
 .pc-tag { position: absolute; left: 16px; top: 22px; padding: 3px 8px; border-radius: 4px 999px 999px 999px; background: var(--pc-me); color: #fff; font: 600 12px/1.3 var(--font), sans-serif; white-space: nowrap; }

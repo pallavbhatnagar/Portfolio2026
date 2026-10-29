@@ -58,7 +58,7 @@
     };
     const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
     const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
-    const place = (el, x, y, ms) => { el.style.transition = ms ? `transform ${ms}ms ${EASE}` : "none"; el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; };
+    const place = (el, x, y, ms) => { el.style.transition = (ms ? `transform ${ms}ms ${EASE}, ` : "") + "opacity 0.3s ease"; el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; };
     const frame = (x, y, w, h, ms) => {
       box.style.transition = (ms ? `transform ${ms}ms ${EASE}, width ${ms}ms ${EASE}, height ${ms}ms ${EASE}, ` : "") + "opacity 0.2s ease, box-shadow 0.2s ease, border-color 0.25s ease";
       box.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
@@ -100,14 +100,13 @@
       await wait(160); if (done) return;
       frame(tx, ty, bw, bh, 650); place(cursor, tx + bw * 0.62, ty + bh * 0.6, 650);
       await wait(470); pl.classList.add("is-snap"); await wait(260); if (done) return;
+      // Let go: the cursor leaves the word to itself, then the guides go,
+      // the box is deselected, a beat on the clean word, and away.
       cursor.classList.remove("is-down"); box.classList.remove("is-grabbed");
+      cursor.classList.add("is-gone");
       await wait(650); if (done) return;
-      // Click: the guides go, the box is deselected, a beat on the clean word, and away.
-      pl.classList.remove("is-snap");
-      cursor.classList.add("is-down"); await wait(170); if (done) return;
-      cursor.classList.remove("is-down"); box.classList.add("is-done");
-      place(cursor, tx + bw * 0.62 + 40, ty + bh * 0.6 + 60, 500);
-      await wait(520); finish();
+      pl.classList.remove("is-snap"); box.classList.add("is-done");
+      await wait(690); finish();
     };
     requestAnimationFrame(() => { run(); });
     pl.addEventListener("pointerdown", finish);
