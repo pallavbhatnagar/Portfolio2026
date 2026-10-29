@@ -18,7 +18,9 @@
   // 0b) Preloader (CSS .preloader): on the first page of a visit, a cursor
   //     designs the hello (a text box snapped to centre, then the hello
   //     alone in a few languages), then the panel lifts away. A click or
-  //     any key skips to the end. The head script decides whether it runs (html.is-preloading). As it starts to lift
+  //     any key skips to the end. With motion reduced it is just a still
+  //     "Hello" for a moment. The head script decides whether it runs
+  //     (html.is-preloading). As it starts to lift
   //     the page hears "preloader:leaving" (the hero starts drawing then),
   //     and once it's gone, "preloader:done".
   if (document.documentElement.classList.contains("is-preloading")) {
@@ -34,7 +36,7 @@
     pl.innerHTML = '<div class="pc-guide pc-gv"></div><div class="pc-guide pc-gh"></div>'
       + '<div class="pc-box"><p class="pl-word is-on pc-word"></p><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><i class="pc-h"></i><span class="pc-size"></span></div>'
       + '<p class="pl-word is-on pc-word pc-measure" aria-hidden="true"></p>'
-      + '<div class="pc-cursor"><svg viewBox="0 0 16 20" aria-hidden="true"><path d="M1.2 1.2v15.6l4.3-4.1 2.9 6.3 2.6-1.2-2.8-6.2h6.1z"/></svg><span class="pc-tag">Pallav</span></div>'
+      + '<div class="pc-cursor"><svg class="pc-rs" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 3h6.5L7.3 5.2l7.5 7.5 2.2-2.2V17h-6.5l2.2-2.2-7.5-7.5L3 9.5z"/></svg><svg class="pc-ar" viewBox="0 0 16 20" aria-hidden="true"><path d="M1.2 1.2v15.6l4.3-4.1 2.9 6.3 2.6-1.2-2.8-6.2h6.1z"/></svg><span class="pc-tag">Pallav</span></div>'
       + '<div class="pl-curve"></div>';
     document.body.appendChild(pl);
     html.classList.add("pl-ready");
@@ -63,6 +65,17 @@
       }, 1200);
     };
     const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
+    // A frame-by-frame animation over ms, eased in and out; stops if skipped.
+    const tween = (ms, step) => new Promise((r) => {
+      const t0 = performance.now();
+      const tick = (now) => {
+        if (done) return r();
+        const k = Math.min(1, (now - t0) / ms);
+        step(k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2);
+        if (k < 1) requestAnimationFrame(tick); else r();
+      };
+      requestAnimationFrame(tick);
+    });
     const EASE = "cubic-bezier(0.65, 0, 0.35, 1)";
     const place = (el, x, y, ms) => { el.style.transition = (ms ? `transform ${ms}ms ${EASE}, ` : "") + "opacity 0.3s ease"; el.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`; };
     const frame = (x, y, w, h, ms) => {
@@ -77,7 +90,9 @@
     let big = 0;
     const fit = (w, size = big) => { measurer.style.fontSize = `${size}px`; measurer.textContent = w; const pad = measurer.offsetHeight * 0.22; return [measurer.offsetWidth + pad * 2, measurer.offsetHeight + pad * 0.6]; };
     const run = async () => {
-      const W = window.innerWidth, H = window.innerHeight, cx = W / 2, cy = H / 2;
+      // Measured on the panel itself (on phones the window can be taller or
+      // shorter than what shows, as the browser's bars come and go).
+      const W = pl.clientWidth, H = pl.clientHeight, cx = W / 2, cy = H / 2;
       // It starts out small, remarking on where it is; only once centred is
       // it sized up for the hello.
       big = parseFloat(getComputedStyle(measurer).fontSize);
@@ -126,12 +141,20 @@
       // Scale it up: the corner handle dragged out from the centre, the text
       // growing with the box, up to the hello size; then it says hello.
       place(cursor, tx + bw, ty + bh, 320); await wait(360); if (done) return;
-      cursor.classList.add("is-down");
-      [bw, bh] = fit(intro, introBig); tx = cx - bw / 2; ty = cy - bh / 2;
-      word.style.transition = `font-size 640ms ${EASE}`; word.style.fontSize = `${introBig}px`;
-      frame(tx, ty, bw, bh, 640); place(cursor, tx + bw, ty + bh, 640); track(640);
-      await wait(700); if (done) return;
-      cursor.classList.remove("is-down");
+      // (One animation drives it all: each frame the text is set a little
+      // bigger, measured, and the box and the handle fitted round it, so the
+      // text never strays outside the box. The pointer is the resize one.)
+      cursor.classList.add("is-down", "is-resize");
+      word.style.transition = "none";
+      await tween(720, (e) => {
+        word.style.fontSize = `${(small + (introBig - small) * e).toFixed(2)}px`;
+        const pad = word.offsetHeight * 0.22, w = word.offsetWidth + pad * 2, h = word.offsetHeight + pad * 0.6;
+        frame(cx - w / 2, cy - h / 2, w, h, 0); place(cursor, cx + w / 2, cy + h / 2, 0);
+        size.textContent = `${Math.round(w)} × ${Math.round(h)}`;
+      });
+      if (done) return;
+      await wait(120); if (done) return;
+      cursor.classList.remove("is-down", "is-resize");
       word.style.transition = ""; word.classList.remove("is-on");
       await wait(220); if (done) return;
       // The line is cleared and "Hello" is typed in at full size, with a
@@ -159,7 +182,18 @@
       }
       finish();
     };
-    requestAnimationFrame(() => { run(); });
+    // Reduced motion (or Calm): just the word, a moment, and on to the
+    // page (the panel fades instead of lifting; see the CSS).
+    if (reduce.matches) {
+      box.classList.add("is-on", "is-done");
+      word.textContent = words[0];
+      requestAnimationFrame(() => {
+        big = parseFloat(getComputedStyle(measurer).fontSize);
+        const [w, h] = fit(words[0]);
+        frame((pl.clientWidth - w) / 2, (pl.clientHeight - h) / 2, w, h, 0);
+        timer = setTimeout(finish, 1300);
+      });
+    } else requestAnimationFrame(() => { run(); });
     pl.addEventListener("pointerdown", finish);
     addEventListener("keydown", finish, { once: true });
   }
@@ -591,6 +625,7 @@
     let ticking = false;
 
     const measure = () => {
+      if (section) section.classList.remove("proj-flat");
       cards.forEach((c) => { c.style.minHeight = ""; });
       const tallest = Math.max(...cards.map((c) => c.offsetHeight));
       cards.forEach((c) => { c.style.minHeight = `${tallest}px`; });
@@ -615,6 +650,14 @@
           section.classList.remove("proj-pinned");
           section.style.removeProperty("--stack-top");
         }
+      }
+      // Stack only while it works: the last card has to sit whole on screen
+      // at its sticky spot, or the cards scroll by (.proj-flat). Apart from
+      // that, only Calm / reduced motion turns the stacking off.
+      if (section && !reduceMq.matches && getComputedStyle(cards[0]).position === "sticky") {
+        const last = cards[cards.length - 1];
+        const fitsStack = (parseFloat(getComputedStyle(last).top) || 0) + last.offsetHeight <= window.innerHeight - 8;
+        if (!fitsStack) section.classList.add("proj-flat");
       }
       active = !reduceMq.matches && getComputedStyle(cards[0]).position === "sticky";
 

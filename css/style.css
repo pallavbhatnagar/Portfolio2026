@@ -697,22 +697,30 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .proj-intro > :nth-child(2) { transition-delay: 80ms; }
 }
 
-/* No stacking when motion is reduced, or when the window is too short for
-   a whole card to sit below the header: the cards simply scroll by. */
-@media (prefers-reduced-motion: reduce), (max-height: 560px) {
+/* No stacking when motion is reduced (Calm): the cards simply scroll by.
+   Otherwise they stack at every size, unless a whole card can't fit on
+   screen at its sticky spot (a very short window), which script.js flags
+   with .proj-flat, since a card stuck half off screen would hide its own
+   bottom under the next one. */
+@media (prefers-reduced-motion: reduce) {
   .proj-stack .project { position: relative; top: auto; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
 }
+.projects.proj-flat .proj-stack .project { position: relative; top: auto; }
+/* Phones: the cards simply scroll by (a stack of screenshot strips reads
+   poorly that small). */
+@media (max-width: 640px) { .proj-stack .project { position: relative; top: auto; } }
 /* Wider screens, cards not stacking: the same space under the heading as
    when they stack. */
-@media (prefers-reduced-motion: reduce) and (min-width: 901px), (max-height: 560px) and (min-width: 901px) {
+@media (prefers-reduced-motion: reduce) and (min-width: 901px) {
   .proj-head, .projects.proj-pinned .proj-head { margin-bottom: 3rem; }
 }
-/* Phones: as in the original design, the cards simply scroll by, and the
-   heading scrolls with the page too (no pinning). script.js reads the
-   heading's position, so with it not sticky it stops pinning altogether. */
+@media (min-width: 901px) { .projects.proj-flat .proj-head { margin-bottom: 3rem; } }
+/* Small tablets (and phones): one column; the cards stack on tablets; the heading
+   scrolls with the page (no pinning). script.js reads the heading's
+   position, so with it not sticky it stops pinning altogether. */
 @media (max-width: 900px) {
-  .proj-stack .project { position: relative; top: auto; grid-template-columns: 1fr; min-height: 0; margin-bottom: 2rem; }
+  .proj-stack .project { grid-template-columns: 1fr; min-height: 0; margin-bottom: 2rem; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
   .projects + .value { margin-top: calc(var(--space-section) - 2.75rem); }
   .proj-stack .project-panel { order: -1; margin: -1.125rem -1.125rem 0; border-radius: 0.5rem 0.5rem 0 0; }
@@ -2675,6 +2683,9 @@ body.ask-open .cs-side { display: none; }
    allowed); until script.js builds the panel, ::before covers the page so
    nothing flashes, and it clears itself after 7s if the script never runs. */
 html.is-preloading { overflow: hidden; }
+/* ...and stays scroll-less until the panel has fully gone: a scrollbar coming
+   back mid-lift would show as a strip beside the panel. */
+html.pl-ready { overflow: hidden; }
 html.is-preloading::before { content: ""; position: fixed; inset: 0; z-index: 200; background: var(--pl-bg); animation: pl-safety 0.01s linear 10s forwards; }
 html.is-preloading.pl-ready::before { display: none; }
 @keyframes pl-safety { to { visibility: hidden; } }
@@ -2687,13 +2698,19 @@ html.is-preloading.pl-ready::before { display: none; }
 /* The curved edge: an ellipse hanging below the panel, flattening as it lifts. */
 .pl-curve { position: absolute; left: -10%; top: calc(100% - 1px); width: 120%; height: 22vh; border-radius: 0 0 50% 50% / 0 0 100% 100%; background: var(--pl-bg); transform-origin: top; transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
 .preloader.is-leaving .pl-curve { transform: scaleY(0); }
-/* Type: large, in Manrope Medium (like the first line of the hero headline).
+/* Reduced motion (and Calm): the panel simply fades to the page. */
+@media (prefers-reduced-motion: reduce) {
+  .preloader { transition: opacity 0.4s ease; }
+  .preloader.is-leaving { transform: none; opacity: 0; }
+  .preloader.is-leaving .pl-curve { transform: none; }
+}
+/* Type: large, in Manrope SemiBold.
    Other scripts fall back to each system's sans-serif. */
 .pl-word {
   margin: 0;
-  font-family: var(--font), "Nirmala UI", "Kohinoor Devanagari", "Noto Sans Devanagari", "Noto Sans Gurmukhi", "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
+  font-family: var(--font), "Nirmala UI", "Kohinoor Devanagari", "Noto Sans Devanagari", "Noto Sans Gurmukhi", "Gurmukhi Sangam MN", "Gurmukhi MN", "Mukta Mahee", "Yu Gothic UI", "Hiragino Sans", "Noto Sans JP", "Malgun Gothic", "Apple SD Gothic Neo", "Noto Sans KR", "Microsoft YaHei UI", "PingFang SC", "Noto Sans SC", "Segoe UI", "Geeza Pro", "Noto Sans Arabic", sans-serif;
   font-size: clamp(2.75rem, 6.5vw, 5rem);
-  font-weight: 500;
+  font-weight: 600;
   letter-spacing: -0.03em;
   line-height: 1.1;
   opacity: 0;
@@ -2727,6 +2744,12 @@ html.is-preloading.pl-ready::before { display: none; }
 .preloader.pc-go .pc-cursor.is-gone { opacity: 0; }
 .pc-cursor svg { display: block; width: 22px; height: 27px; fill: var(--pc-me); stroke: #fff; stroke-width: 1.2; stroke-linejoin: round; transform-origin: 2px 2px; transition: transform 0.12s ease-out; }
 .pc-cursor.is-down svg { transform: scale(0.86); }
+/* While resizing, the arrow becomes the diagonal resize pointer, centred on the handle. */
+.pc-cursor .pc-rs { display: none; width: 20px; height: 20px; margin: -10px 0 0 -10px; transform-origin: 50% 50%; }
+.pc-cursor.is-resize .pc-ar { display: none; }
+.pc-cursor.is-resize .pc-rs { display: block; }
+.pc-cursor.is-resize.is-down .pc-rs { transform: none; }
+.pc-cursor.is-resize .pc-tag { left: 12px; top: 12px; }
 .pc-tag { position: absolute; left: 16px; top: 22px; padding: 3px 8px; border-radius: 4px 999px 999px 999px; background: var(--pc-me); color: #fff; font: 600 12px/1.3 var(--font), sans-serif; white-space: nowrap; }
 .pc-guide { background: var(--pc-guide); opacity: 0; transition: opacity 0.15s ease; }
 .pc-gv { left: 50%; width: 1px; height: 100%; }
