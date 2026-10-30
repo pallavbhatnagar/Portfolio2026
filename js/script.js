@@ -67,7 +67,17 @@
       word.classList.add("is-on");
       timer = setTimeout(finish, 1300);
     } else requestAnimationFrame(show);
-    pl.addEventListener("pointerdown", finish);
+    // A click skips it. With motion reduced it's only a still "Hello" over
+    // the page, so the click also goes through to what was under it (the Ask
+    // box, a link) instead of being used up on the panel.
+    pl.addEventListener("pointerdown", (e) => {
+      finish();
+      if (!reduce.matches) return;
+      const under = document.elementsFromPoint(e.clientX, e.clientY).find((el) => !pl.contains(el));
+      const target = under && under.closest("a, button, input, textarea, select, [role='button']");
+      if (!target) return;
+      addEventListener("pointerup", () => { if (target.matches("input, textarea, select")) target.focus(); else target.click(); }, { once: true });
+    });
     addEventListener("keydown", finish, { once: true });
   }
 

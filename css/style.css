@@ -2720,7 +2720,7 @@ html.is-preloading.pl-ready::before { display: none; }
 :root { --pl-bg: #0d0d0d; --pl-ink: #ffffff; }
 :root[data-theme="dark"] { --pl-bg: #ffffff; --pl-ink: #0d0d0d; }
 .preloader { position: fixed; inset: 0; z-index: 201; display: grid; place-items: center; background: var(--pl-bg); color: var(--pl-ink); cursor: pointer; transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
-.preloader.is-leaving { transform: translateY(-100%); }
+.preloader.is-leaving { transform: translateY(-100%); pointer-events: none; } /* once it's going, clicks reach the page */
 /* The curved edge: an ellipse hanging below the panel, flattening as it lifts. */
 .pl-curve { position: absolute; left: -10%; top: calc(100% - 1px); width: 120%; height: 22vh; border-radius: 0 0 50% 50% / 0 0 100% 100%; background: var(--pl-bg); transform-origin: top; transition: transform 1.2s cubic-bezier(0.76, 0, 0.24, 1); }
 .preloader.is-leaving .pl-curve { transform: scaleY(0); }
