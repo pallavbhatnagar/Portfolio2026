@@ -23,7 +23,7 @@
 @media (max-width: 640px) { .bp-measure b { display: none; } }
 html.bp-on .bp-grid { opacity: 1; }
 
-html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-panel, .hc-ask, .btn, .value-tabs, .value-panel, .tq-card, .next-ch, ul, ol) { outline: 1px dashed var(--bp-line); outline-offset: 2px; }
+html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-panel, .hc-ask, .btn, .value-panel, .tq-card, .next-ch, ul, ol) { outline: 1px dashed var(--bp-line); outline-offset: 2px; }
 
 .bp-box { position: fixed; z-index: 995; pointer-events: none; border: 1.5px solid var(--bp-sel); border-radius: 2px; background: color-mix(in srgb, var(--bp-sel) 6%, transparent); opacity: 0; transition: opacity 0.12s ease; }
 .bp-box.is-on { opacity: 1; }
@@ -43,7 +43,7 @@ html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-p
    any touch screen, so a landscape iPad is left out too). */
 @media (max-width: 1024px), (hover: none), (pointer: coarse) {
   .bp-grid, .bp-box, .bp-toggle { display: none; }
-  html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-panel, .hc-ask, .btn, .value-tabs, .value-panel, .tq-card, .next-ch, ul, ol) { outline: none; }
+  html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-panel, .hc-ask, .btn, .value-panel, .tq-card, .next-ch, ul, ol) { outline: none; }
 }
 
 /* ---------- Light on the project cards ----------

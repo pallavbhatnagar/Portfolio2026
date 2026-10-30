@@ -471,13 +471,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 @media (hover: hover) and (pointer: fine) { .proj-title-link:hover { background-size: 100% max(3px, 0.085em); } }
 .proj-title-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 @media (forced-colors: active) { .proj-title-link { text-decoration: underline; background-image: none; } }
-.proj-all { flex: none; display: inline-flex; align-items: center; gap: 0.3125rem; min-height: 24px; font-size: 1rem; font-weight: 500; color: var(--ink-soft); text-decoration: underline; text-decoration-color: transparent; text-underline-offset: 0.25em; transition: color 0.2s ease, text-decoration-color 0.2s ease; }
-.proj-all svg { width: 0.875rem; height: 0.875rem; flex: none; transition: transform 0.25s var(--ease-out); }
-@media (hover: hover) and (pointer: fine) { .proj-all:hover { color: var(--ink); text-decoration-color: currentColor; } .proj-all:hover svg { transform: translate(2px, -2px); } }
-.proj-all:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 0.25rem; color: var(--ink); }
 @media (max-width: 640px) {
   .proj-head { flex-direction: column; align-items: flex-start; }
-  .proj-all { flex: none; }
 }
 .proj-intro p {
   max-width: 52ch;
@@ -1809,7 +1804,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    ========================================================= */
 .ag-turn { display: flex; flex-direction: column; gap: 0.3125rem; margin-top: var(--space-4); }
 .ag-turn:first-child { margin-top: 0; }
-.ag-turn.from-user { align-items: flex-end; }
 .ag-who { font-size: 0.75rem; font-weight: 500; letter-spacing: 0.02em; color: var(--mint-ink); }
 .ag-bubble { max-width: 88%; padding: 0.4375rem 0.625rem; border-radius: 0.5rem; background: var(--fill); color: var(--fill-ink); font-size: var(--fs-body); line-height: 1.5; }
 .ag-content { font-size: var(--fs-body); line-height: 1.6; color: var(--ink); }
@@ -3155,8 +3149,6 @@ main.ab:has(.ab-table) { overflow-x: visible; }
   }
 /* Stickers on About headings, each acting out its words. */
 .ab-h2 .hs-host { position: relative; display: inline-block; }
-.hs-quote { right: -1em; top: -0.42em; width: 0.82em; height: 0.82em; border-radius: 50%; background: #d4d0f2; color: #1b1b39; --hr: -10deg; }
-.hs-quote span { display: block; height: 0.5em; font-size: 1.5em; font-weight: 800; line-height: 1; translate: 0 -0.02em; }
 .hs-ask { right: -0.95em; top: -0.38em; width: 0.8em; height: 0.8em; border-radius: 0.22em; background: #c3cff9; color: #1b1b39; --hr: 10deg; }
 .hs-ask span { font-size: 0.6em; font-weight: 800; line-height: 1; }
 /* Home headline: an app window on "products". */
@@ -3220,7 +3212,7 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 
 /* Stickers on section headings, a size up (the Home headline's stay as
    they are). */
-.hs-quote, .hs-ask, .hs-steps, .hs-plus, .hs-heart { font-size: 1.22em; }
+.hs-ask, .hs-steps, .hs-plus, .hs-heart { font-size: 1.22em; }
 .hs-hand { position: absolute; right: -1.15em; top: -0.45em; display: inline-grid; vertical-align: baseline; margin: 0; width: 1.05em; height: 1.05em; }
 .hs-talk { font-size: 1.15em; }
 

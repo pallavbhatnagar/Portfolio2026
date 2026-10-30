@@ -102,11 +102,21 @@
     const AC = window.AudioContext || window.webkitAudioContext;
     let ctx = null;
     const loads = {};
+    const pageLoaded = new Promise((ok) => { if (document.readyState === "complete") ok(); else addEventListener("load", ok, { once: true }); });
     const getCtx = () => { if (!ctx && AC) ctx = new AC(); return ctx; };
+    // A browser keeps sound asleep until the visitor first presses something,
+    // and waking it takes a moment (longest in Safari). Wake it on any press,
+    // so by the time a click asks for a sound it starts at once. That matters
+    // most in Calm and reduced motion, where the chat opens instantly and a
+    // late sound would trail behind it.
+    const wake = () => { if (ctx && ctx.state !== "running") { const r = ctx.resume(); if (r && r.catch) r.catch(() => {}); } };
+    ["pointerdown", "touchstart", "touchend", "keydown"].forEach((t) => addEventListener(t, wake, { capture: true, passive: true }));
     const load = (name) => {
       if (!AC) return Promise.resolve(null);
       if (!loads[name]) {
-        loads[name] = fetch(base + name)
+        // After the page itself has loaded, so they never hold it up.
+        loads[name] = pageLoaded
+          .then(() => fetch(base + name))
           .then((r) => r.arrayBuffer())
           .then((data) => new Promise((ok, fail) => {
             // Callback form for older Safari; newer browsers also return a
@@ -132,7 +142,7 @@
       const c = getCtx();
       const clip = loads[name] && loads[name].ready;
       if (c && clip) {
-        if (c.state === "suspended") c.resume();
+        if (c.state !== "running") wake(); // "interrupted" too, in Safari
         const src = c.createBufferSource();
         src.buffer = clip.buf;
         const gain = c.createGain();
@@ -1575,6 +1585,13 @@
     // screen (the strip moves, so they start and stop as cards pass), and
     // load only then. Reduced motion (or Calm) leaves them on their still.
     const lfVideos = Array.from(lfTrack.querySelectorAll("video[data-life-video]"));
+    // Their stills (data-poster) load as the strip comes near, not with the
+    // page: the strip is far down, and they'd hold up everything above it.
+    const stills = () => lfVideos.forEach((vid) => { if (vid.dataset.poster) { vid.poster = vid.dataset.poster; delete vid.dataset.poster; } });
+    if (section && "IntersectionObserver" in window) {
+      const near = new IntersectionObserver((en) => { if (en[0].isIntersecting) { stills(); near.disconnect(); } }, { rootMargin: "1000px 0px" });
+      near.observe(section);
+    } else stills();
     if (lfVideos.length && "IntersectionObserver" in window) {
       const lfSeen = new Set();
       const lfSync = (vid) => {
@@ -1601,24 +1618,32 @@
     };
     const wrap = () => { if (setW) x = ((x % setW) + setW) % setW; };
     const draw = () => { lfTrack.style.transform = "translate3d(" + -x + "px, 0, 0)"; };
+    // The run only ticks while it can move: on screen, the tab in view, and
+    // not Calm (reduced motion), where it stays put unless dragged (drag and
+    // the arrow keys draw it themselves).
+    let raf = 0, inView = true;
+    const live = () => inView && !document.hidden && !reduce.matches;
     const frame = (now) => {
+      raf = 0;
+      if (!live()) return;
       const dt = Math.min(48, now - (last || now));
       last = now;
-      if (!drag && !(section && section.classList.contains("is-offscreen"))) {
-        const want = reduce.matches ? 0 : hover ? BASE * 0.35 : BASE;
-        // Calm (reduced motion): no movement at all. Otherwise ease back to
-        // the slow run.
-        if (reduce.matches) v = 0;
-        else v += (want - v) * Math.min(1, dt / 420);
+      if (!drag) {
+        const want = hover ? BASE * 0.35 : BASE;
+        v += (want - v) * Math.min(1, dt / 420); // eases back to the slow run
         x += v * dt;
         wrap();
         draw();
       }
-      requestAnimationFrame(frame);
+      raf = requestAnimationFrame(frame);
     };
+    const run = () => { if (!raf && live()) { last = 0; raf = requestAnimationFrame(frame); } };
     measure();
     if ("ResizeObserver" in window) new ResizeObserver(measure).observe(lfTrack);
-    requestAnimationFrame(frame);
+    if (section && "IntersectionObserver" in window) new IntersectionObserver((en) => { inView = en[0].isIntersecting; run(); }, { rootMargin: "100px 0px" }).observe(section);
+    document.addEventListener("visibilitychange", run);
+    if (reduce.addEventListener) reduce.addEventListener("change", () => { if (reduce.matches) v = 0; run(); });
+    run();
     lfRow.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") hover = true; });
     lfRow.addEventListener("pointerleave", () => { hover = false; });
 
@@ -1814,17 +1839,18 @@
       const frame = (now) => {
         const dt = Math.min(48, now - (last || now));
         last = now;
+        // Calm: no movement at all, so no loop either (a drag still moves it).
+        if (reduce.matches) { vel = 0; raf = 0; return; }
         if (!drag) {
-          const target = reduce.matches || held ? 0 : -DRIFT;
-          if (reduce.matches) vel = 0; // Calm: no movement at all
-          else vel += (target - vel) * Math.min(1, dt / 600);
+          const target = held ? 0 : -DRIFT;
+          vel += (target - vel) * Math.min(1, dt / 600);
           pos += vel * dt;
           wrap();
           track.style.transform = `translate3d(${pos}px, 0, 0)`;
         }
         raf = requestAnimationFrame(frame);
       };
-      const run = () => { if (!raf && narrow.matches && inView && !document.hidden) { last = 0; raf = requestAnimationFrame(frame); } };
+      const run = () => { if (!raf && narrow.matches && inView && !document.hidden && !reduce.matches) { last = 0; raf = requestAnimationFrame(frame); } };
       const halt = () => { cancelAnimationFrame(raf); raf = 0; };
       const reset = () => { halt(); closeOpen(); track.style.transform = ""; pos = 0; if (narrow.matches) { measure(); run(); } };
       track.addEventListener("pointerdown", (e) => {
@@ -1859,6 +1885,7 @@
       track.addEventListener("pointerup", end);
       track.addEventListener("pointercancel", end);
       document.addEventListener("visibilitychange", () => (document.hidden ? halt() : run()));
+      if (reduce.addEventListener) reduce.addEventListener("change", run);
       if ("IntersectionObserver" in window) new IntersectionObserver(([en]) => { inView = en.isIntersecting; inView ? run() : halt(); }).observe(pile);
       narrow.addEventListener("change", () => { reset(); if (!narrow.matches) hug(); else pile.querySelectorAll(".ab-snap").forEach((el) => { el.style.left = ""; el.style.top = ""; }); });
       window.addEventListener("resize", () => { if (narrow.matches) measure(); else hug(); });
