@@ -57,7 +57,7 @@
       word.textContent = words[i];
       void word.offsetWidth;
       word.classList.add("is-on");
-      const hold = i === 0 ? 1400 : i === words.length - 1 ? 900 : 360;
+      const hold = i === 0 ? 1100 : i === words.length - 1 ? 700 : 270;
       i += 1;
       timer = setTimeout(i < words.length ? show : finish, hold);
     };
@@ -1287,6 +1287,9 @@
     }
     window.addEventListener("resize", () => fitLines());
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitLines());
+    // And again when the display settings change how text is set (easier
+    // reading, text size, plain): the lines grow, so the box must too.
+    new MutationObserver(() => requestAnimationFrame(fitLines)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-read", "data-text", "data-plain", "data-focus", "style"] });
     const show = (key, animate) => {
       const r = READERS.find((x) => x[0] === key) || READERS[0];
       rdRoles.querySelectorAll(".rd-role").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.role === r[0])));
