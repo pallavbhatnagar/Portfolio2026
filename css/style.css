@@ -3346,12 +3346,16 @@ html[data-text="1"] { --text-scale: 1.125; }
 html[data-text="2"] { --text-scale: 1.25; }
 
 /* Easier reading: the WCAG 1.4.12 kinds of spacing, at a comfortable level. */
-html[data-read] :is(p, li, dd, dt, blockquote, figcaption, summary, label, td):not(.nav *) { line-height: 1.75 !important; letter-spacing: 0.03em !important; word-spacing: 0.1em !important; }
+html[data-read] :is(p, li, dd, dt, blockquote, figcaption, summary, label, td):not(.nav *):not(.rd-line, .pl-word) { line-height: 1.75 !important; letter-spacing: 0.03em !important; word-spacing: 0.1em !important; }
 html[data-read] p + p { margin-top: 0.9em; }
-/* Display lines set as paragraphs (the Works title, the hello word) stay
-   display type: a comfortable line height and a little word spacing, not
-   the wide body-text spacing above. */
-html[data-read] p:is(.rd-line, .pl-word):not(.nav *) { margin-top: 0; line-height: 1.32 !important; letter-spacing: -0.01em !important; word-spacing: 0.06em !important; } /* (margin: the reader lines are stacked paragraphs, not a run of them) */
+/* Titles get easier reading too, scaled for display type: more room
+   between the lines, letters a little apart (in place of the tight
+   tracking), a touch more space between words. Every heading on every
+   page, and the title lines set as paragraphs (the Works title, the hello
+   word). The reader lines are stacked, so they don't take the gap between
+   paragraphs. */
+html[data-read] :is(h1, h2, h3, h4, h5, h6, .rd-line, .pl-word):not(.nav *):not(.sr-only) { line-height: 1.3 !important; letter-spacing: 0.01em !important; word-spacing: 0.06em !important; }
+html[data-read] p.rd-line { margin-top: 0; }
 
 /* Calm: the site treats it exactly like a device asking for reduced motion
    (js/motion-css.js applies every reduced-motion rule, and scripts read Calm
