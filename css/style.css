@@ -3786,3 +3786,9 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
    it would slide over the timeline.) */
 .ab-story .ab-h2 { position: static; }
 .ab-story > * { min-width: 0; } /* the swipeable job cards on phones mustn't widen the story */
+
+/* Chat: two or three follow-up questions under the latest answer, picked to
+   fit it (script.js 22-23). Same chips as the suggestions above the thread. */
+.ag-next { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin-top: 0.75rem; }
+.ag-next .wk-chip { border-radius: 8px; text-align: left; }
+@media (hover: hover) and (pointer: fine) { .ag-next .wk-chip:hover { border-color: var(--line); color: var(--ink); background: color-mix(in srgb, var(--ink) 4%, var(--bg)); } }

@@ -2280,37 +2280,46 @@
 
   const topics = [
     { k: ["shipped", "projects", "portfolio", "what have you built", "case stud", "worked on"],
-      text: "Four recent ones — tap a card to open the full case study.", render: renderProjectsGrid },
+      text: "Four recent ones — tap a card to open the full case study.", render: renderProjectsGrid,
+      next: [`Tell me about ${PROJECTS[0] ? PROJECTS[0].name : "Wave 2.0"}`, "How do you work?", "Where have you worked?"] },
     // One answer per featured project, from js/projects.js. Extra words
     // people might use for a project go in EXTRA_KEYWORDS.
     ...PROJECTS.map((p) => ({
       k: [p.id, p.name.toLowerCase(), ...(EXTRA_KEYWORDS[p.id] || [])],
       text: `${p.name}: ${p.desc}`,
-      render: () => renderProjectCard(p.id)
+      render: () => renderProjectCard(p.id),
+      // The other projects, with how he works after the first two.
+      next: (() => { const o = PROJECTS.filter((x) => x.id !== p.id).map((x) => `Tell me about ${x.name}`); return [...o.slice(0, 2), "How do you work?", ...o.slice(2)]; })()
     })),
     { k: ["how do you work", "process", "approach", "sketch", "method"],
-      text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.' },
+      text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.', next: ["What have you shipped?", "Where have you worked?", "Are you available to hire?"] },
     { k: ["worked", "experience", "companies", "career", "history", "resume", "cv"],
-      text: "Five years across four teams, from a design internship to senior UX:", render: renderExperience },
+      text: "Five years across four teams, from a design internship to senior UX:", render: renderExperience, next: ["What have you shipped?", "How do you work?", "Are you available to hire?"] },
     { k: ["freelance", "hire", "available", "open to work", "full-time", "contract"],
-      text: "Open to full-time roles and selected freelance projects — he usually replies within two days.", render: renderContactCard },
+      text: "Open to full-time roles and selected freelance projects — he usually replies within two days.", render: renderContactCard, next: ["How can I reach you?", "Where have you worked?", "What have you shipped?"] },
     { k: ["contact", "email", "reach", "get in touch", "talk to"],
-      text: "Here's the best way in:", render: renderContactCard },
+      text: "Here's the best way in:", render: renderContactCard, next: ["Are you available to hire?", "What have you shipped?", "What do you do outside work?"] },
     { k: ["music", "soundcloud", "compose", "song", "track", "film score"],
-      text: "Away from the desk he composes for films as a hobby, and experiments with sound: synths, strings and found noises.", render: renderMusicCard },
+      text: "Away from the desk he composes for films as a hobby, and experiments with sound: synths, strings and found noises.", render: renderMusicCard, next: ["What are you reading?", "Any fun facts?", "What have you shipped?"] },
     { k: ["book", "reading", "comic"],
-      text: "Currently reading The Design of Everyday Things, and a regular comics reader.", render: renderBooksCard },
+      text: "Currently reading The Design of Everyday Things, and a regular comics reader.", render: renderBooksCard, next: ["Do you make music?", "Any fun facts?", "How do you work?"] },
     { k: ["outside work", "hobby", "hobbies", "free time", "off the clock"],
-      text: "Film scores, comics and books, mostly (and Harry Potter: type lumos anywhere on the site):", render: () => renderMusicCard() + renderBooksCard() },
+      text: "Film scores, comics and books, mostly (and Harry Potter: type lumos anywhere on the site):", render: () => renderMusicCard() + renderBooksCard(), next: ["Any fun facts?", "How do you work?", "What have you shipped?"] },
     // The Lumos easter egg (lumos.js). Sending just "lumos" here casts it.
     { k: ["harry potter", "hogwarts", "wizard", "lumos", "spell", "easter egg", "fun fact", "something fun", "secret"],
-      text: "He's a big Harry Potter fan. Type lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out." },
+      text: "He's a big Harry Potter fan. Type lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out.", next: ["What do you do outside work?", "Do you make music?", "What have you shipped?"] },
     // Greetings and "who are you" last, so a specific topic wins ("tell me
     // about your music" is about music, not about you).
     { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],
-      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with five years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him." },
+      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with five years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him.", next: ["What have you shipped?", "How do you work?", "How can I reach you?"] },
   ];
-  const fallback = { text: "I don't have a scripted answer for that one yet. Try a question about a project, how Pallav works, or reach him directly:", render: renderContactCard };
+  const fallback = { text: "I don't have a scripted answer for that one yet. Try a question about a project, how Pallav works, or reach him directly:", render: renderContactCard, next: ["What have you shipped?", "How do you work?", "Where have you worked?"] };
+  // On a case study the page answers questions about its own project
+  // (case.js); its follow-ups walk through the rest of that story.
+  // When an answer's own follow-ups run out (already asked), these top it
+  // back up to three, so every answer offers somewhere to go next.
+  const MORE_NEXT = ["What have you shipped?", "How do you work?", "Where have you worked?", "Are you available to hire?", "How can I reach you?", "What do you do outside work?", ...PROJECTS.map((p) => `Tell me about ${p.name}`), "Do you make music?", "What are you reading?", "Any fun facts?"];
+  const CASE_NEXT = ["What was the problem?", "What did the research find?", "What were the key decisions?", "What was the result?", "What tools did you use?"];
 
   const match = (text) => {
     const q = ` ${text.toLowerCase()} `;
@@ -2352,7 +2361,9 @@
         body.className = "ag-content";
         const text = typeof content === "string" ? content : content.text;
         const extra = typeof content === "object" && content.render ? content.render() : "";
-        body.innerHTML = `<p>${text}</p>${extra}`;
+        const next = typeof content === "object" && content.next && content.next.length
+          ? `<div class="ag-next" role="group" aria-label="Ask next">${content.next.map((q) => `<button class="wk-chip" type="button">${q}</button>`).join("")}</div>` : "";
+        body.innerHTML = `<p>${text}</p>${extra}${next}`;
         turn.appendChild(body);
         streamReply(body);
       } else {
@@ -2442,6 +2453,11 @@
     };
 
     let askBusy = false;
+    const given = new Set(); // the answers given so far, so none is offered twice
+    askThread.addEventListener("click", (e) => {
+      const chip = e.target.closest(".ag-next .wk-chip");
+      if (chip) askAsk(chip.textContent);
+    });
     const askAsk = (text) => {
       const clean = text.trim();
       if (!clean || askBusy) return;
@@ -2454,8 +2470,18 @@
       const delay = reduce.matches ? 100 : 500 + Math.random() * 400;
       setTimeout(() => {
         typing.remove();
-        const reply = (typeof window.pageAnswer === "function" && window.pageAnswer(clean)) || match(clean);
-        addAskMessage("agent", reply);
+        const fromPage = typeof window.pageAnswer === "function" && window.pageAnswer(clean);
+        const reply = fromPage || match(clean);
+        // Follow-ups that fit the answer: three that lead to answers not yet
+        // given in this chat (this one included), the answer's own first.
+        given.add(reply.text);
+        const answerTo = (q) => (typeof window.pageAnswer === "function" && window.pageAnswer(q)) || match(q);
+        const pool = fromPage ? CASE_NEXT : (reply.next || fallback.next);
+        const fits = (q, list) => !list.includes(q) && !given.has(answerTo(q).text);
+        const next = [];
+        [...pool, ...MORE_NEXT].forEach((q) => { if (next.length < 3 && fits(q, next)) next.push(q); });
+        askThread.querySelectorAll(".ag-next").forEach((el) => el.remove()); // only the latest answer offers them
+        addAskMessage("agent", { ...reply, next });
         glowOff(1100);
         askSend.disabled = false;
         askBusy = false;
