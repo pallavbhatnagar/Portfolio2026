@@ -1,6 +1,18 @@
 (() => {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+  // When a panel or menu closes, focus goes back to the button that opened
+  // it, so keyboard users carry on from there. After a mouse or touch, the
+  // browser would draw a focus ring on that button out of nowhere (it
+  // inherits the ring from the text box that had focus), so then focus is
+  // simply let go instead.
+  let keyed = false;
+  addEventListener("keydown", (e) => { if (!e.metaKey && !e.ctrlKey && !e.altKey) keyed = true; }, true);
+  addEventListener("pointerdown", () => { keyed = false; }, true);
+  const giveBack = (el) => {
+    if (keyed) el.focus({ preventScroll: true });
+    else if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
+  };
 
   // 0) The AI colours (Bloom: blue into hot pink) on every AI sparkle icon.
   //    Each icon gets its own copy of the gradient inside its own <svg>:
@@ -1406,7 +1418,7 @@
         rdTrig.setAttribute("aria-expanded", "false");
         rdRoles.classList.remove("is-open");
         rdRoles.hidden = true;
-        if (focus) rdTrig.focus();
+        if (focus) giveBack(rdTrig);
       };
       rdTrig.addEventListener("click", () => (rdRoles.hidden ? openMenu() : closeMenu(false)));
       rdRoles.addEventListener("click", (e) => { if (e.target.closest(".rd-role")) closeMenu(true); });
@@ -2606,7 +2618,7 @@
       const finish = () => { askPanel.hidden = true; };
       if (reduce.matches) finish();
       else askPanel.addEventListener("transitionend", finish, { once: true });
-      askTrigger.focus({ preventScroll: true });
+      giveBack(askTrigger);
     };
     askTriggers.forEach((t) => t.setAttribute("aria-expanded", "false"));
     askTriggers.forEach((t) => {
@@ -3048,7 +3060,7 @@
       panel.classList.remove("is-dragging", "is-settling");
       panel.style.transform = "";
       btn.setAttribute("aria-expanded", "false");
-      if (back) btn.focus({ preventScroll: true });
+      if (back) giveBack(btn);
     };
     btn.addEventListener("click", () => (panel.hidden ? open() : close(true)));
     panel.querySelector(".dsp-close").addEventListener("click", () => close(true));

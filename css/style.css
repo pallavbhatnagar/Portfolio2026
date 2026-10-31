@@ -155,7 +155,6 @@
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
 :root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.98); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
-:root[data-theme="dark"] .im-tag { background: var(--surface); }
 :root[data-theme="dark"] .im-avatars svg { border-color: var(--surface-2); background: var(--surface-2); }
 :root[data-theme="dark"] .off-card { background: var(--surface); }
 :root[data-theme="dark"] .off-books { background: #1b2321; }
@@ -170,7 +169,7 @@
 /* A calm cross-fade between themes on the surfaces that actually change,
    not a blanket transition on every element. */
 @media (prefers-reduced-motion: no-preference) {
-  body, .nav::before, .project, .to-top, .im-tag,
+  body, .nav::before, .project, .to-top,
   .off-card, .off-books, .wk-card, .ag-info, .theme-toggle {
     transition: background-color 0.35s var(--ease-out), color 0.35s var(--ease-out), border-color 0.35s var(--ease-out), box-shadow 0.35s var(--ease-out);
   }
@@ -1314,8 +1313,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    doodles draw when the cards scroll in. Transform, opacity and stroke only. */
 .ab-impact { display: grid; grid-template-columns: minmax(0, 0.82fr) minmax(0, 1.18fr); gap: var(--space-5); align-items: stretch; }
 .im-copy { display: flex; flex-direction: column; align-items: flex-start; }
-.im-tag { display: inline-flex; align-items: center; gap: 0.3125rem; margin: 0 0 0.875rem; padding: 0.1875rem 0.5rem; border-radius: 0.3125rem; background: var(--surface); font-size: 0.875rem; font-weight: 500; color: var(--ink); }
-.im-tag svg { color: var(--mint-ink); }
 .im-lede { margin: 0.3125rem 0 0; font-size: var(--fs-lead); line-height: 1.5; color: var(--ink-soft); }
 .im-lede strong { font-weight: 500; color: var(--ink); }
 /* What teams bring me in for: a row of its own under the cards, on the
