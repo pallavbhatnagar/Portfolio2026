@@ -20,15 +20,8 @@
     }
     const text = line.querySelector(".ab-now-text");
     const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true });
-    const hourOf = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", hour12: false });
-    const doing = (h) => h < 7 ? "asleep" : h < 9 ? "on my first coffee" : h < 13 ? "deep in research" : h < 14 ? "at lunch" : h < 18 ? "designing with the team" : h < 20 ? "walking the dog" : h < 23 ? "making music" : "reading a comic";
-    const tick = () => {
-      const now = new Date();
-      const h = Number(hourOf.format(now)) % 24;
-      const time = fmt.format(now).replace("AM", "am").replace("PM", "pm");
-      text.innerHTML = `<b>${time}</b> in New Delhi, ${doing(h)}`;
-      line.classList.toggle("is-off", h < 9 || h >= 18);
-    };
+    // The time there, and open to work (so the dot always stays lit).
+    const tick = () => { text.innerHTML = `<b>${fmt.format(new Date())}</b> in New Delhi, available for work`; };
     tick();
     setInterval(tick, 30000);
   }

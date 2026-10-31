@@ -39,7 +39,7 @@
     hc.style.setProperty("--mess-delay", "150ms");
     document.addEventListener("preloader:leaving", enter, { once: true });
   } else enter();
-  if (visit) afterIntro(() => setTimeout(cursorVisit, 1400));
+  if (visit) afterIntro(() => setTimeout(cursorVisit, 700));
   else afterIntro(straighten);
 
   // ---------- The visiting cursor ----------
@@ -136,18 +136,18 @@
       // In from the right, to the scattered word, and a click on it.
       await glide(hc.clientWidth + 30, w0.y - 70, 0);
       layer.classList.add("is-on");
-      await glide(w0.x + w0.w * 0.5, w0.y + w0.h * 0.88, 1000); if (gone) return;
+      await glide(w0.x + w0.w * 0.5, w0.y + w0.h * 0.88, 750); if (gone) return;
       await press(); if (gone) return;
       fitSel(); sel.classList.add("is-on");
-      await wait(450); if (gone) return;
+      await wait(300); if (gone) return;
       // The toolbar above the selection, then Tidy up.
       const r = fitSel();
       const barX = Math.max(bar.offsetWidth / 2 + 8, Math.min(hc.clientWidth - bar.offsetWidth / 2 - 8, r.x + r.w / 2));
       bar.style.transform = `translate(${barX.toFixed(1)}px, ${(r.y - 12).toFixed(1)}px) translate(-50%, -100%)`;
       bar.classList.add("is-on");
-      await wait(380); if (gone) return;
+      await wait(260); if (gone) return;
       const bb = box(bar);
-      await glide(bb.x + bb.w * 0.62, bb.y + bb.h * 0.55, 520); if (gone) return;
+      await glide(bb.x + bb.w * 0.62, bb.y + bb.h * 0.55, 420); if (gone) return;
       await press(); if (gone) return;
       hc.style.setProperty("--mess-delay", "0ms");
       straighten();
@@ -156,14 +156,14 @@
       const t0 = performance.now();
       const follow = () => { if (gone) return; fitSel(); if (performance.now() - t0 < 1900) requestAnimationFrame(follow); };
       follow();
-      await glide(r.x + r.w + 34, r.y + r.h * 0.2, 600); // out of the way, to watch the letters line up
-      await wait(1500); if (gone) return;
+      await glide(r.x + r.w + 34, r.y + r.h * 0.2, 480); // out of the way, to watch the letters line up
+      await wait(1100); if (gone) return;
       sel.classList.remove("is-on");
       // A comment on the Ask box.
       const ask = hc.querySelector(".hc-ask");
       if (ask) {
-        const a = box(ask), px = Math.max(8, Math.min(a.x + a.w - 6, hc.clientWidth - pin.offsetWidth - 8)), py = a.y - 4; // kept on screen
-        await glide(px + 8, py + 6, 950); if (gone) return;
+        const a = box(ask), px = Math.max(8, Math.min(a.x + (a.w - pin.offsetWidth) / 2, hc.clientWidth - pin.offsetWidth - 8)), py = a.y - 4; // centred over the box, kept on screen
+        await glide(px + 8, py + 6, 750); if (gone) return;
         await press(); if (gone) return;
         pin.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px)`;
         // The comment is left, and the cursor fades away on the spot.

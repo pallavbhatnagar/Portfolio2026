@@ -57,7 +57,7 @@
       word.textContent = words[i];
       void word.offsetWidth;
       word.classList.add("is-on");
-      const hold = i === 0 ? 1100 : i === words.length - 1 ? 700 : 270;
+      const hold = i === 0 ? 800 : i === words.length - 1 ? 550 : 210;
       i += 1;
       timer = setTimeout(i < words.length ? show : finish, hold);
     };
@@ -65,7 +65,7 @@
     if (reduce.matches) {
       word.textContent = words[0];
       word.classList.add("is-on");
-      timer = setTimeout(finish, 1300);
+      timer = setTimeout(finish, 1000);
     } else requestAnimationFrame(show);
     // A click skips it. With motion reduced it's only a still "Hello" over
     // the page, so the click also goes through to what was under it (the Ask
@@ -2982,7 +2982,11 @@
 
     // Open under the button (a sheet from the bottom on phones); close with
     // Escape, the close button, or a click outside. Focus goes in and back.
+    let spot = null; // where the panel was moved to (iPad and desktop), kept while on the page
+    const keepIn = ([x, y]) => [Math.round(Math.min(Math.max(8, x), innerWidth - panel.offsetWidth - 8)), Math.round(Math.min(Math.max(8, y), innerHeight - panel.offsetHeight - 8))];
+    const putAt = ([x, y]) => { panel.style.left = x + "px"; panel.style.top = y + "px"; panel.style.right = "auto"; };
     const place = () => {
+      if (spot && !window.matchMedia("(max-width: 640px)").matches) { spot = keepIn(spot); putAt(spot); return; }
       const r = btn.getBoundingClientRect();
       panel.style.top = Math.round(r.bottom + 12) + "px";
       panel.style.right = Math.max(8, Math.round(window.innerWidth - r.right - 10)) + "px";
@@ -3059,6 +3063,25 @@
     };
     panel.addEventListener("pointerup", endDrag);
     panel.addEventListener("pointercancel", endDrag);
+    // iPad and desktop: hold the grab line and the panel moves with the
+    // pointer, kept on screen. It stays there until the page is left.
+    let moving = null;
+    panel.addEventListener("pointerdown", (e) => {
+      if (sheet() || e.button !== 0 || !e.target.closest(".dsp-grab")) return;
+      e.preventDefault();
+      const r = panel.getBoundingClientRect();
+      moving = { id: e.pointerId, dx: e.clientX - r.left, dy: e.clientY - r.top };
+      html.classList.add("dsp-moving");
+      try { panel.setPointerCapture(e.pointerId); } catch (err) { /* not capturable */ }
+    });
+    panel.addEventListener("pointermove", (e) => {
+      if (!moving || e.pointerId !== moving.id) return;
+      spot = keepIn([e.clientX - moving.dx, e.clientY - moving.dy]);
+      putAt(spot);
+    });
+    const endMove = (e) => { if (!moving || e.pointerId !== moving.id) return; moving = null; html.classList.remove("dsp-moving"); };
+    panel.addEventListener("pointerup", endMove);
+    panel.addEventListener("pointercancel", endMove);
     window.addEventListener("resize", () => { if (!panel.hidden) place(); });
     let touchY = 0;
     panel.addEventListener("touchstart", (e) => { touchY = e.touches[0].clientY; }, { passive: true });

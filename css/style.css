@@ -467,8 +467,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    Bloom-coloured underline as the reader pick on the Works page, scaled to
    the heading, a touch thicker under the pointer. */
 #projects-title { line-height: 1.22; } /* room between the lines, so the link's underline reads clearly */
-.proj-title-link { color: inherit; text-decoration: none; padding-bottom: 0.04em; background-image: linear-gradient(90deg, #3965fa, #9b7fe8, #f2369a); background-size: 100% max(2px, 0.055em); background-position: 0 100%; background-repeat: no-repeat; transition: background-size 0.2s var(--ease-out); }
-@media (hover: hover) and (pointer: fine) { .proj-title-link:hover { background-size: 100% max(3px, 0.085em); } }
+/* A hand-drawn marker stroke under a word, in the Bloom colours (the AI's),
+   a shade deeper on light pages. Used under "Every product" on Home and the
+   reader pick on Works; a touch heavier under the pointer. */
+:root { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); }
+:root[data-theme="dark"] { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); }
+.proj-title-link { color: inherit; text-decoration: none; padding-bottom: 0.1em; background-image: var(--scribble); background-size: 100% 0.32em; background-position: 0 100%; background-repeat: no-repeat; }
+@media (hover: hover) and (pointer: fine) { .proj-title-link:hover { background-image: var(--scribble-bold); } }
 .proj-title-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 @media (forced-colors: active) { .proj-title-link { text-decoration: underline; background-image: none; } }
 @media (max-width: 640px) {
@@ -2832,7 +2837,7 @@ html:not(.js) .rd-ind { display: none; }
   background-size: 22px 22px;
   -webkit-mask-image: radial-gradient(55% 60% at 50% 45%, #000 0%, transparent 75%);
   mask-image: radial-gradient(55% 60% at 50% 45%, #000 0%, transparent 75%);
-  opacity: 0.55;
+  opacity: 0.8;
 }
 
 /* The picker sentence. */
@@ -2843,22 +2848,21 @@ html:not(.js) .rd-pick { display: none; }
   display: inline-flex;
   align-items: center;
   gap: 0.3em;
-  padding: 0 0 0.125rem;
+  padding: 0 0 0.2rem;
   border: 0;
   background: none;
   font: inherit;
   font-weight: 650;
   color: var(--ink);
   cursor: pointer;
-  /* A Bloom-coloured underline, the AI's colours. */
-  background-image: linear-gradient(90deg, #3965fa, #9b7fe8, #f2369a);
-  background-size: 100% 2px;
+  background-image: var(--scribble); /* the hand-drawn stroke (see .proj-title-link) */
+  background-size: 100% 0.36em;
   background-position: 0 100%;
   background-repeat: no-repeat;
 }
 .rd-trig svg { width: 0.85em; height: 0.85em; transition: transform 0.25s var(--ease-out); }
 .rd-trig[aria-expanded="true"] svg { transform: rotate(180deg); }
-@media (hover: hover) and (pointer: fine) { .rd-trig:hover { background-size: 100% 3px; } }
+@media (hover: hover) and (pointer: fine) { .rd-trig:hover { background-image: var(--scribble-bold); } }
 .rd-trig:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 
 /* The list of readers: a glass card under the word. */
@@ -3513,7 +3517,13 @@ html .dsp .dsp-hint { line-height: 1.25 !important; letter-spacing: 0 !important
 :root[data-theme="dark"] .dsp-vol-range { --vol: var(--ink); }
 .dsp-vol-range:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.25rem; }
 
-.dsp-grab { display: none; }
+/* iPad and desktop: the same grab line as on phones, but it moves the
+   panel anywhere on screen (script.js); a click outside still closes it. */
+.dsp-grab { position: relative; display: block; width: 2.25rem; height: 0.3125rem; margin: -0.25rem auto 0.75rem; border-radius: 999px; background: color-mix(in srgb, var(--ink) 22%, transparent); touch-action: none; cursor: move; transition: background-color 0.15s ease; }
+.dsp-grab::before { content: ""; position: absolute; inset: -0.75rem -2.5rem -0.5rem; } /* a bigger target to hold */
+@media (hover: hover) and (pointer: fine) { .dsp-grab:hover { background: color-mix(in srgb, var(--ink) 40%, transparent); } }
+html.dsp-moving, html.dsp-moving * { cursor: move !important; user-select: none; -webkit-user-select: none; }
+@media (forced-colors: active) { .dsp-grab { background: CanvasText; } }
 /* Phones: an action sheet. It lines up with the nav bar's edges, sits
    flush on the bottom of the screen (rounded only on top, clear of the
    home indicator), and rises out of the bottom edge. */
