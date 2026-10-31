@@ -16,8 +16,10 @@
    - Nox: the light gutters (two dips), closes into the tip and leaves a
      curl of smoke.
    Calm (reduced motion): no sparks, dust, flicker or bloom; the light just
-   follows the pointer. Touch: it follows the finger. */
+   follows the pointer. Touch screens (phones, tablets, iPads) have no
+   keyboard to cast it with, so there it is switched off altogether. */
 (() => {
+  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) { try { sessionStorage.removeItem("lumos"); } catch (e) {} return; }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const KEY = "lumos";
   const store = { get: () => { try { return sessionStorage.getItem(KEY); } catch (e) { return null; } }, set: (v) => { try { v ? sessionStorage.setItem(KEY, "1") : sessionStorage.removeItem(KEY); } catch (e) {} } };
@@ -44,6 +46,14 @@ html.is-lumos, html.is-lumos * { cursor: none !important; }
 html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !important; }
 @media (hover: none), (pointer: coarse) { html.is-lumos, html.is-lumos * { cursor: auto !important; } }
 @media (prefers-reduced-motion: reduce) { .lumos-night { transition: opacity 0.2s ease; } .lumos-say { transition: opacity 0.2s ease; translate: -50% 0; } }
+/* Page morphs (View Transitions, e.g. the works list/grid switch) lift what
+   moves into a layer above the page. Named here too, the night and the
+   light stay on top of it and keep running instead of blinking off. */
+html.is-lumos .lumos-night { view-transition-name: lumos-night; }
+html.is-lumos .lumos-fx { view-transition-name: lumos-fx; }
+html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } /* names must be unique */
+::view-transition-group(lumos-night), ::view-transition-group(lumos-fx), ::view-transition-group(lumos-say), ::view-transition-new(lumos-night), ::view-transition-new(lumos-fx), ::view-transition-new(lumos-say) { animation: none; }
+::view-transition-old(lumos-night), ::view-transition-old(lumos-fx), ::view-transition-old(lumos-say) { display: none; }
 @media (forced-colors: active) { .lumos-night, .lumos-fx { display: none; } }
 @media print { .lumos-night, .lumos-fx, .lumos-say { display: none; } }`;
   document.head.appendChild(css);
@@ -217,7 +227,20 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
   // shown how, so most visits never download it.
   const SOUND = "lumos.mp3";
   const ready = () => { if (window.siteSfx) window.siteSfx.load(SOUND); };
-  const chime = () => { if (window.siteSfx) window.siteSfx.play(SOUND); };
+  // Played the moment it is cast. If it isn't decoded yet (a very quick
+  // typist on a slow line), it plays the moment it is, but only if that is
+  // still close enough to the cast to feel like one event.
+  const chime = () => {
+    const s = window.siteSfx;
+    if (!s) return;
+    if (s.ready(SOUND)) { s.play(SOUND); return; }
+    const t = performance.now();
+    s.load(SOUND).then((v) => { if (v && on && performance.now() - t < 600) s.play(SOUND); });
+  };
+  // Fetched and decoded once the page has settled, so it is ready long
+  // before anyone finishes typing the word.
+  addEventListener("load", () => (window.requestIdleCallback || setTimeout)(ready, { timeout: 3000 }), { once: true });
+  if (document.readyState === "complete") (window.requestIdleCallback || setTimeout)(ready, { timeout: 3000 });
   const light = (cast) => {
     if (on) return;
     on = true; store.set(true);

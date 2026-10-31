@@ -181,7 +181,11 @@
   const qBox = hc.querySelector(".hc-q");
   // What hiring people actually ask (different from the chat's own
   // suggestions).
-  const QS = ["What impact did your work have?", "Have you led design on a team?", "How do you work with engineers?", "When could you start?", "Psst: Try typing lumos"]; // the last one, a hint at the Lumos easter egg (lumos.js)
+  let QS = ["What impact did your work have?", "Have you led design on a team?", "How do you work with engineers?", "When could you start?"];
+  // The Lumos easter egg (lumos.js) gets every other turn, so anyone who
+  // watches the box for a few seconds sees it. Not where there is no
+  // keyboard to type it with.
+  if (!window.matchMedia("(hover: none), (pointer: coarse)").matches) QS = QS.flatMap((q) => [q, "Psst: Try typing lumos"]);
   if (!ask || !qBox || reduce.matches) return;
   let qi = 0;
   let cur = qBox.firstElementChild;

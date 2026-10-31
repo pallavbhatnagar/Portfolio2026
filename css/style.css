@@ -414,7 +414,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* About: looping animations pause while their section is off screen (script.js). */
 .is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
 @keyframes fade-in { to { opacity: 1; } }
-@keyframes trail-draw { to { stroke-dashoffset: 0; } }
 
 @media (max-width: 900px) {
   .hero { --hero-top: calc(var(--pad) + 7.125rem); }
@@ -2580,83 +2579,97 @@ body.ask-open .cs-side { display: none; }
   .footer-links img { filter: invert(1) !important; }
 }
 
+/* The Lumos hint (about.html), hidden where there is no keyboard to type it. */
+@media (hover: none), (pointer: coarse) { .lumos-hint { display: none; } }
+
 /* =========================================================
-   404 page (404.html). The home page's line in reverse: a straight path
-   loses its way and knots up where the page should be, while a dashed line
-   shows the route it should have taken. One drawing moment on load; the
-   text and buttons follow the hero's type and spacing.
+   404 page (404.html). A hand-drawn hut with smoke curling from its
+   chimney, and footsteps (js/steps404.js) wandering the page around the
+   words. No nav or footer: everything sits centred in the window.
    ========================================================= */
-/* No nav or footer: everything sits centred in the window. */
 .nf {
-  --nf-fs: clamp(1.625rem, 3.4vw, 2.5rem);
+  position: relative;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
-  max-width: 39.625rem;
+  max-width: 56rem;
   min-height: 100vh;
   min-height: 100dvh;
   margin: 0 auto;
   padding: 3rem var(--pad);
   text-align: center;
 }
-.nf-head { width: max-content; max-width: 100%; }
-.nf-trail { display: flex; justify-content: flex-end; width: 100%; overflow: hidden; margin-bottom: 0.8rem; }
-.nf-stage { position: relative; flex: none; width: 100%; }
-.nf-svg { display: block; width: 100%; height: auto; overflow: visible; }
-.nf-ghost { fill: none; stroke: var(--line); stroke-width: 1.4; stroke-dasharray: 2 8; stroke-linecap: round; vector-effect: non-scaling-stroke; }
-.nf-line { fill: none; stroke: var(--ink); stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.nf-node { fill: var(--bg); stroke: var(--ink); stroke-width: 1.6; vector-effect: non-scaling-stroke; }
-.nf-dot { fill: var(--ink); }
-.nf-chip {
-  position: absolute;
-  left: calc(82.9% + 0.75rem);
-  top: 58.2%;
-  transform: translateY(-50%);
-  padding: 0.1875rem 0.625rem;
-  border-radius: 999px;
-  background: var(--rose-bg);
-  color: var(--rose-ink);
-  font-size: 0.84375rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-}
-.nf-title { font-size: var(--nf-fs); font-weight: 500; letter-spacing: -0.024em; line-height: 0.98; }
-.nf-lede { max-width: 46em; margin: 0.5rem auto 0; font-size: 0.95625rem; line-height: 1.5; color: var(--ink-soft); }
+/* One size that scales smoothly with the window; lines stay apart when it wraps. */
+.nf-title { font-size: clamp(1.75rem, 1.2rem + 2.2vw, 2.5rem); font-weight: 500; letter-spacing: -0.024em; line-height: 1.1; text-wrap: balance; }
+.nf-lede { text-wrap: balance; margin: 0.5rem auto 0; font-size: 0.95625rem; line-height: 1.5; color: var(--ink-soft); }
 .nf-actions { justify-content: center; margin-top: 1.5625rem; }
 /* The buttons at 90% of the site size, to match the rest of this page. */
 .nf-actions .btn { min-height: 2.6rem; padding: 0.3125rem 1rem; font-size: 0.9rem; }
-
-@media (prefers-reduced-motion: no-preference) {
-  /* The line draws with the site's trail curve while the dot rides it; the
-     404 lands as the dot stops in the knot. */
-  .js .nf-line { stroke-dasharray: 1; stroke-dashoffset: 1; animation: trail-draw 2.6s cubic-bezier(0.55, 0, 0.2, 1) forwards; }
-  .js .nf-chip { opacity: 0; animation: nf-chip-in 0.6s var(--ease-out) 2.45s forwards; }
-  .js .nf-title, .js .nf-lede, .js .nf-actions { opacity: 0; animation: nf-rise 0.8s var(--ease-out) forwards; }
-  .js .nf-lede { animation-delay: 0.08s; }
-  .js .nf-actions { animation-delay: 0.16s; }
-}
-@keyframes nf-chip-in { from { opacity: 0; transform: translateY(-50%) scale(0.9); } to { opacity: 1; transform: translateY(-50%); } }
-@keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
-@media (max-width: 640px) {
-  .nf-title { font-size: clamp(1.25rem, 7.1vw, 2.25rem); }
-  /* Phones: the drawing never goes narrower than 40rem, so the knot and the
-     404 stay large; the straight start is cropped and fades in from the left. */
-  .nf-head { width: 100%; }
-  .nf-stage { width: max(100%, 40rem); margin-right: -2.75rem; }
-  .nf-trail { -webkit-mask-image: linear-gradient(to right, transparent, #000 22%); mask-image: linear-gradient(to right, transparent, #000 22%); }
-}
 /* Very narrow phones: the two buttons stack, each on one line. */
 @media (max-width: 359px) {
   .nf-actions { flex-direction: column; }
   .nf-actions .btn { flex: none; width: 100%; }
 }
+
+/* The footsteps walk on a layer behind the words, in the site's ink. */
+.nf-steps { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
+.nf-steps use { fill: var(--ink); }
+
+/* The hut: brown line work over pastel washes set a touch off-register,
+   like hand-tinted print. Smoke curls up from the chimney. In the dark
+   theme the washes fade back and the windows and open door glow with
+   firelight that wavers very slightly. Reduced motion and Calm: the smoke
+   hangs still and the light holds steady. */
+.nf-hut { display: block; width: min(22rem, 66vw); height: auto; margin: 0 auto 2rem; overflow: visible; color: #4a3222; }
+[data-theme="dark"] .nf-hut { color: #d3bfa3; }
+.hut-lines path, .hut-puff { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.hut-puff { stroke-width: 1.3; transform-box: fill-box; transform-origin: center; }
+.hut-puff:nth-child(1) { opacity: 0.8; transform: translate(0, -6px) scale(0.8); }
+.hut-puff:nth-child(2) { opacity: 0.6; transform: translate(10px, -34px) scale(1.3); }
+.hut-puff:nth-child(3) { opacity: 0.42; transform: translate(24px, -64px) scale(1.8); }
+.hut-puff:nth-child(4) { opacity: 0.25; transform: translate(40px, -92px) scale(2.2); }
+.hut-puff:nth-child(5) { opacity: 0; }
+.hut-wash { opacity: 0.9; }
+[data-theme="dark"] .hut-wash { opacity: 0.2; }
+[data-theme="dark"] .w-ground, [data-theme="dark"] .w-bush { display: none; }
+.w-ground { fill: url(#hutGround); }
+.w-bush { fill: #bcdcb4; }
+.w-stone { fill: #ecc9c4; }
+.w-wall { fill: #dcd6ee; }
+.w-roof { fill: #f5e1a8; }
+.w-door { fill: #f2bfc0; }
+.w-pumpkin { fill: #f7c495; }
+.hut-light { display: none; }
+[data-theme="dark"] .hut-light { display: inline; }
+.hut-pane rect { fill: #ffc46b; opacity: 0.82; }
+.hut-pane .hut-door { opacity: 0.6; }
+.hut-halo rect { fill: #ff9a3c; opacity: 0.55; }
+
+@media (prefers-reduced-motion: no-preference) {
+  .js .nf-hut, .js .nf-title, .js .nf-lede, .js .nf-actions { opacity: 0; animation: nf-rise 0.8s var(--ease-out) forwards; }
+  .js .nf-lede { animation-delay: 0.08s; }
+  .js .nf-actions { animation-delay: 0.16s; }
+  html:not([data-motion="calm"]) .hut-puff { opacity: 0; animation: hut-puff 6.5s cubic-bezier(0.3, 0.6, 0.4, 1) calc(var(--i) * -1.3s) infinite; }
+  /* Two slow, uneven waves that never line up, so the light never pulses. */
+  html:not([data-motion="calm"]) .hut-halo { animation: hut-waver 4.7s ease-in-out infinite; }
+  html:not([data-motion="calm"]) .hut-pane { animation: hut-waver-soft 3.1s ease-in-out infinite; }
+}
+@keyframes nf-rise { from { opacity: 0; transform: translateY(0.625rem); } to { opacity: 1; transform: none; } }
+@keyframes hut-puff {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.5); }
+  12% { opacity: 0.85; }
+  50% { transform: translate(14px, -50px) scale(1.5) rotate(10deg); }
+  100% { opacity: 0; transform: translate(46px, -104px) scale(2.4) rotate(22deg); }
+}
+@keyframes hut-waver { 0%, 100% { opacity: 1; } 27% { opacity: 0.88; } 46% { opacity: 0.97; } 71% { opacity: 0.85; } 86% { opacity: 0.94; } }
+@keyframes hut-waver-soft { 0%, 100% { opacity: 1; } 35% { opacity: 0.92; } 62% { opacity: 0.98; } 81% { opacity: 0.9; } }
 @media (forced-colors: active) {
-  .nf-chip { border: 1px solid CanvasText; }
-  .nf-line, .nf-ghost { stroke: CanvasText; }
-  .nf-node { fill: Canvas; stroke: CanvasText; }
-  .nf-dot { fill: CanvasText; }
+  .nf-hut { color: CanvasText; }
+  .hut-light, .hut-wash { display: none; }
+  .nf-steps use { fill: CanvasText; }
 }
 
 /* AI glow around the chat box (like Apple Intelligence): while the chat
