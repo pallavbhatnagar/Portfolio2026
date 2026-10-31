@@ -1724,7 +1724,13 @@
   //     motion; reduced motion shows them already in place.
   const table = document.querySelector(".ab-table");
   if (table) {
-    const drop = () => requestAnimationFrame(() => requestAnimationFrame(() => table.classList.add("is-in")));
+    // At a glance, just under the numbers, comes in on the same beat when
+    // any of it is on screen, rather than waiting to be scrolled further in.
+    const glance = document.querySelector(".ab-glance");
+    const drop = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+      table.classList.add("is-in");
+      if (glance && glance.getBoundingClientRect().top < window.innerHeight) glance.querySelectorAll(".ab-r, .ab-facts").forEach((el) => el.classList.add("is-in"));
+    }));
     if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", drop, { once: true });
     else drop();
 

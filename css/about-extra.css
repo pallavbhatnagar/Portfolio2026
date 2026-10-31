@@ -37,7 +37,7 @@
 
 /* ---------- The first screen arrives as one ----------
    The title, the intro and the time rise in one after another as the
-   snapshots start to drop (.ab-table.is-in), and the numbers and the story
+   snapshots start to drop (.ab-table.is-in), and the numbers and At a glance
    just under them follow on the same beat, instead of the words showing at
    once and the rest fading in a second later. */
 @media (prefers-reduced-motion: no-preference) {
@@ -47,6 +47,6 @@
   .ab-table .ab-lede { transition-delay: 160ms; }
   .ab-table .ab-now-time { transition-delay: 240ms; }
   .ab-table ~ .ab-stats.ab-r { transition-delay: 320ms; }
-  .ab-table ~ .ab-story > .ab-h2.ab-r { transition-delay: 400ms; }
-  .ab-table ~ .ab-story > .ab-story-body.ab-r { transition-delay: 480ms; }
+  .ab-table ~ .ab-glance > .ab-h2.ab-r { transition-delay: 400ms; }
+  .ab-table ~ .ab-glance > .ab-facts.ab-r { transition-delay: 480ms; }
 }
