@@ -3121,8 +3121,8 @@
   // 26) Scroll line and hero depth (Home, Works, About and the case studies).
   //     A thin line along the top of the window fills as you read down the
   //     page. Leaving the top of Home, the hero stickers float up at their
-  //     own speeds and turn; on About (1024px and up) the snapshots rise a
-  //     touch faster than the page. The hero words stay put. Reduced motion
+  //     own speeds and turn; on About (1024px and up) the snapshots do the
+  //     same, each at its own speed, so they lead and the words follow. The hero words stay put. Reduced motion
   //     (or Calm): no line, and the hero holds still.
   if (document.querySelector(".hero.hc, .wk-hero, .ab-table, main.cs")) {
     const line = document.createElement("div");
@@ -3212,7 +3212,7 @@
       if (pile) {
         const on = !still && wideDepth.matches;
         pile.querySelectorAll(".ab-snap:not(.is-spare):not(.is-copy)").forEach((el, i) => {
-          el.style.translate = on ? `0 ${(-y * (0.05 + ((i * 37) % 5) * 0.03)).toFixed(1)}px` : "";
+          el.style.translate = on ? `0 ${(-y * (0.45 + ((i * 37) % 5) * 0.12)).toFixed(1)}px` : "";
         });
       }
     };

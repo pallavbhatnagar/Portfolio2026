@@ -3369,7 +3369,7 @@ html[data-contrast][data-theme="dark"] :is(.proj-stack .project, .wk-card, .cs-i
 html[data-contrast] .tq-name span, html[data-contrast] .lf-fig figcaption { color: var(--ink-soft); }
 
 /* Underline links: every text link, not the cards or buttons. */
-html[data-links] a:not(.btn):not(.project-link):not([class*="card"]):not(.cs-rail-back):not(.cs-crumb-back):not(.om-sc) { text-decoration-line: underline !important; text-decoration-thickness: 0.075em !important; text-underline-offset: 0.22em !important; }
+html[data-links] a:not(.btn):not(.project-link):not([class*="card"]):not(.cs-rail-back):not(.cs-crumb-back):not(.om-sc):not(.proj-title-link) { text-decoration-line: underline !important; text-decoration-thickness: 0.075em !important; text-underline-offset: 0.22em !important; }
 
 /* Bold focus ring: thick ink outline with a bright halo, on everything. */
 html[data-focus] :focus-visible { outline: 3px solid var(--ink) !important; outline-offset: 3px !important; box-shadow: 0 0 0 7px #ffd23f !important; }

@@ -21,7 +21,7 @@
     const text = line.querySelector(".ab-now-text");
     const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true });
     // The time there, and open to work (so the dot always stays lit).
-    const tick = () => { text.innerHTML = `<b>${fmt.format(new Date())}</b> in New Delhi, available for work`; };
+    const tick = () => { text.innerHTML = `<b>${fmt.format(new Date())}</b> in New Delhi, Available for work`; };
     tick();
     setInterval(tick, 30000);
   }

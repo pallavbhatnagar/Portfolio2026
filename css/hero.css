@@ -183,14 +183,15 @@
    A design-tool cursor with a name tag; the blue selection with handles and
    its size; a dark floating toolbar with Tidy up; and a comment pin with a
    note. All drawn inside the hero, above it, and never in the way. */
-.hcur { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; --hcur-me: #ff9a1f; --hcur-edge: #d97a06; --hcur-sel: #0d99ff; }
+.hcur { position: absolute; inset: 0; z-index: 6; pointer-events: none; opacity: 0; transition: opacity 0.3s ease; --hcur-me: #e42f97; --hcur-arrow: #0d0d0d; --hcur-arrow-edge: #fff; --hcur-sel: #3965fa; } /* a plain black pointer with a white edge, a Bloom-pink name tag and avatar, the selection in the brand blue */
+:root[data-theme="dark"] .hcur { --hcur-me: #ea3a96; --hcur-sel: #5b82ff; }
 .hcur.is-on { opacity: 1; }
 .hcur.is-gone { opacity: 0; }
 .hcur-cur { position: absolute; left: 0; top: 0; z-index: 3; transition: opacity 0.35s ease; }
 .hcur-cur.is-gone { opacity: 0; }
-.hcur-cur svg { display: block; width: 22px; height: 22px; fill: var(--hcur-me); stroke: var(--hcur-edge); stroke-width: 1.1; stroke-linejoin: round; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.25)); transform-origin: 3px 2px; transition: transform 0.12s ease-out; }
+.hcur-cur svg { display: block; width: 22px; height: 22px; fill: var(--hcur-arrow); stroke: var(--hcur-arrow-edge); stroke-width: 1.5; stroke-linejoin: round; filter: drop-shadow(0 1px 1.5px rgba(0, 0, 0, 0.25)); transform-origin: 3px 2px; transition: transform 0.12s ease-out; }
 .hcur-cur.is-down svg { transform: scale(0.86); }
-.hcur-cur span { position: absolute; left: 17px; top: 19px; padding: 3px 10px 4px; border: 1.5px solid var(--hcur-edge); border-radius: 999px; background: var(--hcur-me); color: #fff; font: 600 12px/1.25 var(--font), sans-serif; white-space: nowrap; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.18); }
+.hcur-cur span { position: absolute; left: 21px; top: 19px; padding: 5px 13px 6px; border-radius: 3px 14px 14px 14px; background: var(--hcur-me); color: #fff; font: 500 13px/1.25 var(--font), sans-serif; letter-spacing: 0.01em; white-space: nowrap; }
 .hcur-sel { position: absolute; left: 0; top: 0; border: 1px solid var(--hcur-sel); opacity: 0; transition: opacity 0.18s ease; }
 .hcur-sel.is-on { opacity: 1; }
 .hcur-sel i { position: absolute; width: 6px; height: 6px; border: 1px solid var(--hcur-sel); background: #fff; }
