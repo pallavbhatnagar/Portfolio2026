@@ -1576,6 +1576,28 @@
     if (shell) shell.addEventListener("scroll", request, { passive: true });
   }
 
+  // Project cards with a clip (projects.js "video"): it plays, silent and
+  // looping, only while the card is on screen and the tab is in front. It is
+  // fetched the first time its card comes near. With motion reduced or in
+  // Calm it stays on its still frame.
+  const cardVids = Array.from(document.querySelectorAll("video[data-card-video]"));
+  if (cardVids.length && "IntersectionObserver" in window) {
+    const seen = new Set();
+    const sync = (v) => {
+      if (seen.has(v) && !document.hidden && !reduce.matches) {
+        if (v.preload === "none") { v.preload = "auto"; v.load(); }
+        v.muted = true;
+        const p = v.play(); if (p && p.catch) p.catch(() => {});
+      } else v.pause();
+    };
+    const vidIo = new IntersectionObserver((entries) => {
+      entries.forEach((en) => { if (en.isIntersecting) seen.add(en.target); else seen.delete(en.target); sync(en.target); });
+    }, { rootMargin: "200px 0px" });
+    cardVids.forEach((v) => vidIo.observe(v));
+    document.addEventListener("visibilitychange", () => cardVids.forEach(sync));
+    reduce.addEventListener("change", () => cardVids.forEach(sync));
+  }
+
   // "Life, lately" on About: an endless row that runs slowly on its own and
   // can be dragged or swiped either way; a fling carries on and eases back
   // to the slow run. The pictures are listed twice, so wrapping the position

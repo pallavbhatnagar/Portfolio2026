@@ -84,14 +84,24 @@
   background: color-mix(in srgb, var(--bg) 82%, transparent);
   -webkit-backdrop-filter: blur(14px) saturate(160%);
   backdrop-filter: blur(14px) saturate(160%);
-  box-shadow: 0 1.5rem 3rem -1.75rem rgba(57, 60, 120, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --hc-base: 0 1.5rem 3rem -1.75rem rgba(57, 60, 120, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  --hc-k: 0.7; /* how strong the AI shade is; softer on white */
+  box-shadow: var(--hc-base), -1.75rem 1rem 3rem -1.25rem rgb(57 101 250 / calc(0.34 * var(--hc-k))), 1.25rem 1.25rem 3rem -1.25rem rgb(242 54 154 / calc(0.26 * var(--hc-k)));
   font: inherit;
   text-align: left;
   color: var(--ink);
   cursor: pointer;
   transition: border-color 0.25s ease, transform 0.25s var(--hc-out);
 }
-:root[data-theme="dark"] .hc-ask { box-shadow: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+:root[data-theme="dark"] .hc-ask { --hc-k: 1; --hc-base: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+/* A soft shade in the AI colours under the box, drifting slowly from side
+   to side (still with motion reduced or in Calm). */
+@media (prefers-reduced-motion: no-preference) { .hc-ask { animation: hc-shade 9s ease-in-out infinite alternate; } }
+@keyframes hc-shade {
+  0% { box-shadow: var(--hc-base), -1.75rem 1rem 3rem -1.25rem rgb(57 101 250 / calc(0.34 * var(--hc-k))), 1.25rem 1.25rem 3rem -1.25rem rgb(242 54 154 / calc(0.26 * var(--hc-k))); }
+  50% { box-shadow: var(--hc-base), 0.25rem 1.5rem 3.25rem -1.25rem rgb(155 127 232 / calc(0.34 * var(--hc-k))), 1.75rem 0.75rem 3rem -1.25rem rgb(57 101 250 / calc(0.26 * var(--hc-k))); }
+  100% { box-shadow: var(--hc-base), 1.75rem 1rem 3rem -1.25rem rgb(242 54 154 / calc(0.3 * var(--hc-k))), -1.25rem 1.25rem 3rem -1.25rem rgb(57 101 250 / calc(0.28 * var(--hc-k))); }
+}
 /* A thin Bloom-coloured light that slowly travels round the box's edge. */
 @property --hc-a { syntax: "<angle>"; initial-value: 0deg; inherits: false; }
 .hc-ask::before {

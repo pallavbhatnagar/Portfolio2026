@@ -121,7 +121,7 @@
   // ---------- Light on the project cards ----------
   const cards = Array.from(document.querySelectorAll(".proj-stack .project"));
   const wire = (card) => {
-    const img = card.querySelector(".project-shot img");
+    const img = card.querySelector(".project-shot :is(img, video)");
     let raf = 0, last = null;
     const paint = () => {
       raf = 0;

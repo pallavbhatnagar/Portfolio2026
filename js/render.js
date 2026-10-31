@@ -17,6 +17,11 @@
   const link = (p) => `/works/${encodeURIComponent(p.slug)}`;
   const thumb = (p) => p.thumbnail || p.image;
   const thumbAlt = (p) => p.thumbAlt || p.alt || p.name;
+  // The card picture, or its clip: silent, looping, fetched only once it is
+  // near the screen (script.js plays it while it is in view).
+  const media = (p, img) => p.video
+    ? `<video src="${esc(p.video)}" poster="${esc(thumb(p))}" aria-label="${esc(thumbAlt(p))}" muted loop playsinline preload="none" data-card-video></video>`
+    : `<img src="${esc(thumb(p))}" alt="${esc(thumbAlt(p))}" ${img}>`;
   const isExploration = (p) => String(p.kind).toLowerCase() === "exploration";
 
   // ---------- Home: the featured projects, in their home.order ----------
@@ -34,7 +39,7 @@
         </dl>
         <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}"></a>
       </div>
-      <div class="project-panel"><div class="project-shot">${p.locked ? lockBadge : ""}<img src="${esc(thumb(p))}" alt="${esc(thumbAlt(p))}" loading="lazy"></div></div>
+      <div class="project-panel"><div class="project-shot">${p.locked ? lockBadge : ""}${media(p, 'loading="lazy"')}</div></div>
     </article>`).join("\n"));
   }
 
@@ -53,7 +58,7 @@
           <p class="wk-what">${esc(p.works.text)}</p>
           <p class="wk-meta">${(p.works.meta || []).map((m) => `<span>${esc(m)}</span>`).join("")}</p>
         </div>
-        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">${esc(p.kind)}</span>${p.locked ? lockBadge : ""}</div><div class="wk-media"><img src="${esc(thumb(p))}" alt="${esc(thumbAlt(p))}" ${i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"'}></div></div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">${esc(p.kind)}</span>${p.locked ? lockBadge : ""}</div><div class="wk-media">${media(p, i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"')}</div></div>
       </a>
     </li>`;
     }).join(""));

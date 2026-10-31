@@ -19,6 +19,9 @@
    - tint       mint | lilac | rose | sky | sand (the card's colour)
    - locked     true = the card asks for the case-study password first
    - thumbnail  the card image; thumbAlt describes it
+   - video      optional: a short silent clip that plays on the card in place
+                of the image (the thumbnail shows until it starts, and stays
+                with motion reduced or in Calm)
    - home       optional: show on the Home page (order 1-4, text, two metrics)
    - works      the Works page card (text, and two lines under it)
    ========================================================= */
@@ -65,8 +68,9 @@ window.CASE_STUDIES = [
     year: "2024",
     tint: "lilac",
     locked: true,
-    thumbnail: "/assets/projects/wayfarer/images/thumbnail.webp",
-    thumbAlt: "Wayfarer Health mobile screen",
+    thumbnail: "/assets/videos/projects/wayfarer.webp",
+    video: "/assets/videos/projects/wayfarer.mp4",
+    thumbAlt: "Animated preview: a banking app on a phone",
     home: {
       order: 3,
       text: "Patients gave up on an eleven-field booking form. It became one short, guided conversation.",
@@ -98,8 +102,9 @@ window.CASE_STUDIES = [
     year: "2024",
     tint: "rose",
     locked: true,
-    thumbnail: "/assets/projects/parcelo/images/thumbnail.webp",
-    thumbAlt: "Parcelo dashboard on a laptop",
+    thumbnail: "/assets/videos/projects/parcelo.webp",
+    video: "/assets/videos/projects/parcelo.mp4",
+    thumbAlt: "Animated preview: a matcha tea shop page",
     home: {
       order: 4,
       text: "Late deliveries were hiding in a dashboard that showed everything. Now they surface in seconds.",
