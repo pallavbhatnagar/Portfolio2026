@@ -125,11 +125,14 @@
             if (p && p.catch) p.catch(() => {});
           }))
           .then((buf) => {
-            // Where the sound actually starts and ends.
+            // Where the sound actually starts and ends. Quiet files get a
+            // lower bar, so their fade-out isn't clipped.
             const d = buf.getChannelData(0);
-            let s = 0, e = d.length - 1;
-            while (s < e && Math.abs(d[s]) < 0.01) s++;
-            while (e > s && Math.abs(d[e]) < 0.01) e--;
+            let s = 0, e = d.length - 1, peak = 0;
+            for (let i = 0; i < d.length; i++) if (Math.abs(d[i]) > peak) peak = Math.abs(d[i]);
+            const quiet = Math.min(0.01, peak * 0.02);
+            while (s < e && Math.abs(d[s]) < quiet) s++;
+            while (e > s && Math.abs(d[e]) < quiet) e--;
             const sr = buf.sampleRate;
             return { buf, start: Math.max(0, s / sr - 0.005), dur: (e - s) / sr + 0.01 };
           })
@@ -2304,10 +2307,10 @@
     { k: ["book", "reading", "comic"],
       text: "Currently reading The Design of Everyday Things, and a regular comics reader.", render: renderBooksCard, next: ["Do you make music?", "Any fun facts?", "How do you work?"] },
     { k: ["outside work", "hobby", "hobbies", "free time", "off the clock"],
-      text: "Film scores, comics and books, mostly (and Harry Potter: type lumos anywhere on the site):", render: () => renderMusicCard() + renderBooksCard(), next: ["Any fun facts?", "How do you work?", "What have you shipped?"] },
+      text: "Film scores, comics and books, mostly (and Harry Potter: try typing lumos anywhere on the site):", render: () => renderMusicCard() + renderBooksCard(), next: ["Any fun facts?", "How do you work?", "What have you shipped?"] },
     // The Lumos easter egg (lumos.js). Sending just "lumos" here casts it.
     { k: ["harry potter", "hogwarts", "wizard", "lumos", "spell", "easter egg", "fun fact", "something fun", "secret"],
-      text: "He's a big Harry Potter fan. Type lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out.", next: ["What do you do outside work?", "Do you make music?", "What have you shipped?"] },
+      text: "He's a big Harry Potter fan. Try typing lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out.", next: ["What do you do outside work?", "Do you make music?", "What have you shipped?"] },
     // Greetings and "who are you" last, so a specific topic wins ("tell me
     // about your music" is about music, not about you).
     { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],

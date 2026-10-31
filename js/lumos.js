@@ -213,6 +213,11 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
   document.addEventListener("visibilitychange", () => { if (!document.hidden && (on || sparks.length)) run(); });
 
   // ---- Casting ----
+  // The spell's sound. Fetched only once someone starts to spell it, or is
+  // shown how, so most visits never download it.
+  const SOUND = "lumos.mp3";
+  const ready = () => { if (window.siteSfx) window.siteSfx.load(SOUND); };
+  const chime = () => { if (window.siteSfx) window.siteSfx.play(SOUND); };
   const light = (cast) => {
     if (on) return;
     on = true; store.set(true);
@@ -223,6 +228,7 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
     lt.x = ptr.x; lt.y = ptr.y; lt.vx = lt.vy = 0;
     night.style.setProperty("--x", lt.x + "px"); night.style.setProperty("--y", lt.y + "px"); // in place from the first frame
     rad.to = R();
+    if (cast) chime();
     if (cast && !calm()) {
       rad.v = 0; rad.vel = 9; // springs open past its size, then settles
       flash = 1; ring = 0;
@@ -256,6 +262,7 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
     if (e.metaKey || e.ctrlKey || e.altKey || (tg && (tg.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(tg.tagName)))) return;
     if (e.key.length !== 1) return;
     typed = (typed + e.key.toLowerCase()).slice(-5);
+    if (typed.endsWith("lu")) ready();
     if (typed.endsWith("lumos")) { typed = ""; light(true); }
     else if (typed.endsWith("nox")) { typed = ""; putOut(); }
   });
@@ -272,6 +279,8 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
     if (close) close.click();
     if (word === "lumos") light(true); else putOut();
   }, true);
+
+  document.addEventListener("input", (e) => { const v = e.target && e.target.value; if (typeof v === "string" && /^\s*lu/i.test(v)) ready(); });
 
   const follow = (e) => {
     if (on) { ptr.vx = e.clientX - ptr.x; ptr.vy = e.clientY - ptr.y; }
@@ -299,10 +308,11 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
     if (on || hinted()) return;
     try { localStorage.setItem(HINT, "1"); } catch (e) {}
     nudge.classList.add("is-on");
+    ready();
     nudgeTimer = setTimeout(hideNudge, 6000);
   }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   // And one for anyone reading the console.
-  try { console.log("%cPsst: Type lumos", "font: 600 13px/1.4 system-ui, sans-serif; color: #e0a63c;"); } catch (e) {}
+  try { console.log("%cPsst: Try typing lumos", "font: 600 13px/1.4 system-ui, sans-serif; color: #e0a63c;"); } catch (e) {}
 
   // Lit from page to page: the pointer's spot is kept as the page is left,
   // so on the next page the light starts where the mouse already is, rather
