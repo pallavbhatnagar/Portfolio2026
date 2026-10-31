@@ -46,6 +46,7 @@
 :root[data-theme="dark"] .hc-dp { box-shadow: 0 0 0 3px #fff; }
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) { .hc-dp:hover { rotate: 0deg; } }
 @media (prefers-reduced-motion: reduce) { .hc-dp { rotate: 0deg; } } /* Calm too (motion-css.js): straight, no tilt */
+@media (max-width: 1024px), (hover: none), (pointer: coarse) { .hc-dp { rotate: 0deg; } } /* iPad and phones: straight too */
 .hc-dp img { display: block; width: 100%; height: 100%; object-fit: cover; }
 .hc-dp-alt { position: absolute; inset: 0; opacity: 0; pointer-events: none; }
 @media (prefers-reduced-motion: no-preference) and (hover: hover) and (pointer: fine) {

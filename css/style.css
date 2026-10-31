@@ -468,11 +468,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    the heading, a touch thicker under the pointer. */
 #projects-title { line-height: 1.22; } /* room between the lines, so the link's underline reads clearly */
 /* A hand-drawn marker stroke under a word, in the Bloom colours (the AI's),
-   a shade deeper on light pages. Used under "Every product" on Home and the
+   a shade deeper on light pages. The stroke scales with its box (Safari
+   ignores a fixed-width stroke in a background picture), so the small
+   one under the Works pick has its own, heavier stroke. Used under "Every product" on Home and the
    reader pick on Works; a touch heavier under the pointer. */
-:root { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); }
-:root[data-theme="dark"] { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 200 12%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274%27 stroke-linecap=%27round%27 vector-effect=%27non-scaling-stroke%27/%3E%3C/svg%3E"); }
-.proj-title-link { color: inherit; text-decoration: none; padding-bottom: 0.1em; background-image: var(--scribble); background-size: 100% 0.32em; background-position: 0 100%; background-repeat: no-repeat; }
+:root { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%272.7%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%275.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); }
+:root[data-theme="dark"] { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%272.7%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%275.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); }
+.proj-title-link { color: inherit; text-decoration: none; padding-bottom: 0.1em; background-image: var(--scribble); background-size: 100% 0.373em; background-position: 0 100%; background-repeat: no-repeat; }
 @media (hover: hover) and (pointer: fine) { .proj-title-link:hover { background-image: var(--scribble-bold); } }
 .proj-title-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 @media (forced-colors: active) { .proj-title-link { text-decoration: underline; background-image: none; } }
@@ -1281,10 +1283,12 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 .ab-story .ab-h2 { position: sticky; top: 4.625rem; }
 .ab-story-body p { max-width: 52ch; margin: 0; font-size: var(--fs-lead); line-height: 1.6; color: var(--ink-soft); }
 .ab-story-body p + p { margin-top: 0.875rem; }
-/* Scroll highlight: each word moves from the secondary grey to ink as its
-   paragraph passes through the reading zone (script.js sets --k per word).
-   The grey start (--ink-dim) keeps unread text at 4.5:1. */
-.ab-story-body .w { color: color-mix(in srgb, var(--ink) calc(var(--k, 1) * 100%), var(--ink-dim)); }
+/* Scroll highlight: each word moves from a faint grey to ink as its line
+   passes the reading line (script.js sets --k per word). Unread text starts
+   faint on purpose, so the change is clear; it is all in full ink by the
+   time it reaches the middle of the screen. Without the effect (reduced
+   motion, Calm) the text is the usual readable grey. */
+.ab-story-body .w { color: color-mix(in srgb, var(--ink) calc(var(--k, 1) * 100%), color-mix(in srgb, var(--ink) 26%, var(--bg))); }
 
 .ab-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: var(--space-4); margin: 0; }
 .ab-facts > div { position: relative; padding: 0.75rem 0; }
@@ -1292,7 +1296,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
    hover an ink line follows it across. */
 .ab-facts > div::before, .ab-facts > div::after { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px; transform-origin: left center; }
 .ab-facts > div::before { background: var(--hairline); }
-.ab-facts > div::after { background: var(--ink); transform: scaleX(0); transition: transform 0.7s var(--ease-out); }
+.ab-facts > div::after { top: -0.5px; height: 2px; background: var(--ink); transform: scaleX(0); transition: transform 0.7s var(--ease-out); } /* the hover line: a touch heavier than the hairline, in full ink */
 @media (hover: hover) and (pointer: fine) { .ab-facts > div:hover::after { transform: scaleX(1); } }
 @media (prefers-reduced-motion: no-preference) {
   .js .ab-facts:not(.is-in) > div::before { transform: scaleX(0); }
@@ -2855,14 +2859,14 @@ html:not(.js) .rd-pick { display: none; }
   font-weight: 650;
   color: var(--ink);
   cursor: pointer;
-  background-image: var(--scribble); /* the hand-drawn stroke (see .proj-title-link) */
-  background-size: 100% 0.36em;
+  background-image: var(--scribble-sm); /* the hand-drawn stroke (see .proj-title-link), drawn a touch heavier for its smaller box */
+  background-size: 100% 0.42em;
   background-position: 0 100%;
   background-repeat: no-repeat;
 }
 .rd-trig svg { width: 0.85em; height: 0.85em; transition: transform 0.25s var(--ease-out); }
 .rd-trig[aria-expanded="true"] svg { transform: rotate(180deg); }
-@media (hover: hover) and (pointer: fine) { .rd-trig:hover { background-image: var(--scribble-bold); } }
+@media (hover: hover) and (pointer: fine) { .rd-trig:hover { background-image: var(--scribble-sm-bold); } }
 .rd-trig:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 
 /* The list of readers: a glass card under the word. */
@@ -3765,3 +3769,20 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
    after the music and books cards. */
 .off-now-block { margin-top: var(--space-6, 4.5rem); }
 .off-now-block .now-h { font-size: clamp(1.375rem, 2.6vw, 1.75rem); }
+
+/* About: "Life, lately" holds the Now list beside its heading, and the
+   photo strip runs the full width of the page (the nav bar's width) under
+   both. */
+.ab-life { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+.ab-life-top { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
+.ab-life-top .now-stamp { margin-top: 0.75rem; }
+.ab-life-top .now-list > div:first-child { padding-top: 0; }
+@media (max-width: 900px) { .ab-life-top { grid-template-columns: 1fr; gap: var(--space-3); } }
+/* About: "Where I've been" is the second half of "The path so far": it runs
+   the full width under the story, with a smaller heading. */
+.ab-story > .ab-path { grid-column: 1 / -1; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
+.ab-path .path-h { font-size: clamp(1.375rem, 2.6vw, 1.75rem); }
+/* (The section now runs on past the story, so its heading no longer sticks:
+   it would slide over the timeline.) */
+.ab-story .ab-h2 { position: static; }
+.ab-story > * { min-width: 0; } /* the swipeable job cards on phones mustn't widen the story */

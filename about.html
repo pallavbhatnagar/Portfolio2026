@@ -19,9 +19,9 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","saber"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded"))d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261602" />
-<link rel="stylesheet" href="/css/about-extra.css?v=20261602" />
-<script src="/js/motion-css.js?v=20261602"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261605" />
+<link rel="stylesheet" href="/css/about-extra.css?v=20261605" />
+<script src="/js/motion-css.js?v=20261605"></script>
 </head>
 <body>
 
@@ -66,7 +66,7 @@
   <nav class="cs-side ab-side" aria-label="On this page">
     <p class="cs-rail-name" aria-hidden="true">On this page</p>
     <ol class="cs-toc">
-      <li><a href="#story">How I got here</a></li><li><a href="#path">Where I've been</a></li><li><a href="#glance">At a glance</a></li><li><a href="#working">Working with me</a></li><li><a href="#outside">Outside the brief</a></li><li><a href="#life">Life, lately</a></li><li><a href="#questions">Questions</a></li>
+      <li><a href="#glance">At a glance</a></li><li><a href="#story">The path so far</a></li><li><a href="#life">Life, lately</a></li><li><a href="#outside">Outside the brief</a></li><li><a href="#working">Working with me</a></li><li><a href="#questions">Questions</a></li>
     </ol>
   </nav>
 
@@ -139,37 +139,6 @@
     <div class="ab-stat"><p class="ab-num" data-to="200" data-suf="+">200+</p><p class="ab-cap">usability sessions run</p></div>
   </section>
 
-  <!-- ============ STORY ============ -->
-  <section id="story" class="ab-story">
-    <h2 class="ab-h2 ab-r"><span class="hs-host">How I got here<span class="hs hs-steps" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h5v-5h5V9h6" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 5.5 20 9l-3.5 3.5" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></h2>
-    <div class="ab-story-body ab-r">
-      <p>I started in graphic design, drawn to the way a good layout could make people feel calm. Then I watched users struggle with a checkout I had made beautiful, and I learned that polish is not the same as clarity.</p>
-      <p>Since then I've worked across fintech, healthcare, logistics and education, always close to the people using the product. I run the research, shape the flows, design the interface and often build the prototype myself, with AI and code as part of my everyday toolkit.</p>
-      <p>The work I'm proudest of is rarely the loudest: the onboarding that stopped support tickets, the dashboard a dispatcher can read in two seconds, the design system that lets a team move without asking permission.</p>
-    </div>
-  </section>
-
-  <!-- ============ WHERE I'VE BEEN (sample data). One <li> per job, oldest
-       first; the last one is "now". The line above them is drawn for four
-       stops: to add or remove one, change the grid count in style.css
-       (.path-grid) and the nodes in the SVG. ============ -->
-  <section id="path" class="ab-path" aria-labelledby="path-title">
-    <h2 class="ab-h2" id="path-title">Where I've been</h2>
-    <p class="ab-sub">Four teams in five years. It started tangled and got clearer with every job.</p>
-    <svg class="path-line" viewBox="0 0 1000 64" aria-hidden="true">
-      <path class="pl-main" pathLength="1" d="M8 40C40 2 78 64 104 28S160 8 140 46S206 44 250 40H750"/>
-      <path class="pl-next" d="M760 40H992"/>
-      <circle class="pl-node" cx="8" cy="40" r="6"/><circle class="pl-node" cx="250" cy="40" r="6"/><circle class="pl-node" cx="500" cy="40" r="6"/>
-      <circle class="pl-ring" cx="750" cy="40" r="13"/><circle class="pl-node pl-now" cx="750" cy="40" r="7"/>
-    </svg>
-    <ol class="path-grid">
-      <li><p class="path-yr">2017</p><p class="path-co">Studio Nine</p><p class="path-role">Design intern</p><p class="path-p">A summer internship during my B.Des. My first real users, and my first redesign.</p></li>
-      <li><p class="path-yr">2018 – 2020</p><p class="path-co">Pixelcraft</p><p class="path-role">UI designer</p><p class="path-p">Apps for a dozen clients. Sat in on my first user calls and never stopped.</p></li>
-      <li><p class="path-yr">2020 – 2023</p><p class="path-co">Wave</p><p class="path-role">Product designer</p><p class="path-p">Rebuilt a trading app's navigation and a design system shared across brokers.</p></li>
-      <li><p class="path-yr">2023 – now <span class="path-now">Now</span></p><p class="path-co">Resilinc</p><p class="path-role">Senior UX designer</p><p class="path-p">Designing and prototyping supply chain software, with AI in the toolkit.</p></li>
-    </ol>
-  </section>
-
   <!-- ============ AT A GLANCE (sample data) ============ -->
   <section id="glance" class="ab-glance">
     <h2 class="ab-h2 ab-r">At a glance</h2>
@@ -183,194 +152,37 @@
     </dl>
   </section>
 
-  <!-- ============ WORKING WITH ME: how I work, in three habits. Edit the sentences. ============ -->
-  <section id="working" class="ab-impact" aria-labelledby="impact-title">
-    <div class="im-copy ab-r">
-      <p class="im-tag">Working with me</p>
-      <h2 class="ab-h2" id="impact-title"><span class="hs-host">Who you'd be working with<span class="hs hs-hand" aria-hidden="true"><span>&#129309;</span></span></span></h2>
-      <p class="im-lede">A designer who builds, and a teammate who makes the work <strong>easier for everyone around it.</strong></p>
-      <div class="im-foot">
-        <p><strong>The short version:</strong> calm in messy projects, clear in handoff, and honest about what we don't know yet.</p>
-        <div class="im-rating">
-          <!-- Replace the drawn avatars with photos if you like: <img src="/assets/images/about/friend-1.jpg" alt=""> -->
-          <span class="im-avatars" aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#c9c9c9"/><path d="M4 48c2-10 10-14 20-14s18 4 20 14z" fill="#111"/><ellipse cx="24" cy="22" rx="9.5" ry="11" fill="#f3f3f3" stroke="#111" stroke-width="1.6"/><path d="M14.6 24c1 8 5 12 9.4 12s8.400-4 9.400-12c-2 3-5 4-9.400 4s-7.400-1-9.400-4z" fill="#111"/><g fill="none" stroke="#111" stroke-width="1.6"><rect x="16.500" y="19.500" width="6" height="4.500" rx="1.500"/><rect x="25.500" y="19.500" width="6" height="4.500" rx="1.500"/><path d="M22.500 21.500h3"/></g></svg><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#b4b4b4"/><path d="M4 48c2-10 10-14 20-14s18 4 20 14z" fill="#111"/><ellipse cx="24" cy="23" rx="9.500" ry="11" fill="#f3f3f3" stroke="#111" stroke-width="1.6"/><path d="M13.500 20c-1-9 8-13 15-9 4 2 6 5 5.500 9-2-4-6-6-10.500-5.500-4 .500-7 2-10 5.500z" fill="#111"/><circle cx="20.500" cy="24" r="1.200" fill="#111"/><circle cx="27.500" cy="24" r="1.200" fill="#111"/><path d="M21 29.500c2 1.600 4 1.600 6 0" fill="none" stroke="#111" stroke-width="1.400" stroke-linecap="round"/></svg><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#dcdcdc"/><path d="M4 48c2-10 10-14 20-14s18 4 20 14z" fill="#111"/><ellipse cx="24" cy="23" rx="9.500" ry="11" fill="#f3f3f3" stroke="#111" stroke-width="1.6"/><g fill="#111"><circle cx="15" cy="15" r="4.500"/><circle cx="20" cy="11.500" r="4.500"/><circle cx="27" cy="11.500" r="4.500"/><circle cx="32.500" cy="15.500" r="4.500"/></g><g fill="none" stroke="#111" stroke-width="1.500"><circle cx="20" cy="23" r="3.400"/><circle cx="28" cy="23" r="3.400"/><path d="M23.400 23h1.200"/></g></svg></span>
-          <span class="im-rating-text">Built alongside engineers, PMs and researchers</span>
-        </div>
-      </div>
+  <!-- ============ STORY ============ -->
+  <section id="story" class="ab-story">
+    <h2 class="ab-h2 ab-r"><span class="hs-host">The path so far<span class="hs hs-steps" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h5v-5h5V9h6" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 5.5 20 9l-3.5 3.5" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></h2>
+    <div class="ab-story-body ab-r">
+      <p>I started in graphic design, drawn to the way a good layout could make people feel calm. Then I watched users struggle with a checkout I had made beautiful, and I learned that polish is not the same as clarity.</p>
+      <p>Since then I've worked across fintech, healthcare, logistics and education, always close to the people using the product. I run the research, shape the flows, design the interface and often build the prototype myself, with AI and code as part of my everyday toolkit.</p>
+      <p>The work I'm proudest of is rarely the loudest: the onboarding that stopped support tickets, the dashboard a dispatcher can read in two seconds, the design system that lets a team move without asking permission.</p>
     </div>
-
-    <div class="im-grid">
-      <article class="im-card im-wide" style="--tint: var(--lime-bg); --tone: var(--lime-ink)">
-        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.200-4.400L16.800 4a2.100 2.100 0 0 1 3 3L8.400 18.800z"/><path d="M14.500 6.500l3 3"/></svg>Where I start</p>
-        <svg class="im-doodle" viewBox="0 0 150 52" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M4 40 C 20 8, 32 58, 48 28 S 76 16, 92 32 S 122 46, 144 10"/><path class="dd dd2" pathLength="1" d="M124 4l10 10M134 4l-4 12"/></svg>
-        <p class="im-big">With the problem, not the pixels.</p>
-        <p class="im-cap">Before any screen, I talk to the people who use the product and write down what is really getting in their way. The design follows from that.</p>
-      </article>
-      <article class="im-card" style="--tint: var(--blue-bg); --tone: var(--blue-ink)">
-        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>How I collaborate</p>
-        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M10 8h40a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H26l-12 12V40h-4a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"/><path class="dd dd2" pathLength="1" d="M24 20a6 6 0 1 1 8 5c-2 1-2 2-2 4M30 33v.5"/></svg>
-        <p class="im-big im-big-s">I design in the open.</p>
-        <p class="im-cap">Rough work goes up early, so engineers and product can shape it while it is still cheap to change.</p>
-      </article>
-      <article class="im-card" style="--tint: var(--rose-panel); --tone: var(--rose-ink)">
-        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.900 5.100L19 10l-5.100 1.900L12 17l-1.900-5.100L5 10l5.100-1.900z"/></svg>After handoff</p>
-        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M30 6a24 24 0 1 1-0.1 0"/><path class="dd dd2" pathLength="1" d="M19 31l8 8 15-17"/></svg>
-        <p class="im-big im-big-s">I stay until it ships.</p>
-        <p class="im-cap">I answer questions fast during the build and check the live version against the design before calling it done.</p>
-      </article>
-    </div>
-
-    <!-- What teams bring me in for: its own row under the cards. -->
-    <div class="im-fit ab-r">
-      <p class="im-fit-h">Teams usually bring me in to</p>
-      <ul class="im-fit-list">
-        <li>Untangle a flow people keep dropping out of.</li>
-        <li>Turn research into decisions the team can act on.</li>
-        <li>Take a design from Figma all the way to shipped code.</li>
-      </ul>
+  
+    <!-- ============ WHERE I'VE BEEN, part of The path so far (sample data). One <li> per job, oldest
+         first; the last one is "now". The line above them is drawn for four
+         stops: to add or remove one, change the grid count in style.css
+         (.path-grid) and the nodes in the SVG. ============ -->
+    <div id="path" class="ab-path" role="group" aria-labelledby="path-title">
+      <h3 class="ab-h2 path-h" id="path-title">Where I've been</h3>
+      <p class="ab-sub">Four teams in five years. It started tangled and got clearer with every job.</p>
+      <svg class="path-line" viewBox="0 0 1000 64" aria-hidden="true">
+        <path class="pl-main" pathLength="1" d="M8 40C40 2 78 64 104 28S160 8 140 46S206 44 250 40H750"/>
+        <path class="pl-next" d="M760 40H992"/>
+        <circle class="pl-node" cx="8" cy="40" r="6"/><circle class="pl-node" cx="250" cy="40" r="6"/><circle class="pl-node" cx="500" cy="40" r="6"/>
+        <circle class="pl-ring" cx="750" cy="40" r="13"/><circle class="pl-node pl-now" cx="750" cy="40" r="7"/>
+      </svg>
+      <ol class="path-grid">
+        <li><p class="path-yr">2017</p><p class="path-co">Studio Nine</p><p class="path-role">Design intern</p><p class="path-p">A summer internship during my B.Des. My first real users, and my first redesign.</p></li>
+        <li><p class="path-yr">2018 – 2020</p><p class="path-co">Pixelcraft</p><p class="path-role">UI designer</p><p class="path-p">Apps for a dozen clients. Sat in on my first user calls and never stopped.</p></li>
+        <li><p class="path-yr">2020 – 2023</p><p class="path-co">Wave</p><p class="path-role">Product designer</p><p class="path-p">Rebuilt a trading app's navigation and a design system shared across brokers.</p></li>
+        <li><p class="path-yr">2023 – now <span class="path-now">Now</span></p><p class="path-co">Resilinc</p><p class="path-role">Senior UX designer</p><p class="path-p">Designing and prototyping supply chain software, with AI in the toolkit.</p></li>
+      </ol>
     </div>
   </section>
 
-  <!-- ============ OFF THE CLOCK (sample data). SoundCloud source is in data-sc-src ============ -->
-  <section id="outside" class="ab-off" aria-labelledby="off-title">
-    <header class="ab-off-head ab-r">
-      <h2 class="ab-h2" id="off-title">Outside the brief</h2>
-      <p>Film scores, comics and a stack of books: what I make and read when nobody is waiting on a deliverable.</p>
-    </header>
-
-    <div class="off-grid">
-      <!-- Music: the words, the genres, a link to SoundCloud and the sound
-           videos (script.js 18). -->
-      <article class="off-card off-music om-s">
-        <div class="om-copy">
-        <p class="off-tag">Music</p>
-        <h3 class="off-h">I compose for films, as a hobby.</h3>
-        <p class="off-p">Away from the desk, I write music for short films and experiment with sound: synths, strings, found noises and a lot of trial and error.</p>
-        <ul class="om-genres"><li>Film scores</li><li>Experiments</li><li>Ambient</li></ul>
-        <div class="om-vid-cap">
-            <a class="om-sc" href="https://soundcloud.com/" target="_blank" rel="noopener">Listen more on SoundCloud<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="sr-only"> (opens in a new tab)</span></a>
-          </div>
-        </div>
-        <!-- The sound video: plays silently on a loop; tap it for sound.
-             Put the file at assets/videos/music/sound.mp4 (and a still at
-             assets/videos/music/sound-poster.webp). Until then a placeholder
-             shows. "Listen on SoundCloud" opens the profile in a new tab:
-             set its href to your SoundCloud page. -->
-        <!-- More than one video: list them in .om-list (file, still, title,
-             credit). The arrows, a swipe or the arrow keys move between
-             them (script.js 18); the first one is the one in the markup. -->
-        <figure class="om-video" aria-roledescription="carousel" aria-label="Scenes I scored">
-          <ol class="om-list" hidden>
-            <li data-src="/assets/videos/music/sound.mp4" data-poster="/assets/videos/music/sound-poster.webp" data-label="Death in the Family: a scene I scored"><b>Batman v Superman: Dawn of Justice</b><span>Rescored by Pallav Bhatnagar</span></li>
-            <li data-src="/assets/videos/music/fallen-scene.mp4" data-poster="/assets/videos/music/fallen-poster.webp" data-label="Fallen: a scene I scored"><b>Fallen</b><span>Music by Pallav Bhatnagar</span></li>
-            <li data-src="/assets/videos/music/valhalla-scene.mp4" data-poster="/assets/videos/music/valhalla-poster.webp" data-label="Valhalla: a scene I scored"><b>Valhalla</b><span>Music by Pallav Bhatnagar</span></li>
-            <li data-src="/assets/videos/music/shikamaru-scene.mp4" data-poster="/assets/videos/music/shikamaru-poster.webp" data-label="Shikamaru's Revenge: a scene I scored"><b>Naruto Shippuden: Shikamaru's Revenge</b><span>Rescored by Pallav Bhatnagar</span></li>
-          </ol>
-          <div class="om-screen" tabindex="-1">
-            <video class="om-vid" muted loop playsinline preload="none" poster="/assets/videos/music/sound-poster.webp" aria-label="Death in the Family: a scene I scored">
-              <source src="/assets/videos/music/sound.mp4" type="video/mp4">
-            </video>
-            <p class="om-vid-tag" aria-live="polite"><b>Batman v Superman: Dawn of Justice</b><span>Rescored by Pallav Bhatnagar</span></p>
-            <div class="om-vid-empty" aria-hidden="true"><span class="om-vinyl"></span><span>Video coming soon</span></div>
-            <div class="tctl">
-              <button class="tbtn om-prev" type="button" aria-label="Previous video" hidden>
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2.5v14H6zM19 5.5v13L9.5 12z"/></svg>
-              </button>
-              <button class="tbtn tplay" type="button" aria-label="Play video">
-                <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
-                <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
-              </button>
-              <button class="tbtn om-next" type="button" aria-label="Next video" hidden>
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.5 5H18v14h-2.5zM5 5.5v13l9.5-6.5z"/></svg>
-              </button>
-              <button class="tbtn tmute" type="button" aria-label="Unmute" aria-pressed="true">
-                <svg class="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11"/></svg>
-                <svg class="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
-              </button>
-            </div>
-          </div>
-        </figure>
-      </article>
-
-      <!-- Books and comics: a slow marquee. Each cover is listed twice (the
-           second copy is hidden from screen readers) so the loop never shows
-           a seam; add or remove a book in both halves. -->
-      <article class="off-card off-books">
-        <p class="off-tag">Books and comics</p>
-        <h3 class="off-h"><span class="sr-only">Pages that feed my work.</span><span aria-hidden="true">Pages that <span class="bk-edit"><span class="bk-old">distract<svg class="bk-strike" viewBox="0 0 200 20" preserveAspectRatio="none"><path pathLength="1" d="M4 13C40 6 70 15 104 9S170 6 196 11"/></svg></span><span class="bk-new">feed</span></span> my work.</span></h3>
-        <p class="off-p">Design books for the day job; comics and graphic novels for pacing, framing and story.</p>
-        <p class="off-p off-now">Right now: <strong data-reading>Kolahal.</strong></p>
-        <div class="bm" role="list" aria-label="Books and comics I read" tabindex="0">
-          <div class="bm-track" role="none">
-            <div class="bcv" role="listitem" data-book="0" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-15155833.webp" alt="Harry Potter and the Philosopher&#39;s Stone cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">J.K. Rowling</span><span class="bcv-t">Harry Potter and the Philosopher&#39;s Stone</span></span></div>
-            <div class="bcv" role="listitem" data-book="1" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-798170.webp" alt="The Dark Knight Returns cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">The Dark Knight Returns</span></span></div>
-            <div class="bcv" role="listitem" data-book="2" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-7440859.webp" alt="100 Things Every Designer Needs to Know About People cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Susan Weinschenk</span><span class="bcv-t">100 Things Every Designer Needs to Know About People</span></span></div>
-            <div class="bcv" role="listitem" data-book="3" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-8477209.webp" alt="Hooked cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Nir Eyal</span><span class="bcv-t">Hooked</span></span></div>
-            <div class="bcv" role="listitem" data-book="4" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/isbn-9780465050659.webp" alt="The Design of Everyday Things cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Don Norman</span><span class="bcv-t">The Design of Everyday Things</span></span></div>
-            <div class="bcv" role="listitem" data-book="5" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-9407338.webp" alt="The Silent Patient cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alex Michaelides</span><span class="bcv-t">The Silent Patient</span></span></div>
-            <div class="bcv" role="listitem" data-book="6" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-8747160.webp" alt="Verity cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Colleen Hoover</span><span class="bcv-t">Verity</span></span></div>
-            <div class="bcv" role="listitem" data-book="7" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-6808112.webp" alt="Screenplay: The Foundations of Screenwriting cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Syd Field</span><span class="bcv-t">Screenplay: The Foundations of Screenwriting</span></span></div>
-            <div class="bcv" role="listitem" data-book="8" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-9254137.webp" alt="Behind Her Eyes cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Sarah Pinborough</span><span class="bcv-t">Behind Her Eyes</span></span></div>
-            <div class="bcv" role="listitem" data-book="9" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8765388.webp" alt="Flashpoint cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Geoff Johns</span><span class="bcv-t">Flashpoint</span></span></div>
-            <div class="bcv" role="listitem" data-book="10" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-7774899.webp" alt="Watchmen cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alan Moore</span><span class="bcv-t">Watchmen</span></span></div>
-            <div class="bcv" role="listitem" data-book="11" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-847534.webp" alt="Eat That Frog! cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Tracy</span><span class="bcv-t">Eat That Frog!</span></span></div>
-            <div class="bcv" role="listitem" data-book="12" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/isbn-9780785139409.webp" alt="Ultimate Spider-Man cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Michael Bendis</span><span class="bcv-t">Ultimate Spider-Man</span></span></div>
-            <div class="bcv" role="listitem" data-book="13" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/isbn-9781401232597.webp" alt="Batman: The Long Halloween cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Jeph Loeb</span><span class="bcv-t">Batman: The Long Halloween</span></span></div>
-            <div class="bcv" role="listitem" data-book="14" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8821430.webp" alt="Injustice: Gods Among Us cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Tom Taylor</span><span class="bcv-t">Injustice: Gods Among Us</span></span></div>
-            <div class="bcv" role="listitem" data-book="15" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/isbn-9780785134817.webp" alt="Daredevil: Born Again cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Daredevil: Born Again</span></span></div>
-            <div class="bcv" role="listitem" data-book="16" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/isbn-9781401207526.webp" alt="Batman: Year One cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Batman: Year One</span></span></div>
-            <div class="bcv" role="listitem" data-book="17" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-798157.webp" alt="Kingdom Come cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Mark Waid</span><span class="bcv-t">Kingdom Come</span></span></div>
-            <div class="bcv" role="listitem" data-book="18" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-11956378.webp" alt="All-Star Superman cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Grant Morrison</span><span class="bcv-t">All-Star Superman</span></span></div>
-            <div class="bcv" role="listitem" data-book="19" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-4725161.webp" alt="X-Men: God Loves, Man Kills cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Chris Claremont</span><span class="bcv-t">X-Men: God Loves, Man Kills</span></span></div>
-            <div class="bcv" role="listitem" data-book="20" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/raj-jaljala.webp" alt="Jaljala cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Jaljala</span></span></div>
-            <div class="bcv is-reading" role="listitem" data-book="21" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/raj-kolahal.webp" alt="Kolahal cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kolahal</span></span><span class="bcv-tag">Reading</span></div>
-            <div class="bcv" role="listitem" data-book="22" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/raj-kohram.webp" alt="Kohram cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kohram</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="0" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-15155833.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">J.K. Rowling</span><span class="bcv-t">Harry Potter and the Philosopher&#39;s Stone</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="1" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-798170.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">The Dark Knight Returns</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="2" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-7440859.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Susan Weinschenk</span><span class="bcv-t">100 Things Every Designer Needs to Know About People</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="3" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-8477209.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Nir Eyal</span><span class="bcv-t">Hooked</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="4" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/isbn-9780465050659.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Don Norman</span><span class="bcv-t">The Design of Everyday Things</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="5" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-9407338.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alex Michaelides</span><span class="bcv-t">The Silent Patient</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="6" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-8747160.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Colleen Hoover</span><span class="bcv-t">Verity</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="7" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-6808112.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Syd Field</span><span class="bcv-t">Screenplay: The Foundations of Screenwriting</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="8" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-9254137.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Sarah Pinborough</span><span class="bcv-t">Behind Her Eyes</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="9" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8765388.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Geoff Johns</span><span class="bcv-t">Flashpoint</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="10" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-7774899.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alan Moore</span><span class="bcv-t">Watchmen</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="11" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-847534.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Tracy</span><span class="bcv-t">Eat That Frog!</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="12" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/isbn-9780785139409.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Michael Bendis</span><span class="bcv-t">Ultimate Spider-Man</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="13" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/isbn-9781401232597.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Jeph Loeb</span><span class="bcv-t">Batman: The Long Halloween</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="14" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8821430.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Tom Taylor</span><span class="bcv-t">Injustice: Gods Among Us</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="15" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/isbn-9780785134817.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Daredevil: Born Again</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="16" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/isbn-9781401207526.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Batman: Year One</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="17" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-798157.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Mark Waid</span><span class="bcv-t">Kingdom Come</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="18" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-11956378.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Grant Morrison</span><span class="bcv-t">All-Star Superman</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="19" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-4725161.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Chris Claremont</span><span class="bcv-t">X-Men: God Loves, Man Kills</span></span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="20" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/raj-jaljala.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Jaljala</span></span></div>
-            <div class="bcv is-reading" role="listitem" aria-hidden="true" data-book="21" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/raj-kolahal.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kolahal</span></span><span class="bcv-tag">Reading</span></div>
-            <div class="bcv" role="listitem" aria-hidden="true" data-book="22" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/raj-kohram.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kohram</span></span></div>
-          </div>
-        </div>
-      </article>
-    </div>
-
-    <!-- Now: what I'm up to this month, the last part of Outside the brief. -->
-      <div id="now" class="ab-now off-now-block" role="group" aria-labelledby="now-title">
-      <div class="ab-r">
-        <h3 class="ab-h2 now-h" id="now-title">Now</h3>
-        <p class="ab-sub">What I'm up to this month.</p>
-        <p class="now-stamp">Updated <time data-now-month datetime="2026-10">October 2026</time></p>
-      </div>
-      <div class="now-card ab-r">
-        <dl class="now-list">
-          <div><dt>Building</dt><dd>An AI-powered chat for this site, so you can ask my work anything.</dd></div>
-          <div><dt>Learning</dt><dd>Motion in code: one small experiment every week.</dd></div>
-          <div><dt>Exploring</dt><dd>Voice interfaces, and what a good "undo" sounds like.</dd></div>
-          <!-- Listening: replace the link with the music video you want to share. -->
-          <div><dt>Listening</dt><dd><a class="now-link" href="https://www.youtube.com/results?search_query=nils+frahm+says+live" target="_blank" rel="noopener">Nils Frahm, "Says" (live)<span class="sr-only"> on YouTube (opens in a new tab)</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a> on repeat.</dd></div>
-        </dl>
-      </div>
-    </div>
-  </section>
 
 <!-- ============ LIFE, LATELY: the heading on the left; on the right, an
        endless row of tall photos and videos, each with a place name on the
@@ -379,9 +191,21 @@
        (autoplay, muted, loop), as noted in it. The set is listed twice so the
        loop never shows a seam: change a card in both halves. ============ -->
   <section id="life" class="ab-life" aria-labelledby="life-title">
-    <div class="ab-life-head">
-      <h2 class="ab-h2" id="life-title"><span class="hs-host">Life, lately<span class="hs hs-cam" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8"/><path d="M8.5 7l1.5-2.5h4L15.5 7" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#fff" stroke="#5c3d0b" stroke-width="1.8"/></svg></span></span></h2>
-      <p class="ab-sub">Trips, weekends and whatever has my attention lately.</p>
+    <div class="ab-life-top">
+      <div class="ab-life-head">
+        <h2 class="ab-h2" id="life-title"><span class="hs-host">Life, lately<span class="hs hs-cam" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="3" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8"/><path d="M8.5 7l1.5-2.5h4L15.5 7" fill="#ffd98a" stroke="#5c3d0b" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13.5" r="3.6" fill="#fff" stroke="#5c3d0b" stroke-width="1.8"/></svg></span></span></h2>
+        <p class="ab-sub">Trips, weekends and what I'm up to this month.</p>
+        <p class="now-stamp">Updated <time data-now-month datetime="2026-10">October 2026</time></p>
+      </div>
+      <div id="now" class="now-card ab-r" role="group" aria-label="What I'm up to this month">
+        <dl class="now-list">
+          <div><dt>Building</dt><dd>An AI-powered chat for this site, so you can ask my work anything.</dd></div>
+          <div><dt>Learning</dt><dd>Motion in code: one small experiment every week.</dd></div>
+          <div><dt>Exploring</dt><dd>Voice interfaces, and what a good "undo" sounds like.</dd></div>
+          <!-- Listening: replace the link with the music video you want to share. -->
+          <div><dt>Listening</dt><dd><a class="now-link" href="https://www.youtube.com/results?search_query=nils+frahm+says+live" target="_blank" rel="noopener">Nils Frahm, "Says" (live)<span class="sr-only"> on YouTube (opens in a new tab)</span><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg></a> on repeat.</dd></div>
+        </dl>
+      </div>
     </div>
     <div class="lf-row" role="region" aria-label="Life, lately: photos and videos. Use the left and right arrow keys to move." tabindex="0">
       <ul class="lf-track">
@@ -1073,6 +897,177 @@
     </div>
   </section>
 
+  <!-- ============ OFF THE CLOCK (sample data). SoundCloud source is in data-sc-src ============ -->
+  <section id="outside" class="ab-off" aria-labelledby="off-title">
+    <header class="ab-off-head ab-r">
+      <h2 class="ab-h2" id="off-title">Outside the brief</h2>
+      <p>Film scores, comics and a stack of books: what I make and read when nobody is waiting on a deliverable.</p>
+    </header>
+
+    <div class="off-grid">
+      <!-- Music: the words, the genres, a link to SoundCloud and the sound
+           videos (script.js 18). -->
+      <article class="off-card off-music om-s">
+        <div class="om-copy">
+        <p class="off-tag">Music</p>
+        <h3 class="off-h">I compose for films, as a hobby.</h3>
+        <p class="off-p">Away from the desk, I write music for short films and experiment with sound: synths, strings, found noises and a lot of trial and error.</p>
+        <ul class="om-genres"><li>Film scores</li><li>Experiments</li><li>Ambient</li></ul>
+        <div class="om-vid-cap">
+            <a class="om-sc" href="https://soundcloud.com/" target="_blank" rel="noopener">Listen more on SoundCloud<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg><span class="sr-only"> (opens in a new tab)</span></a>
+          </div>
+        </div>
+        <!-- The sound video: plays silently on a loop; tap it for sound.
+             Put the file at assets/videos/music/sound.mp4 (and a still at
+             assets/videos/music/sound-poster.webp). Until then a placeholder
+             shows. "Listen on SoundCloud" opens the profile in a new tab:
+             set its href to your SoundCloud page. -->
+        <!-- More than one video: list them in .om-list (file, still, title,
+             credit). The arrows, a swipe or the arrow keys move between
+             them (script.js 18); the first one is the one in the markup. -->
+        <figure class="om-video" aria-roledescription="carousel" aria-label="Scenes I scored">
+          <ol class="om-list" hidden>
+            <li data-src="/assets/videos/music/sound.mp4" data-poster="/assets/videos/music/sound-poster.webp" data-label="Death in the Family: a scene I scored"><b>Batman v Superman: Dawn of Justice</b><span>Rescored by Pallav Bhatnagar</span></li>
+            <li data-src="/assets/videos/music/fallen-scene.mp4" data-poster="/assets/videos/music/fallen-poster.webp" data-label="Fallen: a scene I scored"><b>Fallen</b><span>Music by Pallav Bhatnagar</span></li>
+            <li data-src="/assets/videos/music/valhalla-scene.mp4" data-poster="/assets/videos/music/valhalla-poster.webp" data-label="Valhalla: a scene I scored"><b>Valhalla</b><span>Music by Pallav Bhatnagar</span></li>
+            <li data-src="/assets/videos/music/shikamaru-scene.mp4" data-poster="/assets/videos/music/shikamaru-poster.webp" data-label="Shikamaru's Revenge: a scene I scored"><b>Naruto Shippuden: Shikamaru's Revenge</b><span>Rescored by Pallav Bhatnagar</span></li>
+          </ol>
+          <div class="om-screen" tabindex="-1">
+            <video class="om-vid" muted loop playsinline preload="none" poster="/assets/videos/music/sound-poster.webp" aria-label="Death in the Family: a scene I scored">
+              <source src="/assets/videos/music/sound.mp4" type="video/mp4">
+            </video>
+            <p class="om-vid-tag" aria-live="polite"><b>Batman v Superman: Dawn of Justice</b><span>Rescored by Pallav Bhatnagar</span></p>
+            <div class="om-vid-empty" aria-hidden="true"><span class="om-vinyl"></span><span>Video coming soon</span></div>
+            <div class="tctl">
+              <button class="tbtn om-prev" type="button" aria-label="Previous video" hidden>
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M6 5h2.5v14H6zM19 5.5v13L9.5 12z"/></svg>
+              </button>
+              <button class="tbtn tplay" type="button" aria-label="Play video">
+                <svg class="i-play" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+                <svg class="i-pause" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+              </button>
+              <button class="tbtn om-next" type="button" aria-label="Next video" hidden>
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M15.5 5H18v14h-2.5zM5 5.5v13l9.5-6.5z"/></svg>
+              </button>
+              <button class="tbtn tmute" type="button" aria-label="Unmute" aria-pressed="true">
+                <svg class="i-vol" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M15.5 9a4 4 0 010 6M18 6.5a7.5 7.5 0 010 11"/></svg>
+                <svg class="i-mute" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5z" fill="currentColor"/><path d="M16 9.5l5 5M21 9.5l-5 5"/></svg>
+              </button>
+            </div>
+          </div>
+        </figure>
+      </article>
+
+      <!-- Books and comics: a slow marquee. Each cover is listed twice (the
+           second copy is hidden from screen readers) so the loop never shows
+           a seam; add or remove a book in both halves. -->
+      <article class="off-card off-books">
+        <p class="off-tag">Books and comics</p>
+        <h3 class="off-h"><span class="sr-only">Pages that feed my work.</span><span aria-hidden="true">Pages that <span class="bk-edit"><span class="bk-old">distract<svg class="bk-strike" viewBox="0 0 200 20" preserveAspectRatio="none"><path pathLength="1" d="M4 13C40 6 70 15 104 9S170 6 196 11"/></svg></span><span class="bk-new">feed</span></span> my work.</span></h3>
+        <p class="off-p">Design books for the day job; comics and graphic novels for pacing, framing and story.</p>
+        <p class="off-p off-now">Right now: <strong data-reading>Kolahal.</strong></p>
+        <div class="bm" role="list" aria-label="Books and comics I read" tabindex="0">
+          <div class="bm-track" role="none">
+            <div class="bcv" role="listitem" data-book="0" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-15155833.webp" alt="Harry Potter and the Philosopher&#39;s Stone cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">J.K. Rowling</span><span class="bcv-t">Harry Potter and the Philosopher&#39;s Stone</span></span></div>
+            <div class="bcv" role="listitem" data-book="1" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-798170.webp" alt="The Dark Knight Returns cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">The Dark Knight Returns</span></span></div>
+            <div class="bcv" role="listitem" data-book="2" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-7440859.webp" alt="100 Things Every Designer Needs to Know About People cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Susan Weinschenk</span><span class="bcv-t">100 Things Every Designer Needs to Know About People</span></span></div>
+            <div class="bcv" role="listitem" data-book="3" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-8477209.webp" alt="Hooked cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Nir Eyal</span><span class="bcv-t">Hooked</span></span></div>
+            <div class="bcv" role="listitem" data-book="4" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/isbn-9780465050659.webp" alt="The Design of Everyday Things cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Don Norman</span><span class="bcv-t">The Design of Everyday Things</span></span></div>
+            <div class="bcv" role="listitem" data-book="5" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-9407338.webp" alt="The Silent Patient cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alex Michaelides</span><span class="bcv-t">The Silent Patient</span></span></div>
+            <div class="bcv" role="listitem" data-book="6" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-8747160.webp" alt="Verity cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Colleen Hoover</span><span class="bcv-t">Verity</span></span></div>
+            <div class="bcv" role="listitem" data-book="7" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-6808112.webp" alt="Screenplay: The Foundations of Screenwriting cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Syd Field</span><span class="bcv-t">Screenplay: The Foundations of Screenwriting</span></span></div>
+            <div class="bcv" role="listitem" data-book="8" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-9254137.webp" alt="Behind Her Eyes cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Sarah Pinborough</span><span class="bcv-t">Behind Her Eyes</span></span></div>
+            <div class="bcv" role="listitem" data-book="9" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8765388.webp" alt="Flashpoint cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Geoff Johns</span><span class="bcv-t">Flashpoint</span></span></div>
+            <div class="bcv" role="listitem" data-book="10" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-7774899.webp" alt="Watchmen cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alan Moore</span><span class="bcv-t">Watchmen</span></span></div>
+            <div class="bcv" role="listitem" data-book="11" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-847534.webp" alt="Eat That Frog! cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Tracy</span><span class="bcv-t">Eat That Frog!</span></span></div>
+            <div class="bcv" role="listitem" data-book="12" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/isbn-9780785139409.webp" alt="Ultimate Spider-Man cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Michael Bendis</span><span class="bcv-t">Ultimate Spider-Man</span></span></div>
+            <div class="bcv" role="listitem" data-book="13" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/isbn-9781401232597.webp" alt="Batman: The Long Halloween cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Jeph Loeb</span><span class="bcv-t">Batman: The Long Halloween</span></span></div>
+            <div class="bcv" role="listitem" data-book="14" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8821430.webp" alt="Injustice: Gods Among Us cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Tom Taylor</span><span class="bcv-t">Injustice: Gods Among Us</span></span></div>
+            <div class="bcv" role="listitem" data-book="15" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/isbn-9780785134817.webp" alt="Daredevil: Born Again cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Daredevil: Born Again</span></span></div>
+            <div class="bcv" role="listitem" data-book="16" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/isbn-9781401207526.webp" alt="Batman: Year One cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Batman: Year One</span></span></div>
+            <div class="bcv" role="listitem" data-book="17" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-798157.webp" alt="Kingdom Come cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Mark Waid</span><span class="bcv-t">Kingdom Come</span></span></div>
+            <div class="bcv" role="listitem" data-book="18" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-11956378.webp" alt="All-Star Superman cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Grant Morrison</span><span class="bcv-t">All-Star Superman</span></span></div>
+            <div class="bcv" role="listitem" data-book="19" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-4725161.webp" alt="X-Men: God Loves, Man Kills cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Chris Claremont</span><span class="bcv-t">X-Men: God Loves, Man Kills</span></span></div>
+            <div class="bcv" role="listitem" data-book="20" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/raj-jaljala.webp" alt="Jaljala cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Jaljala</span></span></div>
+            <div class="bcv is-reading" role="listitem" data-book="21" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/raj-kolahal.webp" alt="Kolahal cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kolahal</span></span><span class="bcv-tag">Reading</span></div>
+            <div class="bcv" role="listitem" data-book="22" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/raj-kohram.webp" alt="Kohram cover" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kohram</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="0" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-15155833.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">J.K. Rowling</span><span class="bcv-t">Harry Potter and the Philosopher&#39;s Stone</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="1" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-798170.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">The Dark Knight Returns</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="2" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-7440859.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Susan Weinschenk</span><span class="bcv-t">100 Things Every Designer Needs to Know About People</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="3" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-8477209.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Nir Eyal</span><span class="bcv-t">Hooked</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="4" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/isbn-9780465050659.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Don Norman</span><span class="bcv-t">The Design of Everyday Things</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="5" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-9407338.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alex Michaelides</span><span class="bcv-t">The Silent Patient</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="6" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-8747160.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Colleen Hoover</span><span class="bcv-t">Verity</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="7" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-6808112.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Syd Field</span><span class="bcv-t">Screenplay: The Foundations of Screenwriting</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="8" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-9254137.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Sarah Pinborough</span><span class="bcv-t">Behind Her Eyes</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="9" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8765388.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Geoff Johns</span><span class="bcv-t">Flashpoint</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="10" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/id-7774899.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Alan Moore</span><span class="bcv-t">Watchmen</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="11" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/id-847534.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Tracy</span><span class="bcv-t">Eat That Frog!</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="12" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/isbn-9780785139409.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Brian Michael Bendis</span><span class="bcv-t">Ultimate Spider-Man</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="13" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/isbn-9781401232597.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Jeph Loeb</span><span class="bcv-t">Batman: The Long Halloween</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="14" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-8821430.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Tom Taylor</span><span class="bcv-t">Injustice: Gods Among Us</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="15" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/isbn-9780785134817.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Daredevil: Born Again</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="16" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/isbn-9781401207526.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Frank Miller</span><span class="bcv-t">Batman: Year One</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="17" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/id-798157.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Mark Waid</span><span class="bcv-t">Kingdom Come</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="18" style="--t: var(--sky-bg); --k: var(--sky-ink)"><img src="/assets/images/books/id-11956378.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Grant Morrison</span><span class="bcv-t">All-Star Superman</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="19" style="--t: var(--sand-bg); --k: var(--sand-ink)"><img src="/assets/images/books/id-4725161.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Chris Claremont</span><span class="bcv-t">X-Men: God Loves, Man Kills</span></span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="20" style="--t: var(--mint-bg); --k: var(--mint-ink)"><img src="/assets/images/books/raj-jaljala.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Jaljala</span></span></div>
+            <div class="bcv is-reading" role="listitem" aria-hidden="true" data-book="21" style="--t: var(--lilac-bg); --k: var(--lilac-ink)"><img src="/assets/images/books/raj-kolahal.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kolahal</span></span><span class="bcv-tag">Reading</span></div>
+            <div class="bcv" role="listitem" aria-hidden="true" data-book="22" style="--t: var(--rose-bg); --k: var(--rose-ink)"><img src="/assets/images/books/raj-kohram.webp" alt="" loading="lazy"><span class="bcv-meta"><span class="bcv-a">Raj Comics</span><span class="bcv-t">Kohram</span></span></div>
+          </div>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ WORKING WITH ME: how I work, in three habits. Edit the sentences. ============ -->
+  <section id="working" class="ab-impact" aria-labelledby="impact-title">
+    <div class="im-copy ab-r">
+      <p class="im-tag">Working with me</p>
+      <h2 class="ab-h2" id="impact-title"><span class="hs-host">Who you'd be working with<span class="hs hs-hand" aria-hidden="true"><span>&#129309;</span></span></span></h2>
+      <p class="im-lede">A designer who builds, and a teammate who makes the work <strong>easier for everyone around it.</strong></p>
+      <div class="im-foot">
+        <p><strong>The short version:</strong> calm in messy projects, clear in handoff, and honest about what we don't know yet.</p>
+        <div class="im-rating">
+          <!-- Replace the drawn avatars with photos if you like: <img src="/assets/images/about/friend-1.jpg" alt=""> -->
+          <span class="im-avatars" aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#c9c9c9"/><path d="M4 48c2-10 10-14 20-14s18 4 20 14z" fill="#111"/><ellipse cx="24" cy="22" rx="9.5" ry="11" fill="#f3f3f3" stroke="#111" stroke-width="1.6"/><path d="M14.6 24c1 8 5 12 9.4 12s8.400-4 9.400-12c-2 3-5 4-9.400 4s-7.400-1-9.400-4z" fill="#111"/><g fill="none" stroke="#111" stroke-width="1.6"><rect x="16.500" y="19.500" width="6" height="4.500" rx="1.500"/><rect x="25.500" y="19.500" width="6" height="4.500" rx="1.500"/><path d="M22.500 21.500h3"/></g></svg><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#b4b4b4"/><path d="M4 48c2-10 10-14 20-14s18 4 20 14z" fill="#111"/><ellipse cx="24" cy="23" rx="9.500" ry="11" fill="#f3f3f3" stroke="#111" stroke-width="1.6"/><path d="M13.500 20c-1-9 8-13 15-9 4 2 6 5 5.500 9-2-4-6-6-10.500-5.500-4 .500-7 2-10 5.500z" fill="#111"/><circle cx="20.500" cy="24" r="1.200" fill="#111"/><circle cx="27.500" cy="24" r="1.200" fill="#111"/><path d="M21 29.500c2 1.600 4 1.600 6 0" fill="none" stroke="#111" stroke-width="1.400" stroke-linecap="round"/></svg><svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="24" fill="#dcdcdc"/><path d="M4 48c2-10 10-14 20-14s18 4 20 14z" fill="#111"/><ellipse cx="24" cy="23" rx="9.500" ry="11" fill="#f3f3f3" stroke="#111" stroke-width="1.6"/><g fill="#111"><circle cx="15" cy="15" r="4.500"/><circle cx="20" cy="11.500" r="4.500"/><circle cx="27" cy="11.500" r="4.500"/><circle cx="32.500" cy="15.500" r="4.500"/></g><g fill="none" stroke="#111" stroke-width="1.500"><circle cx="20" cy="23" r="3.400"/><circle cx="28" cy="23" r="3.400"/><path d="M23.400 23h1.200"/></g></svg></span>
+          <span class="im-rating-text">Built alongside engineers, PMs and researchers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="im-grid">
+      <article class="im-card im-wide" style="--tint: var(--lime-bg); --tone: var(--lime-ink)">
+        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.200-4.400L16.800 4a2.100 2.100 0 0 1 3 3L8.400 18.800z"/><path d="M14.500 6.500l3 3"/></svg>Where I start</p>
+        <svg class="im-doodle" viewBox="0 0 150 52" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M4 40 C 20 8, 32 58, 48 28 S 76 16, 92 32 S 122 46, 144 10"/><path class="dd dd2" pathLength="1" d="M124 4l10 10M134 4l-4 12"/></svg>
+        <p class="im-big">With the problem, not the pixels.</p>
+        <p class="im-cap">Before any screen, I talk to the people who use the product and write down what is really getting in their way. The design follows from that.</p>
+      </article>
+      <article class="im-card" style="--tint: var(--blue-bg); --tone: var(--blue-ink)">
+        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>How I collaborate</p>
+        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M10 8h40a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H26l-12 12V40h-4a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"/><path class="dd dd2" pathLength="1" d="M24 20a6 6 0 1 1 8 5c-2 1-2 2-2 4M30 33v.5"/></svg>
+        <p class="im-big im-big-s">I design in the open.</p>
+        <p class="im-cap">Rough work goes up early, so engineers and product can shape it while it is still cheap to change.</p>
+      </article>
+      <article class="im-card" style="--tint: var(--rose-panel); --tone: var(--rose-ink)">
+        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.900 5.100L19 10l-5.100 1.900L12 17l-1.900-5.100L5 10l5.100-1.900z"/></svg>After handoff</p>
+        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M30 6a24 24 0 1 1-0.1 0"/><path class="dd dd2" pathLength="1" d="M19 31l8 8 15-17"/></svg>
+        <p class="im-big im-big-s">I stay until it ships.</p>
+        <p class="im-cap">I answer questions fast during the build and check the live version against the design before calling it done.</p>
+      </article>
+    </div>
+
+    <!-- What teams bring me in for: its own row under the cards. -->
+    <div class="im-fit ab-r">
+      <p class="im-fit-h">Teams usually bring me in to</p>
+      <ul class="im-fit-list">
+        <li>Untangle a flow people keep dropping out of.</li>
+        <li>Turn research into decisions the team can act on.</li>
+        <li>Take a design from Figma all the way to shipped code.</li>
+      </ul>
+    </div>
+  </section>
+
   <!-- ============ QUESTIONS PEOPLE ASK (sample answers). Add or remove a
        <details> block per question. The first one starts open; opening one
        closes the others, with a short slide (script.js). ============ -->
@@ -1152,11 +1147,11 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261602" defer fetchpriority="high"></script>
-<script src="/js/projects.js?v=20261602" defer fetchpriority="high"></script>
-<script src="/js/render.js?v=20261602" defer fetchpriority="high"></script>
-<script src="/js/script.js?v=20261602" defer fetchpriority="high"></script>
-<script src="/js/about-extra.js?v=20261602" defer fetchpriority="high"></script>
-<script src="/js/pixel-dog.js?v=20261602" defer fetchpriority="high"></script>
+<script src="/js/content.js?v=20261605" defer fetchpriority="high"></script>
+<script src="/js/projects.js?v=20261605" defer fetchpriority="high"></script>
+<script src="/js/render.js?v=20261605" defer fetchpriority="high"></script>
+<script src="/js/script.js?v=20261605" defer fetchpriority="high"></script>
+<script src="/js/about-extra.js?v=20261605" defer fetchpriority="high"></script>
+<script src="/js/pixel-dog.js?v=20261605" defer fetchpriority="high"></script>
 </body>
 </html>
