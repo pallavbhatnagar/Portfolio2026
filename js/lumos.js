@@ -151,7 +151,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
       // Sparks shed from the tip: a trickle at rest, more as it moves.
       if (on) {
         const speed = Math.hypot(ptr.vx, ptr.vy);
-        let n = 0.3 * dt + Math.min(4, speed * 0.06) * dt;
+        let n = 0.2 * dt + Math.min(2.6, speed * 0.04) * dt;
         while (n > 0) { if (Math.random() < n) spark(ptr.x + rand(-2, 2), ptr.y + rand(-2, 2), rand(0.4, 1.6), true); n -= 1; }
       }
       for (let i = sparks.length - 1; i >= 0; i--) {
@@ -255,7 +255,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
     if (cast && !calm()) {
       rad.v = 0; rad.vel = 9; // springs open past its size, then settles
       flash = 1; ring = 0;
-      for (let i = 0; i < 48; i++) spark(ptr.x, ptr.y, rand(2.5, 7.5), false);
+      for (let i = 0; i < 32; i++) spark(ptr.x, ptr.y, rand(2.5, 7.5), false);
     } else { rad.v = rad.to; rad.vel = 0; }
     run();
   };

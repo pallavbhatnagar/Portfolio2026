@@ -2581,12 +2581,9 @@ body.ask-open .cs-side { display: none; }
 
 /* =========================================================
    404 page (404.html). A hand-drawn hut with smoke curling from its
-   chimney, and footsteps (js/steps404.js) wandering the page around the
-   words. No nav or footer: everything sits centred in the window.
+   chimney. No nav or footer: everything sits centred in the window.
    ========================================================= */
 .nf {
-  position: relative;
-  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -2610,10 +2607,6 @@ body.ask-open .cs-side { display: none; }
   .nf-actions { flex-direction: column; }
   .nf-actions .btn { flex: none; width: 100%; }
 }
-
-/* The footsteps walk on a layer behind the words, in the site's ink. */
-.nf-steps { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 0; overflow: visible; }
-.nf-steps use { fill: var(--ink); }
 
 /* The hut: brown line work over pastel washes set a touch off-register,
    like hand-tinted print. Smoke curls up from the chimney. In the dark
@@ -2666,7 +2659,6 @@ body.ask-open .cs-side { display: none; }
 @media (forced-colors: active) {
   .nf-hut { color: CanvasText; }
   .hut-light, .hut-wash { display: none; }
-  .nf-steps use { fill: CanvasText; }
 }
 
 /* AI glow around the chat box (like Apple Intelligence): while the chat
