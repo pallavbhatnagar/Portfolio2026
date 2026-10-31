@@ -2301,7 +2301,10 @@
     { k: ["book", "reading", "comic"],
       text: "Currently reading The Design of Everyday Things, and a regular comics reader.", render: renderBooksCard },
     { k: ["outside work", "hobby", "hobbies", "free time", "off the clock"],
-      text: "Film scores, comics and books, mostly:", render: () => renderMusicCard() + renderBooksCard() },
+      text: "Film scores, comics and books, mostly (and Harry Potter: type lumos anywhere on the site):", render: () => renderMusicCard() + renderBooksCard() },
+    // The Lumos easter egg (lumos.js). Sending just "lumos" here casts it.
+    { k: ["harry potter", "hogwarts", "wizard", "lumos", "spell", "easter egg", "fun fact", "something fun", "secret"],
+      text: "He's a big Harry Potter fan. Type lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out." },
     // Greetings and "who are you" last, so a specific topic wins ("tell me
     // about your music" is about music, not about you).
     { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],

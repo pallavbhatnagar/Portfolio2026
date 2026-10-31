@@ -216,10 +216,12 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
   const light = (cast) => {
     if (on) return;
     on = true; store.set(true);
+    hideNudge();
     document.documentElement.classList.add("is-lumos");
     night.classList.add("is-on"); say.classList.add("is-on");
     if (!motes.length) seedMotes();
     lt.x = ptr.x; lt.y = ptr.y; lt.vx = lt.vy = 0;
+    night.style.setProperty("--x", lt.x + "px"); night.style.setProperty("--y", lt.y + "px"); // in place from the first frame
     rad.to = R();
     if (cast && !calm()) {
       rad.v = 0; rad.vel = 9; // springs open past its size, then settles
@@ -280,5 +282,40 @@ html.is-lumos .lumos-say, html.is-lumos .lumos-say * { cursor: pointer !importan
   addEventListener("pointerdown", follow, { passive: true });
   addEventListener("resize", () => { size(); if (on) { seedMotes(); rad.to = R(); run(); } });
 
-  if (store.get()) light(false);
+  // ---- Telling people it's there ----
+  // The first time someone switches to the dark theme: a one-off nudge.
+  const HINT = "lumos-hinted";
+  const hinted = () => { try { return localStorage.getItem(HINT); } catch (e) { return "1"; } };
+  const nudge = document.createElement("div");
+  nudge.className = "lumos-say lumos-nudge";
+  nudge.setAttribute("role", "status");
+  nudge.innerHTML = `<span><b>It's dark in here.</b>Try typing <kbd>lumos</kbd></span><button type="button">Lumos</button>`;
+  document.body.appendChild(nudge);
+  let nudgeTimer = 0;
+  const hideNudge = () => { clearTimeout(nudgeTimer); nudge.classList.remove("is-on"); };
+  nudge.querySelector("button").addEventListener("click", () => { hideNudge(); light(true); });
+  new MutationObserver(() => {
+    if (document.documentElement.getAttribute("data-theme") !== "dark") { hideNudge(); return; }
+    if (on || hinted()) return;
+    try { localStorage.setItem(HINT, "1"); } catch (e) {}
+    nudge.classList.add("is-on");
+    nudgeTimer = setTimeout(hideNudge, 6000);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+  // And one for anyone reading the console.
+  try { console.log("%cPsst: Type lumos", "font: 600 13px/1.4 system-ui, sans-serif; color: #e0a63c;"); } catch (e) {}
+
+  // Lit from page to page: the pointer's spot is kept as the page is left,
+  // so on the next page the light starts where the mouse already is, rather
+  // than in the middle until the mouse moves.
+  addEventListener("pagehide", () => { if (on) { try { sessionStorage.setItem(KEY + "-at", Math.round(ptr.x) + "," + Math.round(ptr.y)); } catch (e) {} } });
+  if (store.get()) {
+    try {
+      const at = (sessionStorage.getItem(KEY + "-at") || "").split(",").map(Number);
+      if (at.length === 2 && at.every(isFinite)) { ptr.x = Math.min(at[0], innerWidth); ptr.y = Math.min(at[1], innerHeight); }
+    } catch (e) {}
+    // Already night on the last page: no fade in, so the page never flashes lit.
+    night.style.transition = "none";
+    light(false);
+    requestAnimationFrame(() => requestAnimationFrame(() => { night.style.transition = ""; }));
+  }
 })();
