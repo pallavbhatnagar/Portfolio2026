@@ -2295,7 +2295,9 @@
   };
 
   // Touch screens have no keyboard to cast Lumos with (lumos.js is off there).
+  // Nor is it there with motion reduced or in Calm, so the chat doesn't offer it then.
   const touchy = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  const noSpell = () => touchy || reduce.matches;
   const topics = [
     { k: ["shipped", "projects", "portfolio", "what have you built", "case stud", "worked on"],
       text: "Four recent ones — tap a card to open the full case study.", render: renderProjectsGrid,
@@ -2322,10 +2324,10 @@
     { k: ["book", "reading", "comic"],
       text: "Currently reading The Design of Everyday Things, and a regular comics reader.", render: renderBooksCard, next: ["Do you make music?", "Any fun facts?", "How do you work?"] },
     { k: ["outside work", "hobby", "hobbies", "free time", "off the clock"],
-      text: (touchy ? "Film scores, comics and books, mostly (and Harry Potter):" : "Film scores, comics and books, mostly (and Harry Potter: try typing lumos anywhere on the site):"), render: () => renderMusicCard() + renderBooksCard(), next: ["Any fun facts?", "How do you work?", "What have you shipped?"] },
+      get text() { return noSpell() ? "Film scores, comics and books, mostly (and Harry Potter):" : "Film scores, comics and books, mostly (and Harry Potter: try typing lumos anywhere on the site):"; }, render: () => renderMusicCard() + renderBooksCard(), next: ["Any fun facts?", "How do you work?", "What have you shipped?"] },
     // The Lumos easter egg (lumos.js). Sending just "lumos" here casts it.
     { k: ["harry potter", "hogwarts", "wizard", "lumos", "spell", "easter egg", "fun fact", "something fun", "secret"],
-      text: touchy ? "He's a big Harry Potter fan. There's a photo of the grand staircase in the life strip on his About page." : "He's a big Harry Potter fan. Try typing lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out.", next: ["What do you do outside work?", "Do you make music?", "What have you shipped?"] },
+      get text() { return noSpell() ? "He's a big Harry Potter fan. There's a photo of the grand staircase in the life strip on his About page." : "He's a big Harry Potter fan. Try typing lumos anywhere on this site (or send just that here) and see what happens. Nox puts it out."; }, next: ["What do you do outside work?", "Do you make music?", "What have you shipped?"] },
     // Greetings and "who are you" last, so a specific topic wins ("tell me
     // about your music" is about music, not about you).
     { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],

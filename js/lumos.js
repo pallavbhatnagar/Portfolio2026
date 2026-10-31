@@ -15,9 +15,9 @@
      gravity, drag and a twinkle; a burst and a ring when it's cast.
    - Nox: the light gutters (two dips), closes into the tip and leaves a
      curl of smoke.
-   Calm (reduced motion): no sparks, dust, flicker or bloom; the light just
-   follows the pointer. Touch screens (phones, tablets, iPads) have no
-   keyboard to cast it with, so there it is switched off altogether. */
+   It is off with motion reduced or in Calm (and goes out if Calm is
+   switched on while it is lit), and on touch screens (phones, tablets,
+   iPads), which have no keyboard to cast it with. */
 (() => {
   if (window.matchMedia("(hover: none), (pointer: coarse)").matches) { try { sessionStorage.removeItem("lumos"); } catch (e) {} return; }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -242,7 +242,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
   addEventListener("load", () => (window.requestIdleCallback || setTimeout)(ready, { timeout: 3000 }), { once: true });
   if (document.readyState === "complete") (window.requestIdleCallback || setTimeout)(ready, { timeout: 3000 });
   const light = (cast) => {
-    if (on) return;
+    if (on || calm()) return; // no spell with motion reduced or in Calm
     on = true; store.set(true);
     hideNudge();
     document.documentElement.classList.add("is-lumos");
@@ -295,7 +295,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
   document.addEventListener("submit", (e) => {
     const form = e.target, field = form && form.querySelector("textarea, input[type='text']");
     const word = field ? field.value.trim().toLowerCase().replace(/[!.]+$/, "") : "";
-    if (word !== "lumos" && word !== "nox") return;
+    if ((word !== "lumos" && word !== "nox") || calm()) return; // in Calm the chat just answers
     e.preventDefault(); e.stopImmediatePropagation();
     field.value = "";
     const close = document.getElementById("askPanelClose") || document.querySelector(".ask-panel-close");
@@ -328,7 +328,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
   nudge.querySelector("button").addEventListener("click", () => { hideNudge(); light(true); });
   new MutationObserver(() => {
     if (document.documentElement.getAttribute("data-theme") !== "dark") { hideNudge(); return; }
-    if (on || hinted()) return;
+    if (on || calm() || hinted()) return;
     try { localStorage.setItem(HINT, "1"); } catch (e) {}
     nudge.classList.add("is-on");
     ready();
@@ -341,6 +341,9 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
   // so on the next page the light starts where the mouse already is, rather
   // than in the middle until the mouse moves.
   addEventListener("pagehide", () => { if (on) { try { sessionStorage.setItem(KEY + "-at", Math.round(ptr.x) + "," + Math.round(ptr.y)); } catch (e) {} } });
+  // Calm switched on (or motion reduced) while it is lit: it goes out at once.
+  reduce.addEventListener("change", () => { if (calm()) { putOut(); hideNudge(); } });
+  if (store.get() && calm()) store.set(false);
   if (store.get()) {
     try {
       const at = (sessionStorage.getItem(KEY + "-at") || "").split(",").map(Number);

@@ -2576,8 +2576,11 @@ body.ask-open .cs-side { display: none; }
   .footer-links img { filter: invert(1) !important; }
 }
 
-/* The Lumos hint (about.html), hidden where there is no keyboard to type it. */
+/* The Lumos hint (about.html), hidden where the spell is off (lumos.js):
+   no keyboard to type it with, motion reduced, or Calm. */
 @media (hover: none), (pointer: coarse) { .lumos-hint { display: none; } }
+@media (prefers-reduced-motion: reduce) { html:not([data-motion="lively"]) .lumos-hint { display: none; } }
+html[data-motion="calm"] .lumos-hint { display: none; }
 
 /* =========================================================
    404 page (404.html). A hand-drawn hut with smoke curling from its
@@ -2611,17 +2614,13 @@ body.ask-open .cs-side { display: none; }
 /* The hut: brown line work over pastel washes set a touch off-register,
    like hand-tinted print. Smoke curls up from the chimney. In the dark
    theme the washes fade back and the windows and open door glow with
-   firelight that wavers very slightly. Reduced motion and Calm: the smoke
-   hangs still and the light holds steady. */
+   firelight that wavers very slightly. Reduced motion and Calm: no smoke,
+   and the light holds steady. */
 .nf-hut { display: block; width: min(22rem, 66vw); height: auto; margin: 0 auto 2rem; overflow: visible; color: #4a3222; }
 [data-theme="dark"] .nf-hut { color: #d3bfa3; }
 .hut-lines path, .hut-puff { fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
 .hut-puff { stroke-width: 1.3; transform-box: fill-box; transform-origin: center; }
-.hut-puff:nth-child(1) { opacity: 0.8; transform: translate(0, -6px) scale(0.8); }
-.hut-puff:nth-child(2) { opacity: 0.6; transform: translate(10px, -34px) scale(1.3); }
-.hut-puff:nth-child(3) { opacity: 0.42; transform: translate(24px, -64px) scale(1.8); }
-.hut-puff:nth-child(4) { opacity: 0.25; transform: translate(40px, -92px) scale(2.2); }
-.hut-puff:nth-child(5) { opacity: 0; }
+.hut-smoke { display: none; } /* only with motion on (below) */
 .hut-wash { opacity: 0.9; }
 [data-theme="dark"] .hut-wash { opacity: 0.2; }
 [data-theme="dark"] .w-ground, [data-theme="dark"] .w-bush { display: none; }
@@ -2642,6 +2641,7 @@ body.ask-open .cs-side { display: none; }
   .js .nf-hut, .js .nf-title, .js .nf-lede, .js .nf-actions { opacity: 0; animation: nf-rise 0.8s var(--ease-out) forwards; }
   .js .nf-lede { animation-delay: 0.08s; }
   .js .nf-actions { animation-delay: 0.16s; }
+  html:not([data-motion="calm"]) .hut-smoke { display: inline; }
   html:not([data-motion="calm"]) .hut-puff { opacity: 0; animation: hut-puff 6.5s cubic-bezier(0.3, 0.6, 0.4, 1) calc(var(--i) * -1.3s) infinite; }
   /* Two slow, uneven waves that never line up, so the light never pulses. */
   html:not([data-motion="calm"]) .hut-halo { animation: hut-waver 4.7s ease-in-out infinite; }
