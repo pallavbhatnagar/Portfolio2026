@@ -2798,10 +2798,14 @@
   //      Transitions snapshot the page and the switch above runs unchanged
   //      inside it. Reduced motion or Calm, checked at the moment of the
   //      click, or a browser without View Transitions: the theme switches
-  //      at once.
+  //      at once. Touch screens skip the snapshot too: phones size it as if
+  //      the address bar were hidden, so the page jumped in height for the
+  //      length of the fade. There the colours cross-fade in place instead
+  //      (the "calm cross-fade between themes" in style.css).
   if (themeToggle && typeof document.startViewTransition === "function") {
     const root = document.documentElement;
-    const still = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const touch = window.matchMedia("(hover: none), (pointer: coarse)");
+    const still = () => touch.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const fade = (change) => {
       if (still()) { change(); return; }
       root.classList.add("theme-fading");
