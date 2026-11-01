@@ -2,7 +2,7 @@
 
 These are placeholders that look like the site's drawn badges. Replace any of
 them with the real thing, keeping the same file name, and the case study
-(work/wayfarer.html) picks it up. No code changes needed.
+(works/wayfarer.html) picks it up. No code changes needed.
 
 ## team/ (people on the project, shown as overlapping circles)
 - `team/daniel-okafor.png`

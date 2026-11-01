@@ -69,7 +69,6 @@
      hue scale (50 tint, 100 panel, 900 ink): mint green, lilac violet, rose
      coral, sky blue, sand warm ochre. */
   --c-blue: var(--blue-500);
-  --c-navy: #1b1b39;
   --mint-bg: #f6faf4;  --mint-panel: #eef6ea;  --mint-ink: #2b4c1a;
   --lilac-bg: #f6f4fb; --lilac-panel: #ede9f6; --lilac-ink: #27194d;
   --rose-bg: #fcf4f3;  --rose-panel: #f8e9e7;  --rose-ink: #57190f;
@@ -346,7 +345,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   max-width: 60.125rem;
   margin: 0 auto;
   --hero-top: calc(var(--pad) + 9.25rem);
-  --hero-fs: clamp(2.25rem, 5.56vw, 3.25rem);
   position: relative;
   padding: var(--hero-top) var(--pad) 5.875rem;
 }
@@ -412,7 +410,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 
 /* About: looping animations pause while their section is off screen (script.js). */
 .is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
-@keyframes fade-in { to { opacity: 1; } }
 
 @media (max-width: 900px) {
   .hero { --hero-top: calc(var(--pad) + 7.125rem); }
@@ -1526,10 +1523,8 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 @keyframes pxdog-heart-fade { from { opacity: 1; } to { opacity: 0; } }
 
 /* =========================================================
-   About: Where I've been, Now, Questions people ask.
+   About: the path so far (with Where I've been) and the FAQ.
    ========================================================= */
-.ab { --accent: #1244ed; }
-:root[data-theme="dark"] .ab { --accent: #9cb1f7; }
 .ab-sub { margin: 0.3125rem 0 0; font-size: 1rem; line-height: 1.5; color: var(--ink-soft); }
 
 /* Where I've been: the home page's line, tangled at the start and straight
@@ -1566,7 +1561,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 
 
 /* Now */
-.ab-now, .ab-faq { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
+.ab-faq { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
 .now-stamp { display: block; margin: 0.875rem 0 0; font-size: var(--fs-small); color: var(--ink-soft); }
 .now-stamp::before { content: ""; display: inline-block; vertical-align: 0.0625rem; margin-right: 0.625rem; width: 0.4375rem; height: 0.4375rem; border-radius: 50%; background: var(--dot); box-shadow: 0 0 0 0.25rem color-mix(in srgb, var(--dot) 18%, transparent); }
 .now-card { padding: 0.25rem 1.25rem; border-radius: 0.5rem; background: var(--surface); }
@@ -1609,7 +1604,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
   .path-grid li:last-child { padding-bottom: 0.25rem; }
   .path-grid li::before { content: ""; position: absolute; left: -0.5rem; top: 0.125rem; box-sizing: border-box; width: 0.875rem; height: 0.875rem; border: 2px solid var(--ink); border-radius: 50%; background: var(--bg); }
   .path-grid li:last-child::before { background: var(--ink); }
-  .ab-now, .ab-faq { grid-template-columns: 1fr; gap: var(--space-3); }
+  .ab-faq { grid-template-columns: 1fr; gap: var(--space-3); }
 }
 @media (max-width: 480px) { .now-list > div { grid-template-columns: 1fr; gap: 0.25rem; } }
 
@@ -3327,7 +3322,7 @@ html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
    case studies: wide screens only, and not while the chat is open. */
 .ab-side { margin-top: -1.25rem; opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0s linear 0.3s; }
 .ab-side.is-shown { opacity: 1; visibility: visible; transition: opacity 0.3s ease, visibility 0s; }
-.ab-story, .ab-path, .ab-glance, .ab-impact, .ab-now, .ab-off, .ab-life, .ab-faq { scroll-margin-top: 5.25rem; }
+.ab-story, .ab-path, .ab-glance, .ab-impact, .ab-off, .ab-life, .ab-faq { scroll-margin-top: 5.25rem; }
 @media (prefers-reduced-motion: reduce) { .ab-side, .ab-side.is-shown { transition: none; } }
 
 /* A tapped snapshot (touch screens, strip or spread): straight, on top,
@@ -3766,11 +3761,6 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 @media (hover: hover) and (pointer: fine) {
   .cs-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
 }
-
-/* Now, inside Outside the brief: a smaller heading and some room above,
-   after the music and books cards. */
-.off-now-block { margin-top: var(--space-6, 4.5rem); }
-.off-now-block .now-h { font-size: clamp(1.375rem, 2.6vw, 1.75rem); }
 
 /* About: "Life, lately" holds the Now list beside its heading, and the
    photo strip runs the full width of the page (the nav bar's width) under

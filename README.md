@@ -78,15 +78,18 @@ what you edit.
 ## How to…
 
 ### Replace a project image
-Each project has its own folder, `assets/projects/<slug>/images/`, with five
-images. Right now they're all copies of the same picture (dummies). Save your
-image over a file with the **same name** and it appears on the site:
+Each project has its own folder, `assets/projects/<slug>/images/`. Save your image (WebP) over a file with the
+**same name** and it appears on the site:
 
 | File | Where it shows | Best size |
 |---|---|---|
-| `cover.jpg` | Top of the case study page | Landscape 16:8, 1600 px wide or more |
-| `thumbnail.jpg` | The project card on Home and Works | Landscape 16:10, 1200 px wide or more |
-| `detail-01.jpg` to `detail-03.jpg` | The case study's three "Key decisions" | 4:3, 1200 px wide or more |
+| `cover.webp` | Top of the case study page (`cover.jpg` is the link preview) | Landscape 16:8, 1600 px wide or more |
+| `thumbnail.webp` | The project card on Home and Works | Landscape 16:10, 1200 px wide or more |
+| `detail-01.webp` to `detail-03.webp` | The case study's three "Key decisions" | 4:3, 1200 px wide or more |
+
+A card can play a short silent video instead: put the MP4 and a WebP still
+of its first frame in `assets/videos/projects/`, and set `video` and
+`thumbnail` for that project in `js/projects.js` (Parcelo and Wayfarer do this).
 
 **One extra step for detail images.** While they're dummies, each decision
 shows a zoomed-in crop of the image. When you add a real detail image, open
@@ -165,10 +168,10 @@ over it with the same name. To add a network (for example Instagram):
 Icons appear in the order of that list. Free line icons that match the style:
 [Tabler Icons](https://tabler.io/icons) (the current ones come from there).
 
-### Add a profile photo
-The site has no profile photo yet. When you add one, save it as
-`assets/images/profile/profile.jpg` and reference it from the HTML with that
-path.
+### Change the profile photo
+The photo beside your name on Home is `assets/images/dp/dp-nav.webp`, and the
+one it turns into on hover is `dp-hover.webp`. Save a new square image over
+either (same name) to change it.
 
 ## File naming
 Lowercase, words separated by hyphens: `wealthbasket-cover.jpg`,
