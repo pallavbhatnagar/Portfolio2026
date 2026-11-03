@@ -201,14 +201,15 @@
   let QS = ["What impact did your work have?", "Have you led design on a team?", "How do you work with engineers?", "When could you start?"];
   // The Lumos easter egg (lumos.js) gets every other turn, so anyone who
   // watches the box for a few seconds sees it. Not where there is no
-  // keyboard to type it with.
+  // keyboard to type it with. With motion reduced or in Calm the box holds
+  // still on one question, and the spell is off, so the hint never shows.
   if (!window.matchMedia("(hover: none), (pointer: coarse)").matches) QS = QS.flatMap((q) => [q, "Psst: Try typing lumos"]);
-  if (!ask || !qBox || reduce.matches) return;
+  if (!ask || !qBox) return;
   let qi = 0;
   let cur = qBox.firstElementChild;
   cur.textContent = QS[0];
   setInterval(() => {
-    if (document.hidden || ask.matches(":hover, :focus-visible")) return;
+    if (document.hidden || reduce.matches || ask.matches(":hover, :focus-visible")) return;
     qi = (qi + 1) % QS.length;
     const next = document.createElement("span");
     next.className = "is-next";
@@ -221,4 +222,12 @@
     setTimeout(() => old.remove(), 500);
     cur = next;
   }, 3000);
+  // Calm switched on with the hint showing: back to the first question.
+  reduce.addEventListener("change", () => {
+    if (!reduce.matches) return;
+    qi = 0;
+    qBox.querySelectorAll("span").forEach((el) => { if (el !== cur) el.remove(); });
+    cur.classList.remove("is-out", "is-next");
+    cur.textContent = QS[0];
+  });
 })();

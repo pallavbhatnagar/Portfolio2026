@@ -335,7 +335,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
     nudgeTimer = setTimeout(hideNudge, 6000);
   }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   // And one for anyone reading the console.
-  try { console.log("%cPsst: Try typing lumos", "font: 600 13px/1.4 system-ui, sans-serif; color: #e0a63c;"); } catch (e) {}
+  if (!calm()) try { console.log("%cPsst: Try typing lumos", "font: 600 13px/1.4 system-ui, sans-serif; color: #e0a63c;"); } catch (e) {}
 
   // Lit from page to page: the pointer's spot is kept as the page is left,
   // so on the next page the light starts where the mouse already is, rather
