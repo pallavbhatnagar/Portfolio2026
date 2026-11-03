@@ -1,65 +1,85 @@
-/* Hero (centred): one entrance after the loading screen ("complicated"
-   arrives scattered and snaps straight), and the chat box turning through
-   example questions as hints. Clicking the box only opens or closes the
-   Talk to my Work chat (script.js); it never asks anything itself. */
+/* Hero (centred): one entrance after the loading screen, "messy" that can be
+   clicked to scramble it (a cursor comes and tidies it up), and the chat box
+   turning through example questions as hints. Clicking the box only opens or
+   closes the Talk to my Work chat (script.js); it never asks anything itself. */
 (() => {
   const hc = document.querySelector(".hc");
   if (!hc) return;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  // Split the scattered word ("complicated") into letters, each a little out of place.
+  // "messy" in letters, so each can be thrown out of place.
   const mess = hc.querySelector(".hc-mess");
+  let chars = [];
   if (mess) {
     const word = mess.textContent;
-    mess.innerHTML = `<span class="sr-only">${word}</span>` + Array.from(word).map((c, i) => {
-      const r = (Math.random() * 2 - 1) * 34;
-      const y = (Math.random() * 2 - 1) * 26;
-      const x = (Math.random() * 2 - 1) * 10;
-      return `<span class="ch" aria-hidden="true" style="--i:${i};--r:${r.toFixed(1)};--x:${x.toFixed(1)};--y:${y.toFixed(1)}">${c}</span>`;
-    }).join("");
+    mess.innerHTML = `<span class="sr-only">${word}</span>` + Array.from(word).map((c, i) => `<span class="ch" aria-hidden="true" style="--i:${i}">${c}</span>`).join("");
+    chars = Array.from(mess.querySelectorAll(".ch"));
   }
 
-  // The words rise as the hello screen starts to lift; the scattered word
-  // waits until it has fully gone (.mess-go), so its letters snap straight
-  // where you can see them. Without the hello screen, both go together.
+  // The words rise as the hello screen starts to lift.
   const raf2 = (fn) => requestAnimationFrame(() => requestAnimationFrame(fn));
   const enter = () => raf2(() => hc.classList.add("is-in"));
-  const straighten = () => raf2(() => hc.classList.add("mess-go"));
-  // A visiting cursor (below) tidies "messy" itself, once a visit, at
-  // every size; otherwise (Calm, or a later page in the visit) it
-  // straightens on its own as before.
-  let seen = false;
-  try { seen = sessionStorage.getItem("hero-cursor") === "1"; } catch (e) { /* private mode */ }
-  const visit = !reduce.matches && !seen && !!mess;
-  const afterIntro = (fn) => {
-    if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:done", fn, { once: true });
-    else fn();
+  if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", enter, { once: true });
+  else enter();
+
+  // Click "messy" and it gets messy, a new way each time; the cursor below
+  // comes to fix it. A click while it is fixing starts over. On phones, with
+  // motion reduced or in Calm, it is just a word.
+  const phone = window.matchMedia("(max-width: 640px)");
+  const plain = () => phone.matches || reduce.matches;
+  let stopVisit = null, tidyTimer = 0;
+  const scatter = () => {
+    clearTimeout(tidyTimer);
+    mess.classList.remove("is-tidying");
+    chars.forEach((c) => {
+      c.style.setProperty("--r", ((Math.random() * 2 - 1) * 34).toFixed(1));
+      c.style.setProperty("--x", ((Math.random() * 2 - 1) * 10).toFixed(1));
+      c.style.setProperty("--y", ((Math.random() * 2 - 1) * 26).toFixed(1));
+    });
+    mess.classList.add("is-messed");
   };
-  if (document.documentElement.classList.contains("is-preloading")) {
-    hc.style.setProperty("--mess-delay", "150ms");
-    document.addEventListener("preloader:leaving", enter, { once: true });
-  } else enter();
-  if (visit) afterIntro(() => setTimeout(cursorVisit, 700));
-  else afterIntro(straighten);
+  const tidy = () => {
+    if (!mess.classList.contains("is-messed")) return;
+    mess.classList.remove("is-messed");
+    mess.classList.add("is-tidying"); // the slow, one-by-one snap into line
+    tidyTimer = setTimeout(() => mess.classList.remove("is-tidying"), 1700);
+  };
+  if (mess) {
+    const pressable = () => {
+      if (plain()) { mess.removeAttribute("role"); mess.removeAttribute("tabindex"); mess.removeAttribute("aria-label"); return; }
+      mess.setAttribute("role", "button");
+      mess.tabIndex = 0;
+      mess.setAttribute("aria-label", "messy: make it messy");
+    };
+    const makeMess = () => {
+      if (plain()) return;
+      if (stopVisit) stopVisit();
+      scatter();
+      cursorVisit();
+    };
+    pressable();
+    const settle = () => { if (plain()) { if (stopVisit) stopVisit(); mess.classList.remove("is-messed", "is-tidying"); } pressable(); };
+    reduce.addEventListener("change", settle);
+    phone.addEventListener("change", settle);
+    mess.addEventListener("click", makeMess);
+    mess.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); makeMess(); } });
+  }
 
   // ---------- The visiting cursor ----------
   // A design-tool cursor ("Pallav") glides in, selects the scattered
   // "messy", hits Tidy up (the letters snap into line, the selection
-  // tightening round them), and leaves a comment on the Ask box, fading
-  // away as it does; then the comment fades too.
+  // tightening round them), and glides away.
   // Decorative; scrolling the hero away sends it off at once.
   function cursorVisit() {
-    try { sessionStorage.setItem("hero-cursor", "1"); } catch (e) { /* private mode */ }
     const layer = document.createElement("div");
     layer.className = "hcur";
     layer.setAttribute("aria-hidden", "true");
     layer.innerHTML = '<div class="hcur-sel"><i></i><i></i><i></i><i></i><span class="hcur-size"></span></div>'
       + '<div class="hcur-bar"><svg viewBox="0 0 16 16"><circle cx="3.5" cy="3.5" r="1.6"/><circle cx="8" cy="3.5" r="1.6"/><circle cx="12.5" cy="3.5" r="1.6"/><circle cx="3.5" cy="8" r="1.6"/><circle cx="8" cy="8" r="1.6"/><circle cx="12.5" cy="8" r="1.6"/><circle cx="3.5" cy="12.5" r="1.6"/><circle cx="8" cy="12.5" r="1.6"/><circle cx="12.5" cy="12.5" r="1.6"/></svg>Tidy up</div>'
-      + '<div class="hcur-pin"><span class="hcur-av">P</span><span class="hcur-note">Ask me anything here.</span></div>'
       + '<div class="hcur-cur"><svg viewBox="0 0 22 22"><path d="M3.2 2.4c-.5-.2-1 .3-.8.8l5.6 16c.2.6 1 .6 1.2 0l2.3-6.4 6.4-2.3c.6-.2.6-1 0-1.2z"/></svg><span>Pallav</span></div>';
     hc.appendChild(layer);
     const sel = layer.querySelector(".hcur-sel"), size = layer.querySelector(".hcur-size"), bar = layer.querySelector(".hcur-bar");
-    const pin = layer.querySelector(".hcur-pin"), cur = layer.querySelector(".hcur-cur");
+    const cur = layer.querySelector(".hcur-cur");
     let gone = false, raf = 0, at = null, timer = 0;
     const wait = (ms) => new Promise((r) => { timer = setTimeout(r, ms); });
     const box = (el) => { const a = el.getBoundingClientRect(), b = hc.getBoundingClientRect(); return { x: a.left - b.left, y: a.top - b.top, w: a.width, h: a.height }; };
@@ -67,7 +87,6 @@
     // glyph, measured from the font) through its own tilt and offset, so it
     // hugs the word scattered or straight. Falls back to the letters' boxes
     // where a browser can't measure glyphs.
-    const chars = Array.from(mess.querySelectorAll(".ch"));
     const ink = document.createElement("canvas").getContext("2d");
     const glyph = (c) => {
       const cs = getComputedStyle(c);
@@ -118,22 +137,32 @@
     });
     const press = async () => { cur.classList.add("is-down"); await wait(130); cur.classList.remove("is-down"); };
     let safety = 0;
+    const onScroll = () => { if (hc.getBoundingClientRect().bottom < hc.offsetHeight * 0.55) leave(); };
+    const shell = document.getElementById("shellScroll");
+    const stop = () => {
+      gone = true; clearTimeout(timer); clearTimeout(safety); cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+      if (shell) shell.removeEventListener("scroll", onScroll);
+      stopVisit = null;
+    };
+    // Sent off: the word tidies itself and the cursor fades.
     const leave = () => {
       if (gone) return;
-      gone = true; clearTimeout(timer); clearTimeout(safety); cancelAnimationFrame(raf);
-      straighten();
+      stop();
+      tidy();
       layer.classList.add("is-gone");
       setTimeout(() => layer.remove(), 400);
     };
-    const onScroll = () => { if (hc.getBoundingClientRect().bottom < hc.offsetHeight * 0.55) leave(); };
+    // A new click: this visit makes way for the next at once.
+    stopVisit = () => { stop(); layer.remove(); };
     window.addEventListener("scroll", onScroll, { passive: true });
-    const shell = document.getElementById("shellScroll");
     if (shell) shell.addEventListener("scroll", onScroll, { passive: true });
-    safety = setTimeout(leave, 16000);
+    safety = setTimeout(leave, 12000);
 
     (async () => {
+      // A beat to see the mess, then in from the right and a click on it.
+      await wait(420); if (gone) return;
       const w0 = wordBox();
-      // In from the right, to the scattered word, and a click on it.
       await glide(hc.clientWidth + 30, w0.y - 70, 0);
       layer.classList.add("is-on");
       await glide(w0.x + w0.w * 0.5, w0.y + w0.h * 0.88, 750); if (gone) return;
@@ -149,29 +178,17 @@
       const bb = box(bar);
       await glide(bb.x + bb.w * 0.62, bb.y + bb.h * 0.55, 420); if (gone) return;
       await press(); if (gone) return;
-      hc.style.setProperty("--mess-delay", "0ms");
-      straighten();
+      tidy();
       bar.classList.remove("is-on");
       // The selection tightens round the letters as they line up.
       const t0 = performance.now();
-      const follow = () => { if (gone) return; fitSel(); if (performance.now() - t0 < 1900) requestAnimationFrame(follow); };
+      const follow = () => { if (gone) return; fitSel(); if (performance.now() - t0 < 1700) requestAnimationFrame(follow); };
       follow();
-      await glide(r.x + r.w + 34, r.y + r.h * 0.2, 480); // out of the way, to watch the letters line up
+      await glide(r.x + r.w + 34, r.y + r.h * 0.2, 480); if (gone) return; // out of the way, to watch the letters line up
       await wait(1100); if (gone) return;
       sel.classList.remove("is-on");
-      // A comment on the Ask box.
-      const ask = hc.querySelector(".hc-ask");
-      if (ask) {
-        const a = box(ask), px = Math.max(8, Math.min(a.x + (a.w - pin.offsetWidth) / 2, hc.clientWidth - pin.offsetWidth - 8)), py = a.y - 4; // centred over the box, kept on screen
-        await glide(px + 8, py + 6, 750); if (gone) return;
-        await press(); if (gone) return;
-        pin.style.transform = `translate(${px.toFixed(1)}px, ${py.toFixed(1)}px)`;
-        // The comment is left, and the cursor fades away on the spot.
-        pin.classList.add("is-on"); cur.classList.add("is-gone");
-        await wait(2600); if (gone) return;
-        pin.classList.add("is-out"); // a plain, smooth fade
-        await wait(650);
-      }
+      await wait(200); if (gone) return;
+      await glide(hc.clientWidth + 30, r.y - 70, 620);
       leave();
     })();
   }

@@ -60,7 +60,9 @@
   text-wrap: balance;
 }
 .hc-title .hc-line { display: block; }
-.hc-mess { display: inline-block; white-space: nowrap; }
+.hc-mess { display: inline-block; white-space: nowrap; user-select: none; -webkit-user-select: none; }
+.hc-mess[role="button"] { cursor: pointer; }
+.hc-mess:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
 .hc-mess .ch { display: inline-block; }
 .hc-lede { max-width: 40em; text-wrap: balance; margin-top: 1.5rem; font-size: 1rem; line-height: 1.6; color: var(--ink-soft); }
 
@@ -141,9 +143,21 @@
 @media (prefers-reduced-motion: no-preference) {
   .js .hc:not(.is-in) .hc-rise { opacity: 0; transform: translateY(0.875rem); filter: blur(6px); }
   .hc-rise { transition: opacity 0.9s var(--hc-out), transform 0.9s var(--hc-out), filter 0.9s var(--hc-out); transition-delay: calc(var(--d, 0) * 1ms); }
-  /* "complicated": each letter starts out of line, then snaps straight. */
-  .js .hc:not(.mess-go) .hc-mess .ch { transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) rotate(calc(var(--r) * 1deg)); }
-  .hc-mess .ch { transition: transform 1.1s var(--hc-io); transition-delay: calc(var(--mess-delay, 700ms) + var(--i) * 70ms); }
+  /* Clicked: the letters fly apart at once. Tidied: they snap back into line
+     one by one, slowly enough to watch. */
+  .hc-mess .ch { transition: transform 0.25s var(--hc-out); }
+  .hc-mess.is-messed .ch { transform: translate(calc(var(--x) * 1px), calc(var(--y) * 1px)) rotate(calc(var(--r) * 1deg)); transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); transition-delay: calc(var(--i) * 18ms); }
+  .hc-mess.is-tidying .ch { transition: transform 1.1s var(--hc-io); transition-delay: calc(var(--i) * 70ms); }
+  /* Pointing at it, the letters settle unevenly, each at its own height and
+     angle, and stay until the pointer leaves: a hint that it does something. */
+  @media (hover: hover) and (pointer: fine) and (min-width: 641px) {
+    html:not([data-motion="calm"]) .hc-mess:not(.is-messed, .is-tidying) .ch { transition: transform 0.32s var(--hc-out); transition-delay: calc(var(--i) * 22ms); }
+    html:not([data-motion="calm"]) .hc-mess:not(.is-messed, .is-tidying):hover .ch:nth-child(2) { transform: translateY(-0.025em) rotate(-3deg); }
+    html:not([data-motion="calm"]) .hc-mess:not(.is-messed, .is-tidying):hover .ch:nth-child(3) { transform: translateY(0.055em) rotate(4deg); }
+    html:not([data-motion="calm"]) .hc-mess:not(.is-messed, .is-tidying):hover .ch:nth-child(4) { transform: translateY(-0.045em) rotate(-6deg); }
+    html:not([data-motion="calm"]) .hc-mess:not(.is-messed, .is-tidying):hover .ch:nth-child(5) { transform: translateY(0.065em) rotate(5deg); }
+    html:not([data-motion="calm"]) .hc-mess:not(.is-messed, .is-tidying):hover .ch:nth-child(6) { transform: translateY(-0.03em) rotate(-4deg); }
+  }
 }
 
 @media (max-width: 640px) {
@@ -207,10 +221,4 @@
 .hcur-bar { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 6px; padding: 6px 10px 6px 8px; border-radius: 8px; background: #1e1e1e; color: #fff; font: 600 12px/1 var(--font), sans-serif; white-space: nowrap; box-shadow: 0 6px 16px -6px rgba(0, 0, 0, 0.45); opacity: 0; scale: 0.92; transform-origin: 50% 100%; transition: opacity 0.16s ease, scale 0.2s cubic-bezier(0.34, 1.56, 0.64, 1); }
 .hcur-bar svg { width: 13px; height: 13px; fill: currentColor; }
 .hcur-bar.is-on { opacity: 1; scale: 1; }
-.hcur-pin { position: absolute; left: 0; top: 0; display: flex; align-items: flex-start; gap: 8px; opacity: 0; scale: 0.6; transform-origin: 0 100%; transition: opacity 0.2s ease, scale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
-.hcur-pin.is-on { opacity: 1; scale: 1; }
-.hcur-pin.is-on.is-out { opacity: 0; transition: opacity 0.6s ease; }
-.hcur-av { display: grid; place-items: center; width: 28px; height: 28px; margin-top: -28px; border-radius: 50% 50% 50% 0; background: var(--hcur-me); color: #fff; font: 700 12px/1 var(--font), sans-serif; box-shadow: 0 0 0 2px #fff, 0 3px 8px rgba(0, 0, 0, 0.22); }
-.hcur-note { margin-top: -30px; padding: 7px 11px; border-radius: 10px; background: #fff; color: #1e1e1e; font: 500 13px/1.3 var(--font), sans-serif; white-space: nowrap; box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(0, 0, 0, 0.06); }
-:root[data-theme="dark"] .hcur-note { background: #2c2c2e; color: #f2f2f2; box-shadow: 0 6px 18px -6px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.08); }
 @media print { .hcur { display: none; } }
