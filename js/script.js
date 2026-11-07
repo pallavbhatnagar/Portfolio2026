@@ -14,6 +14,10 @@
     else if (document.activeElement && document.activeElement !== document.body) document.activeElement.blur();
   };
 
+  // 00) No right-click menu on the site, except in text boxes (so pasting
+  //     into the chat still works).
+  addEventListener("contextmenu", (e) => { if (!e.target.closest("input, textarea, [contenteditable]")) e.preventDefault(); });
+
   // 0) The AI colours (Bloom: blue into hot pink) on every AI sparkle icon.
   //    Each icon gets its own copy of the gradient inside its own <svg>:
   //    Safari doesn't reliably paint a gradient borrowed from another <svg>,
@@ -2607,9 +2611,9 @@
     // iPhone Safari, where overflow: hidden on the page doesn't hold it.
     const coverMq = window.matchMedia("(max-width: 1299px)");
     let pinnedY = null;
-    const pinPage = () => {
+    const pinPage = (y) => {
       if (!coverMq.matches || pinnedY !== null) return;
-      pinnedY = window.scrollY;
+      pinnedY = y == null ? window.scrollY : y;
       const s = document.body.style;
       s.position = "fixed";
       s.top = `-${pinnedY}px`;
@@ -2628,13 +2632,16 @@
       window.scrollTo(0, y);
       root.style.scrollBehavior = "";
     };
-    const openAsk = () => {
+    // toTop (a case study's "Ask AI about this project"): the page goes back
+    // to its top as the panel opens, so the project's cover sits beside the
+    // chat about it.
+    const openAsk = (toTop) => {
       if (askOpen) return;
       askOpen = true;
       // Side by side (desktop), the page keeps the pressed button in place;
       // covered (tablet, phone), the page is pinned instead.
-      const hold = coverMq.matches ? () => {} : holdInPlace(askTrigger);
-      pinPage();
+      const hold = coverMq.matches || toTop ? () => {} : holdInPlace(askTrigger);
+      pinPage(toTop ? 0 : null); // pinned at the top, and it stays there on close
       askPanel.hidden = false;
       askPanel.inert = false;
       document.body.classList.add("ask-open");
@@ -2642,6 +2649,12 @@
       // starting at full strength (a hidden panel has nothing to fade from).
       requestAnimationFrame(() => requestAnimationFrame(() => { if (askOpen) { glowOn(); glowOff(1400); } }));
       hold();
+      if (toTop && !coverMq.matches) {
+        requestAnimationFrame(() => {
+          const scroller = inShellScroll() ? shellScroll : document.scrollingElement;
+          scroller.scrollTo({ top: 0, behavior: reduce.matches ? "auto" : "smooth" });
+        });
+      }
       void askPanel.offsetWidth;
       askPanel.classList.add("is-open");
       askTriggers.forEach((t) => t.setAttribute("aria-expanded", "true"));
@@ -2673,7 +2686,7 @@
         askTrigger = t; // focus returns here when the panel closes
         if (askOpen) { closeAsk(); return; }
         sfx.play("apple_intelligence.mp3");
-        openAsk();
+        openAsk(t.classList.contains("cs-ask"));
         if (t.dataset.ask && !askThread.children.length) askAsk(t.dataset.ask);
       });
     });

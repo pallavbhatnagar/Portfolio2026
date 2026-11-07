@@ -405,7 +405,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
   .btn:hover { transform: translateY(-2px); }
-  .btn-secondary:hover { border-color: var(--ink); }
+  .btn-secondary:hover { border-color: var(--ink); background: var(--surface); } /* a soft grey fill: #f4f4f4 on the light page, #202020 on the dark */
 }
 
 /* About: looping animations pause while their section is off screen (script.js). */
@@ -814,7 +814,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* Each skill tints the card its own soft pastel (the site's project tints:
    sky, mint, lilac, rose, sand), crossfading as the skill changes. */
 .vx-card { --vx-tint: var(--sky-panel); --vx-base: #fff; background: color-mix(in srgb, var(--vx-tint) 16%, var(--vx-base)); border-color: color-mix(in srgb, var(--ink) 6%, transparent); transition: background-color 0.5s ease; }
-:root[data-theme="dark"] .vx-card { --vx-base: var(--surface-2); background: color-mix(in srgb, var(--vx-tint) 16%, var(--vx-base)); }
+:root[data-theme="dark"] .vx-card { --vx-base: var(--surface-2); background: color-mix(in srgb, var(--vx-tint) 8%, var(--vx-base)); }
 .vx-card:has(#vx-p1.is-on) { --vx-tint: var(--mint-panel); }
 .vx-card:has(#vx-p2.is-on) { --vx-tint: var(--lilac-panel); }
 .vx-card:has(#vx-p3.is-on) { --vx-tint: var(--rose-panel); }
@@ -873,8 +873,8 @@ html[data-motion="calm"] .vx-card { transition: none; }
   .value-stat { flex-direction: column; gap: 0.1875rem; }
 }
 /* =========================================================
-   Footer: a slim band in blue across the foot of the page (#0052cc, and the
-   brighter #0067ff in the dark theme), in
+   Footer: a slim band across the foot of the page (black #141414 in the
+   light theme, blue #0067ff in the dark theme), in
    both themes, with white text and icons. One row: the email (with
    its own copy button) on the left, social links on the right. It takes
    white ink colours, so its text and icons read on the blue.
@@ -894,7 +894,7 @@ html[data-motion="calm"] .vx-card { transition: none; }
   --ink: #fff;
   --ink-soft: rgba(255, 255, 255, 0.95);
   min-height: var(--footer-h);
-  background: #0052cc; /* a darker shade of the dark theme's #0067ff */
+  background: #141414; /* the dark theme's page black */
   color: var(--ink);
   overflow: hidden;
 }
@@ -936,7 +936,7 @@ html[data-motion="calm"] .vx-card { transition: none; }
 }
 .footer-links svg { width: 1.25rem; height: 1.25rem; }
 /* Icon files (assets/icons/social/, filled Bootstrap Icons) are drawn in
-   black: flipped to white on the blue band. All but full white at rest,
+   black: flipped to white on the dark band. All but full white at rest,
    full on hover or focus. */
 .footer-links img { display: block; width: 1.125rem; height: 1.125rem; opacity: 0.95; filter: invert(1); transition: opacity 0.2s ease; }
 .footer-links a:focus-visible img { opacity: 1; }
@@ -944,7 +944,7 @@ html[data-motion="calm"] .vx-card { transition: none; }
 .footer-mail:focus-visible, .footer-links a:focus-visible { color: var(--ink); outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.1875rem; }
 
 /* Back to top: fixed to the window's right edge, shown only near the
-   bottom. White in both themes, so it stands out on the blue footer band it
+   bottom. White in both themes, so it stands out on the footer band it
    lines up with; a hairline edge keeps it from melting into the white page. */
 .to-top {
   position: fixed;
@@ -968,7 +968,7 @@ html[data-motion="calm"] .vx-card { transition: none; }
 /* While the Ask AI panel is open, .site-shell (the "web part") is inset
    from the true viewport by --ask-gap and narrowed by the panel's width —
    re-anchor to its edges instead of the window's, or the button would
-   float over the grey gap or the panel itself. It stays in the blue footer
+   float over the grey gap or the panel itself. It stays in the footer
    band, level with the footer icons. */
 body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc(var(--ask-gap) + 0.8125rem); }
 .to-top:active { transform: scale(0.94); }
@@ -1262,7 +1262,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 }
 .copy-mail svg { grid-area: 1 / 1; width: 0.9375rem; height: 0.9375rem; transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out); }
 .copy-mail .i-done { opacity: 0; transform: scale(0.6); }
-.site-footer .copy-mail { opacity: 0.9; } /* bright on the blue band, like the links */
+.site-footer .copy-mail { opacity: 0.9; } /* bright on the band, like the links */
 .copy-mail.is-copied { opacity: 1; }
 .copy-mail.is-copied .i-copy { opacity: 0; transform: scale(0.6); }
 .copy-mail.is-copied .i-done { opacity: 1; transform: none; }
@@ -3174,6 +3174,9 @@ main.ab:has(.ab-table) { overflow-x: visible; }
    lime glow in the corner; the video sits in it without a visible edge and
    fades into the card at its foot. */
 .off-music.om-s, :root[data-theme="dark"] .off-music.om-s { background: radial-gradient(90% 120% at 0% 0%, rgba(182, 227, 123, 0.16), transparent 60%), #141a12; color: #f2f1ee; box-shadow: none; }
+/* Dark theme: the music card glows faintly in its own lime, a soft light
+   spilling onto the page around it. */
+:root[data-theme="dark"]:not([data-contrast]) .off-music.om-s { box-shadow: 0 0 24px -6px rgba(182, 227, 123, 0.03), 0 0 70px -20px rgba(182, 227, 123, 0.025); }
 .om-s .off-tag { color: #b6e37b; }
 .om-s .off-h { color: #f2f1ee; }
 .om-s .off-p { color: rgba(242, 241, 238, 0.7); }

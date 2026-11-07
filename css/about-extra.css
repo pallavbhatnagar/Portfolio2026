@@ -25,6 +25,14 @@
 .ab-path.is-tracing .path-grid li { transition: opacity 0.25s ease; }
 .ab-path.is-tracing .path-grid li:not(.is-focus) { opacity: 0.45; }
 @media (prefers-reduced-motion: reduce) { .pl-trace { transition: none; } }
+/* Dark theme: the line glows softly, the bold trace a little more, and the
+   "now" dot (and any dot you point at) carries a bright halo, with the
+   pulsing ring glowing as it spreads. */
+:root[data-theme="dark"] .ab-path .pl-main { filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.35)) drop-shadow(0 0 8px rgba(170, 185, 255, 0.22)); }
+:root[data-theme="dark"] .ab-path .pl-trace { filter: drop-shadow(0 0 3px rgba(255, 255, 255, 0.45)) drop-shadow(0 0 12px rgba(170, 185, 255, 0.3)); }
+:root[data-theme="dark"] .ab-path .pl-now, :root[data-theme="dark"] .ab-path .pl-node.is-focus { filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.7)) drop-shadow(0 0 12px rgba(170, 185, 255, 0.45)); }
+:root[data-theme="dark"] .ab-path .pl-ring { filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.5)); }
+@media (forced-colors: active) { .ab-path .pl-main, .ab-path .pl-trace, .ab-path .pl-node, .ab-path .pl-ring { filter: none !important; } }
 
 /* ---------- Snapshots lean in ----------
    On the wide table, each photo near the pointer drifts a few pixels
