@@ -5,6 +5,55 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
 
+  // ---------- A heading's typed last word ----------
+  // "Outside the brief" types through a few words (its data-words): the
+  // word is deleted letter by letter, as if backspaced, and the next is
+  // typed in, a little unevenly like a hand, with a thin caret that blinks
+  // while it waits and holds solid while typing. Screen readers hear the
+  // first word once. It types only while the heading is in view and the tab
+  // is in front; with motion reduced or in Calm it rests on the first word,
+  // without the caret.
+  const rot = document.querySelector(".ab-rot");
+  if (rot) {
+    const WORDS = (rot.dataset.words || "").split(" ").filter(Boolean);
+    const word = rot.querySelector(".ab-rot-word");
+    const caret = document.createElement("span");
+    caret.className = "ab-caret";
+    caret.setAttribute("aria-hidden", "true");
+    rot.append(caret);
+    let at = 0, timer = 0, seen = false, busy = false;
+    const later = (fn, ms) => { timer = setTimeout(fn, ms); };
+    const still = () => reduce.matches || !seen || document.hidden;
+    const hold = () => { busy = false; rot.classList.remove("is-typing"); later(next, 2400); };
+    const typeIn = (target, n) => {
+      if (still()) { word.textContent = target; return hold(); }
+      word.textContent = target.slice(0, n);
+      if (n >= target.length) return hold();
+      later(() => typeIn(target, n + 1), 70 + Math.random() * 60);
+    };
+    const erase = (target) => {
+      if (still()) { word.textContent = target; return hold(); }
+      const t = word.textContent;
+      if (!t.length) return later(() => typeIn(target, 1), 160);
+      word.textContent = t.slice(0, -1);
+      later(() => erase(target), 42);
+    };
+    function next() {
+      if (still()) { timer = 0; return; } // picked up again when it is back in view
+      busy = true;
+      rot.classList.add("is-typing");
+      at = (at + 1) % WORDS.length;
+      erase(WORDS[at]);
+    }
+    const wake = () => { if (!timer && !busy && !still()) later(next, 1200); };
+    // Back to the first word, and still.
+    const rest = () => { clearTimeout(timer); timer = 0; busy = false; at = 0; word.textContent = WORDS[0]; rot.classList.remove("is-typing"); };
+    if ("IntersectionObserver" in window) new IntersectionObserver(([en]) => { seen = en.isIntersecting; wake(); }).observe(rot);
+    else { seen = true; wake(); }
+    document.addEventListener("visibilitychange", wake);
+    reduce.addEventListener("change", () => { if (reduce.matches) rest(); else wake(); });
+  }
+
   // ---------- Local time ----------
   // The time where I am (India), and what I'm probably doing at that hour.
   const lede = document.querySelector(".ab-lede");

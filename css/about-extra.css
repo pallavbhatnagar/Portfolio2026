@@ -50,3 +50,17 @@
   .ab-table ~ .ab-glance > .ab-h2.ab-r { transition-delay: 400ms; }
   .ab-table ~ .ab-glance > .ab-facts.ab-r { transition-delay: 480ms; }
 }
+
+/* "Outside the brief": its typed last word (about-extra.js). A thin caret
+   in the ink colour blinks on and off while it waits, and holds solid while
+   typing. With motion reduced or in Calm there is no caret. */
+.ab-rot { white-space: nowrap; }
+/* The changing word, and its caret, in the site's blue (lighter in the
+   dark theme). */
+.ab-rot { color: var(--blue-500); }
+:root[data-theme="dark"] .ab-rot { color: var(--blue-300); }
+@media (forced-colors: active) { .ab-rot { color: CanvasText; } .ab-caret { background: CanvasText; } }
+.ab-caret { display: inline-block; width: 0.06em; height: 0.82em; margin-left: 0.05em; vertical-align: -0.04em; background: currentColor; animation: ab-caret 1.05s steps(1) infinite; }
+.ab-rot.is-typing .ab-caret { animation: none; }
+@keyframes ab-caret { 50% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .ab-caret { display: none; } }

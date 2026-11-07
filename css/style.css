@@ -863,20 +863,37 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   .value-stat { flex-direction: column; gap: 0.1875rem; }
 }
 /* =========================================================
-   Footer: plain text at the end of the page — no background, no fixed
-   positioning, just the page's own surface continuing underneath it. One
-   row: the email (with its own copy button) on the left, social links on
-   the right.
+   Footer: a slim band in blue across the foot of the page (#0052cc, and the
+   brighter #0067ff in the dark theme), in
+   both themes, with white text and icons. One row: the email (with
+   its own copy button) on the left, social links on the right. It takes
+   white ink colours, so its text and icons read on the blue.
+   It waits behind the page: the page is a sheet that slides up off it as
+   you reach the end, and its row rises into place as it is uncovered
+   (script.js).
    ========================================================= */
 :root { --footer-h: 3.75rem; }
 .page-end { display: block; height: 1px; }
+/* The page sits above the footer, on its own colour, so it covers it. */
+.page { position: relative; z-index: 1; background: var(--bg); }
 
 .site-footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 0;
+  --ink: #fff;
+  --ink-soft: rgba(255, 255, 255, 0.95);
   min-height: var(--footer-h);
+  background: #0052cc; /* a darker shade of the dark theme's #0067ff */
   color: var(--ink);
   overflow: hidden;
 }
+:root[data-theme="dark"] .site-footer { background: #0067ff; } /* a brighter blue on the dark page */
+/* The soft bands of light behind the footer's row (script.js 1b). */
+.footer-wave { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+@media print, (forced-colors: active) { .footer-wave { display: none; } }
 .footer-inner {
+  position: relative;
   display: flex;
   align-items: center;
   max-width: 60.125rem;
@@ -908,39 +925,36 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   transition: color 0.2s ease;
 }
 .footer-links svg { width: 1.25rem; height: 1.25rem; }
-/* Icon files (assets/icons/social/) are drawn in the site's black: at 60%
-   they match the grey text colour, and turn full black on hover. Dark
-   theme flips them to light. */
-.footer-links img { display: block; width: 1.25rem; height: 1.25rem; opacity: 0.6; transition: opacity 0.2s ease; }
+/* Icon files (assets/icons/social/, filled Bootstrap Icons) are drawn in
+   black: flipped to white on the blue band. All but full white at rest,
+   full on hover or focus. */
+.footer-links img { display: block; width: 1.125rem; height: 1.125rem; opacity: 0.95; filter: invert(1); transition: opacity 0.2s ease; }
 .footer-links a:focus-visible img { opacity: 1; }
 @media (hover: hover) and (pointer: fine) { .footer-links a:hover img { opacity: 1; } }
-:root[data-theme="dark"] .footer-links img { filter: invert(1); }
 .footer-mail:focus-visible, .footer-links a:focus-visible { color: var(--ink); outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 0.1875rem; }
 
 /* Back to top: fixed to the window's right edge, shown only near the
-   bottom. Solid ink in light mode, solid white in dark mode — the
-   opposite of a plain white-card floating button, and with no shadow, so
-   it reads as a flat mark rather than a card sitting on top of the page. */
+   bottom. White in both themes, so it stands out on the blue footer band it
+   lines up with; a hairline edge keeps it from melting into the white page. */
 .to-top {
   position: fixed;
   right: 1.125rem;
-  bottom: 1.125rem;
+  bottom: 0.8125rem; /* its centre level with the footer icons at the page foot */
   z-index: 20;
   display: grid;
   place-items: center;
   width: 2.125rem;
   height: 2.125rem;
   border-radius: 50%;
-  background: #202020; /* palette Dark Gray */
-  color: #fff;
-  box-shadow: none;
+  background: #fff;
+  color: #0d0d0d;
+  box-shadow: 0 0 0 1px rgba(13, 13, 13, 0.1); /* a hairline edge, so it holds on the white page */
   opacity: 0;
   visibility: hidden;
   transform: translateY(12px);
   transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), visibility 0s linear 0.3s;
 }
 .to-top[data-show="true"] { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
-:root[data-theme="dark"] .to-top { background: #fff; color: #0d0d0d; }
 /* While the Ask AI panel is open, .site-shell (the "web part") is inset
    from the true viewport by --ask-gap and narrowed by the panel's width —
    re-anchor to its edges instead of the window's, or the button would
@@ -1237,6 +1251,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125r
 }
 .copy-mail svg { grid-area: 1 / 1; width: 0.9375rem; height: 0.9375rem; transition: opacity 0.25s var(--ease-out), transform 0.35s var(--ease-out); }
 .copy-mail .i-done { opacity: 0; transform: scale(0.6); }
+.site-footer .copy-mail { opacity: 0.9; } /* bright on the blue band, like the links */
 .copy-mail.is-copied { opacity: 1; }
 .copy-mail.is-copied .i-copy { opacity: 0; transform: scale(0.6); }
 .copy-mail.is-copied .i-done { opacity: 1; transform: none; }
@@ -2078,6 +2093,29 @@ body.ask-open .shell-scrollbar {
    text was white on white), and the active send button's arrow turns dark
    to stay visible on its now-light circle. */
 :root[data-theme="dark"] .ask-panel-form { background: var(--bg); box-shadow: inset 0 0 0 1px var(--control-edge); }
+/* Dark theme: the chat box's glowing caret (script.js 24a). The browser's
+   caret is hidden there; this one stands in for it. */
+:root[data-theme="dark"] .has-glow-caret .ask-panel-input { caret-color: transparent; }
+.ag-caret { position: absolute; z-index: 1; left: 0; top: 0; width: 0; height: 0; pointer-events: none; opacity: 0; transition: opacity 0.15s ease; }
+.ag-caret.is-on { opacity: 1; }
+.ag-caret::before { content: ""; position: absolute; left: -1rem; top: -1rem; width: 2rem; height: 2rem; border-radius: 50%; background: radial-gradient(rgba(255, 180, 150, 0.1), transparent 70%); }
+.ag-bar { position: absolute; left: -1px; top: -0.62em; width: 2px; height: 1.2em; border-radius: 2px; background: rgba(236, 214, 204, 0.6); box-shadow: 0 0 5px rgba(255, 170, 140, 0.18); }
+/* The cone: cut to shape on the inside, softened as a whole on the outside
+   (a blur on the cut layer itself would leave its edges sharp). */
+.ag-beam { position: absolute; left: -0.2rem; top: -2.25rem; width: 8.5rem; height: 4.5rem; filter: blur(4px); mix-blend-mode: screen; }
+.ag-beam::before { content: ""; position: absolute; inset: 0; background: radial-gradient(ellipse 95% 55% at 0% 50%, rgba(255, 205, 184, 0.32), rgba(255, 155, 128, 0.11) 40%, rgba(255, 140, 110, 0) 74%); clip-path: polygon(0 40%, 100% 4%, 100% 96%, 0 60%); }
+.ag-caret i { position: absolute; left: 0; top: 0; width: 2px; height: 2px; border-radius: 50%; background: #f2cbb9; opacity: 0; box-shadow: 0 0 3px rgba(255, 190, 160, 0.6); }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .ag-caret.is-on:not(.is-typing) .ag-bar { animation: ag-blink 1.05s steps(1) infinite; }
+  html:not([data-motion="calm"]) .ag-caret.is-on .ag-beam { animation: ag-breathe 3.2s ease-in-out infinite; }
+  html:not([data-motion="calm"]) .ag-caret.is-on i { animation: ag-spark 2.6s ease-out calc(var(--k) * -0.5s) infinite; }
+  .ag-caret i:nth-child(odd) { --dy: -0.7rem; }
+  .ag-caret i:nth-child(even) { --dy: 0.6rem; }
+}
+@keyframes ag-blink { 50% { opacity: 0.25; } }
+@keyframes ag-breathe { 0%, 100% { opacity: 0.85; } 50% { opacity: 1; } }
+@keyframes ag-spark { 0% { opacity: 0; transform: translate(4px, 0) scale(0.6); } 20% { opacity: 0.45; } 100% { opacity: 0; transform: translate(4.5rem, var(--dy, 0)) scale(1.1); } }
+@media (forced-colors: active) { .ag-caret { display: none; } :root[data-theme="dark"] .has-glow-caret .ask-panel-input { caret-color: auto; } }
 :root[data-theme="dark"] .ask-panel-send:not(:disabled) { background: var(--ink); color: var(--bg); }
 
 @media (prefers-reduced-motion: reduce) {
@@ -3717,22 +3755,22 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
    the AI colours (Bloom, blue into pink) with a violet edge, ink text and the
    gradient spark; the wash deepens a little on hover. Follows the theme
    through var(--bg). */
-.btn.nav-ai.ask-cta { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); color: var(--ink); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
+.btn.nav-ai.ask-cta { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 30%, var(--bg)), color-mix(in srgb, #9b62e0 26%, var(--bg)) 55%, color-mix(in srgb, #f2369a 28%, var(--bg))); color: var(--ink); border-color: color-mix(in srgb, #9b7fe8 80%, var(--line)); box-shadow: 0 2px 12px -4px rgba(124, 92, 230, 0.35); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) {
-  .btn.nav-ai.ask-cta:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
+  .btn.nav-ai.ask-cta:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 40%, var(--bg)), color-mix(in srgb, #9b62e0 35%, var(--bg)) 55%, color-mix(in srgb, #f2369a 37%, var(--bg))); border-color: #9b7fe8; }
 }
 /* Dark theme: mixing the brand hues into near-black turned them muddy (navy
    into maroon). Here the wash sits on a violet-tinted base, the hues glow
    through at higher strength, a light lilac edge and a hairline of top light
    lift it off the page, and the label stays white. */
 :root[data-theme="dark"] .btn.nav-ai.ask-cta, :root[data-theme="dark"] .cs-ask {
-  background: linear-gradient(115deg, rgba(76, 116, 255, 0.16), rgba(155, 98, 224, 0.13) 55%, rgba(242, 54, 154, 0.11)), #1b1a21;
-  border-color: rgba(176, 150, 255, 0.32); color: #f2f0f7;
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05); }
+  background: linear-gradient(115deg, rgba(76, 116, 255, 0.42), rgba(155, 98, 224, 0.36) 55%, rgba(242, 54, 154, 0.32)), #1b1a21;
+  border-color: rgba(190, 166, 255, 0.6); color: #fff;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 0 18px -4px rgba(140, 104, 255, 0.45); }
 @media (hover: hover) and (pointer: fine) {
   :root[data-theme="dark"] .btn.nav-ai.ask-cta:hover, :root[data-theme="dark"] .cs-ask:hover {
-    background: linear-gradient(115deg, rgba(76, 116, 255, 0.23), rgba(155, 98, 224, 0.19) 55%, rgba(242, 54, 154, 0.16)), #1d1c24;
-    border-color: rgba(176, 150, 255, 0.48); }
+    background: linear-gradient(115deg, rgba(76, 116, 255, 0.54), rgba(155, 98, 224, 0.47) 55%, rgba(242, 54, 154, 0.42)), #1d1c24;
+    border-color: rgba(200, 180, 255, 0.78); }
 }
 @media (forced-colors: active) { .btn.nav-ai.ask-cta { background: ButtonFace; color: ButtonText; border: 1px solid ButtonText; } }
 /* The closing chapter's buttons and the AI call to action don't lift on
@@ -3757,9 +3795,9 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 /* The case studies' "Ask AI about this project" matches the AI call to
    action on Home and About (.ask-cta): the same soft AI wash, violet edge and
    weight, deepening on hover, with no lift. */
-.cs-ask { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 16%, var(--bg)), color-mix(in srgb, #9b62e0 13%, var(--bg)) 55%, color-mix(in srgb, #f2369a 14%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 50%, var(--line)); font-weight: 600; }
+.cs-ask { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 30%, var(--bg)), color-mix(in srgb, #9b62e0 26%, var(--bg)) 55%, color-mix(in srgb, #f2369a 28%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 80%, var(--line)); box-shadow: 0 2px 12px -4px rgba(124, 92, 230, 0.35); font-weight: 600; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 24%, var(--bg)), color-mix(in srgb, #9b62e0 20%, var(--bg)) 55%, color-mix(in srgb, #f2369a 21%, var(--bg))); border-color: color-mix(in srgb, #9b7fe8 70%, var(--line)); }
+  .cs-ask:hover { background: linear-gradient(115deg, color-mix(in srgb, #3965fa 40%, var(--bg)), color-mix(in srgb, #9b62e0 35%, var(--bg)) 55%, color-mix(in srgb, #f2369a 37%, var(--bg))); border-color: #9b7fe8; }
 }
 
 /* About: "Life, lately" holds the Now list beside its heading, and the

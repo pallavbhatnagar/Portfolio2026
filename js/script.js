@@ -178,6 +178,102 @@
   })();
   window.siteSfx = sfx; // shared with pixel-dog.js (the dog's bark)
 
+  // 1b) The footer waits behind the page (CSS): as the page slides up off
+  //     it, its row rises the last few pixels into place and fades up, as
+  //     if coming out from underneath. Behind its row, soft bands of light
+  //     roll slowly across the blue (below); it runs only while the footer
+  //     is uncovered and the tab is in front. Still with motion reduced or
+  //     in Calm.
+  const footRow = document.querySelector(".footer-inner");
+  if (footRow) {
+    const foot = footRow.closest(".site-footer"), page = document.querySelector(".page");
+    let ticking = false, shown = 0;
+    // The swell: three broad, translucent bands of light rolling slowly
+    // across the blue, each a soft wave whose crest is a touch brighter,
+    // like light moving under water. With a mouse, a soft glow follows the
+    // pointer and the nearest crests lift towards it. Motion reduced or Calm:
+    // the bands hold one still frame.
+    const cv = document.createElement("canvas");
+    cv.className = "footer-wave";
+    cv.setAttribute("aria-hidden", "true");
+    foot.prepend(cv);
+    const ctx = cv.getContext("2d");
+    let W = 0, H = 0, waveRaf = 0;
+    const ptr = { x: 0, y: 0, on: false, k: 0 };
+    const t0 = performance.now();
+    const BANDS = [
+      { base: 0.4, amp: 0.48, len: 0.0016, speed: 0.22, ph: 0.0, a: 0.085 },
+      { base: 0.6, amp: 0.4, len: 0.0024, speed: -0.16, ph: 2.1, a: 0.07 },
+      { base: 0.8, amp: 0.3, len: 0.0034, speed: 0.12, ph: 4.0, a: 0.055 },
+    ];
+    const fit = () => {
+      const dpr = Math.min(devicePixelRatio || 1, 2);
+      W = foot.clientWidth; H = foot.clientHeight;
+      cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    // How much of the footer is uncovered, 0 to 1.
+    const uncovered = () => (page ? Math.min(1, Math.max(0, (foot.getBoundingClientRect().bottom - page.getBoundingClientRect().bottom) / (foot.offsetHeight || 1))) : 1);
+    const paint = (now) => {
+      waveRaf = 0;
+      shown = uncovered(); // checked every frame, so it stops as soon as the page covers it
+      const still = reduce.matches;
+      const t = still ? 0 : (now - t0) / 1000;
+      ptr.k += ((ptr.on && !still ? 1 : 0) - ptr.k) * 0.08; // the glow eases in and out
+      ctx.clearRect(0, 0, W, H);
+      const step = 6;
+      for (const b of BANDS) {
+        const y = (x) => {
+          let v = H * b.base + Math.sin(x * b.len + t * b.speed * 2 + b.ph) * H * b.amp + Math.sin(x * b.len * 2.3 - t * b.speed * 1.3 + b.ph) * H * b.amp * 0.35;
+          if (ptr.k > 0.01) { const d = (x - ptr.x) / 160; v -= Math.exp(-d * d) * H * 0.12 * ptr.k; } // crest lifts under the pointer
+          return v;
+        };
+        // The body: from the crest down, fading to nothing.
+        ctx.beginPath();
+        ctx.moveTo(0, H);
+        for (let x = 0; x <= W + step; x += step) ctx.lineTo(x, y(x));
+        ctx.lineTo(W, H); ctx.closePath();
+        const g = ctx.createLinearGradient(0, H * (b.base - b.amp), 0, H);
+        g.addColorStop(0, `rgba(255, 255, 255, ${b.a})`);
+        g.addColorStop(1, "rgba(255, 255, 255, 0)");
+        ctx.fillStyle = g; ctx.fill();
+        // The crest: a faint, soft rim of light.
+        ctx.beginPath();
+        for (let x = 0; x <= W + step; x += step) x ? ctx.lineTo(x, y(x)) : ctx.moveTo(x, y(x));
+        ctx.strokeStyle = `rgba(255, 255, 255, ${(b.a * 1.6).toFixed(3)})`;
+        ctx.lineWidth = 1; ctx.stroke();
+      }
+      if (ptr.k > 0.01) {
+        const r = 140, g = ctx.createRadialGradient(ptr.x, ptr.y, 0, ptr.x, ptr.y, r);
+        g.addColorStop(0, `rgba(255, 255, 255, ${(0.1 * ptr.k).toFixed(3)})`);
+        g.addColorStop(1, "rgba(255, 255, 255, 0)");
+        ctx.fillStyle = g; ctx.fillRect(ptr.x - r, ptr.y - r, r * 2, r * 2);
+      }
+      if (!still && shown > 0 && !document.hidden) waveRaf = requestAnimationFrame(paint);
+    };
+    const wave = () => { if (!waveRaf && shown > 0) waveRaf = requestAnimationFrame(paint); };
+    fit();
+    addEventListener("resize", () => { fit(); wave(); });
+    document.addEventListener("visibilitychange", wave);
+    foot.addEventListener("pointermove", (e) => { if (e.pointerType !== "mouse") return; const r = foot.getBoundingClientRect(); ptr.x = e.clientX - r.left; ptr.y = e.clientY - r.top; ptr.on = true; });
+    foot.addEventListener("pointerleave", () => { ptr.on = false; });
+    const lift = () => {
+      ticking = false;
+      shown = uncovered();
+      wave();
+      if (reduce.matches || !page) { footRow.style.transform = footRow.style.opacity = ""; return; }
+      footRow.style.transform = shown > 0.97 ? "" : `translateY(${((1 - shown) * 18).toFixed(1)}px)`;
+      footRow.style.opacity = shown > 0.97 ? "" : (0.25 + 0.75 * shown).toFixed(2);
+    };
+    const ask = () => { if (!ticking) { ticking = true; requestAnimationFrame(lift); } };
+    addEventListener("scroll", ask, { passive: true });
+    addEventListener("resize", ask);
+    const shellEl = document.getElementById("shellScroll");
+    if (shellEl) shellEl.addEventListener("scroll", ask, { passive: true });
+    reduce.addEventListener("change", ask);
+    lift();
+  }
+
   // 2) Sleek auto-hide scrollbars: a thin, near-invisible thumb that fades
   //    in only while a container is actively scrolling (CSS has no
   //    "is-scrolling" state, so a scroll listener toggles the class and a
@@ -2791,6 +2887,58 @@
       try { saved = localStorage.getItem("theme"); } catch (e) { /* private mode */ }
       if (!saved) { setDark(darkMq.matches); syncToggle(); announce(); }
     });
+  }
+
+  // 24a) Dark theme: a glowing caret in the chat's text box. The browser's
+  //      own caret is hidden there and this one sits where it would be: a
+  //      bright bar with a halo, a soft cone of warm light spilling ahead into
+  //      the empty space, and a few sparks drifting through it. It blinks
+  //      while you pause and holds solid while you type. Where it goes is
+  //      found by laying the text up to the cursor out in a hidden copy of the
+  //      box. Light theme: the plain caret. Reduced motion or Calm: no sparks
+  //      or breathing.
+  {
+    const ta = document.getElementById("askPanelInput");
+    const form = ta && ta.closest("form");
+    if (ta && form) {
+      const root = document.documentElement;
+      const glow = document.createElement("span");
+      glow.className = "ag-caret";
+      glow.setAttribute("aria-hidden", "true");
+      glow.innerHTML = '<span class="ag-beam"></span><span class="ag-bar"></span>' + [0, 1, 2, 3, 4].map((i) => `<i style="--k:${i}"></i>`).join("");
+      form.appendChild(glow);
+      form.classList.add("has-glow-caret");
+      const mirror = document.createElement("div");
+      mirror.setAttribute("aria-hidden", "true");
+      mirror.style.cssText = "position:absolute;visibility:hidden;left:-9999px;top:0;white-space:pre-wrap;overflow-wrap:break-word;";
+      document.body.appendChild(mirror);
+      const COPY = ["boxSizing", "width", "paddingTop", "paddingRight", "paddingBottom", "paddingLeft", "borderTopWidth", "borderRightWidth", "borderBottomWidth", "borderLeftWidth", "fontFamily", "fontSize", "fontWeight", "fontStyle", "lineHeight", "letterSpacing", "wordSpacing", "textTransform", "textIndent", "tabSize"];
+      let raf = 0, typing = 0;
+      const place = () => {
+        raf = 0;
+        const on = root.getAttribute("data-theme") === "dark" && document.activeElement === ta && ta.selectionStart === ta.selectionEnd;
+        glow.classList.toggle("is-on", on);
+        if (!on) return;
+        const cs = getComputedStyle(ta);
+        COPY.forEach((k) => { mirror.style[k] = cs[k]; });
+        mirror.style.width = ta.clientWidth + "px";
+        mirror.textContent = ta.value.slice(0, ta.selectionStart);
+        const mark = document.createElement("span");
+        mark.textContent = "\u200b";
+        mirror.appendChild(mark);
+        const line = parseFloat(cs.lineHeight) || parseFloat(cs.fontSize) * 1.45;
+        const x = ta.offsetLeft + mark.offsetLeft + 1.5, y = ta.offsetTop + mark.offsetTop - ta.scrollTop + line / 2;
+        glow.style.transform = `translate(${x.toFixed(1)}px, ${y.toFixed(1)}px)`;
+      };
+      const ask = () => { if (!raf) raf = requestAnimationFrame(place); };
+      // Solid while typing; back to blinking a moment after the last key.
+      const busy = () => { glow.classList.add("is-typing"); clearTimeout(typing); typing = setTimeout(() => glow.classList.remove("is-typing"), 500); ask(); };
+      ["input", "keydown", "keyup"].forEach((t) => ta.addEventListener(t, busy));
+      ["click", "focus", "blur", "scroll", "select", "mouseup"].forEach((t) => ta.addEventListener(t, ask));
+      document.addEventListener("selectionchange", () => { if (document.activeElement === ta) ask(); });
+      addEventListener("resize", ask);
+      new MutationObserver(ask).observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    }
   }
 
   // 24b) Theme fade: switching light and dark crossfades the whole page to
