@@ -811,6 +811,16 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   background: #fff;
 }
 :root[data-theme="dark"] .vx-card { background: var(--surface-2); }
+/* Each skill tints the card its own soft pastel (the site's project tints:
+   sky, mint, lilac, rose, sand), crossfading as the skill changes. */
+.vx-card { --vx-tint: var(--sky-panel); --vx-base: #fff; background: color-mix(in srgb, var(--vx-tint) 16%, var(--vx-base)); border-color: color-mix(in srgb, var(--ink) 6%, transparent); transition: background-color 0.5s ease; }
+:root[data-theme="dark"] .vx-card { --vx-base: var(--surface-2); background: color-mix(in srgb, var(--vx-tint) 16%, var(--vx-base)); }
+.vx-card:has(#vx-p1.is-on) { --vx-tint: var(--mint-panel); }
+.vx-card:has(#vx-p2.is-on) { --vx-tint: var(--lilac-panel); }
+.vx-card:has(#vx-p3.is-on) { --vx-tint: var(--rose-panel); }
+.vx-card:has(#vx-p4.is-on) { --vx-tint: var(--sand-panel); }
+@media (prefers-reduced-motion: reduce) { .vx-card { transition: none; } }
+html[data-motion="calm"] .vx-card { transition: none; }
 .vx-panel { grid-area: 1 / 1; display: flex; flex-direction: column; visibility: hidden; opacity: 0; }
 /* The result sits at the card's bottom edge, level with the last skill. */
 .vx-panel .value-stat { margin-top: auto; padding-top: var(--space-3); }
@@ -889,9 +899,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   overflow: hidden;
 }
 :root[data-theme="dark"] .site-footer { background: #0067ff; } /* a brighter blue on the dark page */
-/* The soft bands of light behind the footer's row (script.js 1b). */
-.footer-wave { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-@media print, (forced-colors: active) { .footer-wave { display: none; } }
 .footer-inner {
   position: relative;
   display: flex;
@@ -901,6 +908,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   margin: 0 auto;
   padding: 2px var(--pad);
 }
+/* Tablets and small laptops: the row nearly reaches the window's edge, so
+   it keeps clear of the back-to-top button that sits at the band's end. */
+@media (min-width: 641px) { .footer-inner { padding-right: max(var(--pad), calc(4.5rem - max(0px, (100vw - 60.125rem) / 2))); } }
 .footer-bar { display: flex; align-items: center; justify-content: space-between; width: 100%; }
 .footer-mail-row { display: flex; align-items: center; gap: 0.375rem; }
 /* Email and social icons rest in grey and darken to full ink on hover or
@@ -958,8 +968,9 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* While the Ask AI panel is open, .site-shell (the "web part") is inset
    from the true viewport by --ask-gap and narrowed by the panel's width —
    re-anchor to its edges instead of the window's, or the button would
-   float over the grey gap or the panel itself. */
-body.ask-open .to-top { right: calc(var(--ask-panel-w) + var(--ask-gap) + 1.125rem); bottom: calc(var(--ask-gap) + 4rem); } /* above the footer icons, which the narrower page brings close */
+   float over the grey gap or the panel itself. It stays in the blue footer
+   band, level with the footer icons. */
+body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc(var(--ask-gap) + 0.8125rem); }
 .to-top:active { transform: scale(0.94); }
 /* Phones: the footer icons sit in the bottom-right corner, so the button
    stays above them instead of covering Dribbble. */
@@ -2141,7 +2152,7 @@ body.ask-open .shell-scrollbar {
   body.ask-open .shell-scroll { position: static; overflow: visible; }
   body.ask-open .site-header { position: fixed; }
   body.ask-open .shell-scrollbar { display: none; }
-  body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: 4rem; } /* clear of the panel, above the footer icons */
+  body.ask-open .to-top { right: 1.125rem; bottom: 0.8125rem; } /* the panel slides over the page here, so the button stays put in the footer band, under it */
   .app-row::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(13, 13, 13, 0.36); opacity: 0; pointer-events: none; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.4s var(--ease-out); }
   body.ask-open .app-row::after { opacity: 1; pointer-events: auto; }
 }
@@ -2780,6 +2791,12 @@ html.is-preloading.pl-ready::before { display: none; }
   opacity: 0;
   transition: opacity 0.3s var(--ease-out);
 }
+/* On the black panel (light theme) the hello glows softly: a faint white
+   halo and a violet bloom from the AI colours. The white panel (dark theme)
+   keeps plain ink type. */
+.pl-word { text-shadow: 0 0 4px rgba(255, 255, 255, 0.3), 0 0 18px rgba(255, 255, 255, 0.12), 0 0 44px rgba(150, 120, 255, 0.2); }
+:root[data-theme="dark"] .pl-word { text-shadow: none; }
+@media (forced-colors: active) { .pl-word { text-shadow: none !important; } }
 .pl-word.is-on { opacity: 1; } /* a fade in place: no slide or blur, so nothing nudges or seems to change weight */
 @media print { html.is-preloading::before, .preloader { display: none; } }
 /* Nothing of the page shows over the hello screen. */
