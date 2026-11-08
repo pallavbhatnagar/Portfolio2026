@@ -40,9 +40,11 @@ html.bp-on main :is(section, header, h1, h2, h3, p, figure, .project, .project-p
 /* Dark theme: a white button with a dark icon. */
 :root[data-theme="dark"] .bp-toggle[aria-pressed="false"] { background: #fff; border-color: #fff; color: #0d0d0d; }
 @media (hover: hover) and (pointer: fine) { :root[data-theme="dark"] .bp-toggle[aria-pressed="false"]:hover { color: #0d0d0d; border-color: #fff; opacity: 0.88; } }
-/* Switched on: dark in both themes, so it still shows over the blue footer
-   band (blue on blue would disappear). */
-.bp-toggle[aria-pressed="true"], :root[data-theme="dark"] .bp-toggle[aria-pressed="true"] { background: #0d0d0d; border-color: rgba(255, 255, 255, 0.28); color: #fff; }
+/* Switched on: blue in the light theme (black would vanish on the black
+   footer band), black in the dark theme (blue would vanish on its blue
+   footer band). */
+.bp-toggle[aria-pressed="true"] { background: var(--blue-500); border-color: var(--blue-500); color: #fff; }
+:root[data-theme="dark"] .bp-toggle[aria-pressed="true"] { background: #0d0d0d; border-color: rgba(255, 255, 255, 0.28); color: #fff; }
 .bp-toggle svg { width: 1rem; height: 1rem; }
 .bp-toggle:active { transform: scale(0.97); }
 .bp-toggle:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
