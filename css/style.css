@@ -3285,11 +3285,6 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 .hs-hand { position: absolute; right: -1.15em; top: -0.45em; display: inline-grid; vertical-align: baseline; margin: 0; width: 1.05em; height: 1.05em; }
 .hs-talk { font-size: 1.15em; }
 
-/* Very small phones: the signature on Home stacks, photo above the name. */
-@media (max-width: 360px) {
-  .hc-sign { flex-direction: column; text-align: center; gap: 0.5rem; }
-  .hc-sign > span { text-align: center; }
-}
 /* Heading stickers sit in the heading's own top-right corner, in room kept
    for them, so they never reach a neighbouring column or the screen edge. */
 .ab-h2 .hs-host, #value-title .hs-host, #testi-title .hs-host { padding-right: 1.3em; }

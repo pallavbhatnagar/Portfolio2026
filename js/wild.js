@@ -65,7 +65,7 @@
       + (margin > 4 ? side(0, margin) + side(r.right, vw - r.right) : "");
   };
 
-  const PICK = "h1, h2, h3, h4, p, a, button, img, li, figure, label, input, .project, .project-panel, .hc-sign, .hc-ask, .value-panel, .tq-card, .next-ch";
+  const PICK = "h1, h2, h3, h4, p, a, button, img, li, figure, label, input, .project, .project-panel, .hc-hi, .hc-ask, .value-panel, .tq-card, .next-ch";
   const describe = (el) => {
     const r = el.getBoundingClientRect(), cs = getComputedStyle(el);
     const tag = el.classList.contains("project") ? "card" : el.tagName.toLowerCase();

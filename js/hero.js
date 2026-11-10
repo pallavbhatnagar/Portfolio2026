@@ -72,7 +72,7 @@
       mess.addEventListener("pointerenter", off, { once: true });
       mess.addEventListener("pointerdown", off, { once: true });
       mess.classList.add("is-hint");
-      const timer = setTimeout(() => mess.classList.remove("is-hint"), 1600);
+      const timer = setTimeout(() => mess.classList.remove("is-hint"), 2000);
     };
     // Just after the words rise in (with the hello screen, as it lifts).
     const soon = () => setTimeout(hint, 500);
