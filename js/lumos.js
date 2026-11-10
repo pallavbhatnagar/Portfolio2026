@@ -34,7 +34,7 @@
 .lumos-fx { position: fixed; inset: 0; z-index: 9991; width: 100vw; height: 100vh; pointer-events: none; }
 .lumos-say { position: fixed; left: 50%; bottom: max(1.25rem, calc(env(safe-area-inset-bottom) + 0.75rem)); z-index: 9992; display: flex; align-items: center; gap: 0.875rem; padding: 0.375rem 0.375rem 0.375rem 0.875rem; border: 1px solid var(--hairline); border-radius: 0.75rem; background: var(--bg); color: var(--ink-soft); box-shadow: 0 0.5rem 1.5rem -0.75rem rgba(0, 0, 0, 0.45); font: 400 0.8125rem/1.3 var(--font), sans-serif; white-space: nowrap; translate: -50% 0.5rem; opacity: 0; pointer-events: none; transition: opacity 0.25s cubic-bezier(0.23, 1, 0.32, 1), translate 0.25s cubic-bezier(0.23, 1, 0.32, 1); }
 .lumos-say.is-on { opacity: 1; translate: -50% 0; pointer-events: auto; }
-.lumos-say b { margin-right: 0.375rem; font-weight: 600; color: var(--ink); }
+.lumos-say b { font-weight: 600; color: var(--ink); }
 .lumos-say kbd { display: inline-block; min-width: 1.25rem; padding: 0.0625rem 0.3125rem; border: 1px solid var(--hairline); border-bottom-width: 2px; border-radius: 0.3125rem; font: 500 0.75rem/1.3 var(--font), sans-serif; color: var(--ink); text-align: center; }
 .lumos-say .ls-touch { display: none; }
 @media (hover: none), (pointer: coarse) { .lumos-say .ls-keys { display: none; } .lumos-say .ls-touch { display: inline; } }
@@ -68,7 +68,7 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
   const say = document.createElement("div");
   say.className = "lumos-say";
   say.setAttribute("role", "status");
-  say.innerHTML = `<span><b>Lumos</b><span class="ls-keys">Type <kbd>nox</kbd> or press <kbd>Esc</kbd> to end</span><span class="ls-touch">Your light follows your finger</span></span><button type="button">Nox</button>`;
+  say.innerHTML = `<span><b>Lumos:</b> <span class="ls-keys">Type <kbd>nox</kbd> or press <kbd>Esc</kbd> to end</span><span class="ls-touch">Your light follows your finger</span></span><button type="button">Nox</button>`;
   document.body.append(night, fx, say);
 
   // ---- State ----

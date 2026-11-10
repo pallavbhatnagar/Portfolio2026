@@ -225,9 +225,12 @@
   let qi = 0;
   let cur = qBox.firstElementChild;
   cur.textContent = QS[0];
-  setInterval(() => {
-    if (document.hidden || reduce.matches || ask.matches(":hover, :focus-visible")) return;
+  // While Lumos is lit (html.is-lumos), the box skips the lumos hint.
+  const SPELL = "Psst: Try typing lumos";
+  const lit = () => document.documentElement.classList.contains("is-lumos");
+  const turn = () => {
     qi = (qi + 1) % QS.length;
+    if (lit() && QS[qi] === SPELL) qi = (qi + 1) % QS.length;
     const next = document.createElement("span");
     next.className = "is-next";
     next.textContent = QS[qi];
@@ -238,7 +241,13 @@
     const old = cur;
     setTimeout(() => old.remove(), 500);
     cur = next;
+  };
+  setInterval(() => {
+    if (document.hidden || reduce.matches || ask.matches(":hover, :focus-visible")) return;
+    turn();
   }, 3000);
+  // Lumos cast with the hint showing: move straight on to a question.
+  new MutationObserver(() => { if (lit() && cur.textContent === SPELL) turn(); }).observe(document.documentElement, { attributes: true, attributeFilter: ["class"] });
   // Calm switched on with the hint showing: back to the first question.
   reduce.addEventListener("change", () => {
     if (!reduce.matches) return;
