@@ -713,9 +713,11 @@
     edge.setAttribute("aria-hidden", "true");
     edge.innerHTML = "<i></i>";
     document.body.appendChild(edge);
-    const foot = document.querySelector(".site-footer");
-    if (foot && "IntersectionObserver" in window) {
-      new IntersectionObserver(([en]) => edge.classList.toggle("is-off", en.isIntersecting)).observe(foot);
+    // The footer waits behind the page (always "on screen" to an
+    // observer), so the cue is the page's own end coming up instead.
+    const end = document.querySelector(".page-end") || document.querySelector(".site-footer");
+    if (end && "IntersectionObserver" in window) {
+      new IntersectionObserver(([en]) => edge.classList.toggle("is-off", en.isIntersecting)).observe(end);
     }
   }
 
@@ -2929,13 +2931,13 @@
     const textNow = () => (prefs.text != null ? prefs.text : textDefault);
     const deviceCalm = () => { const m = html.getAttribute("data-motion"); html.removeAttribute("data-motion"); const r = window.matchMedia("(prefers-reduced-motion: reduce)").matches; if (m) html.setAttribute("data-motion", m); return r; };
     const ic = (d, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra}>${d}</svg>`;
-    const SABER_IC = ic('<g stroke-width="1.6"><path d="M4.3 9.7V8.3C4.3 4.4 7.6 1.3 12 1.3s7.7 3.1 7.7 7v1.4l3.1 10.4c.2.6-.2 1.1-.8 1.2-3.2.8-6.6 1.2-10 1.2s-6.8-.4-10-1.2c-.6-.1-1-.6-.8-1.2z"/><path d="M12 1.3v8.4"/><path d="M2.5 21.3L5.8 12c.6-1.6 2-2.6 3.7-2.6.9 0 1.7.2 2.5.7.8-.5 1.6-.7 2.5-.7 1.7 0 3.1 1 3.7 2.6l3.3 9.3"/><path d="M7.3 13.6c.3-1.1 1.2-1.8 2.3-1.8h.6c.6 0 1 .4 1 1v.2c0 .6-.4 1-1 1H8c-.5 0-.8-.2-.7-.4zM16.7 13.6c-.3-1.1-1.2-1.8-2.3-1.8h-.6c-.6 0-1 .4-1 1v.2c0 .6.4 1 1 1H16c.5 0 .8-.2.7-.4z" fill="currentColor" stroke-width="1"/><path d="M12 15.2l-3.6 4.4h7.2z"/><path d="M8.4 19.6l3.6 2.6 3.6-2.6M5.8 16.4l2.4 3.4M18.2 16.4l-2.4 3.4"/></g>');
     const TOGGLES = [
       ["read", "Easier reading", "More room between lines, letters and words.", ic('<path d="M4 6h16M4 12h11M4 18h14"/>')],
       ["contrast", "More contrast", "Darker text and firmer edges on cards.", ic('<circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor" stroke="none"/>')],
       ["links", "Underline links", "Every link underlined, so links never hide in the text.", ic('<path d="M10 14a3.5 3.5 0 0 0 5 0l3-3a3.5 3.5 0 0 0-5-5l-.8.8M14 10a3.5 3.5 0 0 0-5 0l-3 3a3.5 3.5 0 0 0 5 5l.8-.8"/><path d="M4 21.5h16"/>')],
       ["focus", "Bold focus", "Press Tab to move around; a thick, bright outline shows where you are.", ic('<rect x="7" y="7" width="10" height="10" rx="2"/><rect x="3" y="3" width="18" height="18" rx="4.5" stroke-width="2.6"/>')],
       ["plain", "Hide extras", "Hides the stickers, doodles, the dog and the reading line along the top. Just the words and the work.", ic('<path d="M14.5 3.5H6A2.5 2.5 0 0 0 3.5 6v12A2.5 2.5 0 0 0 6 20.5h12a2.5 2.5 0 0 0 2.5-2.5V9.5z"/><path d="M14.5 3.5v4a2 2 0 0 0 2 2h4M4 4l16 16"/>')],
+      ["saber", "Lightsaber", "Turns the reading line along the top into a red lightsaber. Lively motion only.", ic('<g stroke-width="1.6"><path d="M4.3 9.7V8.3C4.3 4.4 7.6 1.3 12 1.3s7.7 3.1 7.7 7v1.4l3.1 10.4c.2.6-.2 1.1-.8 1.2-3.2.8-6.6 1.2-10 1.2s-6.8-.4-10-1.2c-.6-.1-1-.6-.8-1.2z"/><path d="M12 1.3v8.4"/><path d="M2.5 21.3L5.8 12c.6-1.6 2-2.6 3.7-2.6.9 0 1.7.2 2.5.7.8-.5 1.6-.7 2.5-.7 1.7 0 3.1 1 3.7 2.6l3.3 9.3"/><path d="M7.3 13.6c.3-1.1 1.2-1.8 2.3-1.8h.6c.6 0 1 .4 1 1v.2c0 .6-.4 1-1 1H8c-.5 0-.8-.2-.7-.4zM16.7 13.6c-.3-1.1-1.2-1.8-2.3-1.8h-.6c-.6 0-1 .4-1 1v.2c0 .6.4 1 1 1H16c.5 0 .8-.2.7-.4z" fill="currentColor" stroke-width="1"/><path d="M12 15.2l-3.6 4.4h7.2z"/><path d="M8.4 19.6l3.6 2.6 3.6-2.6M5.8 16.4l2.4 3.4M18.2 16.4l-2.4 3.4"/></g>')],
 
     ];
     // On touch screens there's nothing to point with, so the prompt says tap.
@@ -2977,7 +2979,6 @@
       <div class="dsp-lines">
         ${seg("dsp-text", "Text size", "Makes every word on the site bigger, the panel too.", [["0", '<span class="dsp-a dsp-a0">A</span>', "Default text size"], ["1", '<span class="dsp-a dsp-a1">A</span>', "Large text"], ["2", '<span class="dsp-a dsp-a2">A</span>', "Larger text"]])}
         ${seg("dsp-motion", "Motion", "", [["lively", ic('<path class="dsp-spark dsp-spark-a" d="M10 6.5l1.5 4.6 4.6 1.5-4.6 1.5L10 18.7l-1.5-4.6-4.6-1.5 4.6-1.5z"/><path class="dsp-spark dsp-spark-b" d="M18 3l.7 2.1 2.1.7-2.1.7L18 8.6l-.7-2.1-2.1-.7 2.1-.7z"/>') + "<span>Lively</span>", "Lively motion"], ["calm", ic('<ellipse cx="12" cy="18.2" rx="7.2" ry="2.6"/><ellipse cx="12" cy="12.7" rx="5" ry="2.3"/><ellipse cx="12" cy="7.9" rx="3" ry="1.8"/>') + "<span>Calm</span>", "Calm motion"]])}
-        ${seg("dsp-rline", "Reading line", "The line along the top that fills as you read down the page.", [["line", ic('<path d="M3.5 12h17"/>') + "<span>Line</span>", "Plain reading line"], ["saber", SABER_IC + "<span>Lightsaber</span>", "Lightsaber reading line"]])}
         ${seg("dsp-clicks", "Click sounds", "A soft click whenever you press something on the site.", [["off", "<span>Off</span>", "Click sounds off"], ["on", "<span>On</span>", "Click sounds on"]])}
       </div>
       <div class="dsp-chips">
@@ -3005,10 +3006,8 @@
       if (motionInput) return MOTION_HINTS[motionInput.value];
       const host = el && el.closest("[data-hint]");
       if (!host) return HINT;
-      if (host.querySelector('input[name="dsp-rline"]')) {
-        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "Calm hides the reading line. Switch to Lively to choose one.";
-        if (html.hasAttribute("data-plain")) return "Hide extras hides the reading line. Turn it off to choose one.";
-      }
+      if (host.dataset.key === "saber" && html.hasAttribute("data-plain")) return "Needs the reading line: Hide extras hides it.";
+      if (host.dataset.key === "saber" && window.matchMedia("(prefers-reduced-motion: reduce)").matches) return "Needs Lively motion: Calm hides the reading line.";
       return host.querySelector('input[name="dsp-motion"]') ? motionHint() : host.dataset.hint;
     };
     // The line shows the prompt whenever nothing is being pointed at,
@@ -3100,7 +3099,7 @@
     const resetBtn = panel.querySelector(".dsp-reset");
     const apply = () => {
       if (textNow()) html.setAttribute("data-text", String(textNow())); else html.removeAttribute("data-text");
-      ["saber", ...TOGGLES.map(([k]) => k)].forEach((k) => { if (prefs[k]) html.setAttribute("data-" + k, ""); else html.removeAttribute("data-" + k); });
+      TOGGLES.forEach(([k]) => { if (prefs[k]) html.setAttribute("data-" + k, ""); else html.removeAttribute("data-" + k); });
       const before = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (prefs.motion) html.setAttribute("data-motion", prefs.motion); else html.removeAttribute("data-motion");
       if (window.matchMedia("(prefers-reduced-motion: reduce)").matches !== before) {
@@ -3121,12 +3120,10 @@
       panel.querySelectorAll('input[name="dsp-motion"]').forEach((r) => { r.checked = r.value === (calm ? "calm" : "lively"); });
       panel.querySelectorAll('input[name="dsp-clicks"]').forEach((r) => { r.checked = r.value === (prefs.clicks ? "on" : "off"); });
       panel.querySelectorAll(".dsp-chip").forEach((c) => c.setAttribute("aria-pressed", String(!!prefs[c.dataset.key])));
-      // The reading line's style (a line or the lightsaber). Calm and Hide
-      // extras both hide the line, so the choice rests then (and is kept).
-      const rline = panel.querySelector('[aria-label="Reading line"]');
-      const rlineOff = calm || !!prefs.plain;
-      rline.classList.toggle("is-off", rlineOff);
-      rline.querySelectorAll('input[name="dsp-rline"]').forEach((r) => { r.checked = r.value === (prefs.saber ? "saber" : "line"); r.disabled = rlineOff; });
+      // The lightsaber is a style of the reading line, which Calm and Hide
+      // extras both hide: off limits then (its choice is kept for later).
+      const saberChip = panel.querySelector('.dsp-chip[data-key="saber"]');
+      if (saberChip) { if (calm || prefs.plain) saberChip.setAttribute("aria-disabled", "true"); else saberChip.removeAttribute("aria-disabled"); }
       const custom = Object.keys(prefs).length > 0;
       btn.classList.toggle("is-custom", custom);
       resetBtn.hidden = !custom;
@@ -3138,8 +3135,6 @@
       else if (t.name === "dsp-motion") {
         // Only remember a choice that differs from what the device asks for.
         if ((t.value === "calm") === deviceCalm()) delete prefs.motion; else prefs.motion = t.value;
-      } else if (t.name === "dsp-rline") {
-        if (t.value === "saber") prefs.saber = 1; else delete prefs.saber;
       } else if (t.name === "dsp-clicks") {
         if (t.value === "on") { prefs.clicks = 1; if (window.siteSfx) window.siteSfx.load("click.mp3"); } else delete prefs.clicks;
       }
@@ -3149,6 +3144,7 @@
     });
     panel.querySelectorAll(".dsp-chip").forEach((c) => c.addEventListener("click", () => {
       const k = c.dataset.key;
+      if (c.getAttribute("aria-disabled") === "true") { showHint(c); return; }
       if (prefs[k]) delete prefs[k]; else prefs[k] = 1;
       apply();
     }));
