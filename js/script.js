@@ -205,6 +205,19 @@
     lift();
   }
 
+  // 1c) Home: once the closing line comes into view, the AI colours sweep
+  //     across its words on a loop (CSS draws it; none with reduced motion
+  //     or Calm).
+  const closeLine = document.getElementById("next-title");
+  if (closeLine && "IntersectionObserver" in window) {
+    const sweepIo = new IntersectionObserver(([e]) => {
+      if (!e.isIntersecting) return;
+      sweepIo.disconnect();
+      closeLine.classList.add("is-swept");
+    }, { rootMargin: "0px 0px 15% 0px" }); // starts just before the line scrolls into view
+    sweepIo.observe(closeLine);
+  }
+
   // 2) Sleek auto-hide scrollbars: a thin, near-invisible thumb that fades
   //    in only while a container is actively scrolling (CSS has no
   //    "is-scrolling" state, so a scroll listener toggles the class and a
