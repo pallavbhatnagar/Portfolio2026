@@ -464,7 +464,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* "Every product" in the heading is the way to all the work: the same
    Bloom-coloured underline as the reader pick on the Works page, scaled to
    the heading, a touch thicker under the pointer. */
-#projects-title { line-height: 1.22; } /* room between the lines, so the link's underline reads clearly */
 /* A hand-drawn marker stroke under a word, in the Bloom colours (the AI's),
    a shade deeper on light pages. The stroke scales with its box (Safari
    ignores a fixed-width stroke in a background picture), so the small
