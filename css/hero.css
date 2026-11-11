@@ -225,9 +225,9 @@
 .hc-mark { position: relative; display: inline-block; isolation: isolate; }
 .hc-mark::before {
   content: ""; position: absolute; z-index: -1; left: -0.09em; right: -0.11em; top: 0.4em; bottom: -0.1em;
-  background: #e2dafa; opacity: 0.65; rotate: -0.5deg;
+  background: #e2dafa; opacity: 0.5; rotate: -0.5deg;
   -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60' preserveAspectRatio='none'%3E%3Cpath d='M6 14C60 6 130 10 200 5S285 4 296 9C300 18 297 34 298 46 250 52 180 50 120 55S30 58 7 54C2 40 3 26 6 14Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
   mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 60' preserveAspectRatio='none'%3E%3Cpath d='M6 14C60 6 130 10 200 5S285 4 296 9C300 18 297 34 298 46 250 52 180 50 120 55S30 58 7 54C2 40 3 26 6 14Z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
 }
-:root[data-theme="dark"] .hc-mark::before { background: #4a3f78; }
+:root[data-theme="dark"] .hc-mark::before { background: #4a3f78; opacity: 0.3; }
 @media (forced-colors: active) { .hc-mark::before { display: none; } }
