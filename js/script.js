@@ -741,7 +741,7 @@
     let VOL = 0.35;
     try { const v = parseFloat(localStorage.getItem("ambient-vol")); if (v >= 0 && v <= 1) VOL = v; } catch (e) { /* private mode */ }
     const store = { get: (k) => { try { return sessionStorage.getItem(k); } catch (e) { return null; } }, set: (k, v) => { try { sessionStorage.setItem(k, v); } catch (e) { /* private mode */ } } };
-    let audio = null, fadeRaf = 0, on = false;
+    let audio = null, fadeTimer = 0, on = false;
     const setUi = (playing) => {
       on = playing;
       soundBtn.setAttribute("aria-pressed", String(playing));
@@ -756,18 +756,22 @@
     const getVol = () => (gain ? gain.gain.value : audio.volume);
     const setVol = (v) => { v = Math.min(1, Math.max(0, v)); if (gain) gain.gain.value = v; else audio.volume = v; };
     // Fades move evenly in loudness, not in raw volume (a straight volume
-    // ramp sounds like it jumps at one end), with a soft start and end.
+    // ramp sounds like it jumps at one end), with a soft start and end. It
+    // runs on a timer and the clock, not on animation frames, which browsers
+    // pause in a hidden tab or window: every fade finishes on time anywhere.
     const fade = (to, ms, done) => {
-      cancelAnimationFrame(fadeRaf);
+      clearInterval(fadeTimer);
       const a = Math.sqrt(getVol()), b = Math.sqrt(to), t0 = performance.now();
-      const step = (t) => {
-        const k = Math.min(1, (t - t0) / ms);
+      const step = () => {
+        const k = Math.min(1, (performance.now() - t0) / ms);
         const e = k * k * (3 - 2 * k);
         const amp = a + (b - a) * e;
         setVol(amp * amp);
-        if (k < 1) fadeRaf = requestAnimationFrame(step); else if (done) done();
+        if (k < 1) return;
+        clearInterval(fadeTimer);
+        if (done) done();
       };
-      fadeRaf = requestAnimationFrame(step);
+      fadeTimer = setInterval(step, 16);
     };
     const ensure = () => {
       if (audio) return audio;
@@ -902,7 +906,7 @@
     window.__ambientVolume = (v) => {
       VOL = Math.min(1, Math.max(0, v));
       try { localStorage.setItem("ambient-vol", String(VOL)); } catch (e) { /* private mode */ }
-      if (on && audio) { cancelAnimationFrame(fadeRaf); setVol(VOL); }
+      if (on && audio) { clearInterval(fadeTimer); setVol(VOL); }
       return VOL;
     };
     window.__ambientVolumeNow = () => VOL;

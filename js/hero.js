@@ -61,23 +61,22 @@
     const settle = () => { if (plain()) { if (stopVisit) stopVisit(); mess.classList.remove("is-messed", "is-tidying"); } pressable(); };
     reduce.addEventListener("change", settle);
     phone.addEventListener("change", settle);
-    // As the page opens, the letters settle unevenly for a moment and
-    // straighten again, the same look as pointing at it, so people know it
-    // does something. Pointer devices only (that is where the hover is); not
-    // on phones, in Calm or with motion reduced.
-    const fine = window.matchMedia("(hover: hover) and (pointer: fine)");
+    // Every load, on every screen size, the letters settle unevenly for a
+    // moment and straighten again, so people notice the word. On a visit's
+    // first page it waits for the hello screen to finish lifting; on a
+    // refresh, for the words to finish rising. Not in Calm or with motion
+    // reduced.
     const hint = () => {
-      if (plain() || !fine.matches || mess.matches(":hover") || mess.classList.contains("is-messed")) return;
+      if (reduce.matches || mess.matches(":hover") || mess.classList.contains("is-messed")) return;
       const off = () => { clearTimeout(timer); mess.classList.remove("is-hint"); };
       mess.addEventListener("pointerenter", off, { once: true });
       mess.addEventListener("pointerdown", off, { once: true });
       mess.classList.add("is-hint");
       const timer = setTimeout(() => mess.classList.remove("is-hint"), 2000);
     };
-    // Just after the words rise in (with the hello screen, as it lifts).
-    const soon = () => setTimeout(hint, 500);
-    if (document.documentElement.classList.contains("is-preloading")) document.addEventListener("preloader:leaving", soon, { once: true });
-    else soon();
+    const root = document.documentElement;
+    if (root.classList.contains("is-preloading") || root.classList.contains("pl-ready")) document.addEventListener("preloader:done", () => setTimeout(hint, 100), { once: true });
+    else setTimeout(hint, 900);
     mess.addEventListener("click", makeMess);
     mess.addEventListener("keydown", (e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); makeMess(); } });
   }
