@@ -1356,9 +1356,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .im-rating { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.875rem; }
 .im-rating-text { font-size: var(--fs-body); font-weight: 500; color: var(--ink); }
 .im-avatars { display: inline-flex; }
-.im-avatars svg { display: block; width: 1.75rem; height: 1.75rem; margin-left: -0.5rem; border: 2px solid #fff; border-radius: 50%; background: #fff; }
+.im-avatars svg { display: block; width: 2.25rem; height: 2.25rem; margin-left: -0.625rem; border: 2px solid #fff; border-radius: 50%; background: #fff; }
 /* Grey at rest; with a mouse over the row each face takes its own colour (and a
-   little blush), one after another. The hat-and-beard one stays grey. */
+   little blush), one after another. */
 .im-avatars .av-bg { fill: var(--g); }
 .im-avatars .av-blush { fill: #ff8a96; opacity: 0; }
 @media (hover: hover) and (pointer: fine) {
