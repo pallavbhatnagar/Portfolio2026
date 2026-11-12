@@ -1,6 +1,6 @@
 # Publishes the site to GitHub Pages every time you push to the main branch.
-# The site is plain HTML, CSS and JS, so it's uploaded exactly as it is: no
-# build step. To use it: Settings -> Pages -> Source: "GitHub Actions".
+# The site is plain HTML, CSS and JS, so there's no build step. Only the
+# site itself is published: the notes (*.md) and repo files stay out. To use it: Settings -> Pages -> Source: "GitHub Actions".
 name: Deploy to GitHub Pages
 
 on:
@@ -35,10 +35,16 @@ jobs:
       - name: Set up Pages
         uses: actions/configure-pages@v5
 
+      - name: Gather the public files
+        run: |
+          mkdir -p ../_site
+          rsync -a --exclude '.git' --exclude '.github' --exclude '.gitattributes' --exclude '*.md' ./ ../_site/
+          mv ../_site ./_site
+
       - name: Upload the site
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: _site
 
       - name: Publish
         id: deployment

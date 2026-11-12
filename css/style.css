@@ -1356,7 +1356,20 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .im-rating { display: flex; align-items: center; gap: 0.625rem; margin-top: 0.875rem; }
 .im-rating-text { font-size: var(--fs-body); font-weight: 500; color: var(--ink); }
 .im-avatars { display: inline-flex; }
-.im-avatars svg { display: block; width: 1.75rem; height: 1.75rem; margin-left: -0.5rem; border: 2px solid #fff; border-radius: 50%; background: #fff; filter: grayscale(1) contrast(0.55) brightness(1.35); }
+.im-avatars svg { display: block; width: 1.75rem; height: 1.75rem; margin-left: -0.5rem; border: 2px solid #fff; border-radius: 50%; background: #fff; }
+/* Grey at rest; with a mouse over the row each face takes its own colour (and a
+   little blush), one after another. The hat-and-beard one stays grey. */
+.im-avatars .av-bg { fill: var(--g); }
+.im-avatars .av-blush { fill: #ff8a96; opacity: 0; }
+@media (hover: hover) and (pointer: fine) {
+  .im-rating:hover .av-bg { fill: var(--c); }
+  .im-rating:hover .av-blush { opacity: 0.6; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .im-avatars :is(.av-bg, .av-blush) { transition: fill 0.3s ease, opacity 0.3s ease; }
+  html:not([data-motion="calm"]) .im-avatars svg:nth-child(2) :is(.av-bg, .av-blush) { transition-delay: 0.04s; } html:not([data-motion="calm"]) .im-avatars svg:nth-child(3) :is(.av-bg, .av-blush) { transition-delay: 0.08s; } html:not([data-motion="calm"]) .im-avatars svg:nth-child(4) :is(.av-bg, .av-blush) { transition-delay: 0.12s; } html:not([data-motion="calm"]) .im-avatars svg:nth-child(5) :is(.av-bg, .av-blush) { transition-delay: 0.16s; } html:not([data-motion="calm"]) .im-avatars svg:nth-child(6) :is(.av-bg, .av-blush) { transition-delay: 0.2s; }
+}
+@media (forced-colors: active) { .im-avatars svg { forced-color-adjust: none; } }
 .im-avatars svg:first-child { margin-left: 0; }
 @media (prefers-reduced-motion: no-preference) {
   .js .im-copy:not(.is-in) .im-avatars svg { opacity: 0; transform: translateX(-0.5rem) scale(0.8); }
