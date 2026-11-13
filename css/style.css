@@ -1929,7 +1929,10 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
   background: var(--bg);
   margin: 0;
   border-radius: 0;
-  transition: border-radius 0.4s var(--ease-out), margin 0.4s var(--ease-out), height 0.4s var(--ease-out);
+  /* The top margin changes in one step (not animated), so script.js can
+     move the page back by the same amount in the same frame and nothing on
+     screen jumps; the side margin and corners still ease. */
+  transition: border-radius 0.4s var(--ease-out), margin-left 0.4s var(--ease-out), margin-right 0.4s var(--ease-out), height 0.4s var(--ease-out);
 }
 body.ask-open .site-shell {
   margin: var(--ask-gap) 0 var(--ask-gap) var(--ask-gap);
@@ -3000,7 +3003,8 @@ html:not(.js) .rd-pick { display: none; }
 @media (max-width: 640px) {
   .wk-reader { padding-top: calc(var(--pad) + 5.5rem); padding-bottom: 3.5rem; }
   .rd-pick { font-size: 1.0625rem; }
-  .rd-lines { margin-top: 1.25rem; }
+  .rd-lines { margin-top: 1.25rem; grid-template-rows: 100%; } /* the row is the box (sized to the showing sentence), not the longest one */
+  @media (prefers-reduced-motion: no-preference) { html:not([data-motion="calm"]) .rd-lines { transition: height 0.3s cubic-bezier(0.23, 1, 0.32, 1); } }
   .rd-line { font-size: clamp(1.5rem, 7vw, 2rem); line-height: 1.16; }
   .rd-foot { margin-top: 1.5rem; }
 }
@@ -3886,9 +3890,12 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 .proj-head .proj-intro h2 { max-width: none; line-height: 1.2; } /* same size as the headings below (.value-head h2); a little more air so the underline clears the second line */
 .proj-head .proj-intro p { max-width: 21em; margin: 0; padding-bottom: 0.2em; font-size: clamp(1rem, 1.25vw, 1.1875rem); font-weight: 500; line-height: 1.42; letter-spacing: -0.01em; color: var(--ink); }
 @media (max-width: 900px) {
-  .proj-head .proj-intro { grid-template-columns: minmax(0, 1fr); }
-  .proj-head .proj-intro p { margin-top: 1rem; }
+  .proj-head .proj-intro { grid-template-columns: minmax(0, 1fr); width: 100%; }
+  .proj-head .proj-intro p { max-width: none; margin-top: 1rem; }
 }
+/* Phones: the title runs on across the full width (the break is for the
+   two-column layout). */
+@media (max-width: 640px) { .proj-head .proj-intro h2 { max-width: none; } .proj-head .proj-intro h2 br { display: none; } }
 /* Words that light up (js/words.js): dim until lit. Lit at once with
    motion reduced or in Calm. */
 .wl .w { opacity: 0.2; transition: opacity 0.45s ease; }

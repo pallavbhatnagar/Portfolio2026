@@ -1341,8 +1341,13 @@
     }
     function fitLines() {
       rdLines.querySelectorAll(".rd-line").forEach(threeLines);
-      const tallest = Math.max(...Array.from(rdLines.querySelectorAll(".rd-line"), (l) => l.offsetHeight));
-      if (tallest > 0) rdLines.style.height = `${tallest}px`;
+      // Phones: the box fits the sentence showing (a short sentence leaves no
+      // gap); it eases to the new height when the reader changes. Wider
+      // screens: as tall as the longest, so the page below never moves.
+      const on = rdLines.querySelector(".rd-line.is-on");
+      const h = matchMedia("(max-width: 640px)").matches && on ? on.offsetHeight
+        : Math.max(...Array.from(rdLines.querySelectorAll(".rd-line"), (l) => l.offsetHeight));
+      if (h > 0) rdLines.style.height = `${h}px`;
     }
     window.addEventListener("resize", () => fitLines());
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitLines());
@@ -1471,7 +1476,7 @@
     };
     let sw = null;
     const settle = () => {
-      rdLines.style.transition = "transform 0.3s cubic-bezier(0.23, 1, 0.32, 1)";
+      rdLines.style.transition = "transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), height 0.3s cubic-bezier(0.23, 1, 0.32, 1)";
       rdLines.style.transform = "";
     };
     rdLines.addEventListener("pointerdown", (e) => {
