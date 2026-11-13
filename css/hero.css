@@ -261,7 +261,3 @@
    is drawn deeper and wider so it reads as boldly as it did on the hero's
    bigger type. */
 #value-title .hc-mark::before { left: -0.16em; right: -0.18em; top: 0.22em; bottom: -0.16em; }
-
-/* More air above and below the hero. */
-.hc { padding-top: calc(var(--pad) + 10.5rem); padding-bottom: 9.5rem; }
-@media (max-width: 640px) { .hc { padding-top: calc(var(--pad) + 9rem); padding-bottom: 6.5rem; } }
