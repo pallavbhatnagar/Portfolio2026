@@ -3878,3 +3878,27 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 .ag-next { display: flex; flex-wrap: wrap; gap: 0.3125rem; margin-top: 0.75rem; }
 .ag-next .wk-chip { border-radius: 8px; text-align: left; }
 @media (hover: hover) and (pointer: fine) { .ag-next .wk-chip:hover { border-color: var(--line); color: var(--ink); background: color-mix(in srgb, var(--ink) 4%, var(--bg)); } }
+
+/* The projects heading in two columns: the title on the left, the
+   description on the right, its words lighting up as the section scrolls
+   in (js/words.js). One column below 900px. */
+.proj-head .proj-intro { flex: 1; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 4rem); align-items: end; }
+.proj-head .proj-intro h2 { max-width: none; line-height: 1.2; } /* same size as the headings below (.value-head h2); a little more air so the underline clears the second line */
+.proj-head .proj-intro p { max-width: 21em; margin: 0; padding-bottom: 0.2em; font-size: clamp(1rem, 1.25vw, 1.1875rem); font-weight: 500; line-height: 1.42; letter-spacing: -0.01em; color: var(--ink); }
+@media (max-width: 900px) {
+  .proj-head .proj-intro { grid-template-columns: minmax(0, 1fr); }
+  .proj-head .proj-intro p { margin-top: 1rem; }
+}
+/* Words that light up (js/words.js): dim until lit. Lit at once with
+   motion reduced or in Calm. */
+.wl .w { opacity: 0.2; transition: opacity 0.45s ease; }
+.wl.is-lit .w { opacity: 1; transition-delay: calc(var(--i) * 45ms); }
+@media (prefers-reduced-motion: reduce) { .wl .w { opacity: 1; transition: none; } }
+html[data-motion="calm"] .wl .w { opacity: 1 !important; transition: none !important; }
+@media (forced-colors: active) { .wl .w { opacity: 1; } }
+
+/* Works hero: a plain background, no texture (the About page keeps the
+   dot grid that .wk-sky draws). */
+.wk-reader .wk-sky::before { display: none; }
+
+

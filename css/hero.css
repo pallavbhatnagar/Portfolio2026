@@ -231,3 +231,33 @@
 }
 :root[data-theme="dark"] .hc-mark::before { background: #4a3f78; opacity: 0.3; }
 @media (forced-colors: active) { .hc-mark::before { display: none; } }
+
+/* The wash behind the hero: three soft pools of colour drifting slowly
+   (pale blue, rose and lilac in the light theme; navy into plum in the
+   dark), fading into the page at the bottom so the next section starts
+   clean. Still with motion reduced or in Calm. */
+.hc { --hx-a: #dfe6ff; --hx-b: #f9dcee; --hx-c: #e9e0ff; }
+:root[data-theme="dark"] .hc { --hx-a: #172a52; --hx-b: #43192f; --hx-c: #261a47; }
+.hc .hc-sky::before {
+  inset: -15% -10%;
+  background:
+    radial-gradient(38% 46% at 16% 72%, var(--hx-a), transparent 70%),
+    radial-gradient(36% 44% at 84% 26%, var(--hx-b), transparent 70%),
+    radial-gradient(30% 36% at 58% 88%, var(--hx-c), transparent 70%);
+  background-size: auto;
+  -webkit-mask-image: none; mask-image: none;
+  opacity: 1;
+  filter: blur(24px);
+}
+.hc .hc-sky::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 62%, var(--bg)); }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .hc .hc-sky::before { animation: hx-drift 28s ease-in-out infinite alternate; }
+}
+@keyframes hx-drift { from { transform: translate3d(-3%, 2%, 0) scale(1.04); } to { transform: translate3d(3%, -2.5%, 0) scale(1); } }
+/* Softer in the dark theme, so the colour stays a glow behind the type. */
+:root[data-theme="dark"] .hc .hc-sky::before { opacity: 0.6; }
+@media (forced-colors: active) { .hc .hc-sky { display: none; } }
+/* On "untangle" in the "How I untangle a product." heading, the highlight
+   is drawn deeper and wider so it reads as boldly as it did on the hero's
+   bigger type. */
+#value-title .hc-mark::before { left: -0.16em; right: -0.18em; top: 0.22em; bottom: -0.16em; }
