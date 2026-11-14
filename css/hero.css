@@ -419,3 +419,12 @@ html[data-motion="calm"] .hc-down { transition: none; }
   .hc { grid-template-rows: 0 auto auto auto auto auto minmax(4rem, 1fr) auto; padding-top: calc(var(--pad) + 7.5rem); }
 }
 @media (min-width: 641px) and (max-height: 700px) { .hc { padding-top: calc(var(--pad) + 5rem); } }
+/* iPad and desktop: the three facts always stay on one row. The foot may
+   run wider than the hero's text column (up to the page edges), and the
+   gaps between the facts shrink before anything would wrap. */
+@media (min-width: 641px) {
+  .hc > .hc-foot { width: min(calc(100vw - 2 * var(--pad)), 68rem); }
+  .hc-facts { flex-wrap: nowrap; justify-content: center; gap: clamp(1rem, 4vw, 4.5rem); }
+}
+/* Less space between the facts and the arrow under them. */
+.hc-foot { gap: 0.5rem; }
