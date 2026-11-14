@@ -27,126 +27,6 @@
    ========================================================= */
 window.CASE_STUDIES = [
   {
-    // Case study: works/wealthbasket.html (Paytm Money)
-    slug: "wealthbasket",
-    name: "WealthBasket",
-    kind: "Case study",
-    category: "Fintech",
-    year: "2021",
-    tint: "mint",
-    locked: false,
-    thumbnail: "/assets/projects/wealthbasket/images/thumbnail.webp",
-    thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
-    home: {
-      order: 2,
-      text: "Investing in a basket means trusting stocks you didn't pick. The app had to show its working before it asked for money.",
-      metrics: [
-        [
-          "Screens designed",
-          "30+"
-        ],
-        [
-          "Platforms: iOS, Android and web",
-          "3"
-        ]
-      ]
-    },
-    works: {
-      text: "WealthBasket lets anyone on Paytm Money invest in expert-built portfolios of stocks and ETFs. I helped scope it with the client and designed the core journeys, from a guided first run to a monthly SIP.",
-      meta: [
-        "Product designer",
-        "About 12 months · agency team, for Paytm Money"
-      ]
-    }
-  },
-  {
-    // Case study: works/wayfarer.html
-    slug: "wayfarer",
-    name: "Wayfarer Health",
-    kind: "Case study",
-    category: "Healthcare",
-    year: "2024",
-    tint: "lilac",
-    locked: true,
-    thumbnail: "/assets/videos/projects/wayfarer.webp",
-    video: "/assets/videos/projects/wayfarer.mp4",
-    thumbAlt: "Animated preview: a banking app on a phone",
-    home: {
-      order: 3,
-      text: "Patients gave up on an eleven-field booking form. It became one short, guided conversation.",
-      metrics: [
-        [
-          "Booking completion",
-          "81%"
-        ],
-        [
-          "Support tickets",
-          "-44%"
-        ]
-      ]
-    },
-    works: {
-      text: "Booking and care-plan flow for a telehealth clinic, designed with patients and nurses in the room. We cut the booking form from eleven fields to four and moved the rest into a guided conversation.",
-      meta: [
-        "Senior UX designer",
-        "14 weeks · with 2 researchers, 4 engineers"
-      ]
-    }
-  },
-  {
-    // Case study: works/parcelo.html
-    slug: "parcelo",
-    name: "Parcelo",
-    kind: "Case study",
-    category: "B2B SaaS",
-    year: "2024",
-    tint: "rose",
-    locked: true,
-    thumbnail: "/assets/videos/projects/parcelo.webp",
-    video: "/assets/videos/projects/parcelo.mp4",
-    thumbAlt: "Animated preview: a matcha tea shop page",
-    home: {
-      order: 4,
-      text: "Late deliveries were hiding in a dashboard that showed everything. Now they surface in seconds.",
-      metrics: [
-        [
-          "Time to resolve",
-          "-52%"
-        ],
-        [
-          "Weekly active teams",
-          "+29%"
-        ]
-      ]
-    },
-    works: {
-      text: "A dispatch dashboard redesign so logistics teams can spot late deliveries and act in seconds, not minutes. I mapped the dispatcher's real workflow first, then rebuilt the screen around it.",
-      meta: [
-        "Lead product designer",
-        "8 weeks · with 1 researcher, 2 engineers"
-      ]
-    }
-  },
-  {
-    // Case study: works/lumen.html
-    slug: "lumen",
-    name: "Lumen Learn",
-    kind: "Case study",
-    category: "EdTech",
-    year: "2023",
-    tint: "sky",
-    locked: false,
-    thumbnail: "/assets/projects/lumen/images/thumbnail.webp",
-    thumbAlt: "Lumen Learn onboarding screen",
-    works: {
-      text: "Onboarding and lesson flow for an online learning platform, tested across three rounds of usability sessions with real students. The biggest fix was quiet: fewer choices on the first screen.",
-      meta: [
-        "UX designer and researcher",
-        "9 weeks · with 2 engineers"
-      ]
-    }
-  },
-  {
     // Case study: works/wave.html
     slug: "wave",
     name: "Wave 2.0",
@@ -180,22 +60,120 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: works/jda.html
-    slug: "jda",
-    name: "JDA Infra",
-    kind: "Exploration",
-    category: "Infrastructure",
+    // Case study: works/wealthbasket.html (Paytm Money)
+    slug: "wealthbasket",
+    name: "WealthBasket",
+    kind: "Case study",
+    category: "Fintech",
     year: "2021",
     tint: "mint",
     locked: false,
-    thumbnail: "/assets/projects/jda/images/thumbnail.webp",
-    thumbAlt: "JDA Infra website on a laptop",
-    works: {
-      text: "A website concept for an infrastructure firm that leads with finished projects instead of service lists, so prospective clients see the proof before the pitch.",
-      meta: [
-        "Visual and web design",
-        "2 weeks · solo"
+    thumbnail: "/assets/projects/wealthbasket/images/thumbnail.webp",
+    thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
+    home: {
+      order: 2,
+      text: "Investing in a basket means trusting stocks you didn't pick. The app had to show its working before it asked for money.",
+      metrics: [
+        [
+          "Screens designed",
+          "30+"
+        ],
+        [
+          "Platforms: iOS, Android and web",
+          "3"
+        ]
       ]
+    },
+    works: {
+      text: "WealthBasket lets anyone on Paytm Money invest in expert-built portfolios of stocks and ETFs. I helped scope it with the client and designed the core journeys, from a guided first run to a monthly SIP.",
+      meta: [
+        "Product designer",
+        "About 12 months · agency team, for Paytm Money"
+      ]
+    }
+  },
+  {
+    // Case study: works/atlas.html (locked: full page in portfolio-auth/locked-pages)
+    // PLACEHOLDER content from the project notes: check every line.
+    slug: "atlas",
+    name: "Atlas Design System",
+    kind: "Case study",
+    category: "Design systems",
+    year: "2024",
+    tint: "lilac",
+    locked: true,
+    thumbnail: "/assets/projects/atlas/images/thumbnail.jpg",
+    thumbAlt: "Atlas design system: colour tokens, buttons, toggles and form fields",
+    home: {
+      order: 3,
+      text: "Every product team had grown its own components. Atlas gave design and engineering one shared set of tokens, parts and rules.",
+      metrics: [
+        ["Token groups: colour, type, spacing, elevation, layout", "5"],
+        ["Things documented for every component", "5"]
+      ]
+    },
+    works: {
+      text: "A design system that brings enterprise products onto one language of tokens, components and interaction patterns, so separate teams ship one consistent experience.",
+      meta: ["Senior UX designer", "Enterprise SaaS, with design and engineering teams"]
+    }
+  },
+  {
+    // Case study: works/supply-chain-map.html (locked: full page in portfolio-auth/locked-pages)
+    // PLACEHOLDER content from the project notes: check every line.
+    slug: "supply-chain-map",
+    name: "Supply Chain Visibility Map",
+    kind: "Case study",
+    category: "Enterprise SaaS",
+    year: "2025",
+    tint: "rose",
+    locked: true,
+    thumbnail: "/assets/projects/supply-chain-map/images/thumbnail.jpg",
+    thumbAlt: "Supply chain map: a network of suppliers with risk colours and a detail panel",
+    home: {
+      order: 4,
+      text: "A problem at one supplier can ripple across tiers. The map shows those connections, so risk can be traced, not guessed.",
+      metrics: [
+        ["Views on one map: suppliers, materials, locations", "3"],
+        ["Analytical lenses: compliance and geography", "2"]
+      ]
+    },
+    works: {
+      text: "An interactive map of a supplier network across tiers, so teams can trace how a disruption spreads, judge the risk and move straight to recommended actions.",
+      meta: ["Senior UX designer", "Enterprise SaaS, supply chain risk"]
+    }
+  },
+  {
+    // Case study: works/barefoot-nomads.html
+    // PLACEHOLDER content from the project notes: check every line.
+    slug: "barefoot-nomads",
+    name: "Barefoot Nomads",
+    kind: "Exploration",
+    category: "Travel tech",
+    year: "2025",
+    tint: "sky",
+    locked: false,
+    thumbnail: "/assets/projects/barefoot-nomads/images/thumbnail.jpg",
+    thumbAlt: "Barefoot Nomads concept: group trip cards with seats left and travellers going",
+    works: {
+      text: "A concept for a community travel platform: curated group trips, the people going on them and booking, in one place instead of five apps.",
+      meta: ["Product designer", "Self-initiated concept, solo"]
+    }
+  },
+  {
+    // Case study: works/zacks-insight.html
+    // PLACEHOLDER content from the project notes: check every line.
+    slug: "zacks-insight",
+    name: "Zacks Insight",
+    kind: "Exploration",
+    category: "Fintech",
+    year: "2025",
+    tint: "mint",
+    locked: false,
+    thumbnail: "/assets/projects/zacks-insight/images/thumbnail.jpg",
+    thumbAlt: "Zacks Insight concept: a portfolio chart, sector split and an AI answer",
+    works: {
+      text: "A concept for an AI investment tool that explains a portfolio instead of just reporting it, with answers that show the data behind them.",
+      meta: ["Product designer", "Self-initiated concept, solo"]
     }
   }
 ];

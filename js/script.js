@@ -1302,10 +1302,10 @@
     const READERS = [
       ["anyone", "For anyone", "I make complicated products feel obvious, and I stay with them until they ship.", ["wave", "wealthbasket"]],
       ["recruiters", "Recruiters", "Senior product designer, five years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
-      ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["lumen", "wave"]],
-      ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["parcelo", "wayfarer"]],
-      ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["wave", "jda"]],
-      ["founders", "Founders", "Bring the idea and the deadline. I'll talk to your users, design what matters first and put something real in front of people fast.", ["wealthbasket", "lumen"]]
+      ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["atlas", "wave"]],
+      ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["supply-chain-map", "wealthbasket"]],
+      ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["atlas", "supply-chain-map"]],
+      ["founders", "Founders", "Bring the idea and the deadline. I'll talk to your users, design what matters first and put something real in front of people fast.", ["barefoot-nomads", "zacks-insight"]]
     ];
     const projects = window.CASE_STUDIES || [];
     const lockIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
@@ -2311,9 +2311,10 @@
     });
   const EXTRA_KEYWORDS = {
     wealthbasket: ["paytm", "paytm money", "investing", "portfolio", "sip", "stocks"],
-    wayfarer: ["telehealth", "clinic"],
-    parcelo: ["logistics", "dispatch"],
-    lumen: ["edtech", "course", "e-learning"]
+    atlas: ["design system", "tokens", "components", "library"],
+    "supply-chain-map": ["supply chain", "supplier", "risk", "map", "resilinc"],
+    "barefoot-nomads": ["travel", "trip", "booking", "community"],
+    "zacks-insight": ["ai", "investing", "portfolio insights", "zacks"]
   };
   // Work history, newest first. Keep it in step with "Where I've been" on
   // the About page.
@@ -2453,7 +2454,7 @@
       [/how do you|process|approach|research|workflow|method/i, "Walking through the process"],
       [/contact|email|hire|available|reach|call|rate|salary/i, "Finding the best way to reach me"],
       [/music|film|book|comic|hobby|travel|life|outside/i, "Looking outside the brief"],
-      [/case stud|project|work|portfolio|ship|built|wave|wealth|parcelo|wayfarer|lumen|jda/i, "Opening the case studies"],
+      [/case stud|project|work|portfolio|ship|built|wave|wealth|atlas|supply chain|barefoot|zacks/i, "Opening the case studies"],
     ];
     let thinkN = 0;
     const thinkSpark = () => {

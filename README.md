@@ -34,8 +34,8 @@ new-portoflio/
 ├── about.html            About
 ├── 404.html              Shown for any address that doesn't exist
 ├── works/                One page per case study, at /works/<slug>
-│   ├── wealthbasket.html · wayfarer.html · parcelo.html
-│   └── lumen.html · wave.html · jda.html
+│   ├── wave.html · wealthbasket.html · atlas.html
+│   └── supply-chain-map.html · barefoot-nomads.html · zacks-insight.html
 ├── README.md             This file
 │
 ├── css/
@@ -53,11 +53,11 @@ new-portoflio/
     │   ├── wealthbasket/
     │   │   ├── images/   cover · thumbnail · detail-01 · detail-02 · detail-03
     │   │   └── videos/   the project's videos
-    │   ├── wayfarer/     (same inside)
-    │   ├── parcelo/
-    │   ├── lumen/
+    │   ├── atlas/        (same inside)
+    │   ├── supply-chain-map/
+    │   ├── barefoot-nomads/
     │   ├── wave/
-    │   └── jda/
+    │   └── zacks-insight/
     ├── icons/
     │   └── social/       linkedin.svg · behance.svg · dribbble.svg
     ├── images/
@@ -89,7 +89,7 @@ Each project has its own folder, `assets/projects/<slug>/images/`. Save your ima
 
 A card can play a short silent video instead: put the MP4 and a WebP still
 of its first frame in `assets/videos/projects/`, and set `video` and
-`thumbnail` for that project in `js/projects.js` (Parcelo and Wayfarer do this).
+`thumbnail` for that project in `js/projects.js` (none do at the moment).
 
 **One extra step for detail images.** While they're dummies, each decision
 shows a zoomed-in crop of the image. When you add a real detail image, open
@@ -136,9 +136,9 @@ Save it over `assets/videos/testimonials/meera-kapoor.mp4` (MP4, H.264).
 Save your PDF over `assets/documents/resume/resume.pdf`.
 **The file there now is a placeholder: replace it before publishing.**
 
-### Locked case studies (Wayfarer Health, Parcelo)
-Their real pages are **not** in this folder. `works/wayfarer.html` and
-`works/parcelo.html` here are placeholders (the hero and the password card).
+### Locked case studies (Atlas Design System, Supply Chain Visibility Map)
+Their real pages are **not** in this folder. `works/atlas.html` and
+`works/supply-chain-map.html` here are placeholders (the hero and the password card).
 The full pages live in Cloudflare KV, and the Cloudflare Worker
 `portfolio-auth` serves them after the right password. The Worker's code and
 the full pages are in `../portfolio-auth/`, next to this folder, never on

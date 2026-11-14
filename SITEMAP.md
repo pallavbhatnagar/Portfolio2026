@@ -17,11 +17,11 @@ Works are built by JavaScript from one data file, js/projects.js.
 ├── (any missing address)  Page not found  404.html
 └── /works/<slug>           Case study      works/<slug>.html (one page per project)
     ├── /works/wealthbasket     WealthBasket     Fintech · 2021         case study (locked)
-    ├── /works/wayfarer         Wayfarer Health  Healthcare · 2024      case study · password protected
-    ├── /works/parcelo          Parcelo          B2B SaaS · 2024        case study · password protected
-    ├── /works/lumen            Lumen Learn      EdTech · 2023          case study
+    ├── /works/atlas              Atlas Design System          Design systems, 2024   case study, password protected
+    ├── /works/supply-chain-map   Supply Chain Visibility Map  Enterprise SaaS, 2025  case study, password protected
+    ├── /works/barefoot-nomads    Barefoot Nomads              Travel tech, 2025      concept
     ├── /works/wave             Wave 2.0         Fintech · 2021         case study · detailed (11 chapters)
-    └── /works/jda              JDA Infra        Infrastructure · 2021  exploration
+    └── /works/zacks-insight      Zacks Insight                Fintech, 2025          concept
 ```
 
 Every page shares the same top navigation (Home, Works, About me, a light /
@@ -39,8 +39,8 @@ In order, top to bottom:
    through four labelled steps: Insight, Framing, Interaction, Validation, then
    "Done".
 2. **Products I've worked on.** Four featured project cards that stack on top
-   of each other while scrolling (desktop only): WealthBasket, Wayfarer Health,
-   Parcelo, Lumen Learn. Each card has a category, name, two-line description,
+   of each other while scrolling (desktop only): Wave 2.0, WealthBasket,
+   Atlas Design System, Supply Chain Visibility Map. Each card has a category, name, two-line description,
    two metrics, a "Read case study" link and a screenshot. Locked projects show
    a lock badge.
 3. **What I bring to the table.** Five skills as tabs that advance on a timer
@@ -101,7 +101,7 @@ headline, an "Ask AI about this project" button, then **The team** (avatars
 and a sentence), **My role** (a sentence and focus-area tags), **Timeline and
 platform**, **Tools used**, a cover image and three outcome numbers.
 
-**Standard chapters** (WealthBasket, Wayfarer Health, Parcelo, Lumen Learn, JDA
+**Standard chapters** (WealthBasket, Atlas, Supply Chain Visibility Map, Barefoot Nomads, Zacks Insight
 Infra): Overview → The problem (with a research quote) → What we learned
 (three insights) → Process (five numbered steps) → Key decisions (three, each
 with an image) → Results (with a client testimonial) → Looking back.
@@ -117,7 +117,7 @@ A fixed chapter list on the left highlights the chapter being read (desktop).
 Every case study ends with a **Next project** link to the next project (the
 last one links back to the first).
 
-**Password protection:** Wayfarer Health and Parcelo ask for one shared
+**Password protection:** Atlas and the Supply Chain Visibility Map ask for one shared
 password. Their pages in the repository are placeholders (the hero and a lock
 card). A Cloudflare Worker (`portfolio-auth`) checks the password at
 `/api/unlock`, sets a signed cookie (until the browser closes, 2 hours at
@@ -142,7 +142,7 @@ both projects.
 ```text
 /
 ├── index.html · works/index.html · about.html · 404.html
-├── works/                    wealthbasket · wayfarer · parcelo · lumen · wave · jda (.html)
+├── works/                    wave, wealthbasket, atlas, supply-chain-map, barefoot-nomads, zacks-insight (.html)
 ├── README.md                 How to edit and publish the site
 ├── SITEMAP.md                This file
 ├── .github/workflows/deploy-pages.yml   Publishes to GitHub Pages on every push
