@@ -509,7 +509,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* Home: one step between every section after the hero (--home-gap, from
    the end of one section's content to the start of the next): the value
    section's bottom padding plus the testimonials' top padding. */
-:root { --home-gap: 6.75rem; }
+:root { --home-gap: 9rem; }
 .projects + .value { margin-top: calc(var(--home-gap) - 2.875rem - 0.75rem - 2.75rem); } /* less the last card's margin, the stack's padding and the value's own top padding */
 .project {
   --card: var(--mint-bg); --ink-tag: var(--mint-ink);
@@ -996,7 +996,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .testi {
   max-width: 60.125rem;
   margin: 0 auto;
-  padding: 4rem var(--pad) 2.75rem; /* bottom: the same as the value section's, so the steps match */
+  padding: calc(var(--home-gap) - 2.75rem) var(--pad) 2.75rem; /* top: the Home gap less the value section's bottom padding; bottom: the same as the value section's, so the steps match */
   content-visibility: auto;
   contain-intrinsic-size: auto 31rem;
 }
@@ -3769,7 +3769,7 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 
 /* Home's closing chapter (index.html .next-ch): where the story is now, and
    three ways to start the next part. The heading shares the story style. */
-.next-ch { position: relative; max-width: 60.125rem; margin: 5rem auto var(--home-gap); padding: 0 var(--pad); } /* top: a little more than the others give their headings, so the "Currently" badge has room above it */
+.next-ch { position: relative; max-width: 60.125rem; margin: calc(var(--home-gap) - 1.75rem) auto var(--home-gap); padding: 0 var(--pad); } /* top: a little more than the others give their headings, so the "Currently" badge has room above it */
 /* Where I am now, as a small badge above the line, tilted like the site's
    stickers; it drifts against the scroll (script.js 25c). Still in Calm. */
 .next-ch .next-badge { display: inline-flex; max-width: none; align-items: center; gap: 0.5rem; margin: 0 0 1.25rem; padding: 0.375rem 0.875rem 0.375rem 0.75rem; border-radius: 999px; background: var(--mint-panel); color: var(--mint-ink); font-size: 0.9375rem; font-weight: 600; rotate: -3deg; will-change: translate; }

@@ -269,7 +269,7 @@
    link down to the work. On phones the foot follows the hero in the flow.
    ========================================================= */
 .hc { box-sizing: border-box; min-height: 100vh; min-height: 100svh; padding-bottom: max(14rem, 37vh); } /* lifts the centred hero well clear of the facts, scaled to the screen height */
-.hc-foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 1.75rem; }
+.hc-foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 0.875rem; display: flex; flex-direction: column; align-items: center; gap: 1.75rem; }
 .hc-facts { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; margin: 0; padding: 0; list-style: none; text-align: left; }
 .hc-fact { display: flex; align-items: flex-start; gap: 0.75rem; min-width: 0; }
 /* Each icon is a small tilted sticker, like the ones on the headings. */
@@ -307,8 +307,8 @@
    so the facts and the link read clearly; it returns as soon as you scroll
    (js/fold.js sets .home-top). */
 html.home-top .edge-blur { opacity: 0; }
-/* More air between the first screen and the projects heading. */
-.projects { margin-top: calc(var(--space-section) + 3rem); }
+/* The projects heading follows the first screen with a little air. */
+.projects { margin-top: 3.5rem; }
 /* Phones: the three facts become a ribbon drifting sideways on an endless
    loop (the second copy only makes the loop seamless; hidden from screen
    readers). Motion reduced or Calm: they stack, still. */
@@ -357,3 +357,9 @@ html.home-top .edge-blur { opacity: 0; }
   .hc-fact { flex: 1 1 0; }
   .hc-fact-txt span { max-width: none; }
 }
+/* "Selected work, this way" fades away once you start scrolling and returns at
+   the top (js/fold.js sets .home-top). */
+.hc-down { transition: opacity 0.5s ease; }
+html:not(.home-top) .hc-down { opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .hc-down { transition: none; } }
+html[data-motion="calm"] .hc-down { transition: none; }
