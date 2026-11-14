@@ -1076,7 +1076,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 @media (max-width: 640px) { .tq-arrow { width: 2.5rem; height: 2.5rem; } }
 @media (forced-colors: active) { .tq-card, .tq-arrow { border: 1px solid CanvasText; } }
 
-
 /* =========================================================
    Quiet motion (only ever transform and opacity, all gated)
    ========================================================= */
@@ -1095,7 +1094,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
    blur). Six stacked layers, each blurring more and covering a lower band,
    read as one smooth ramp. It sits under the floating buttons, ignores the
    pointer, and fades out when the footer comes into view. */
-.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 6rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
+.edge-blur { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 4.25rem; pointer-events: none; transition: opacity 0.3s var(--ease-out); }
 .edge-blur.is-off { opacity: 0; }
 /* With the chat open beside the page (wide screens), the blur stays on the
    page side and never covers the chat's own box. */
@@ -1110,7 +1109,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
    theme, the dark grey page in the dark theme), so content softens and
    fades at the edge. A plain gradient: it costs almost nothing to draw. */
 .edge-blur::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, color-mix(in srgb, var(--bg) 35%, transparent) 55%, color-mix(in srgb, var(--bg) 80%, transparent)); pointer-events: none; }
-@media (max-width: 640px) { .edge-blur { height: 4.75rem; } }
+@media (max-width: 640px) { .edge-blur { height: 3.5rem; } }
 @media print { .edge-blur { display: none; } }
 
 /* Ambient music: a speaker beside the theme switch. Muted (with an x) by
@@ -1214,7 +1213,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .value-num { font-variant-numeric: tabular-nums; }
 .value-head p, .testi-head p { font-weight: 400; }
 .value-meta dt { font-weight: 500; }
-
 
 /* Round video controls (used by the About music card). */
 .tctl { position: absolute; right: 0.375rem; bottom: 0.375rem; display: flex; align-items: center; gap: 0.375rem; padding: 0.1875rem 0.4375rem; border-radius: 999px; background: rgba(13, 13, 13, 0.62); }
@@ -1435,7 +1433,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
   .ab-facts { grid-template-columns: 1fr; }
 }
 
-
 /* =========================================================
    Outside the brief: two full-width cards. Music: the words and a sound
    video (scenes I scored, with a link to SoundCloud). Books and comics: a
@@ -1598,7 +1595,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .ab-path.is-armed .pl-ring.is-lit { opacity: 0.25; transform: none; }
 .ab-path.is-armed .pl-next.is-lit { opacity: 0.35; }
 .ab-path.is-done .pl-ring { animation: ring 2.4s ease-out 0.4s infinite; }
-
 
 /* Now */
 .ab-faq { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
@@ -1818,7 +1814,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
   from { transform: translateY(-4%) scale(1.1); }
   to   { transform: translateY(4%) scale(1.1); }
 }
-
 
 @media (max-width: 900px) {
   .wk-hero { padding-top: calc(var(--pad) + 3.75rem); }
@@ -2826,7 +2821,6 @@ html.is-preloading.pl-ready::before { display: none; }
 /* Nothing of the page shows over the hello screen. */
 html.is-preloading .bp-toggle, html.pl-ready .bp-toggle { opacity: 0; pointer-events: none; }
 
-
 /* Works intro: "who's reading?". A quiet row of reader roles above one large
    sentence that rewrites itself for that reader, then the two case studies
    to start with, each in its own project tint. All sentences share one grid
@@ -2876,7 +2870,6 @@ html:not(.js) .rd-ind { display: none; }
   .rd-lines { touch-action: pan-y; }
 }
 
-
 /* Phones: a taller nav bar, easier to hit; the Works filter sticks a step
    below it. */
 @media (max-width: 640px) {
@@ -2897,8 +2890,6 @@ html:not(.js) .rd-ind { display: none; }
   .ab-title { line-height: 1.1; }
   .ab-lede { margin-top: 2.5rem; line-height: 1.4; }
 }
-
-
 
 /* =========================================================
    Works intro: the reader is part of the sentence. "The work, explained
@@ -3012,7 +3003,6 @@ html:not(.js) .rd-pick { display: none; }
   .rd-trig { text-decoration: underline; background-image: none; }
   .rd-menu { border: 1px solid CanvasText; }
 }
-
 
 /* =========================================================
    About hero, "the table": the intro in the middle, and around it
@@ -3150,7 +3140,6 @@ main.ab:has(.ab-table) { overflow-x: visible; }
 @media (min-width: 1024px) { .ab-table { padding-top: calc(var(--pad) + 5rem); } }
 /* The intro on three lines (wider screens). */
 @media (min-width: 641px) { .ab-table .ab-lede { max-width: 31.5em; text-wrap: balance; } }
-
 
 /* =========================================================
    About, Music: kept simple, like the other cards on this page. The
@@ -3657,7 +3646,6 @@ html.dsp-moving, html.dsp-moving * { cursor: move !important; user-select: none;
   .nav-home, .nav-links a { white-space: nowrap; }
 }
 
-
 /* Music: more than one video. Previous and next sit in the video controls
    (previous, play, next, sound); "1 / 3" is a small line above the title.
    A sideways swipe on the video does the same as the arrows, so the video
@@ -3675,7 +3663,6 @@ html.dsp-moving, html.dsp-moving * { cursor: move !important; user-select: none;
   #faq-title { white-space: nowrap; }
 }
 #faq-title .hs-host .hs-ask { top: -0.72em; }
-
 
 /* "Where I've been" on phones takes keyboard focus while it scrolls (script.js 15b). */
 .path-grid:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.5rem; }
@@ -3887,7 +3874,7 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
    description on the right, its words lighting up as the section scrolls
    in (js/words.js). One column below 900px. */
 .proj-head .proj-intro { flex: 1; display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); column-gap: clamp(2rem, 5vw, 4rem); align-items: end; }
-.proj-head .proj-intro h2 { max-width: none; font-size: clamp(1.75rem, 3.6vw, 2.875rem); line-height: 1.2; } /* a step larger than the headings below */
+.proj-head .proj-intro h2 { max-width: none; line-height: 1.2; } /* same size as the headings below (.value-head h2) */
 /* The two lines in contrast, as in the About hero: the link line set firm,
    the rest light. */
 .proj-head .proj-intro h2 { font-weight: 600; letter-spacing: -0.035em; }
@@ -3912,33 +3899,7 @@ html[data-motion="calm"] .wl .w { opacity: 1 !important; transition: none !impor
    dot grid that .wk-sky draws). */
 .wk-reader .wk-sky::before { display: none; }
 
-
-
 /* "Every product has a story.": an open-book sticker after "story", in the
    line with the words (it pops in with the heading, like the others). */
 .hs-book { position: relative; display: inline-grid; width: 0.92em; height: 0.92em; margin-left: 0.22em; vertical-align: -0.04em; border-radius: 0.24em; background: #fbd0e4; color: #7a1f4f; --hr: -10deg; } /* the rose from the AI tile, a hue the other stickers don't use */
 .hs-book svg { width: 72%; height: 72%; }
-
-/* Home, at the top: a gradient of the page colour (white in the light
-   theme, the dark page in the dark), slightly see-through, covers the
-   start of the projects, with "Explore more" on it (js/words.js). Once you
-   scroll, both fade out slowly. Its own layer, so the fade is a plain
-   opacity change. Hidden while the chat is open beside the page. */
-.home-fade { position: fixed; left: 0; right: 0; bottom: 0; z-index: 12; height: 13rem; pointer-events: none; background: linear-gradient(to bottom, color-mix(in srgb, var(--bg) 0%, transparent), color-mix(in srgb, var(--bg) 45%, transparent) 45%, color-mix(in srgb, var(--bg) 72%, transparent)); opacity: 0; transition: opacity 1.2s ease; }
-html.home-top:not(.is-preloading) .home-fade { opacity: 1; }
-body.ask-open .home-fade { display: none; }
-.explore-more { position: fixed; left: 50%; bottom: 1.75rem; z-index: 13; display: inline-flex; align-items: center; gap: 0.375rem; min-height: 32px; padding: 0 0.25rem; transform: translateX(-50%); font-size: var(--fs-small); font-weight: 500; color: var(--ink); text-decoration: none; opacity: 0; pointer-events: none; transition: opacity 0.8s ease; } /* full ink, as if hovered, all the time */
-.explore-more svg { width: 0.9375rem; height: 0.9375rem; }
-html.home-top:not(.is-preloading) .explore-more { opacity: 1; pointer-events: auto; }
-body.ask-open .explore-more { display: none; }
-.explore-more:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 0.25rem; }
-@media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="calm"]) .explore-more svg { animation: em-nudge 2.4s ease-in-out infinite; }
-}
-@keyframes em-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px); } }
-@media (prefers-reduced-motion: reduce) { .home-fade, .explore-more { transition: none; } }
-html[data-motion="calm"] :is(.home-fade, .explore-more) { transition: none; }
-@media (max-width: 640px) { .home-fade { height: 9.5rem; } .explore-more { bottom: 1.25rem; } }
-/* When the Lumos hint sits at the bottom (dark theme), Explore more goes above it. */
-body:has(.lumos-nudge.is-on) .explore-more { bottom: 4.75rem; }
-@media print, (forced-colors: active) { .home-fade, .explore-more { display: none; } }
