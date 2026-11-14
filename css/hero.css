@@ -428,3 +428,11 @@ html[data-motion="calm"] .hc-down { transition: none; }
 }
 /* Less space between the facts and the arrow under them. */
 .hc-foot { gap: 0.5rem; }
+/* iPad and desktop: the facts row spans the same column as the content
+   below (the projects heading and cards): first fact on the left edge,
+   last on the right. If the column is ever too narrow it grows past it,
+   centred, rather than wrapping. */
+@media (min-width: 641px) {
+  .hc > .hc-foot { width: 100%; min-width: max-content; }
+  .hc-facts { justify-content: space-between; gap: 1.25rem; }
+}
