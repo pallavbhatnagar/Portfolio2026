@@ -255,9 +255,105 @@
 }
 @keyframes hx-drift { from { transform: translate3d(-3%, 2%, 0) scale(1.04); } to { transform: translate3d(3%, -2.5%, 0) scale(1); } }
 /* Softer in the dark theme, so the colour stays a glow behind the type. */
-:root[data-theme="dark"] .hc .hc-sky::before { opacity: 0.6; }
+.hc .hc-sky::before { opacity: 0.6; } /* softer wash */
+:root[data-theme="dark"] .hc .hc-sky::before { opacity: 0.42; }
 @media (forced-colors: active) { .hc .hc-sky { display: none; } }
 /* On "untangle" in the "How I untangle a product." heading, the highlight
    is drawn deeper and wider so it reads as boldly as it did on the hero's
    bigger type. */
 #value-title .hc-mark::before { left: -0.16em; right: -0.18em; top: 0.22em; bottom: -0.16em; }
+
+/* =========================================================
+   The first screen: the hero fills it, and its foot carries three quiet
+   facts (a small coloured sticker, a bold line, a soft line) and a text
+   link down to the work. On phones the foot follows the hero in the flow.
+   ========================================================= */
+.hc { box-sizing: border-box; min-height: 100vh; min-height: 100svh; padding-bottom: max(14rem, 37vh); } /* lifts the centred hero well clear of the facts, scaled to the screen height */
+.hc-foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.75rem; display: flex; flex-direction: column; align-items: center; gap: 1.75rem; }
+.hc-facts { display: flex; justify-content: space-between; gap: 1.5rem; width: 100%; margin: 0; padding: 0; list-style: none; text-align: left; }
+.hc-fact { display: flex; align-items: flex-start; gap: 0.75rem; min-width: 0; }
+/* Each icon is a small tilted sticker, like the ones on the headings. */
+.hc-fact-ic { flex: none; display: grid; place-items: center; width: 2.125rem; height: 2.125rem; border-radius: 0.625rem; background: var(--stk, #c3cff9); color: #1b1b39; rotate: var(--hr, -6deg); }
+.hc-fact:nth-child(2) .hc-fact-ic { --stk: #cfe7b0; --hr: 7deg; color: #215452; }
+.hc-fact:nth-child(3) .hc-fact-ic { --stk: #fbd0e4; --hr: -8deg; color: #7a1f4f; }
+.hc-fact-ic svg { width: 58%; height: 58%; }
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .hc-fact-ic { transition: rotate 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+  .hc-fact:hover .hc-fact-ic { rotate: calc(var(--hr, -6deg) * -1); }
+}
+.hc-fact-txt { display: flex; flex-direction: column; gap: 0.125rem; }
+.hc-fact-txt b { font-size: 0.9375rem; font-weight: 600; line-height: 1.35; color: var(--ink); }
+.hc-fact-txt span { max-width: 17em; font-size: 0.8125rem; line-height: 1.4; color: var(--ink-soft); }
+/* A plain text link with a nudging arrow, no button box. */
+.hc-down { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 32px; padding: 0 0.25rem; font-size: var(--fs-small); font-weight: 500; color: var(--ink); text-decoration: none; }
+.hc-down svg { width: 0.9375rem; height: 0.9375rem; }
+.hc-down:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; border-radius: 0.25rem; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .hc-down svg { animation: hc-down-nudge 2.4s ease-in-out infinite; }
+}
+@keyframes hc-down-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px); } }
+@media (max-width: 900px) { .hc-facts { flex-direction: column; gap: 1rem; } }
+@media (max-width: 900px), (max-height: 700px) {
+  .hc { padding-bottom: 3rem; }
+  .hc-foot { position: static; margin-top: 3rem; width: 100%; }
+}
+/* When the Lumos hint sits at the bottom of the screen (dark theme), the
+   foot rises above it. */
+@media (min-width: 901px) and (min-height: 701px) {
+  .hc-foot { transition: bottom 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
+  body:has(.lumos-nudge.is-on) .hc-foot { bottom: 5rem; }
+}
+/* At the very top of Home the frosted band at the bottom edge steps aside,
+   so the facts and the link read clearly; it returns as soon as you scroll
+   (js/fold.js sets .home-top). */
+html.home-top .edge-blur { opacity: 0; }
+/* More air between the first screen and the projects heading. */
+.projects { margin-top: calc(var(--space-section) + 3rem); }
+/* Phones: the three facts become a ribbon drifting sideways on an endless
+   loop (the second copy only makes the loop seamless; hidden from screen
+   readers). Motion reduced or Calm: they stack, still. */
+.hc-facts-view { width: 100%; }
+.hc-facts-copy { display: none; }
+@media (max-width: 640px) {
+  .hc-facts-view { display: flex; overflow: hidden; width: calc(100% + 2 * var(--pad)); margin: 0 calc(-1 * var(--pad)); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .hc-facts { flex: none; flex-direction: row; gap: 2.25rem; width: auto; padding-right: 2.25rem; }
+  .hc-fact { flex: none; }
+  .hc-fact-txt span { max-width: 13.5em; }
+  .hc-facts-copy { display: flex; }
+  @media (prefers-reduced-motion: no-preference) {
+    html:not([data-motion="calm"]) .hc-facts { animation: hc-ribbon 26s linear infinite; }
+  }
+}
+@keyframes hc-ribbon { to { transform: translateX(-100%); } }
+@media (max-width: 640px) and (prefers-reduced-motion: reduce) {
+  .hc-facts-view { display: block; width: 100%; margin: 0; -webkit-mask-image: none; mask-image: none; }
+  .hc-facts { flex-direction: column; padding: 0; }
+  .hc-facts-copy { display: none; }
+}
+@media (max-width: 640px) {
+  html[data-motion="calm"] .hc-facts-view { display: block; width: 100%; margin: 0; -webkit-mask-image: none; mask-image: none; }
+  html[data-motion="calm"] .hc-facts { flex-direction: column; padding: 0; }
+  html[data-motion="calm"] .hc-facts-copy { display: none; }
+}
+/* Phones: the ribbon and the link sit at the bottom of the first screen, as
+   on wide screens; the hero lifts to leave them room. */
+@media (max-width: 640px) {
+  .hc { padding-bottom: max(11rem, 27vh); }
+  .hc-foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.25rem; margin-top: 0; width: auto; gap: 1.25rem; }
+}
+/* Phones: no "Selected work, this way" link; the ribbon alone sits at the
+   bottom of the first screen. */
+@media (max-width: 640px) {
+  .hc-down { display: none; }
+  .hc-foot { bottom: 1.75rem; }
+  .hc { padding-bottom: max(8.5rem, 22vh); }
+}
+/* Tablets and narrow windows (641-900px): the three facts stay in one row
+   at the bottom of the first screen, as on wide screens. */
+@media (min-width: 641px) and (max-width: 900px) and (min-height: 701px) {
+  .hc { padding-bottom: max(14rem, 33vh); }
+  .hc-foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.75rem; margin-top: 0; width: auto; }
+  .hc-facts { flex-direction: row; gap: 1rem; }
+  .hc-fact { flex: 1 1 0; }
+  .hc-fact-txt span { max-width: none; }
+}
