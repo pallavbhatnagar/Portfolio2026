@@ -1236,6 +1236,46 @@
     lockInput.addEventListener("input", () => { if (lockError.textContent) setError(""); });
   }
 
+  // 11b) The password field on a locked case study's page (.gate-card): the
+  //      same check as the dialog, in place. Right password: the page reloads
+  //      and the Worker sends the full case study.
+  document.querySelectorAll("[data-gate-form]").forEach((form) => {
+    const input = form.querySelector(".gate-input");
+    const error = form.querySelector(".gate-error");
+    const go = form.querySelector(".gate-go");
+    const setError = (msg) => { error.textContent = msg; input.setAttribute("aria-invalid", msg ? "true" : "false"); };
+    const shake = () => { input.classList.remove("is-wrong"); void input.offsetWidth; input.classList.add("is-wrong"); input.select(); };
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const value = input.value;
+      if (!value) { setError("Enter the password to continue."); shake(); input.focus(); return; }
+      go.disabled = true;
+      try {
+        const res = await fetch("/api/unlock", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
+          body: JSON.stringify({ password: value })
+        });
+        if (res.status === 401) {
+          setError("");
+          requestAnimationFrame(() => setError("That password didn't work. Check it and try again."));
+          shake();
+          return;
+        }
+        if (!res.ok) throw new Error("status " + res.status);
+        try { sessionStorage.setItem("caseStudiesUnlocked", "1"); } catch (err) { /* private mode */ }
+        window.location.reload();
+      } catch (err) {
+        setError("Couldn't check the password just now. Try again in a moment.");
+        shake();
+      } finally {
+        go.disabled = false;
+      }
+    });
+    input.addEventListener("input", () => { if (error.textContent) setError(""); });
+  });
+
   // 12) Copy email: copies the address, swaps the icon to a check and shows a
   //     short "Copied" note for a moment. Falls back to a hidden textarea.
   const copyBtn = document.querySelector(".copy-mail");

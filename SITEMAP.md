@@ -115,11 +115,13 @@ Results → What I took away.
 
 A fixed chapter list on the left highlights the chapter being read (desktop).
 Every case study ends with a **Next project** link to the next project (the
-last one links back to the first).
+last one links back to the first). The locked placeholders skip to the next
+project that needs no password (both go to Barefoot Nomads).
 
 **Password protection:** Atlas and the Supply Chain Visibility Map ask for one shared
-password. Their pages in the repository are placeholders (the hero and a lock
-card). A Cloudflare Worker (`portfolio-auth`) checks the password at
+password. Their pages in the repository are placeholders: the hero, a row of facts
+(role, year, platform, team), the blurred cover under the password card, and
+the list of sections inside. A Cloudflare Worker (`portfolio-auth`) checks the password at
 `/api/unlock`, sets a signed cookie (until the browser closes, 2 hours at
 most), and then serves the full pages from Cloudflare KV. One unlock covers
 both projects.

@@ -119,7 +119,8 @@ the project's page in `works/`, find that decision's image and change
    with an `order` (1 to 4) and remove `home` from the project it replaces.
 4. **"Next project" links:** each case study ends with a link to the next
    one. Point the page before it at `/works/new-app`, and the new page at the
-   one after.
+   one after. A locked placeholder points at the next project that needs no
+   password, so the suggestion always opens.
 
 To lock a project behind the password, add `data-locked` to its `<main>`
 and set `locked: true` in `js/projects.js`.
