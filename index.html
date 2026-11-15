@@ -20,10 +20,10 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","saber"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded"))d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261781" />
-<link rel="stylesheet" href="/css/hero.css?v=20261781" />
-<link rel="stylesheet" href="/css/wild.css?v=20261781" />
-<script src="/js/motion-css.js?v=20261781"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261786" />
+<link rel="stylesheet" href="/css/hero.css?v=20261786" />
+<link rel="stylesheet" href="/css/wild.css?v=20261786" />
+<script src="/js/motion-css.js?v=20261786"></script>
 </head>
 <body>
 
@@ -63,7 +63,7 @@
        "obvious". -->
   <p class="hc-hi hc-rise" style="--d:0"><span class="hc-hi-in">Hi, I'm <button class="say" type="button" data-say="/assets/audio/sound-effects/pallav-bhatnagar.mp3" aria-describedby="say-home">Pallav Bhatnagar<span class="say-tip" id="say-home" role="tooltip"><span>Pronounced (Pah-luv Bhat-naah-gar)</span><span class="say-hint">Click to hear it (US English)</span></span></button></span></p>
   <h1 class="hc-title hc-big"><span class="hc-line hc-rise" style="--d:90">I turn <span class="hc-mess">messy</span> products<span class="hs hs-knot" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="hs-burst" d="M32 2l6.5 7.8 10-2.2 1.8 10 9.4 4.2-4.2 9.2 4.2 9.2-9.4 4.2-1.8 10-10-2.2L32 62l-6.5-7.8-10 2.2-1.8-10-9.4-4.2L8.5 33 4.3 23.8l9.4-4.2 1.8-10 10 2.2z"/><path d="M14 38c5-14 12 6 16-6s8 6 10-2c1.5-6 6 0 10 0" fill="none" stroke="#1b1b39" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span> <span class="hc-line hc-rise" style="--d:180"><span class="hs hs-app" aria-hidden="true"><svg viewBox="0 0 40 32"><rect x="1.5" y="1.5" width="37" height="29" rx="6" fill="#cfe7b0" stroke="#215452" stroke-width="2.4"/><path d="M1.5 9.5h37" stroke="#215452" stroke-width="2.4"/><circle cx="7" cy="5.6" r="1.4" fill="#215452"/><circle cx="11.5" cy="5.6" r="1.4" fill="#215452"/><rect x="7" y="15" width="12" height="3" rx="1.5" fill="#215452"/><rect x="7" y="21" width="20" height="3" rx="1.5" fill="#215452" opacity=".5"/></svg></span>into ones people get.<span class="hs hs-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span></h1>
-  <p class="hc-lede hc-rise" style="--d:340">Five years designing fintech, healthcare and logistics products, from early-stage startups to platforms used by millions.</p>
+  <p class="hc-lede hc-rise" style="--d:340">Designing product experiences, simplifying complexity and driving meaningful outcomes across fintech, healthcare and logistics.</p>
   <button class="hc-ask hc-rise" id="askAiTrigger" type="button" aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false" aria-label="Talk to my Work" style="--d:420">
     <svg class="nav-ai-ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg>
     <span class="hc-q" aria-hidden="true"><span>What impact did your work have?</span></span>
@@ -76,14 +76,14 @@
   <div class="hc-foot hc-rise" style="--d:640">
     <div class="hc-facts-view">
     <ul class="hc-facts">
-      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><span class="hc-fact-txt"><b>5 years in product design</b><span>From B2C apps to enterprise platforms</span></span></li>
-      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 8l-9 4.5L3 8z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16 9 4.5 9-4.5"/></svg></span><span class="hc-fact-txt"><b>25+ broker apps, one design</b><span>Wave 2.0, white-label trading</span></span></li>
-      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c.6 3.9 2.6 5.9 6.5 6.5-3.9.6-5.9 2.6-6.5 6.5-.6-3.9-2.6-5.9-6.5-6.5 3.9-.6 5.9-2.6 6.5-6.5z"/><path d="M18.5 16v4M16.5 18h4"/></svg></span><span class="hc-fact-txt"><b>Now at Resilinc</b><span>Supply chain software, built with AI</span></span></li>
+      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 8l-9 4.5L3 8z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16 9 4.5 9-4.5"/></svg></span><span class="hc-fact-txt"><b>More than 10 Projects</b><span>Trusted by 12+ Companies</span></span></li>
+      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(3.36 6.16) scale(.72)" stroke-width="2.78"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></g><path d="M12 2.4v2.2M5.4 5.4l1.5 1.5M18.6 5.4l-1.5 1.5M2.6 11.8h2.2M19.2 11.8h2.2"/></svg></span><span class="hc-fact-txt"><b>+5 Years of Contribution</b><span>and Learnings in UX</span></span></li>
+      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg></span><span class="hc-fact-txt"><b>UX Certified</b><span>Globally Recognized</span></span></li>
     </ul>
     <ul class="hc-facts hc-facts-copy" aria-hidden="true">
-      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><span class="hc-fact-txt"><b>5 years in product design</b><span>From B2C apps to enterprise platforms</span></span></li>
-      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 8l-9 4.5L3 8z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16 9 4.5 9-4.5"/></svg></span><span class="hc-fact-txt"><b>25+ broker apps, one design</b><span>Wave 2.0, white-label trading</span></span></li>
-      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5c.6 3.9 2.6 5.9 6.5 6.5-3.9.6-5.9 2.6-6.5 6.5-.6-3.9-2.6-5.9-6.5-6.5 3.9-.6 5.9-2.6 6.5-6.5z"/><path d="M18.5 16v4M16.5 18h4"/></svg></span><span class="hc-fact-txt"><b>Now at Resilinc</b><span>Supply chain software, built with AI</span></span></li>
+      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3.5 21 8l-9 4.5L3 8z"/><path d="m3 12 9 4.5 9-4.5"/><path d="m3 16 9 4.5 9-4.5"/></svg></span><span class="hc-fact-txt"><b>More than 10 Projects</b><span>Trusted by 12+ Companies</span></span></li>
+      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><g transform="translate(3.36 6.16) scale(.72)" stroke-width="2.78"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></g><path d="M12 2.4v2.2M5.4 5.4l1.5 1.5M18.6 5.4l-1.5 1.5M2.6 11.8h2.2M19.2 11.8h2.2"/></svg></span><span class="hc-fact-txt"><b>+5 Years of Contribution</b><span>and Learnings in UX</span></span></li>
+      <li class="hc-fact"><span class="hc-fact-ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg></span><span class="hc-fact-txt"><b>UX Certified</b><span>Globally Recognized</span></span></li>
     </ul>
     </div>
     <a class="hc-down" href="#projects" aria-label="Selected work, this way"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5 8 10l3.5-3.5"/></svg></a>
@@ -333,14 +333,14 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261781" defer fetchpriority="high"></script>
-<script src="/js/projects.js?v=20261781" defer fetchpriority="high"></script>
-<script src="/js/render.js?v=20261781" defer fetchpriority="high"></script>
-<script src="/js/script.js?v=20261781" defer fetchpriority="high"></script>
-<script src="/js/lumos.js?v=20261781" defer></script>
-<script src="/js/hero.js?v=20261781" defer fetchpriority="high"></script>
-<script src="/js/wild.js?v=20261781" defer fetchpriority="high"></script>
-<script src="/js/words.js?v=20261781" defer></script>
-<script src="/js/fold.js?v=20261781" defer></script>
+<script src="/js/content.js?v=20261786" defer fetchpriority="high"></script>
+<script src="/js/projects.js?v=20261786" defer fetchpriority="high"></script>
+<script src="/js/render.js?v=20261786" defer fetchpriority="high"></script>
+<script src="/js/script.js?v=20261786" defer fetchpriority="high"></script>
+<script src="/js/lumos.js?v=20261786" defer></script>
+<script src="/js/hero.js?v=20261786" defer fetchpriority="high"></script>
+<script src="/js/wild.js?v=20261786" defer fetchpriority="high"></script>
+<script src="/js/words.js?v=20261786" defer></script>
+<script src="/js/fold.js?v=20261786" defer></script>
 </body>
 </html>
