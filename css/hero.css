@@ -120,6 +120,8 @@
 
 /* Download resume, centred under the chat box. */
 .hc-resume { margin-top: 1.5rem; }
+.hc-link.hc-resume { font-size: 1.0625rem; }
+.hc-link.hc-resume svg { width: 1rem; height: 1rem; }
 .hc-link { display: inline-flex; align-items: center; gap: 0.375rem; min-height: 24px; font-size: var(--fs-small); font-weight: 600; color: var(--ink); text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--ink) 25%, transparent); text-underline-offset: 0.3em; transition: text-decoration-color 0.2s ease; }
 .hc-link svg { width: 0.875rem; height: 0.875rem; }
 @media (hover: hover) and (pointer: fine) { .hc-link:hover { text-decoration-color: currentColor; } }
@@ -435,4 +437,9 @@ html[data-motion="calm"] .hc-down { transition: none; }
 @media (min-width: 641px) {
   .hc > .hc-foot { width: 100%; min-width: max-content; }
   .hc-facts { justify-content: space-between; gap: 1.25rem; }
+}
+/* Smaller screens: the description is as wide as the title (hero.js measures
+   it), with lines filled rather than balanced so it reaches that width. */
+@media (max-width: 820px) {
+  .hc .hc-lede { width: 100%; max-width: var(--hc-title-w, 40em); text-wrap: pretty; }
 }

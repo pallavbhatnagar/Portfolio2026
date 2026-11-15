@@ -256,3 +256,17 @@
     cur.textContent = QS[0];
   });
 })();
+
+/* Smaller screens: the description below the title takes the title's width
+   (its longest line), so the two read as one block. hero.css uses
+   --hc-title-w only below 821px; wider screens keep the narrower lede. */
+(() => {
+  const hc = document.querySelector(".hc");
+  const lines = hc ? Array.from(hc.querySelectorAll(".hc-title .hc-line")) : [];
+  if (!lines.length) return;
+  const fit = () => hc.style.setProperty("--hc-title-w", Math.max(...lines.map((l) => l.offsetWidth)) + "px");
+  fit();
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  if ("ResizeObserver" in window) new ResizeObserver(fit).observe(hc.querySelector(".hc-title"));
+  else addEventListener("resize", fit);
+})();
