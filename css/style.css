@@ -3946,3 +3946,9 @@ html[data-motion="calm"] .wl .w { opacity: 1 !important; transition: none !impor
 /* Up to 900px (where the heading and description stack), "Every product
    has a story." runs on one line; the break is for the two-column layout. */
 @media (max-width: 900px) { .proj-head .proj-intro h2 br { display: none; } }
+/* Phones: the testimonials and closing headings wrap to three or four lines,
+   so they get more space between lines. */
+@media (max-width: 640px) {
+  .testi-head h2 { line-height: 1.2; }
+  .next-ch h2 { line-height: 1.34; }
+}
