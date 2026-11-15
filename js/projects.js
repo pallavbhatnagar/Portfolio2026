@@ -93,16 +93,16 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: works/atlas.html (locked: full page in portfolio-auth/locked-pages)
+    // Case study: works/atlasdesignsystem.html (locked: full page in portfolio-auth/locked-pages)
     // PLACEHOLDER content from the project notes: check every line.
-    slug: "atlas",
+    slug: "atlasdesignsystem",
     name: "Atlas Design System",
     kind: "Case study",
     category: "Design systems",
     year: "2024",
     tint: "lilac",
     locked: true,
-    thumbnail: "/assets/projects/atlas/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/atlasdesignsystem/images/thumbnail.jpg",
     thumbAlt: "Atlas design system: colour tokens, buttons, toggles and form fields",
     home: {
       order: 3,
@@ -118,16 +118,16 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: works/supply-chain-map.html (locked: full page in portfolio-auth/locked-pages)
+    // Case study: works/supplychainmap.html (locked: full page in portfolio-auth/locked-pages)
     // PLACEHOLDER content from the project notes: check every line.
-    slug: "supply-chain-map",
+    slug: "supplychainmap",
     name: "Supply Chain Visibility Map",
     kind: "Case study",
     category: "Enterprise SaaS",
     year: "2025",
     tint: "rose",
     locked: true,
-    thumbnail: "/assets/projects/supply-chain-map/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/supplychainmap/images/thumbnail.jpg",
     thumbAlt: "Supply chain map: a network of suppliers with risk colours and a detail panel",
     home: {
       order: 4,

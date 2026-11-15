@@ -1302,9 +1302,9 @@
     const READERS = [
       ["anyone", "For anyone", "I make complicated products feel obvious, and I stay with them until they ship.", ["wave", "wealthbasket"]],
       ["recruiters", "Recruiters", "Senior product designer, five years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
-      ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["atlas", "wave"]],
-      ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["supply-chain-map", "wealthbasket"]],
-      ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["atlas", "supply-chain-map"]],
+      ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["atlasdesignsystem", "wave"]],
+      ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["supplychainmap", "wealthbasket"]],
+      ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["atlasdesignsystem", "supplychainmap"]],
       ["founders", "Founders", "Bring the idea and the deadline. I'll talk to your users, design what matters first and put something real in front of people fast.", ["barefoot-nomads", "zacks-insight"]]
     ];
     const projects = window.CASE_STUDIES || [];
@@ -2311,8 +2311,8 @@
     });
   const EXTRA_KEYWORDS = {
     wealthbasket: ["paytm", "paytm money", "investing", "portfolio", "sip", "stocks"],
-    atlas: ["design system", "tokens", "components", "library"],
-    "supply-chain-map": ["supply chain", "supplier", "risk", "map", "resilinc"],
+    atlasdesignsystem: ["design system", "tokens", "components", "library"],
+    "supplychainmap": ["supply chain", "supplier", "risk", "map", "resilinc"],
     "barefoot-nomads": ["travel", "trip", "booking", "community"],
     "zacks-insight": ["ai", "investing", "portfolio insights", "zacks"]
   };

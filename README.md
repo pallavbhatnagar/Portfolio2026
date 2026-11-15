@@ -34,8 +34,8 @@ new-portoflio/
 ├── about.html            About
 ├── 404.html              Shown for any address that doesn't exist
 ├── works/                One page per case study, at /works/<slug>
-│   ├── wave.html · wealthbasket.html · atlas.html
-│   └── supply-chain-map.html · barefoot-nomads.html · zacks-insight.html
+│   ├── wave.html · wealthbasket.html · atlasdesignsystem.html
+│   └── supplychainmap.html · barefoot-nomads.html · zacks-insight.html
 ├── README.md             This file
 │
 ├── css/
@@ -53,8 +53,8 @@ new-portoflio/
     │   ├── wealthbasket/
     │   │   ├── images/   cover · thumbnail · detail-01 · detail-02 · detail-03
     │   │   └── videos/   the project's videos
-    │   ├── atlas/        (same inside)
-    │   ├── supply-chain-map/
+    │   ├── atlasdesignsystem/        (same inside)
+    │   ├── supplychainmap/
     │   ├── barefoot-nomads/
     │   ├── wave/
     │   └── zacks-insight/
@@ -137,8 +137,8 @@ Save your PDF over `assets/documents/resume/resume.pdf`.
 **The file there now is a placeholder: replace it before publishing.**
 
 ### Locked case studies (Atlas Design System, Supply Chain Visibility Map)
-Their real pages are **not** in this folder. `works/atlas.html` and
-`works/supply-chain-map.html` here are placeholders (the hero and the password card).
+Their real pages are **not** in this folder. `works/atlasdesignsystem.html` and
+`works/supplychainmap.html` here are placeholders (the hero and the password card).
 The full pages live in Cloudflare KV, and the Cloudflare Worker
 `portfolio-auth` serves them after the right password. The Worker's code and
 the full pages are in `../portfolio-auth/`, next to this folder, never on

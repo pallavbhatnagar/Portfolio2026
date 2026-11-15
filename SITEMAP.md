@@ -17,8 +17,8 @@ Works are built by JavaScript from one data file, js/projects.js.
 ├── (any missing address)  Page not found  404.html
 └── /works/<slug>           Case study      works/<slug>.html (one page per project)
     ├── /works/wealthbasket     WealthBasket     Fintech · 2021         case study (locked)
-    ├── /works/atlas              Atlas Design System          Design systems, 2024   case study, password protected
-    ├── /works/supply-chain-map   Supply Chain Visibility Map  Enterprise SaaS, 2025  case study, password protected
+    ├── /works/atlasdesignsystem  Atlas Design System          Design systems, 2024   case study, password protected
+    ├── /works/supplychainmap   Supply Chain Visibility Map  Enterprise SaaS, 2025  case study, password protected
     ├── /works/barefoot-nomads    Barefoot Nomads              Travel tech, 2025      concept
     ├── /works/wave             Wave 2.0         Fintech · 2021         case study · detailed (11 chapters)
     └── /works/zacks-insight      Zacks Insight                Fintech, 2025          concept
@@ -142,7 +142,7 @@ both projects.
 ```text
 /
 ├── index.html · works/index.html · about.html · 404.html
-├── works/                    wave, wealthbasket, atlas, supply-chain-map, barefoot-nomads, zacks-insight (.html)
+├── works/                    wave, wealthbasket, atlasdesignsystem, supplychainmap, barefoot-nomads, zacks-insight (.html)
 ├── README.md                 How to edit and publish the site
 ├── SITEMAP.md                This file
 ├── .github/workflows/deploy-pages.yml   Publishes to GitHub Pages on every push
