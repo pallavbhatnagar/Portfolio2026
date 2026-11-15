@@ -219,7 +219,7 @@
   // watches the box for a few seconds sees it. Not where there is no
   // keyboard to type it with. With motion reduced or in Calm the box holds
   // still on one question, and the spell is off, so the hint never shows.
-  if (!window.matchMedia("(hover: none), (pointer: coarse)").matches) QS = QS.flatMap((q) => [q, "Psst: Try typing lumos"]);
+  if (!window.matchMedia("(hover: none), (pointer: coarse), (max-width: 640px)").matches) QS = QS.flatMap((q) => [q, "Psst: Try typing lumos"]);
   if (!ask || !qBox) return;
   let qi = 0;
   let cur = qBox.firstElementChild;

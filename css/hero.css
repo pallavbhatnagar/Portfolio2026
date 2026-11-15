@@ -299,12 +299,6 @@
   .hc { padding-bottom: 3rem; }
   .hc-foot { position: static; margin-top: 3rem; width: 100%; }
 }
-/* When the Lumos hint sits at the bottom of the screen (dark theme), the
-   foot rises above it. */
-@media (min-width: 901px) and (min-height: 701px) {
-  .hc-foot { transition: bottom 0.4s cubic-bezier(0.23, 1, 0.32, 1); }
-  body:has(.lumos-nudge.is-on) .hc-foot { bottom: 5rem; }
-}
 /* At the very top of Home the frosted band at the bottom edge steps aside,
    so the facts and the link read clearly; it returns as soon as you scroll
    (js/fold.js sets .home-top). */
@@ -388,9 +382,6 @@ html[data-motion="calm"] .hc-down { transition: none; }
 @media (prefers-reduced-motion: no-preference) {
   .hc-foot.hc-rise { transition: opacity 0.9s var(--hc-out), transform 0.9s var(--hc-out), filter 0.9s var(--hc-out); transition-delay: calc(var(--d, 0) * 1ms); }
 }
-/* When the Lumos hint sits at the bottom of the screen (dark theme), the
-   foot rises above it. */
-@media (min-width: 641px) { body:has(.lumos-nudge.is-on) .hc { padding-bottom: 4.5rem; } }
 @media (max-width: 640px) { .hc { padding-bottom: 1.5rem; } }
 /* Short screens (a landscape tablet or a small laptop window): less air under
    the nav, so the facts and the link still end on the first screen. */

@@ -2678,7 +2678,7 @@ body.ask-open .cs-side { display: none; }
 
 /* The Lumos hint (about.html), hidden where the spell is off (lumos.js):
    no keyboard to type it with, motion reduced, or Calm. */
-@media (hover: none), (pointer: coarse) { .lumos-hint { display: none; } }
+@media (hover: none), (pointer: coarse), (max-width: 640px) { .lumos-hint { display: none; } }
 @media (prefers-reduced-motion: reduce) { html:not([data-motion="lively"]) .lumos-hint { display: none; } }
 html[data-motion="calm"] .lumos-hint { display: none; }
 

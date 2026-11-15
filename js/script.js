@@ -2397,9 +2397,10 @@
     return `<iframe class="ag-embed" src="https://w.soundcloud.com/player/?${params.toString()}" title="Sketches and scores on SoundCloud" width="100%" height="166" style="border:0;border-radius:0.4375rem;display:block" allow="autoplay"></iframe>`;
   };
 
-  // Touch screens have no keyboard to cast Lumos with (lumos.js is off there).
+  // Touch screens have no keyboard to cast Lumos with, and phone-sized windows
+  // (640px or less) don't get it either (lumos.js is off there).
   // Nor is it there with motion reduced or in Calm, so the chat doesn't offer it then.
-  const touchy = window.matchMedia("(hover: none), (pointer: coarse)").matches;
+  const touchy = window.matchMedia("(hover: none), (pointer: coarse), (max-width: 640px)").matches;
   const noSpell = () => touchy || reduce.matches;
   const topics = [
     { k: ["shipped", "projects", "portfolio", "what have you built", "case stud", "worked on"],

@@ -17,9 +17,10 @@
      curl of smoke.
    It is off with motion reduced or in Calm (and goes out if Calm is
    switched on while it is lit), and on touch screens (phones, tablets,
-   iPads), which have no keyboard to cast it with. */
+   iPads), which have no keyboard to cast it with, and in windows 640px wide
+   or less (phone-sized), where none of its hints show either. */
 (() => {
-  if (window.matchMedia("(hover: none), (pointer: coarse)").matches) { try { sessionStorage.removeItem("lumos"); } catch (e) {} return; }
+  if (window.matchMedia("(hover: none), (pointer: coarse), (max-width: 640px)").matches) { try { sessionStorage.removeItem("lumos"); } catch (e) {} return; }
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const KEY = "lumos";
   const store = { get: () => { try { return sessionStorage.getItem(KEY); } catch (e) { return null; } }, set: (v) => { try { v ? sessionStorage.setItem(KEY, "1") : sessionStorage.removeItem(KEY); } catch (e) {} } };
@@ -37,6 +38,17 @@
 .lumos-say b { font-weight: 600; color: var(--ink); }
 .lumos-say kbd { display: inline-block; min-width: 1.25rem; padding: 0.0625rem 0.3125rem; border: 1px solid var(--hairline); border-bottom-width: 2px; border-radius: 0.3125rem; font: 500 0.75rem/1.3 var(--font), sans-serif; color: var(--ink); text-align: center; }
 .lumos-say .ls-touch { display: none; }
+/* The dark-theme nudge floats over the page (nothing moves for it), with a
+   close button and a thin bar along its foot that runs out over 6 seconds.
+   Pointing at it or focusing it pauses the bar. */
+.lumos-nudge { overflow: hidden; gap: 0.625rem; padding-right: 0.3125rem; }
+.lumos-nudge .ln-x { display: grid; place-items: center; width: 1.75rem; height: 1.75rem; padding: 0; border-radius: 0.4375rem; background: transparent; color: var(--ink-soft); }
+.lumos-nudge .ln-x svg { width: 0.875rem; height: 0.875rem; }
+@media (hover: hover) and (pointer: fine) { .lumos-say .ln-x:hover { opacity: 1; background: color-mix(in srgb, var(--ink) 8%, transparent); color: var(--ink); } }
+.lumos-nudge .ln-bar { position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: color-mix(in srgb, var(--ink) 60%, transparent); transform-origin: left; transform: scaleX(0); pointer-events: none; }
+.lumos-nudge.is-on .ln-bar { animation: ln-run 6s linear forwards; }
+.lumos-nudge:hover .ln-bar, .lumos-nudge:focus-within .ln-bar { animation-play-state: paused; }
+@keyframes ln-run { from { transform: scaleX(1); } to { transform: scaleX(0); } }
 @media (hover: none), (pointer: coarse) { .lumos-say .ls-keys { display: none; } .lumos-say .ls-touch { display: inline; } }
 .lumos-say button { padding: 0.375rem 0.75rem; border: 0; border-radius: 0.5rem; background: var(--ink); color: var(--bg); font: 500 0.8125rem/1.2 var(--font), sans-serif; cursor: pointer; transition: transform 0.16s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.16s ease; }
 @media (hover: hover) and (pointer: fine) { .lumos-say button:hover { opacity: 0.88; } }
@@ -321,18 +333,19 @@ html.is-lumos .lumos-say:not(.lumos-nudge) { view-transition-name: lumos-say; } 
   const nudge = document.createElement("div");
   nudge.className = "lumos-say lumos-nudge";
   nudge.setAttribute("role", "status");
-  nudge.innerHTML = `<span><b>It's dark in here.</b>Try typing <kbd>lumos</kbd></span><button type="button">Lumos</button>`;
+  nudge.innerHTML = `<span><b>It's dark in here.</b> Try typing <kbd>lumos</kbd></span><button type="button" class="ln-go">Lumos</button><button type="button" class="ln-x" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button><span class="ln-bar" aria-hidden="true"></span>`;
   document.body.appendChild(nudge);
-  let nudgeTimer = 0;
-  const hideNudge = () => { clearTimeout(nudgeTimer); nudge.classList.remove("is-on"); };
-  nudge.querySelector("button").addEventListener("click", () => { hideNudge(); light(true); });
+  const hideNudge = () => nudge.classList.remove("is-on");
+  nudge.querySelector(".ln-go").addEventListener("click", () => { hideNudge(); light(true); });
+  nudge.querySelector(".ln-x").addEventListener("click", hideNudge);
+  // It closes when its bar runs out (the bar pauses while pointed at).
+  nudge.querySelector(".ln-bar").addEventListener("animationend", hideNudge);
   new MutationObserver(() => {
     if (document.documentElement.getAttribute("data-theme") !== "dark") { hideNudge(); return; }
-    if (on || calm() || hinted()) return;
+    if (on || calm() || hinted() || matchMedia("(max-width: 640px)").matches) return;
     try { localStorage.setItem(HINT, "1"); } catch (e) {}
     nudge.classList.add("is-on");
     ready();
-    nudgeTimer = setTimeout(hideNudge, 6000);
   }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
   // And one for anyone reading the console.
   if (!calm()) try { console.log("%cPsst: Try typing lumos", "font: 600 13px/1.4 system-ui, sans-serif; color: #e0a63c;"); } catch (e) {}
