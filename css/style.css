@@ -3837,6 +3837,8 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 @keyframes next-sweep { 0% { background-position: 100% 0; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); } 85%, 100% { background-position: 0 0; } } /* 3.4s of slow sweep, then a short 0.6s of plain ink before the next */
 @media (forced-colors: active) { #next-title.is-swept { background: none !important; color: CanvasText !important; } }
 .next-ch p { max-width: 52ch; margin-top: 1rem; font-size: 1.125rem; line-height: 1.5; color: var(--ink-soft); }
+/* The line under the heading runs on one line where the screen has room. */
+.next-ch h2 + p { max-width: none; text-wrap: balance; }
 .next-actions { display: flex; flex-wrap: wrap; gap: 0.625rem; margin-top: 2rem; }
 /* Both actions the same width, so "Book a call" holds its own beside "Ask my portfolio". */
 .next-actions .btn { min-width: 10rem; justify-content: center; }

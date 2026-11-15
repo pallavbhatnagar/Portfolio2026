@@ -39,7 +39,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Wave 2.0 trading screen on a phone",
     home: {
       order: 1,
-      text: "Brokers wanted a trading app of their own without building one. One white-label app had to feel native under every brand.",
+      text: "Brokers wanted their own trading app without building one. I designed a single white-label system that feels native under every brand.",
       metrics: [
         [
           "Branded broker apps launched",
@@ -72,7 +72,7 @@ window.CASE_STUDIES = [
     thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
       order: 2,
-      text: "Investing in a basket means trusting stocks you didn't pick. The app had to show its working before it asked for money.",
+      text: "Buying a basket means trusting stocks you didn't pick. So the app earns trust first: it shows performance, then asks for money.",
       metrics: [
         [
           "Screens designed",
@@ -106,7 +106,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Atlas design system: colour tokens, buttons, toggles and form fields",
     home: {
       order: 3,
-      text: "Every product team had grown its own components. Atlas gave design and engineering one shared set of tokens, parts and rules.",
+      text: "Every product team had grown its own components. Atlas gave design and engineering one shared language: tokens, parts and rules.",
       metrics: [
         ["Token groups: colour, type, spacing, elevation, layout", "5"],
         ["Things documented for every component", "5"]
@@ -131,7 +131,7 @@ window.CASE_STUDIES = [
     thumbAlt: "Supply chain map: a network of suppliers with risk colours and a detail panel",
     home: {
       order: 4,
-      text: "A problem at one supplier can ripple across tiers. The map shows those connections, so risk can be traced, not guessed.",
+      text: "A problem at one supplier can ripple across tiers. The map makes that risk visible, so teams can trace it instead of guessing.",
       metrics: [
         ["Views on one map: suppliers, materials, locations", "3"],
         ["Analytical lenses: compliance and geography", "2"]
