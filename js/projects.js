@@ -143,16 +143,16 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: works/barefoot-nomads.html
+    // Case study: works/barefootnomads.html
     // PLACEHOLDER content from the project notes: check every line.
-    slug: "barefoot-nomads",
+    slug: "barefootnomads",
     name: "Barefoot Nomads",
     kind: "Exploration",
     category: "Travel tech",
     year: "2025",
     tint: "sky",
     locked: false,
-    thumbnail: "/assets/projects/barefoot-nomads/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/barefootnomads/images/thumbnail.jpg",
     thumbAlt: "Barefoot Nomads concept: group trip cards with seats left and travellers going",
     works: {
       text: "A concept for a community travel platform: curated group trips, the people going on them and booking, in one place instead of five apps.",
@@ -160,16 +160,16 @@ window.CASE_STUDIES = [
     }
   },
   {
-    // Case study: works/zacks-insight.html
+    // Case study: works/zacksinsight.html
     // PLACEHOLDER content from the project notes: check every line.
-    slug: "zacks-insight",
+    slug: "zacksinsight",
     name: "Zacks Insight",
     kind: "Exploration",
     category: "Fintech",
     year: "2025",
     tint: "mint",
     locked: false,
-    thumbnail: "/assets/projects/zacks-insight/images/thumbnail.jpg",
+    thumbnail: "/assets/projects/zacksinsight/images/thumbnail.jpg",
     thumbAlt: "Zacks Insight concept: a portfolio chart, sector split and an AI answer",
     works: {
       text: "A concept for an AI investment tool that explains a portfolio instead of just reporting it, with answers that show the data behind them.",

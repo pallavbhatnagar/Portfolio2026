@@ -1305,7 +1305,7 @@
       ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["atlasdesignsystem", "wave"]],
       ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["supplychainmap", "wealthbasket"]],
       ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["atlasdesignsystem", "supplychainmap"]],
-      ["founders", "Founders", "Bring the idea and the deadline. I'll talk to your users, design what matters first and put something real in front of people fast.", ["barefoot-nomads", "zacks-insight"]]
+      ["founders", "Founders", "Bring the idea and the deadline. I'll talk to your users, design what matters first and put something real in front of people fast.", ["barefootnomads", "zacksinsight"]]
     ];
     const projects = window.CASE_STUDIES || [];
     const lockIc = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
@@ -2313,8 +2313,8 @@
     wealthbasket: ["paytm", "paytm money", "investing", "portfolio", "sip", "stocks"],
     atlasdesignsystem: ["design system", "tokens", "components", "library"],
     "supplychainmap": ["supply chain", "supplier", "risk", "map", "resilinc"],
-    "barefoot-nomads": ["travel", "trip", "booking", "community"],
-    "zacks-insight": ["ai", "investing", "portfolio insights", "zacks"]
+    "barefootnomads": ["travel", "trip", "booking", "community"],
+    "zacksinsight": ["ai", "investing", "portfolio insights", "zacks"]
   };
   // Work history, newest first. Keep it in step with "Where I've been" on
   // the About page.

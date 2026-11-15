@@ -35,7 +35,7 @@ new-portoflio/
 ├── 404.html              Shown for any address that doesn't exist
 ├── works/                One page per case study, at /works/<slug>
 │   ├── wave.html · wealthbasket.html · atlasdesignsystem.html
-│   └── supplychainmap.html · barefoot-nomads.html · zacks-insight.html
+│   └── supplychainmap.html · barefootnomads.html · zacksinsight.html
 ├── README.md             This file
 │
 ├── css/
@@ -55,9 +55,9 @@ new-portoflio/
     │   │   └── videos/   the project's videos
     │   ├── atlasdesignsystem/        (same inside)
     │   ├── supplychainmap/
-    │   ├── barefoot-nomads/
+    │   ├── barefootnomads/
     │   ├── wave/
-    │   └── zacks-insight/
+    │   └── zacksinsight/
     ├── icons/
     │   └── social/       linkedin.svg · behance.svg · dribbble.svg
     ├── images/
