@@ -78,11 +78,23 @@
       timer = setTimeout(i < words.length ? show : finish, hold);
     };
     // Reduced motion (or Calm): just "Hello", still, for a moment, then on.
-    if (reduce.matches) {
-      word.textContent = words[0];
-      word.classList.add("is-on");
-      timer = setTimeout(finish, 1000);
-    } else requestAnimationFrame(show);
+    // Either way the first word waits for Manrope Bold (preloaded in the
+    // head), so it never shows in a fallback font and then changes weight;
+    // after 1.5s it goes ahead regardless.
+    const start = () => {
+      if (done) return;
+      if (reduce.matches) {
+        word.textContent = words[0];
+        word.classList.add("is-on");
+        timer = setTimeout(finish, 1000);
+      } else requestAnimationFrame(show);
+    };
+    let started = false;
+    const go = () => { if (!started) { started = true; start(); } };
+    if (document.fonts && document.fonts.load) {
+      document.fonts.load('700 1em "Manrope"', "Hello").then(go, go);
+      setTimeout(go, 1500);
+    } else go();
     // A click skips it. With motion reduced it's only a still "Hello" over
     // the page, so the click also goes through to what was under it (the Ask
     // box, a link) instead of being used up on the panel.

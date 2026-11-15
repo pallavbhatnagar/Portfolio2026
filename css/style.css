@@ -887,6 +887,10 @@ html[data-motion="calm"] .vx-card { transition: none; }
 .page-end { display: block; height: 1px; }
 /* The page sits above the footer, on its own colour, so it covers it. */
 .page { position: relative; z-index: 1; background: var(--bg); }
+/* Locked stubs (hero and password card only) are shorter than the screen:
+   the page fills it, so the footer sits at the bottom of the viewport. */
+.page:has(> main[data-locked]) { min-height: calc(100vh - var(--footer-h)); min-height: calc(100dvh - var(--footer-h)); }
+body.ask-open .page:has(> main[data-locked]) { min-height: calc(100dvh - var(--ask-gap) * 2 - var(--footer-h)); }
 
 .site-footer {
   position: sticky;
