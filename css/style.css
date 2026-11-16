@@ -3958,3 +3958,9 @@ html[data-motion="calm"] .wl .w { opacity: 1 !important; transition: none !impor
    html.fonts-in), so none is seen jumping when the text reflows. */
 .hs-nw { white-space: nowrap; }
 html.js:not(.fonts-in) .hs { opacity: 0 !important; }
+/* Phones: the "Where I've been" cards are a swipeable row, shown as they
+   are, without fading in one after another. */
+@media (max-width: 640px) {
+  .ab-path.is-armed .path-grid li { opacity: 1; transform: none; }
+  .ab-path .path-grid li { transition: none; }
+}

@@ -93,3 +93,9 @@
 }
 .ab-sig-text b { display: block; font-size: 1.0625rem; font-weight: 600; line-height: 1.35; letter-spacing: 0.012em; color: var(--ink); }
 .ab-sig-text span { display: block; margin-top: 0.1875rem; font-size: 0.9375rem; line-height: 1.4; letter-spacing: 0.015em; color: var(--ink-soft); }
+/* Phones: the cards are a plain swipeable row; touching one doesn't dim
+   the others. */
+@media (max-width: 640px) {
+  .ab-path.is-tracing .path-grid li:not(.is-focus) { opacity: 1; }
+  .ab-path .path-grid li { transition: none; }
+}
