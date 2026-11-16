@@ -41,6 +41,24 @@
 
   document.querySelectorAll("[data-back]").forEach(smartBack);
 
+  // Jumps within the page (the chapter list, citations, "back to top") move
+  // the page and update the address, but replace the history entry instead
+  // of adding one, so Back always leaves the case study rather than
+  // stepping back through places on it.
+  document.addEventListener("click", (e) => {
+    if (e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+    const a = e.target.closest('a[href^="#"]');
+    if (!a || a.hasAttribute("data-back")) return;
+    const id = decodeURIComponent(a.getAttribute("href").slice(1));
+    const el = id ? document.getElementById(id) : null;
+    if (!el) return;
+    e.preventDefault();
+    history.replaceState(history.state, "", "#" + id);
+    el.scrollIntoView({ block: "start" });
+    if (!el.matches("a, button, input, select, textarea, summary, [tabindex]")) el.setAttribute("tabindex", "-1");
+    el.focus({ preventScroll: true });
+  });
+
   // ---------- Outcome numbers count up once in view ----------
   const countUp = (el) => {
     const to = Number(el.dataset.to);
@@ -171,6 +189,57 @@
       // (script.js); the player's own pause and play events follow.
       document.dispatchEvent(new CustomEvent("ambient:media", { detail: { id: frame, playing: true } }));
     });
+  });
+
+  // Local films (data-video): a still with a play button; clicking swaps in
+  // the video with its own controls, already playing. While it plays with
+  // sound, the ambient music steps aside (script.js).
+  root.querySelectorAll("[data-video]").forEach((box) => {
+    const btn = box.querySelector(".cs-play");
+    if (!btn) return;
+    const title = box.dataset.videoTitle || "Video";
+    btn.setAttribute("aria-label", `Play video: ${title}`);
+    btn.addEventListener("click", () => {
+      const v = document.createElement("video");
+      v.src = box.dataset.video;
+      v.controls = true;
+      v.playsInline = true;
+      v.setAttribute("aria-label", title);
+      const still = box.querySelector("img");
+      if (still) v.poster = still.currentSrc || still.src;
+      const said = (playing) => document.dispatchEvent(new CustomEvent("ambient:media", { detail: { id: v, playing } }));
+      v.addEventListener("play", () => said(true));
+      v.addEventListener("pause", () => said(false));
+      v.addEventListener("ended", () => said(false));
+      if (still) still.replaceWith(v); else box.prepend(v);
+      btn.remove();
+      box.classList.add("is-playing");
+      v.play().catch(() => {});
+      v.focus();
+    });
+  });
+
+  // Looping screen videos (data-ambient): muted, and they play only while on
+  // screen. With motion reduced (or Calm) they stay on their still frame;
+  // the corner button pauses or plays them by hand either way.
+  root.querySelectorAll("video[data-ambient]").forEach((v) => {
+    const btn = (v.closest("figure") || v.parentElement).querySelector(".wv-reel-btn");
+    let held = reduce.matches; // paused by the visitor, or by reduced motion
+    let seen = false;
+    const sync = () => {
+      if (btn) {
+        btn.setAttribute("aria-pressed", String(held));
+        btn.setAttribute("aria-label", held ? "Play the screens video" : "Pause the screens video");
+      }
+      if (seen && !held) { if (v.preload === "none") v.preload = "auto"; v.play().catch(() => {}); }
+      else v.pause();
+    };
+    if (btn) btn.addEventListener("click", () => { held = !held; sync(); });
+    reduce.addEventListener("change", () => { held = reduce.matches; sync(); });
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(([e]) => { seen = e.isIntersecting; sync(); }, { threshold: 0.35 }).observe(v);
+    }
+    sync();
   });
 
   window.pageAnswer = (q) => {

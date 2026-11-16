@@ -510,7 +510,13 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    the end of one section's content to the start of the next): the value
    section's bottom padding plus the testimonials' top padding. */
 :root { --home-gap: 9rem; }
-.projects + .value { margin-top: calc(var(--home-gap) - 2.875rem - 0.75rem - 2.75rem); } /* less the last card's margin, the stack's padding and the value's own top padding */
+/* Scroll between one project card settling and the next one starting to
+   cover it. Larger on wider screens, where the cards stack; phones just
+   scroll past them. */
+:root { --card-gap: 4.5rem; }
+@media (max-width: 640px) { :root { --card-gap: 2.875rem; } }
+.projects.proj-flat { --card-gap: 2.875rem; }
+.projects + .value { margin-top: calc(var(--home-gap) - var(--card-gap) - 0.75rem - 2.75rem); } /* less the last card's margin, the stack's padding and the value's own top padding */
 .project {
   --card: var(--mint-bg); --ink-tag: var(--mint-ink);
 }
@@ -526,7 +532,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: 1.125rem;
   min-height: 20.125rem;
-  margin-bottom: 2.875rem;
+  margin-bottom: var(--card-gap);
   padding: 1.125rem;
   border-radius: 1.125rem;
   background: var(--card);
@@ -2225,7 +2231,7 @@ body.ask-open .shell-scrollbar {
 /* Cover: the project's screenshot, full width, on its tint. */
 .cs-cover { position: relative; margin: 2.375rem 0 0; overflow: hidden; aspect-ratio: 16 / 8; border-radius: 0.5rem; background: var(--tint); }
 .cs-cover-media { position: absolute; inset: 0; }
-.cs-cover-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.cs-cover-media img, .cs-cover-media video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* Outcomes: three results side by side, no rules or dividers, set close
    under the cover so they read as its caption. */
@@ -2599,14 +2605,14 @@ body.ask-open .cs-side { display: none; }
 @keyframes cs-settle { from { transform: scale(1.14); } }
 @supports (animation-timeline: view()) {
   @media (prefers-reduced-motion: no-preference) {
-    .cs-cover-media img { animation: cs-drift-cover linear both; animation-timeline: view(); animation-range: exit -20% exit 100%; }
+    .cs-cover-media img, .cs-cover-media video { animation: cs-drift-cover linear both; animation-timeline: view(); animation-range: exit -20% exit 100%; }
     .cs-crop img { animation: cs-drift-full linear both; animation-timeline: view(); animation-range: cover; }
     .cs-crop.is-crop img { animation-name: cs-drift-crop; }
   }
   /* Reduced motion (or Calm): no drift, but the framing it has while
      drifting, so switching never zooms the images out. */
   @media (prefers-reduced-motion: reduce) {
-    .cs-cover-media img { transform: scale(1.06); }
+    .cs-cover-media img, .cs-cover-media video { transform: scale(1.06); }
     .cs-crop:not(.is-crop) img { transform: scale(1.08); }
   }
 }

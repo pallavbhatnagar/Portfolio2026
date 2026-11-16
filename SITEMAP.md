@@ -19,8 +19,9 @@ Works are built by JavaScript from one data file, js/projects.js.
     ├── /works/wealthbasket     WealthBasket     Fintech · 2021         case study (locked)
     ├── /works/atlasdesignsystem  Atlas Design System          Design systems, 2024   case study, password protected
     ├── /works/supplychainmap   Supply Chain Visibility Map  Enterprise SaaS, 2025  case study, password protected
+    ├── /works/askresilinc       Ask Resilinc                 AI research, 2026      case study
     ├── /works/barefootnomads    Barefoot Nomads              Travel tech, 2025      concept
-    ├── /works/wave             Wave 2.0         Fintech · 2021         case study · detailed (11 chapters)
+    ├── /works/wave             Wave 2.0         Fintech · 2021         case study · detailed (12 chapters, a looping screens video and the launch film)
     └── /works/zacksinsight      Zacks Insight                Fintech, 2025          concept
 ```
 
@@ -116,7 +117,7 @@ Results → What I took away.
 A fixed chapter list on the left highlights the chapter being read (desktop).
 Every case study ends with a **Next project** link to the next project (the
 last one links back to the first). The locked placeholders skip to the next
-project that needs no password (both go to Barefoot Nomads).
+project that needs no password (both go to Ask Resilinc).
 
 **Password protection:** Atlas and the Supply Chain Visibility Map ask for one shared
 password. Their pages in the repository are placeholders: the hero, a row of facts
@@ -144,7 +145,7 @@ both projects.
 ```text
 /
 ├── index.html · works/index.html · about.html · 404.html
-├── works/                    wave, wealthbasket, atlasdesignsystem, supplychainmap, barefootnomads, zacksinsight (.html)
+├── works/                    wave, wealthbasket, atlasdesignsystem, supplychainmap, askresilinc, barefootnomads, zacksinsight (.html)
 ├── README.md                 How to edit and publish the site
 ├── SITEMAP.md                This file
 ├── .github/workflows/deploy-pages.yml   Publishes to GitHub Pages on every push

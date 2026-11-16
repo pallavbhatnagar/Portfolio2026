@@ -114,7 +114,7 @@ window.CASE_STUDIES = [
     },
     works: {
       text: "A design system that brings enterprise products onto one language of tokens, components and interaction patterns, so separate teams ship one consistent experience.",
-      meta: ["Senior UX designer", "Enterprise SaaS, with design and engineering teams"]
+      meta: ["UX designer", "Enterprise SaaS, with design and engineering teams"]
     }
   },
   {
@@ -139,7 +139,23 @@ window.CASE_STUDIES = [
     },
     works: {
       text: "An interactive map of a supplier network across tiers, so teams can trace how a disruption spreads, judge the risk and move straight to recommended actions.",
-      meta: ["Senior UX designer", "Enterprise SaaS, supply chain risk"]
+      meta: ["UX designer", "Enterprise SaaS, supply chain risk"]
+    }
+  },
+  {
+    // Case study: works/askresilinc.html (page-only styles in css/ai-research.css)
+    slug: "askresilinc",
+    name: "Ask Resilinc",
+    kind: "Case study",
+    category: "AI research",
+    year: "2026",
+    tint: "lilac",
+    locked: false,
+    thumbnail: "/assets/projects/askresilinc/images/thumbnail.jpg",
+    thumbAlt: "An AI assistant answering the same question two ways: padded and robotic, then short and direct",
+    works: {
+      text: "Research on making an in-house AI assistant talk like a sharp colleague: plain, direct and honest, without letting a friendlier tone change a single fact.",
+      meta: ["UX designer", "Enterprise SaaS, in-house AI assistant"]
     }
   },
   {

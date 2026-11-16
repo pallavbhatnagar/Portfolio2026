@@ -1356,13 +1356,13 @@
   const rdStart = document.getElementById("rdStart");
   if (rdRoles && rdLines && rdStart) {
     // Each line answers the question that reader is really asking:
-    // recruiter, "is he senior and available?"; design lead, "will he hold
+    // recruiter, "is he experienced and available?"; design lead, "will he hold
     // the bar?"; product manager, "will he move a number, quickly?";
     // engineer, "will his handoff hurt?"; founder, "can he take this from
     // zero on his own?". Every claim is stated elsewhere on the site.
     const READERS = [
       ["anyone", "For anyone", "I make complicated products feel obvious, and I stay with them until they ship.", ["wave", "wealthbasket"]],
-      ["recruiters", "Recruiters", "Senior product designer, five years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
+      ["recruiters", "Recruiters", "UX designer, five years in. Open to senior roles, remote or in New Delhi, and ready to start in about 30 days.", ["wave", "wealthbasket"]],
       ["leads", "Design leads", "Evidence before anyone opens Figma, rough work shared early, and a bar on detail that holds all the way to launch.", ["atlasdesignsystem", "wave"]],
       ["pms", "Product managers", "A one-page brief we both sign, clickable prototypes in the first couple of weeks, and a clear way to know it worked.", ["supplychainmap", "wealthbasket"]],
       ["engineers", "Engineers", "Every state drawn, edge cases caught in a code prototype first, and someone who can read your pull request and suggest the CSS fix.", ["atlasdesignsystem", "supplychainmap"]],
@@ -2374,13 +2374,14 @@
     wealthbasket: ["paytm", "paytm money", "investing", "portfolio", "sip", "stocks"],
     atlasdesignsystem: ["design system", "tokens", "components", "library"],
     "supplychainmap": ["supply chain", "supplier", "risk", "map", "resilinc"],
+    askresilinc: ["ask resilinc", "ai assistant", "chatbot", "conversation", "humanize", "llm", "ux research"],
     "barefootnomads": ["travel", "trip", "booking", "community"],
     "zacksinsight": ["ai", "investing", "portfolio insights", "zacks"]
   };
   // Work history, newest first. Keep it in step with "Where I've been" on
   // the About page.
   const EXPERIENCE = [
-    { co: "Resilinc", role: "Senior UX designer", years: "2023 – now", tint: "mint" },
+    { co: "Resilinc", role: "UX designer", years: "2023 – now", tint: "mint" },
     { co: "Wave", role: "Product designer", years: "2020 – 2023", tint: "lilac" },
     { co: "Pixelcraft", role: "UI designer", years: "2018 – 2020", tint: "rose" },
     { co: "Studio Nine", role: "Design intern", years: "2017", tint: "sky" }
@@ -2427,7 +2428,7 @@
     { k: ["how do you work", "process", "approach", "sketch", "method"],
       text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.', next: ["What have you shipped?", "Where have you worked?", "Are you available to hire?"] },
     { k: ["worked", "experience", "companies", "career", "history", "resume", "cv"],
-      text: "Five years across four teams, from a design internship to senior UX:", render: renderExperience, next: ["What have you shipped?", "How do you work?", "Are you available to hire?"] },
+      text: "Five years across four teams, from a design internship to UX designer at Resilinc:", render: renderExperience, next: ["What have you shipped?", "How do you work?", "Are you available to hire?"] },
     { k: ["freelance", "hire", "available", "open to work", "full-time", "contract"],
       text: "Open to full-time roles and selected freelance projects — he usually replies within two days.", render: renderContactCard, next: ["How can I reach you?", "Where have you worked?", "What have you shipped?"] },
     { k: ["contact", "email", "reach", "get in touch", "talk to"],
@@ -2516,7 +2517,7 @@
       [/how do you|process|approach|research|workflow|method/i, "Walking through the process"],
       [/contact|email|hire|available|reach|call|rate|salary/i, "Finding the best way to reach me"],
       [/music|film|book|comic|hobby|travel|life|outside/i, "Looking outside the brief"],
-      [/case stud|project|work|portfolio|ship|built|wave|wealth|atlas|supply chain|barefoot|zacks/i, "Opening the case studies"],
+      [/case stud|project|work|portfolio|ship|built|wave|wealth|atlas|supply chain|ask resilinc|chatbot|barefoot|zacks/i, "Opening the case studies"],
     ];
     let thinkN = 0;
     const thinkSpark = () => {

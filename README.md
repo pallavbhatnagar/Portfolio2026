@@ -35,7 +35,8 @@ new-portoflio/
 ├── 404.html              Shown for any address that doesn't exist
 ├── works/                One page per case study, at /works/<slug>
 │   ├── wave.html · wealthbasket.html · atlasdesignsystem.html
-│   └── supplychainmap.html · barefootnomads.html · zacksinsight.html
+│   └── supplychainmap.html · askresilinc.html · barefootnomads.html · zacksinsight.html
+│       (askresilinc.html also loads css/ai-research.css, its own styles)
 ├── README.md             This file
 │
 ├── css/
@@ -55,6 +56,7 @@ new-portoflio/
     │   │   └── videos/   the project's videos
     │   ├── atlasdesignsystem/        (same inside)
     │   ├── supplychainmap/
+    │   ├── askresilinc/
     │   ├── barefootnomads/
     │   ├── wave/
     │   └── zacksinsight/

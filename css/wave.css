@@ -1,0 +1,92 @@
+/* =========================================================
+   Wave 2.0 (works/wave.html) only.
+   - .wv-drop   one delivery drop as a bar: design work, the two
+                review gates and the handover, then it repeats
+   - .wv-steps  the stages in detail; gates and handover marked
+   - .wv-reel   the looping screens video (case.js plays it only
+                while on screen, never in Calm or reduced motion)
+   - .wv-film   the launch film behind a play button (case.js)
+   ========================================================= */
+.cs[data-slug="wave"] {
+  --wv-work: var(--sand-panel);
+  --wv-work-ink: var(--sand-ink);
+  --wv-gate: var(--rose-panel);
+  --wv-gate-ink: var(--rose-ink);
+  --wv-ship: var(--mint-panel);
+  --wv-ship-ink: var(--mint-ink);
+}
+
+/* ---------- One drop ---------- */
+.wv-drop { margin: 1.75rem 0 0; padding: 1.25rem; border-radius: 0.875rem; background: var(--tint); }
+.wv-drop-top { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.wv-drop-name { font-size: 1rem; font-weight: 600; }
+.wv-drop-loop { display: inline-flex; align-items: center; gap: 0.375rem; font-size: var(--fs-small); color: var(--ink-soft); }
+.wv-drop-loop svg { flex: none; }
+.wv-bar { display: flex; gap: 0.3125rem; margin: 0.875rem 0 0; padding: 0; list-style: none; }
+.wv-bar li { flex: var(--g, 1) 1 0; min-width: 0; display: flex; align-items: center; justify-content: center; min-height: 3.25rem; padding: 0.5rem; border-radius: 0.5rem; font-size: 0.875rem; font-weight: 600; line-height: 1.2; text-align: center; background: var(--c); color: var(--k); }
+.wv-bar li:first-child { border-radius: 0.75rem 0.5rem 0.5rem 0.75rem; }
+.wv-bar li:last-child { border-radius: 0.5rem 0.75rem 0.75rem 0.5rem; }
+.wv-bar .is-work, .wv-key .is-work { --c: var(--wv-work); --k: var(--wv-work-ink); }
+.wv-bar .is-gate, .wv-key .is-gate { --c: var(--wv-gate); --k: var(--wv-gate-ink); }
+.wv-bar .is-ship, .wv-key .is-ship { --c: var(--wv-ship); --k: var(--wv-ship-ink); }
+.wv-bar .is-work { background: var(--bg); box-shadow: inset 0 0 0 1px var(--hairline); color: var(--ink); }
+.wv-key .is-work { --c: var(--bg); }
+.wv-key { display: flex; flex-wrap: wrap; gap: 0.5rem 1.25rem; margin: 0.75rem 0 0; padding: 0; list-style: none; font-size: var(--fs-small); color: var(--ink-soft); }
+.wv-key li { display: flex; align-items: center; gap: 0.4375rem; }
+.wv-key li::before { content: ""; width: 0.75rem; height: 0.75rem; border-radius: 0.1875rem; background: var(--c); box-shadow: inset 0 0 0 1px var(--hairline); }
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion="calm"]) .wv-drop:not(.is-in) .wv-bar li { opacity: 0; transform: translateY(0.375rem); }
+  html:not([data-motion="calm"]) .wv-bar li { transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); transition-delay: calc(var(--i, 0) * 60ms + 150ms); }
+}
+
+/* ---------- The stages ---------- */
+.wv-steps .cs-step.is-gate .cs-step-n, .wv-steps .cs-step.is-gate h3 { color: var(--wv-gate-ink); }
+.wv-steps .cs-step.is-ship .cs-step-n, .wv-steps .cs-step.is-ship h3 { color: var(--wv-ship-ink); }
+
+/* ---------- Videos ---------- */
+.wv-reel .cs-figure-media, .wv-film .cs-figure-media { position: relative; background: #0b1426; }
+.wv-reel video, .wv-film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; }
+.wv-film .cs-figure-media img { aspect-ratio: 1280 / 674; }
+.wv-film video { aspect-ratio: 1280 / 674; object-fit: contain; background: #000; }
+.wv-reel-btn { position: absolute; right: 0.75rem; bottom: 0.75rem; z-index: 2; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; border: 0; border-radius: 50%; background: rgba(13, 13, 13, 0.55); color: #fff; cursor: pointer; -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: background-color 0.2s ease, transform 0.16s var(--ease-out); }
+.wv-reel-btn:active { transform: scale(0.95); }
+.wv-reel-btn:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .wv-reel-btn:hover { background: rgba(13, 13, 13, 0.75); } }
+.wv-reel-btn .i-play, .wv-reel-btn[aria-pressed="true"] .i-pause { display: none; }
+.wv-reel-btn[aria-pressed="true"] .i-play { display: block; }
+.wv-reel-btn[hidden] { display: none; }
+
+@media (max-width: 640px) {
+  .wv-drop { padding: 1rem; }
+  .wv-drop-top { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+  .wv-bar { flex-direction: column; }
+  .wv-bar li { min-height: 2.5rem; justify-content: flex-start; padding: 0.5rem 0.875rem; text-align: left; }
+  .wv-bar li:first-child { border-radius: 0.75rem 0.75rem 0.5rem 0.5rem; }
+  .wv-bar li:last-child { border-radius: 0.5rem 0.5rem 0.75rem 0.75rem; }
+}
+@media (forced-colors: active) {
+  .wv-bar li, .wv-key li::before { forced-color-adjust: none; border: 1px solid CanvasText; }
+}
+
+/* ---------- Two halves of one launch ---------- */
+.wv-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.5rem; margin-top: 1.25rem; }
+.wv-half { padding: 1.25rem; border-radius: 0.875rem; }
+.wv-half h4 { font-size: 1.125rem; font-weight: 600; letter-spacing: -0.015em; }
+.wv-half ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.375rem; margin: 0.875rem 0 0; padding: 0; list-style: none; }
+.wv-half li { display: flex; align-items: center; min-height: 3.5rem; padding: 0.625rem 0.75rem; border-radius: 0.5rem; font-size: 0.9375rem; font-weight: 500; line-height: 1.3; }
+.wv-half li.is-wide { grid-column: 1 / -1; }
+.wv-half.is-design { background: var(--mint-panel); color: var(--mint-ink); }
+.wv-half.is-design li { background: color-mix(in srgb, var(--bg) 70%, transparent); color: var(--ink); }
+.wv-half.is-perf { background: #0f1523; color: #f1f3f8; }
+.wv-half.is-perf li { background: rgba(255, 255, 255, 0.07); color: #e6e9f0; box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06); }
+:root[data-theme="dark"] .wv-half.is-perf { background: #0a0f1a; box-shadow: inset 0 0 0 1px var(--hairline); }
+@media (prefers-reduced-motion: no-preference) {
+  html.js:not([data-motion="calm"]) .wv-split:not(.is-in) li { opacity: 0; transform: translateY(0.375rem); }
+  html:not([data-motion="calm"]) .wv-split li { transition: opacity 0.4s var(--ease-out), transform 0.4s var(--ease-out); transition-delay: calc(var(--i, 0) * 50ms + 120ms); }
+}
+@media (max-width: 640px) { .wv-split { grid-template-columns: 1fr; } }
+@media (forced-colors: active) { .wv-half, .wv-half li { border: 1px solid CanvasText; } }
+
+/* The screens video as the cover: same button, in the cover's corner. */
+.cs-cover .wv-reel-btn { position: absolute; right: 1rem; bottom: 1rem; z-index: 3; }
+.wv-cover { background: #e8e9fb; }

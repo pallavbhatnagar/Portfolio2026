@@ -30,8 +30,9 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?s.text:(matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches?1:0);if(T)d.setAttribute("data-text",String(T));["read","contrast","links","focus","plain","saber"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded"))d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261793" />
-<script src="/js/motion-css.js?v=20261793"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261811" />
+<link rel="stylesheet" href="/css/wave.css?v=20261811" />
+<script src="/js/motion-css.js?v=20261811"></script>
 </head>
 <body>
 
@@ -71,7 +72,7 @@
       <a class="cs-rail-back" href="/works/" data-back="history" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"></path><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg></a>
       <p class="cs-rail-name" aria-hidden="true">On this page</p>
       <ol class="cs-toc">
-        <li><a href="#overview">Overview</a></li><li><a href="#users">Users</a></li><li><a href="#research">Research</a></li><li><a href="#problem">Problem</a></li><li><a href="#goals">Goals</a></li><li><a href="#principles">Principles</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#solution">Solution</a></li><li><a href="#system">Design system</a></li><li><a href="#results">Results</a></li><li><a href="#reflection">Reflection</a></li>
+        <li><a href="#overview">Overview</a></li><li><a href="#users">Users</a></li><li><a href="#research">Research</a></li><li><a href="#problem">Problem</a></li><li><a href="#goals">Goals</a></li><li><a href="#principles">Principles</a></li><li><a href="#delivery">Delivery</a></li><li><a href="#architecture">Architecture</a></li><li><a href="#solution">Solution</a></li><li><a href="#system">Design system</a></li><li><a href="#results">Results</a></li><li><a href="#reflection">Reflection</a></li>
       </ol>
     </nav>
 
@@ -97,7 +98,7 @@
     <div class="cs-locked-content">
       <figure class="cs-cover">
         <span class="cs-cover-tag">Case study</span>
-        <div class="cs-cover-media"><img src="/assets/projects/wave/images/cover.webp" alt="Wave 2.0 on a phone: a stock card with the price, market depth and Buy and Sell buttons" fetchpriority="high"></div>
+        <div class="cs-cover-media wv-cover"><video data-ambient muted loop playsinline preload="metadata" poster="/assets/projects/wave/images/screens-poster.jpg" width="1920" height="1080" aria-label="Wave 2.0 screens drifting past: a box order, a price alert, an option chain and stock pages"><source src="/assets/videos/projects/work1.mp4" type="video/mp4"></video></div><button class="wv-reel-btn" type="button" aria-label="Pause the screens video" aria-pressed="false"><svg class="i-pause" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg><svg class="i-play" viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button>
       </figure>
 
       <section class="cs-outcomes ab-r" aria-label="Outcomes">
@@ -192,6 +193,31 @@
       <p class="cs-lead ab-r">Three principles kept a large team consistent. When two good ideas competed, the one that served these better won.</p>
       <div class="cs-principles"><article class="cs-principle ab-r" style="--i:0"><h3>Trust and reliability</h3><p>Money is involved, so every screen has to feel dependable.</p><ul class="cs-bullets"><li>Consistent patterns everywhere</li><li>Clear feedback for every action</li><li>Prevent errors, and let people undo</li><li>Social proof where it helps</li></ul></article><article class="cs-principle ab-r" style="--i:1"><h3>Power and confidence</h3><p>Help people feel in control of their decisions.</p><ul class="cs-bullets"><li>Simple, human language</li><li>Less ambiguity and confusion</li><li>Information that supports the decision</li><li>Room to learn and explore</li></ul></article><article class="cs-principle ab-r" style="--i:2"><h3>Fast and actionable</h3><p>In a moving market, a few seconds decide the outcome.</p><ul class="cs-bullets"><li>Surface time-sensitive opportunities</li><li>Important actions within reach</li><li>Recognition over recall</li><li>Context that adapts to the person</li></ul></article></div>
     </section>
+    <section class="cs-ch" id="delivery">
+      <h2 class="ab-r">How we delivered, drop by drop</h2>
+      <p class="cs-lead ab-r">We shipped Wave 2.0 in drops: slices of the app, each taken from a deep dive to a working handover in the same cycle. Two review gates sat inside every drop, so feedback arrived while it was still cheap to act on.</p>
+      <figure class="wv-drop ab-r" aria-label="One drop, start to finish: deep dive, innovation concept, review, remaining screens, review, feedback and iteration, delivery. Then the next drop starts.">
+        <div class="wv-drop-top"><p class="wv-drop-name">One drop</p><p class="wv-drop-loop"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12a9 9 0 0 1 15.5-6.2L21 8"/><path d="M21 3v5h-5"/><path d="M21 12a9 9 0 0 1-15.5 6.2L3 16"/><path d="M3 21v-5h5"/></svg>Repeats for every drop</p></div>
+        <ol class="wv-bar" aria-hidden="true">
+          <li class="is-work" style="--g:2;--i:0">Deep dive</li><li class="is-work" style="--g:3;--i:1">Concept</li><li class="is-gate" style="--g:1.4;--i:2">Review</li><li class="is-work" style="--g:4;--i:3">Remaining screens</li><li class="is-gate" style="--g:1.4;--i:4">Review</li><li class="is-work" style="--g:2.6;--i:5">Iterate</li><li class="is-ship" style="--g:2.2;--i:6">Delivery</li>
+        </ol>
+        <ul class="wv-key" aria-hidden="true"><li class="is-work">Design work</li><li class="is-gate">Review gate</li><li class="is-ship">Handover</li></ul>
+      </figure>
+      <ol class="cs-steps wv-steps">
+        <li class="cs-step ab-r" style="--i:0"><span class="cs-step-n">01</span><div><h3>Deep dive</h3><p>A working session with the product owner on the drop's users, flows, edge cases and constraints, before anything was drawn.</p></div></li>
+        <li class="cs-step ab-r" style="--i:1"><span class="cs-step-n">02</span><div><h3>Innovation concept</h3><p>The idea behind the drop, and its key screens built straight from the design system, so the concept already looked and behaved like the product.</p></div></li>
+        <li class="cs-step is-gate ab-r" style="--i:2"><span class="cs-step-n">03</span><div><h3>Review gate</h3><p>The concept and key screens in front of stakeholders, early, while changing direction still cost little.</p></div></li>
+        <li class="cs-step ab-r" style="--i:3"><span class="cs-step-n">04</span><div><h3>Remaining screens</h3><p>Feedback folded in, then every remaining screen and state designed, from the same components.</p></div></li>
+        <li class="cs-step is-gate ab-r" style="--i:4"><span class="cs-step-n">05</span><div><h3>Review gate</h3><p>A second review on the complete set, to catch gaps between screens rather than within them.</p></div></li>
+        <li class="cs-step ab-r" style="--i:5"><span class="cs-step-n">06</span><div><h3>Iteration</h3><p>The last round of changes, closed and signed off, so nothing open travelled into development.</p></div></li>
+        <li class="cs-step is-ship ab-r" style="--i:6"><span class="cs-step-n">07</span><div><h3>Delivery</h3><p>A design walkthrough with the 63 Moons engineering team, assets handed over, and support through development until the drop shipped.</p></div></li>
+      </ol>
+      <div class="cs-insights cs-cards" style="--cols:3">
+        <article class="cs-insight ab-r" style="--i:0"><h3>Reviews as gates</h3><p>Two fixed checkpoints meant stakeholders were never surprised, and feedback landed before screens multiplied.</p></article>
+        <article class="cs-insight ab-r" style="--i:1"><h3>System first</h3><p>Key screens came out of the design system from day one, which is what made the remaining screens fast.</p></article>
+        <article class="cs-insight ab-r" style="--i:2"><h3>Handover isn't the end</h3><p>Staying on through development kept the shipped app true to the design.</p></article>
+      </div>
+    </section>
     <section class="cs-ch" id="architecture">
       <h2 class="ab-r">Rebuilding the navigation</h2>
       <p class="cs-lead ab-r">We listed every action a trader takes and mapped them on two questions: how often do people do this, and how much does it matter when they do? The top-right corner became the heart of the app; the rest moved out of the way.</p>
@@ -223,6 +249,7 @@
     <section class="cs-ch" id="system">
       <h2 class="ab-r">One design system, every broker</h2>
       <p class="cs-lead ab-r">Because Wave 2.0 is sold to many brokers, the design system is the product as much as the screens are. The Moon Design System grew to more than 250 components and made designing new features about four times faster.</p>
+      
       <div class="cs-insights cs-cards" style="--cols:2"><article class="cs-insight ab-r" style="--i:0"><h3>Fast design and delivery</h3><p>Designers and developers assemble new mobile and web screens from ready-made components, and it's still how new features are designed and built today.</p></article><article class="cs-insight ab-r" style="--i:1"><h3>Modular and easy to update</h3><p>A flexible structure absorbs new features and changes, and lets each broker adapt any component to its own needs.</p></article><article class="cs-insight ab-r" style="--i:2"><h3>Adapts to each brand</h3><p>Colours, contrast and type adjust to a broker's brand from a single set of tokens, without breaking accessibility.</p></article><article class="cs-insight ab-r" style="--i:3"><h3>Built for one codebase</h3><p>The system follows the Ionic framework's structure, so one build serves iOS and Android and developers and designers speak the same language.</p></article></div>
     </section>
     <section class="cs-ch" id="results">
@@ -233,6 +260,17 @@
         <figcaption>A rule I keep coming back to</figcaption>
       </figure>
       <div class="cs-stats"><div class="cs-stat ab-r" style="--i:0"><p class="cs-stat-num" data-value="25+">25+</p><p class="cs-out-label">branded broker apps launched</p></div><div class="cs-stat ab-r" style="--i:1"><p class="cs-stat-num" data-value="4M">4M</p><p class="cs-out-label">trades placed every day</p></div><div class="cs-stat ab-r" style="--i:2"><p class="cs-stat-num" data-value="2B+">2B+</p><p class="cs-out-label">trades placed every year</p></div><div class="cs-stat ab-r" style="--i:3"><p class="cs-stat-num" data-value="73K">73K</p><p class="cs-out-label">average peak sessions at a time</p></div></div><p class="cs-note ab-r">Figures are approximate, based on data from 2021 to 2023.</p>
+          <h3 class="cs-sub ab-r">Two halves of one launch</h3>
+      <p class="ab-r">63 Moons launched Wave 2.0 on two promises. Our team owned the first: the design. Their engineers rebuilt the platform underneath it.</p>
+      <div class="wv-split ab-r">
+        <section class="wv-half is-design" aria-labelledby="wv-design-h"><h4 id="wv-design-h">Design re-imagined</h4><ul><li style="--i:0">Driving engagement and transactions</li><li style="--i:1">Thin interaction models</li><li style="--i:2">Acquire and retain more</li><li style="--i:3">Contextual content serving</li><li style="--i:4">Future proof with modularity</li><li style="--i:5">A new way to explore F&amp;O</li><li style="--i:6">Social proof</li><li style="--i:7">Error prevention</li></ul></section>
+        <section class="wv-half is-perf" aria-labelledby="wv-perf-h"><h4 id="wv-perf-h">Performance re-calibrated</h4><ul><li style="--i:0">Faster trading</li><li style="--i:1">Faster loading</li><li style="--i:2">Cloud native, not lift and shift</li><li style="--i:3">Frugal operations</li><li style="--i:4">Built for volume and volatility surges</li><li style="--i:5">Scales without limits</li><li class="is-wide" style="--i:6">Microservices architecture, unmatched uptime</li></ul></section>
+      </div>
+      <h3 class="cs-sub ab-r">See it in motion</h3>
+      <figure class="cs-figure is-photo wv-film ab-r">
+        <div class="cs-figure-media" data-video="/assets/videos/projects/wave.mp4" data-video-title="Wave 2.0 launch film"><img src="/assets/projects/wave/images/launch-film-poster.jpg" alt="A frame from the Wave 2.0 launch film: hassle-free brand customisation, beside a phone showing the app's home screen" loading="lazy" width="1280" height="674"><button class="cs-play" type="button"><svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path fill="currentColor" d="M8 5.5v13l11-6.5z"/></svg></button></div>
+        <figcaption>The Wave 2.0 launch film from THEM and 63 Moons: smarter search, contextual content and brand customisation, in about a minute.</figcaption>
+      </figure>
     </section>
     <section class="cs-ch" id="reflection">
       <h2 class="ab-r">What I took away</h2>
@@ -324,11 +362,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
-<script src="/js/content.js?v=20261793" defer fetchpriority="high"></script>
-<script src="/js/projects.js?v=20261793" defer fetchpriority="high"></script>
-<script src="/js/case.js?v=20261793" defer fetchpriority="high"></script>
-<script src="/js/render.js?v=20261793" defer fetchpriority="high"></script>
-<script src="/js/script.js?v=20261793" defer fetchpriority="high"></script>
-<script src="/js/lumos.js?v=20261793" defer></script>
+<script src="/js/content.js?v=20261811" defer fetchpriority="high"></script>
+<script src="/js/projects.js?v=20261811" defer fetchpriority="high"></script>
+<script src="/js/case.js?v=20261811" defer fetchpriority="high"></script>
+<script src="/js/render.js?v=20261811" defer fetchpriority="high"></script>
+<script src="/js/script.js?v=20261811" defer fetchpriority="high"></script>
+<script src="/js/lumos.js?v=20261811" defer></script>
 </body>
 </html>
