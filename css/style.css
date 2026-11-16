@@ -3952,3 +3952,9 @@ html[data-motion="calm"] .wl .w { opacity: 1 !important; transition: none !impor
   .testi-head h2 { line-height: 1.2; }
   .next-ch h2 { line-height: 1.34; }
 }
+/* Stickers that sit inside a line of text (the book after "story.", the AI
+   tile): glued to their word so they never wrap onto a line of their own.
+   And no sticker shows until the fonts have loaded (script.js adds
+   html.fonts-in), so none is seen jumping when the text reflows. */
+.hs-nw { white-space: nowrap; }
+html.js:not(.fonts-in) .hs { opacity: 0 !important; }

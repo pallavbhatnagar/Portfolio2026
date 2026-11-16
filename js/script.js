@@ -194,6 +194,15 @@
   })();
   window.siteSfx = sfx; // shared with pixel-dog.js (the dog's bark)
 
+  // 1b2) Stickers wait for the fonts (CSS: html.js:not(.fonts-in) .hs), so
+  //      none shows in a stand-in font and then jumps as the text reflows.
+  //      After 3s they show regardless.
+  {
+    const fontsIn = () => document.documentElement.classList.add("fonts-in");
+    if (document.fonts && document.fonts.ready) { document.fonts.ready.then(fontsIn); setTimeout(fontsIn, 3000); }
+    else fontsIn();
+  }
+
   // 1c) Home: once the closing line comes into view, the AI colours sweep
   //     across its words on a loop (CSS draws it; none with reduced motion
   //     or Calm).
