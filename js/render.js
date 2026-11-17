@@ -32,11 +32,13 @@
     <article class="project" data-theme="${esc(p.tint)}" style="--n:${i}"${p.locked ? " data-locked" : ""}>
       <div class="project-copy">
         <p class="project-tag">${esc(p.category)}</p>
-        <h3 class="project-title">${esc(p.name)}</h3>
+        <h3 class="project-title is-hook">${esc(p.home.hook || p.name)}</h3>
         <p class="project-desc">${esc(p.home.text)}</p>
-        <dl class="metrics">
-          ${(p.home.metrics || []).map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("\n          ")}
-        </dl>
+        <div class="project-foot">
+          <dl class="metrics">
+            ${(p.home.metrics || []).map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("\n          ")}
+          </dl>
+        </div>
         <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}"></a>
       </div>
       <div class="project-panel"><div class="project-shot">${p.locked ? lockBadge : ""}${media(p, 'loading="lazy"')}</div></div>

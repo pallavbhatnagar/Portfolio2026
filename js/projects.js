@@ -39,7 +39,8 @@ window.CASE_STUDIES = [
     thumbAlt: "Wave 2.0 trading screen on a phone",
     home: {
       order: 1,
-      text: "Brokers wanted their own trading app without building one. I designed a single white-label system that feels native under every brand.",
+      hook: "How do you give dozens of brokers their own trading app, without building dozens of apps?",
+      text: "I designed a single white-label system that feels native under every brand.",
       metrics: [
         [
           "Branded broker apps launched",
@@ -72,7 +73,8 @@ window.CASE_STUDIES = [
     thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
       order: 2,
-      text: "Buying a basket means trusting stocks you didn't pick. So the app earns trust first: it shows performance, then asks for money.",
+      hook: "Would you put money into stocks you didn't pick?",
+      text: "So the app earns trust first: it shows performance, then asks for money.",
       metrics: [
         [
           "Screens designed",
@@ -106,7 +108,8 @@ window.CASE_STUDIES = [
     thumbAlt: "Atlas design system: colour tokens, buttons, toggles and form fields",
     home: {
       order: 3,
-      text: "Every product team had grown its own components. Atlas gave design and engineering one shared language: tokens, parts and rules.",
+      hook: "Every team drew its own button. Could they all speak one language?",
+      text: "So I set up one shared language for design and engineering: tokens, parts and rules.",
       metrics: [
         ["Token groups: colour, type, spacing, elevation, layout", "5"],
         ["Things documented for every component", "5"]
@@ -131,7 +134,8 @@ window.CASE_STUDIES = [
     thumbAlt: "Supply chain map: a network of suppliers with risk colours and a detail panel",
     home: {
       order: 4,
-      text: "A problem at one supplier can ripple across tiers. The map makes that risk visible, so teams can trace it instead of guessing.",
+      hook: "When one supplier stumbles, who else falls with it?",
+      text: "The map makes that ripple visible, so teams can trace the risk instead of guessing.",
       metrics: [
         ["Views on one map: suppliers, materials, locations", "3"],
         ["Analytical lenses: compliance and geography", "2"]

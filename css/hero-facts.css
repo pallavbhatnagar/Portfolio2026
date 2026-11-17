@@ -1,0 +1,155 @@
+/* Home hero: the three facts as rolling counters (js/hero-facts.js). */
+html.has-hero-facts .hc-facts-view { display: none !important; }
+.fl-host { width: 100%; }
+.fl { --ease: cubic-bezier(0.23, 1, 0.32, 1); --spring: cubic-bezier(0.34, 1.56, 0.64, 1); margin: 0; padding: 0; list-style: none; }
+.fl-stk { flex: none; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; border-radius: 0.6875rem; background: var(--bg); color: var(--ink); rotate: var(--tilt); box-shadow: 0 0.25rem 0.75rem -0.25rem rgba(13, 13, 13, 0.18); transition: rotate 0.45s var(--spring), scale 0.45s var(--spring); }
+.fl-stk svg { width: 58%; height: 58%; }
+.fl-stk.is-sm { width: 1.875rem; height: 1.875rem; border-radius: 0.5625rem; }
+.fl-stk.is-lg { width: 3rem; height: 3rem; border-radius: 0.875rem; }
+.fl-txt { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; }
+.fl-txt b { font-size: 0.9375rem; font-weight: 600; line-height: 1.3; color: var(--ink); white-space: nowrap; }
+.fl-txt span { font-size: 0.8125rem; line-height: 1.4; color: var(--ink-soft); white-space: nowrap; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .fl:not(.is-in) > li { opacity: 0; transform: translateY(0.75rem); }
+  html:not([data-motion="calm"]) .fl > li { transition: opacity 0.6s ease, transform 0.7s var(--ease); transition-delay: calc(var(--i, 0) * 90ms); }
+}
+
+/* ---------- Counters: big numbers that count up ---------- */
+.fl-counters { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); width: 100%; }
+.fl-counters li { position: relative; display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto; column-gap: 0.75rem; align-items: center; padding: 0 1.5rem; }
+.fl-counters li + li { border-left: 1px solid var(--hairline); }
+.fl-counters li:first-child { padding-left: 0; }
+.fl-counters .fl-stk { position: absolute; left: auto; right: 1.25rem; top: -0.75rem; }
+.fl-counters li:last-child .fl-stk { right: 0; }
+.fl-num { grid-row: 1 / span 2; font-size: clamp(2.5rem, 4.2vw, 3.5rem); font-weight: 600; letter-spacing: -0.05em; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.fl-counters .fl-txt b { font-size: 1rem; }
+@media (hover: hover) and (pointer: fine) { .fl-counters li:hover .fl-stk { rotate: calc(var(--tilt) * -1.4); scale: 1.08; } }
+
+/* ---------- Ticker: an endless strip across the hero's foot ---------- */
+.fl-ticker { display: flex; width: 100vw; margin-left: calc(50% - 50vw); overflow: hidden; padding: 0.875rem 0; border-block: 1px solid var(--hairline); -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+.fl-run { flex: none; display: flex; align-items: center; gap: 2rem; padding-right: 2rem; margin: 0; list-style: none; }
+.fl-run li { display: flex; align-items: center; gap: 0.625rem; white-space: nowrap; }
+.fl-run b { font-size: 1.0625rem; font-weight: 600; letter-spacing: -0.01em; color: var(--ink); }
+.fl-run span { font-size: 0.9375rem; color: var(--ink-soft); }
+.fl-star { font-size: 0.875rem; color: var(--ink-soft); opacity: 0.6; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .fl-run { animation: fl-tick 32s linear infinite; }
+  html:not([data-motion="calm"]) .fl-ticker:hover .fl-run { animation-play-state: paused; }
+}
+@keyframes fl-tick { to { transform: translateX(-100%); } }
+.fl-ticker.fl > li { all: unset; }
+
+/* ---------- Narrow screens ---------- */
+@media (max-width: 900px) {
+  .fl-counters li { padding: 0 0.75rem; }
+  .fl-num { font-size: clamp(2rem, 7vw, 2.75rem); }
+  .fl-counters .fl-txt span { display: none; }
+}
+@media (max-width: 640px) {
+  .fl-counters { grid-template-columns: 1fr; gap: 1rem; }
+  .fl-counters li { padding: 0; }
+  .fl-counters li + li { border-left: 0; }
+  .fl-counters .fl-txt span { display: block; }
+  .fl-counters .fl-stk { right: 0; top: 0; }
+  .fl-run b { font-size: 0.9375rem; }
+}
+
+/* Fixes after the first look. */
+.fl, .fl * { text-align: left; }
+.fl-counters .fl-stk { position: absolute; right: -1.125rem; top: -0.75rem; left: auto; }
+.fl-counters li:last-child .fl-stk { right: -1.125rem; }
+.fl-num { position: relative; margin-right: 0.75rem; }
+.fl-counters li { padding: 0 1.75rem; }
+.fl-counters .fl-stk, .fl-counters li:last-child .fl-stk { width: 1.625rem; height: 1.625rem; border-radius: 0.5rem; right: -1.5rem; top: -1rem; }
+.fl-num { margin-right: 1.625rem; }
+
+/* =========== Counters, refined (odometer + alphabet roll) =========== */
+.fl-cx { width: 100%; }
+.fl-cx .fl-counters { margin: 0; padding: 0; list-style: none; }
+.fl-cx .fl-counters > li { cursor: default; }
+.fl-cx .fl-num { display: inline-flex; align-items: flex-start; }
+/* A rolling column: an invisible copy of the final character sets the
+   width; the strip of characters slides up to land on it. */
+.od { display: inline-flex; }
+.od-c { position: relative; display: inline-block; height: 1em; overflow: hidden; }
+.od-sz { visibility: hidden; }
+.od-strip { position: absolute; left: 50%; top: 0; display: flex; flex-direction: column; translate: -50% 0; transform: translateY(0); }
+.od-strip > span { display: block; height: 1em; line-height: 1; text-align: center; }
+.od-s { display: inline-block; }
+.fl-cx li.is-rolled .od-strip { transform: translateY(calc(var(--to) * -1em)); transition: transform calc(1.1s + var(--to) * 0.025s) cubic-bezier(0.16, 1, 0.3, 1); transition-delay: calc(var(--i) * 140ms + var(--c) * 90ms + 250ms); }
+.fl-cx li.is-replaying.is-rolled .od-strip { transition-delay: calc(var(--c) * 70ms); }
+.fl-cx li.no-anim .od-strip { transition: none !important; }
+/* The sticker springs on once its number lands, and wiggles on a replay. */
+.fl-cx .fl-stk.is-pop { position: absolute; right: -1.625rem; top: -1.125rem; width: 1.875rem; height: 1.875rem; border-radius: 0.5625rem; scale: 0.2; opacity: 0; }
+.fl-cx li.is-rolled .fl-stk.is-pop { scale: 1; opacity: 1; transition: scale 0.6s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.25s ease, rotate 0.45s cubic-bezier(0.34, 1.56, 0.64, 1); transition-delay: calc(var(--i) * 140ms + 1.15s); }
+.fl-cx li.no-anim .fl-stk.is-pop { transition: none; }
+.fl-cx li.is-wiggle .fl-stk.is-pop { animation: fl-wiggle 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) 0.6s; }
+@keyframes fl-wiggle { 20% { rotate: calc(var(--tilt) + 14deg); scale: 1.15; } 45% { rotate: calc(var(--tilt) - 10deg); } 70% { rotate: calc(var(--tilt) + 5deg); } }
+.fl-cx .fl-num { margin-right: 1.875rem; }
+/* The two lines beside the number ease in after it lands. */
+.fl-cx .fl-txt { opacity: 0; translate: -0.375rem 0; }
+.fl-cx li.is-rolled .fl-txt { opacity: 1; translate: 0 0; transition: opacity 0.5s ease, translate 0.6s cubic-bezier(0.23, 1, 0.32, 1); transition-delay: calc(var(--i) * 140ms + 0.7s); }
+.fl-cx li.no-anim .fl-txt, .fl-cx li.is-replaying .fl-txt { transition: none; opacity: 1; translate: 0 0; }
+/* Phones: the ticker strip instead of the counters. */
+.fl-cx .fl-ticker { display: none; }
+@media (max-width: 640px) {
+  .fl-cx .fl-counters { display: none; }
+  .fl-cx .fl-ticker { display: flex; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fl-cx .od-strip { transform: translateY(calc(var(--to) * -1em)) !important; transition: none !important; }
+  .fl-cx .fl-stk.is-pop, .fl-cx .fl-txt { opacity: 1 !important; scale: 1 !important; translate: 0 0 !important; transition: none !important; }
+}
+html[data-motion="calm"] .fl-cx .od-strip { transform: translateY(calc(var(--to) * -1em)) !important; transition: none !important; }
+html[data-motion="calm"] .fl-cx .fl-stk.is-pop, html[data-motion="calm"] .fl-cx .fl-txt { opacity: 1 !important; scale: 1 !important; translate: 0 0 !important; }
+
+/* The roll fades at the top and bottom instead of a hard clip: each column
+   is taller than a character, with soft edges; once it lands, the
+   characters around the landed one fade out. */
+.od-c { height: 1.7em; margin: -0.35em 0; -webkit-mask-image: linear-gradient(transparent, #000 0.4em, #000 calc(100% - 0.4em), transparent); mask-image: linear-gradient(transparent, #000 0.4em, #000 calc(100% - 0.4em), transparent); }
+.od-sz { display: block; margin-top: 0.35em; line-height: 1; }
+.od-strip { top: 0.35em; }
+.od-strip > span { transition: opacity 0.35s ease; }
+.od-c.is-landed .od-strip > span:not(.t) { opacity: 0; }
+.fl-cx .fl-num { align-items: center; }
+
+/* Rolling characters other than the landing one stay soft: dimmed and
+   blurred, so the roll reads as motion and only the result is crisp. */
+.od-strip > span:not(.t) { opacity: 0.18; filter: blur(2.5px); transition: opacity 0.35s ease, filter 0.35s ease; }
+.od-c { -webkit-mask-image: linear-gradient(transparent, #000 0.55em, #000 calc(100% - 0.55em), transparent); mask-image: linear-gradient(transparent, #000 0.55em, #000 calc(100% - 0.55em), transparent); }
+
+/* Rework: a clean hard clip for the roll (no blur, no fade), and each
+   sticker sits in line at the start of its counter instead of floating. */
+.od-strip > span:not(.t) { opacity: 1 !important; filter: none !important; }
+.od-c { height: 1em !important; margin: 0 !important; -webkit-mask-image: none !important; mask-image: none !important; }
+.od-sz { margin-top: 0 !important; }
+.od-strip { top: 0 !important; }
+.fl-cx .fl-counters > li { display: flex; align-items: center; gap: 0.875rem; }
+.fl-cx .fl-num { display: inline-flex; align-items: center; gap: 0.75rem; margin-right: 0 !important; }
+.fl-cx .fl-num .od { order: 2; }
+.fl-cx .fl-stk.is-pop, .fl-cx li:last-child .fl-stk.is-pop { position: static !important; order: 1; width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; }
+.fl-cx .fl-stk.is-pop svg { width: 56%; height: 56%; }
+.fl-cx .fl-txt { padding-left: 0.25rem; border-left: 0; }
+@media (max-width: 900px) { .fl-cx .fl-stk.is-pop { width: 2.125rem; height: 2.125rem; } .fl-cx .fl-counters > li { gap: 0.625rem; } }
+.fl-counters li + li { border-left: 0 !important; }
+@media (max-width: 640px) { .fl-counters li { padding: 0; } }
+/* Sit inside the content column: spread the three, no side padding. */
+@media (min-width: 641px) { .fl-cx .fl-counters { display: flex !important; justify-content: space-between; gap: 1.5rem; } }
+.fl-cx .fl-counters > li { padding: 0 !important; }
+.fl-cx .fl-num { font-size: clamp(2.25rem, 3.4vw, 3rem); gap: 0.625rem; }
+.fl-cx .fl-counters > li { gap: 0.75rem; }
+.fl-cx .fl-stk.is-pop, .fl-cx li:last-child .fl-stk.is-pop { width: 2.25rem; height: 2.25rem; }
+/* 10% under the original size. */
+.fl-cx .fl-num { font-size: clamp(2.025rem, 3.06vw, 2.7rem); gap: 0.5625rem; }
+.fl-cx .fl-counters > li { gap: 0.675rem; }
+.fl-cx .fl-stk.is-pop, .fl-cx li:last-child .fl-stk.is-pop { width: 2.025rem; height: 2.025rem; border-radius: 0.625rem; }
+.fl-cx .fl-txt b { font-size: 0.9rem; }
+.fl-cx .fl-txt span { font-size: 0.73125rem; }
+
+/* Phones: only the new ticker strip (stickers, facts, stars); no counters,
+   and not the hero's older ribbon. */
+@media (max-width: 640px) {
+  html.has-hero-facts .hc-facts-view { display: none !important; }
+  .fl-cx .fl-counters { display: none !important; }
+  .fl-cx .fl-ticker { display: flex !important; }
+}
