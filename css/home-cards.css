@@ -107,3 +107,30 @@
 
 /* The field as a tinted chip. */
 .proj-stack .project-tag { align-self: flex-start; display: inline-flex; padding: 0.3125rem 0.75rem; border-radius: 99px; background: color-mix(in srgb, var(--ink-tag) 10%, transparent); font-size: 0.875rem !important; font-weight: 600; line-height: 1.2; }
+
+/* The field sits on the screenshot, top left, colour-coded. */
+.proj-stack .project-tag.is-on-shot { position: absolute; top: 0.75rem; left: 0.75rem; z-index: 2; display: inline-flex; margin: 0; padding: 0.25rem 0.625rem; border-radius: 999px; background: var(--tag-bg) !important; color: var(--tag-ink); font-size: var(--fs-small) !important; font-weight: 600; line-height: 1.3; box-shadow: 0 0.25rem 0.75rem rgba(13, 13, 13, 0.14); }
+:root[data-theme="dark"] .proj-stack .project-tag.is-on-shot { background: color-mix(in srgb, var(--tag-ink) 85%, #000) !important; color: #fff; }
+.proj-stack .project-title.is-hook { margin-top: 0; }
+
+/* The question on each card, a weight heavier. */
+.proj-stack .project-title.is-hook { font-weight: 600 !important; letter-spacing: -0.035em; }
+
+/* The question on each card in its card's own deep colour. */
+.proj-stack .project-title.is-hook { color: var(--ink-tag) !important; }
+
+/* Readability pass: a wider text column so the question wraps in two or
+   three even lines, calmer tracking and line height, and a darker answer
+   line with a comfortable measure. */
+@media (min-width: 641px) {
+  .proj-stack .project-copy { width: 44%; padding: 2rem 2rem 2rem 2.25rem; }
+  .proj-stack .project-panel { width: calc(56% - 0.5rem); }
+  .proj-stack .project-foot { left: calc(44% + 1.75rem); }
+}
+.proj-stack .project-title.is-hook { max-width: 22ch; font-size: clamp(1.375rem, 2vw, 1.6875rem) !important; font-weight: 600 !important; letter-spacing: -0.02em !important; line-height: 1.25; text-wrap: balance; }
+.proj-stack .project-desc { margin-top: 1rem; max-width: 36ch; font-size: 1rem !important; line-height: 1.6; color: color-mix(in srgb, var(--ink) 72%, transparent) !important; text-wrap: pretty; }
+@media (max-width: 640px) {
+  .proj-stack .project-title.is-hook { max-width: none; font-size: 1.3125rem !important; }
+  .proj-stack .project-desc { max-width: none; }
+}
+.proj-stack .project-tag.is-on-shot { box-shadow: none !important; }

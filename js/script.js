@@ -738,7 +738,9 @@
     // observer), so the cue is the page's own end coming up instead.
     const end = document.querySelector(".page-end") || document.querySelector(".site-footer");
     if (end && "IntersectionObserver" in window) {
-      new IntersectionObserver(([en]) => edge.classList.toggle("is-off", en.isIntersecting)).observe(end);
+      // Off a little before the end arrives, so the band never fades out
+      // over the page's rounded bottom and the footer.
+      new IntersectionObserver(([en]) => edge.classList.toggle("is-off", en.isIntersecting), { rootMargin: "0px 0px 180px 0px" }).observe(end);
     }
   }
 

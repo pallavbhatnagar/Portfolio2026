@@ -31,7 +31,7 @@
     stack.insertAdjacentHTML("beforeend", featured.map((p, i) => `
     <article class="project" data-theme="${esc(p.tint)}" style="--n:${i}"${p.locked ? " data-locked" : ""}>
       <div class="project-copy">
-        <p class="project-tag">${esc(p.category)}</p>
+        
         <h3 class="project-title is-hook">${esc(p.home.hook || p.name)}</h3>
         <p class="project-desc">${esc(p.home.text)}</p>
         <div class="project-foot">
@@ -41,7 +41,7 @@
         </div>
         <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}"></a>
       </div>
-      <div class="project-panel"><div class="project-shot">${p.locked ? lockBadge : ""}${media(p, 'loading="lazy"')}</div></div>
+      <div class="project-panel"><div class="project-shot"><span class="project-tag is-on-shot" style="--tag-bg: var(--${esc(p.tint)}-panel); --tag-ink: var(--${esc(p.tint)}-ink)">${esc(p.category)}</span>${p.locked ? lockBadge : ""}${media(p, 'loading="lazy"')}</div></div>
     </article>`).join("\n"));
   }
 
@@ -59,8 +59,9 @@
           <h2 class="wk-name">${esc(p.name)}</h2>
           <p class="wk-what">${esc(p.works.text)}</p>
           <p class="wk-meta">${(p.works.meta || []).map((m) => `<span>${esc(m)}</span>`).join("")}</p>
+          <span class="wk-cta" aria-hidden="true">${p.locked ? lockIcon : `<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7M8.5 7H17v8.5"/></svg>`}</span>
         </div>
-        <div class="wk-visual"><div class="wk-marks"><span class="wk-badge">${esc(p.kind)}</span>${p.locked ? lockBadge : ""}</div><div class="wk-media">${media(p, i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"')}</div></div>
+        <div class="wk-visual"><div class="wk-marks"><span class="wk-dom" style="--c-bg: var(--${esc(p.tint)}-panel); --c-ink: var(--${esc(p.tint)}-ink)">${esc(p.category)}</span><span class="wk-badge${explore ? " is-explore" : ""}">${esc(p.kind)}</span>${p.locked ? lockBadge : ""}</div><div class="wk-media">${media(p, i === 0 ? 'loading="eager" fetchpriority="high"' : 'loading="lazy"')}</div></div>
       </a>
     </li>`;
     }).join(""));

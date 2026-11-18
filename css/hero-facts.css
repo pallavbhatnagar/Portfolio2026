@@ -153,3 +153,7 @@ html[data-motion="calm"] .fl-cx .fl-stk.is-pop, html[data-motion="calm"] .fl-cx 
   .fl-cx .fl-counters { display: none !important; }
   .fl-cx .fl-ticker { display: flex !important; }
 }
+
+/* The second line under each counter, a size up. */
+.fl-cx .fl-txt span { font-size: 0.875rem !important; }
+.fl-cx .fl-txt b { font-size: 1rem !important; }

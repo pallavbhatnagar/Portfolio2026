@@ -7,7 +7,7 @@
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   // ---------- View switch ----------
-  // Grid or list, remembered. Switching morphs every card from its old
+  // Grid (the default) or list, remembered. Switching morphs every card from its old
   // place and shape to the new one (View Transitions); each card gets its
   // name only for the switch, so nothing else on the page joins in.
   const KEY = "works-view";
@@ -17,15 +17,16 @@
   view.className = "wk-view";
   view.setAttribute("role", "group");
   view.setAttribute("aria-label", "View");
-  view.innerHTML = `<button type="button" data-view="list" aria-pressed="true" aria-label="List view" title="List view">${ic('<rect x="3.5" y="4.5" width="17" height="6" rx="1.5"/><rect x="3.5" y="13.5" width="17" height="6" rx="1.5"/>')}</button><button type="button" data-view="grid" aria-pressed="false" aria-label="Grid view" title="Grid view">${ic('<rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.5"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1.5"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1.5"/><rect x="13" y="13" width="7.5" height="7.5" rx="1.5"/>')}</button>`;
+  view.innerHTML = `<button type="button" data-view="grid" aria-pressed="true" aria-label="Grid view" title="Grid view">${ic('<rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1.5"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1.5"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1.5"/><rect x="13" y="13" width="7.5" height="7.5" rx="1.5"/>')}</button><button type="button" data-view="list" aria-pressed="false" aria-label="List view" title="List view">${ic('<rect x="3.5" y="4.5" width="17" height="6" rx="1.5"/><rect x="3.5" y="13.5" width="17" height="6" rx="1.5"/>')}</button>`;
   if (bar) bar.appendChild(view);
   const buttons = Array.from(view.querySelectorAll("button"));
   const setView = (mode) => {
     list.classList.toggle("is-grid", mode === "grid");
     buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.view === mode)));
   };
-  let saved = "list";
-  try { saved = localStorage.getItem(KEY) === "grid" ? "grid" : "list"; } catch (e) { /* private mode */ }
+  // Two columns (grid) unless the visitor chose the list.
+  let saved = "grid";
+  try { saved = localStorage.getItem(KEY) === "list" ? "list" : "grid"; } catch (e) { /* private mode */ }
   setView(saved);
   buttons.forEach((b) => b.addEventListener("click", () => {
     const mode = b.dataset.view;

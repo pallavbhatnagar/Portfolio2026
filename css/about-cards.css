@@ -1,0 +1,49 @@
+/* About page cards, in the project cards' language: rounder corners
+   (1.5rem on the card, 1.125rem on anything set inside it), and pictures
+   that sit just inside the card with their own rounded corners. */
+
+/* "Working with me" (im-card), "Outside the brief" (off-card) and the
+   "Building / Learning" card (now-card). */
+.im-card, .off-card, .now-card { border-radius: 1.5rem !important; }
+.im-card { padding: 1.5rem 1.5rem 1.625rem; }
+.off-card { padding: 1.5rem 1.5rem 1.625rem; }
+.now-card { padding: 0.5rem 1.5rem; }
+
+/* Pictures inside the cards: rounded to sit inside the card's curve. */
+.om-screen { border-radius: 1.125rem !important; }
+.lf-pic { border-radius: 1.125rem !important; }
+.ab-snap-pic { border-radius: 0.5rem !important; }
+.om-sc { border-radius: 99px !important; }
+.om-genres li { border-radius: 99px !important; padding: 0.1875rem 0.625rem !important; }
+
+/* Phones: a size down. */
+@media (max-width: 640px) {
+  .im-card, .off-card, .now-card { border-radius: 1.25rem !important; }
+  .im-card, .off-card { padding: 1.25rem; }
+  .om-screen, .lf-pic { border-radius: 1rem !important; }
+}
+
+/* "Life, lately": the grey card gets room to breathe. */
+.now-card { padding: 0.75rem 2rem !important; }
+.now-list > div { grid-template-columns: 7.5rem minmax(0, 1fr); gap: 1.5rem; padding: 1.375rem 0; }
+.ab-life-top { gap: 3rem; margin-bottom: 2.5rem; }
+@media (max-width: 640px) {
+  .now-card { padding: 0.5rem 1.25rem !important; }
+  .now-list > div { grid-template-columns: 1fr; gap: 0.375rem; padding: 1.125rem 0; }
+  .ab-life-top { gap: 1.75rem; margin-bottom: 1.75rem; }
+}
+
+/* "Life, lately": a tinted card with more room inside, sitting closer to
+   the photo strip below. */
+.now-card { background: var(--lilac-bg) !important; padding: 1rem 2.25rem !important; }
+.now-list > div { padding: 1.5rem 0; }
+.now-list > div + div { border-top-color: color-mix(in srgb, var(--lilac-ink) 12%, transparent); }
+.now-list dt { color: var(--lilac-ink); opacity: 0.75; }
+.ab-life-top { margin-bottom: 1.5rem; }
+@media (max-width: 640px) { .now-card { padding: 0.75rem 1.375rem !important; } .now-list > div { padding: 1.25rem 0; } .ab-life-top { margin-bottom: 1.25rem; } }
+.ab-life { row-gap: 0 !important; }
+.ab-life-top { margin-bottom: 1.5rem !important; }
+
+/* Even space above the first row and below the last. */
+.now-list > div:first-child { padding-top: 0.875rem !important; }
+.now-list > div:last-child { padding-bottom: 0.875rem !important; }

@@ -893,6 +893,14 @@ html[data-motion="calm"] .vx-card { transition: none; }
 .page-end { display: block; height: 1px; }
 /* The page sits above the footer, on its own colour, so it covers it. */
 .page { position: relative; z-index: 1; background: var(--bg); }
+/* The page's bottom corners curve in, so it reads as a sheet lifting off
+   the footer beneath it. */
+.page { border-bottom-left-radius: 2rem; border-bottom-right-radius: 2rem; }
+@media (max-width: 640px) { .page { border-bottom-left-radius: 1.25rem; border-bottom-right-radius: 1.25rem; } }
+/* The footer tucks up under the page by the curve's depth, so its colour
+   fills the rounded corners; the extra height sits above its content. */
+.site-footer { margin-top: -2rem; padding-top: 2rem; min-height: calc(var(--footer-h) + 2rem); }
+@media (max-width: 640px) { .site-footer { margin-top: -1.25rem; padding-top: 1.25rem; min-height: calc(var(--footer-h) + 1.25rem); } }
 /* Locked stubs (hero and password card only) are shorter than the screen:
    the page fills it, so the footer sits at the bottom of the viewport. */
 .page:has(> main[data-locked]) { min-height: calc(100vh - var(--footer-h)); min-height: calc(100dvh - var(--footer-h)); }
@@ -3970,3 +3978,20 @@ html.js:not(.fonts-in) .hs { opacity: 0 !important; }
   .ab-path.is-armed .path-grid li { opacity: 1; transform: none; }
   .ab-path .path-grid li { transition: none; }
 }
+
+/* "Every product has a story.": a plain heading and description, like the
+   other Home sections; no link or hand-drawn underline. */
+#projects-title { font-weight: 500 !important; letter-spacing: -0.025em !important; }
+.proj-head .proj-intro p { max-width: 52ch; margin-top: 1rem; font-size: 1.125rem; line-height: 1.5; color: var(--ink-soft); }
+
+/* Testimonials, a size up for easier reading. */
+.tq-quote { font-size: 1.0625rem; line-height: 1.55; }
+.tq-name strong { font-size: 1.1875rem; }
+.tq-name span { font-size: 0.875rem; }
+
+/* The bottom-edge band keeps its own layer through page view transitions
+   (the Work view switch, the theme switch), so it never blinks out while
+   the page beneath it morphs. */
+.edge-blur { view-transition-name: edge-blur; }
+::view-transition-group(edge-blur), ::view-transition-new(edge-blur) { animation: none; }
+::view-transition-old(edge-blur) { display: none; }

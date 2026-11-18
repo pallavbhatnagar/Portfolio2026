@@ -298,7 +298,9 @@
   // and the space above the footer at the end of the page.
   const perches = () => {
     const list = Array.from(host.querySelectorAll(":scope > section")).filter((s) => !s.classList.contains("ab-hero"));
-    const foot = document.querySelector(".site-footer");
+    // The footer tucks up under the page (its rounded bottom), so he stands
+    // on the page's own end, not the footer's hidden top edge.
+    const foot = document.querySelector(".page-end") || document.querySelector(".site-footer");
     if (foot) list.push(foot);
     return list;
   };
@@ -307,7 +309,10 @@
   const hostBox = () => host.getBoundingClientRect();
   const size = () => el.getBoundingClientRect();
   const span = (s) => {
-    const hb = hostBox(), sb = s.getBoundingClientRect(), d = size();
+    // In a two-column section he walks only on the right-hand column, whose
+    // top edge he can stand on, never over the heading or in the gap.
+    const two = s.tagName === "SECTION" && s.lastElementChild && getComputedStyle(s).display === "grid" && getComputedStyle(s).gridTemplateColumns.split(" ").length > 1;
+    const hb = hostBox(), sb = (two ? s.lastElementChild : s).getBoundingClientRect(), d = size();
     return { left: Math.max(sb.left, hb.left) - hb.left, right: Math.min(sb.right, hb.right) - hb.left - d.width };
   };
   const perchY = (s) => s.getBoundingClientRect().top - hostBox().top - size().height + 2;

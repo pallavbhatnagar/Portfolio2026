@@ -1,0 +1,108 @@
+/* Work page cards, matched to the Home project cards: the field in a
+   tinted chip, no year, the screenshot inset 8px with rounded corners,
+   and the same text sizes. The project names stay: this is the full
+   index. */
+.wk-card { min-height: 22rem; padding: 0.5rem; border-radius: 1.5rem; gap: 1.5rem; grid-template-columns: minmax(0, 0.72fr) minmax(0, 1fr); }
+.wk-copy { padding: 1.75rem 0.5rem 1.5rem 1.75rem; }
+.wk-top { justify-content: flex-start; }
+.wk-year { display: none; }
+.wk-cat { display: inline-flex; padding: 0.3125rem 0.75rem; border-radius: 99px; background: color-mix(in srgb, var(--tint-ink) 10%, transparent); font-size: 0.875rem; font-weight: 600; line-height: 1.2; }
+.wk-name { margin-top: 0.875rem; font-size: clamp(1.5rem, 2.3vw, 1.875rem); letter-spacing: -0.03em; line-height: 1.15; }
+.wk-what { margin-top: 0.875rem; max-width: 34ch; font-size: 1.0625rem; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty; }
+.wk-meta { font-size: 0.875rem; }
+.wk-visual { margin: 0; border-radius: 1.125rem; }
+@media (max-width: 900px) {
+  .wk-card { grid-template-columns: 1fr; gap: 0; padding: 0.375rem; border-radius: 1.25rem; }
+  .wk-visual { order: -1; border-radius: 1rem; }
+  .wk-copy { padding: 1rem 1rem 1.25rem; }
+  .wk-what { max-width: none; font-size: 1rem; }
+}
+/* Grid view keeps its compact card. */
+.wk-list.is-grid .wk-card { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 0.375rem; }
+.wk-list.is-grid .wk-visual { margin: 0; border-radius: 1rem; }
+.wk-list.is-grid .wk-copy { padding: 1rem 1rem 1.25rem; }
+.wk-list.is-grid .wk-name { font-size: 1.375rem; }
+.wk-list.is-grid .wk-what { max-width: none; font-size: 0.9375rem; }
+
+/* No role, time or team line on the cards. */
+.wk-meta { display: none; }
+.wk-copy { justify-content: center; }
+.wk-list.is-grid .wk-what { margin-bottom: 0.25rem; }
+
+/* Tags on the screenshot: solid, not see-through. */
+.wk-badge, .wk-marks .shot-lock { background: #fff !important; box-shadow: 0 0.25rem 0.75rem rgba(13, 13, 13, 0.14) !important; }
+
+/* A clear way in at the end of the words: a pill that fills on hover. */
+.wk-cta { align-self: flex-start; display: inline-flex; align-items: center; gap: 0.5rem; margin-top: 1.5rem; padding: 0.625rem 1.125rem; border-radius: 99px; background: var(--fill); color: var(--fill-ink); font-size: 0.9375rem; font-weight: 600; line-height: 1.2; transition: transform 0.2s cubic-bezier(0.23, 1, 0.32, 1); }
+.wk-cta > svg:first-child { width: 1rem; height: 1rem; }
+.wk-cta-arrow { transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
+@media (hover: hover) and (pointer: fine) { .wk-card:hover .wk-cta-arrow { transform: translateX(3px); } }
+.wk-card:active .wk-cta { transform: scale(0.97); }
+.wk-list.is-grid .wk-cta { margin-top: 1rem; }
+
+/* Subtler: a text link with an underline, not a filled button. */
+.wk-cta { padding: 0; border-radius: 0; background: none; color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: color-mix(in srgb, var(--ink) 25%, transparent); text-underline-offset: 0.3em; transition: text-decoration-color 0.2s ease; }
+@media (hover: hover) and (pointer: fine) { .wk-card:hover .wk-cta { text-decoration-color: currentColor; } }
+.wk-card:active .wk-cta { transform: none; }
+
+/* The field moves onto the screenshot, top left; the CTA loses its arrow. */
+.wk-top { display: none; }
+.wk-name { margin-top: 0; }
+.wk-cta-arrow { display: none; }
+.wk-dom { position: absolute; top: 0.75rem; left: 0.75rem; z-index: 1; padding: 0.25rem 0.625rem; border-radius: 999px; background: #fff; color: #0d0d0d; font-size: var(--fs-small); font-weight: 600; box-shadow: 0 0.25rem 0.75rem rgba(13, 13, 13, 0.14); }
+
+/* Words start at the top; the link sits at the bottom after a gap. */
+.wk-copy { justify-content: flex-start !important; }
+.wk-cta { margin-top: auto !important; }
+.wk-what { margin-bottom: 1.5rem; }
+/* Field and kind side by side, top left of the screenshot. */
+.wk-marks { left: 0.75rem; right: auto; }
+.wk-dom { position: static; box-shadow: 0 0.25rem 0.75rem rgba(13, 13, 13, 0.14); }
+.wk-badge { font-weight: 500; }
+.wk-list.is-grid .wk-card { grid-template-rows: auto 1fr; }
+.wk-list.is-grid .wk-what { margin-bottom: 1.25rem; }
+@media (max-width: 900px) { .wk-card { grid-template-rows: auto 1fr; } }
+
+/* The way in is just an icon now: a small round arrow (or the lock),
+   quiet until the card is pointed at. */
+.wk-cta { display: grid !important; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0 !important; border-radius: 50% !important; background: color-mix(in srgb, var(--ink) 6%, transparent) !important; color: var(--ink-soft) !important; text-decoration: none !important; transition: background-color 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1) !important; }
+.wk-cta svg { width: 1rem; height: 1rem; }
+@media (hover: hover) and (pointer: fine) { .wk-card:hover .wk-cta { background: var(--fill) !important; color: var(--fill-ink) !important; transform: rotate(45deg); } .wk-card[data-locked]:hover .wk-cta, .wk-item[data-locked] .wk-card:hover .wk-cta { transform: none; } }
+
+/* Tags colour-coded: the field in the project's own colour; Case study
+   and Exploration each in their own. */
+.wk-dom { background: var(--c-bg, #fff) !important; color: var(--c-ink, #0d0d0d) !important; }
+:root[data-theme="dark"] .wk-dom { background: color-mix(in srgb, var(--c-ink) 85%, #000) !important; color: #fff !important; }
+.wk-badge { background: #e7e3fb !important; color: #2a1d5c !important; }
+.wk-badge.is-explore { background: #fbe7c8 !important; color: #5a3a08 !important; }
+
+/* Domain tags sit flat on the screenshot: no shadow. */
+.wk-dom { box-shadow: none !important; }
+
+/* "My work, explained for [anyone]": the choice reads as a real dropdown,
+   a rounded field with its chevron, instead of an underlined word. The
+   open list marks the current reader with a tick. */
+.rd-trig { gap: 0.5rem !important; margin-left: 0.25rem; padding: 0.3125rem 0.625rem 0.3125rem 0.875rem !important; border: 1px solid var(--line) !important; border-radius: 0.75rem; background: var(--bg) !important; background-image: none !important; font-weight: 600 !important; line-height: 1.3; box-shadow: 0 1px 2px rgba(13, 13, 13, 0.05); transition: border-color 0.2s ease, box-shadow 0.2s ease; }
+@media (hover: hover) and (pointer: fine) { .rd-trig:hover { border-color: color-mix(in srgb, var(--ink) 35%, transparent) !important; } }
+.rd-trig[aria-expanded="true"] { border-color: var(--ink) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 8%, transparent); }
+.rd-trig svg { width: 0.75em; height: 0.75em; color: var(--ink-soft); }
+.rd-trig:focus-visible { border-radius: 0.75rem; outline-offset: 2px; }
+.rd-menu .rd-role[aria-pressed="true"]::before { width: 0.875rem; height: 0.875rem; border-radius: 0; background: none; -webkit-mask: none; content: "\2713"; font-size: 0.875rem; font-weight: 700; line-height: 1; color: var(--ink); }
+@media (hover: hover) and (pointer: fine) { .rd-menu .rd-role:hover { background: var(--surface); color: var(--ink); } }
+
+/* The colour it already had: the site's hand-drawn blue to violet to pink
+   stroke under the word, the same gradient on the border while the list is
+   open, and on the chosen reader's wash and tick. */
+.rd-trig { --g1: #2a4fe0; --g2: #7656d4; --g3: #d9227f; position: relative; }
+:root[data-theme="dark"] .rd-trig, :root[data-theme="dark"] .rd-menu { --g1: #5b82ff; --g2: #a68cf0; --g3: #ff4fa6; }
+.rd-menu { --g1: #2a4fe0; --g2: #7656d4; --g3: #d9227f; }
+.rd-trig::after { content: ""; position: absolute; left: 0.875rem; right: 1.75rem; bottom: 0.0625rem; height: 0.42em; background: var(--scribble-sm) 0 100% / 100% 100% no-repeat; pointer-events: none; }
+@media (hover: hover) and (pointer: fine) { .rd-trig:hover::after { background-image: var(--scribble-sm-bold); } .rd-trig:hover { border-color: color-mix(in srgb, var(--g2) 40%, transparent) !important; } }
+.rd-trig svg { color: var(--g2); }
+.rd-trig[aria-expanded="true"] { border-color: transparent !important; background: linear-gradient(var(--bg), var(--bg)) padding-box, linear-gradient(90deg, var(--g1), var(--g2), var(--g3)) border-box !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--g2) 14%, transparent); }
+.rd-trig[aria-expanded="true"]::after { background-image: var(--scribble-sm-bold); }
+.rd-menu .rd-role[aria-pressed="true"] { background: linear-gradient(90deg, color-mix(in srgb, var(--g1) 10%, transparent), color-mix(in srgb, var(--g2) 10%, transparent), color-mix(in srgb, var(--g3) 10%, transparent)); color: var(--ink); }
+.rd-menu .rd-role[aria-pressed="true"]::before { color: var(--g2); }
+/* A little air between the word and its underline. */
+.rd-trig { padding-top: 0.1875rem !important; padding-bottom: 0.5625rem !important; }
+.rd-trig::after { bottom: 0.0625rem; }

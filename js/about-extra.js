@@ -68,11 +68,8 @@
       lede.after(line);
     }
     const text = line.querySelector(".ab-now-text");
-    const fmt = new Intl.DateTimeFormat("en-US", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true });
-    // The time there, and open to work (so the dot always stays lit).
-    const tick = () => { text.innerHTML = `<b>${fmt.format(new Date())}</b> in New Delhi, open to new work`; };
-    tick();
-    setInterval(tick, 30000);
+    // Open to work (the dot stays lit). No clock.
+    text.textContent = "Open to new opportunities";
   }
 
   // ---------- Career path ----------
