@@ -37,9 +37,7 @@
 @media (max-width: 640px) { .ws-row { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.75rem; padding: 0; } .ws-num { font-size: 1.5rem; } .ws-cap { font-size: 0.75rem; } }
 
 /* More breathing room above and below the numbers. */
-.ws { margin: 1.75rem auto 6.25rem; }
-@media (max-width: 640px) { .ws { margin: 2rem auto 4rem; } }
+.ws { margin: 10rem auto 2.75rem; }
+@media (max-width: 640px) { .ws { margin: 8.5rem auto 2rem; } }
 
-/* A hairline above the numbers, the width of the row. */
-.ws-row { padding-top: 1.75rem !important; border-top: 1px solid var(--line); }
-@media (max-width: 640px) { .ws-row { padding-top: 1.25rem !important; } }
+
