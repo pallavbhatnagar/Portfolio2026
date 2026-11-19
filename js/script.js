@@ -1,3 +1,8 @@
+// A page restored from the browser's back cache (Back, the breadcrumb, a
+// swipe) keeps whatever was measured as it left. Tell everything that
+// measures on resize to measure again once it is showing.
+window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFrame(() => window.dispatchEvent(new Event("resize"))); });
+
 (() => {
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
   const canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
@@ -1418,6 +1423,9 @@
       l.style.maxWidth = `${Math.ceil(hi) + 1}px`;
     }
     function fitLines() {
+      // Not laid out yet (hidden, or a page being restored from the back
+      // cache): measuring now would squeeze the sentence to a sliver.
+      if (rdLines.clientWidth < 200) return;
       rdLines.querySelectorAll(".rd-line").forEach(threeLines);
       // Phones: the box fits the sentence showing (a short sentence leaves no
       // gap); it eases to the new height when the reader changes. Wider
@@ -1425,9 +1433,19 @@
       const on = rdLines.querySelector(".rd-line.is-on");
       const h = matchMedia("(max-width: 640px)").matches && on ? on.offsetHeight
         : Math.max(...Array.from(rdLines.querySelectorAll(".rd-line"), (l) => l.offsetHeight));
-      if (h > 0) rdLines.style.height = `${h}px`;
+      // Phones: an exact height, so it can ease to the next sentence. Wider
+      // screens: a minimum, so the box can never be shorter than its text
+      // and spill over "Start with" below.
+      if (h > 0) {
+        if (matchMedia("(max-width: 640px)").matches) { rdLines.style.minHeight = ""; rdLines.style.height = `${h}px`; }
+        else { rdLines.style.height = ""; rdLines.style.minHeight = `${h}px`; }
+      }
     }
     window.addEventListener("resize", () => fitLines());
+    let lastW = 0;
+    if ("ResizeObserver" in window) new ResizeObserver(() => { const w = rdLines.clientWidth; if (w !== lastW) { lastW = w; fitLines(); } }).observe(rdLines);
+    window.addEventListener("pageshow", () => requestAnimationFrame(() => requestAnimationFrame(fitLines)));
+    document.addEventListener("visibilitychange", () => { if (!document.hidden) requestAnimationFrame(fitLines); });
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitLines());
     // And again when the display settings change how text is set (easier
     // reading, text size, plain): the lines grow, so the box must too.

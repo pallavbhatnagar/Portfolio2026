@@ -4042,3 +4042,10 @@ html.js:not(.fonts-in) .hs { opacity: 0 !important; }
    scroll could outrun, so it never shows over the footer. */
 .edge-blur > i, .edge-blur::after { opacity: calc(var(--edge-in, 1) * var(--edge-out, 1)); }
 .edge-blur.is-off { transition: none; }
+
+/* Work intro sentence: each word is its own inline box (for the word-by-word
+   entrance), and iPad Safari's balanced wrapping mis-sets lines made of such
+   boxes, most visibly on a page restored by Back ("I / make / complicated").
+   The script already sizes the line to three even lines (fitLines), so plain
+   wrapping is used here. */
+.rd-line { text-wrap: wrap !important; }
