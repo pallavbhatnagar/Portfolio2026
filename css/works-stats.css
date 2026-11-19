@@ -43,5 +43,5 @@
 
 /* Tablets (iPad portrait and landscape): the desktop gap pushed the cards
    off the screen, so the space above the numbers follows the screen
-   height instead, between about 30px and 50px. */
-@media (min-width: 641px) and (max-width: 1199px), (min-width: 641px) and (hover: none) and (pointer: coarse) { .ws { margin-top: clamp(2rem, 4.5svh, 3.5rem); } }
+   height instead, between about 45px and 70px. */
+@media (min-width: 641px) and (max-width: 1199px), (min-width: 641px) and (hover: none) and (pointer: coarse) { .ws { margin-top: clamp(3rem, 7svh, 5rem); } }

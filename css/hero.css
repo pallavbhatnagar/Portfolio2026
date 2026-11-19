@@ -449,3 +449,11 @@ html[data-motion="calm"] .hc-down { transition: none; }
    takes the hover and the click. */
 .hc-mess { position: relative; z-index: 1; pointer-events: none; }
 .hc-mess::after { content: ""; position: absolute; left: 0; right: 0; top: 0.14em; bottom: -0.12em; pointer-events: auto; }
+
+/* Tablets held upright (iPad portrait): the hero no longer stretches to
+   the full, very tall screen, which left a large empty band between the
+   words and the facts. It ends with its content; the facts follow a fixed
+   distance below, and the projects start soon after. */
+@media (min-width: 641px) and (max-width: 1199px) and (orientation: portrait), (min-width: 641px) and (orientation: portrait) and (hover: none) and (pointer: coarse) {
+  .hc { min-height: 0; grid-template-rows: minmax(0, 1fr) auto auto auto auto auto 6.5rem auto; padding-bottom: 1rem; }
+}
