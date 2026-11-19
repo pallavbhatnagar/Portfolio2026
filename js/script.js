@@ -1416,7 +1416,7 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => fitLines());
     // And again when the display settings change how text is set (easier
     // reading, text size, plain): the lines grow, so the box must too.
-    new MutationObserver(() => requestAnimationFrame(fitLines)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-read", "data-text", "data-plain", "data-focus", "style"] });
+    new MutationObserver(() => requestAnimationFrame(fitLines)).observe(document.documentElement, { attributes: true, attributeFilter: ["data-read", "data-text", "data-text-small", "data-plain", "data-focus", "style"] });
     const show = (key, animate) => {
       const r = READERS.find((x) => x[0] === key) || READERS[0];
       rdRoles.querySelectorAll(".rd-role").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.role === r[0])));
@@ -3000,9 +3000,11 @@
     let prefs = load();
     delete prefs.quiet; // the old "Quiet sounds" option, since replaced
     try { if (localStorage.getItem("saber") === "1") prefs.saber = 1; localStorage.removeItem("saber"); } catch (e) { /* private mode */ }
-    // Tablets (touch screens 641px and wider) start at the middle text size;
-    // everything else at the smallest. Only a different choice is saved.
-    const textDefault = window.matchMedia("(min-width: 641px) and (hover: none) and (pointer: coarse)").matches ? 1 : 0;
+    // Text size has three steps: smaller (-1), default (0, the middle) and
+    // larger (1), on every device. Only a different choice is saved. An old
+    // saved "2" (the former largest step) becomes the new largest, 1.
+    const textDefault = 0;
+    if (prefs.text != null) prefs.text = Math.max(-1, Math.min(1, Number(prefs.text) || 0));
     const textNow = () => (prefs.text != null ? prefs.text : textDefault);
     const deviceCalm = () => { const m = html.getAttribute("data-motion"); html.removeAttribute("data-motion"); const r = window.matchMedia("(prefers-reduced-motion: reduce)").matches; if (m) html.setAttribute("data-motion", m); return r; };
     const ic = (d, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"${extra}>${d}</svg>`;
@@ -3052,7 +3054,7 @@
         <button class="dsp-close" type="button" aria-label="Close">${ic('<path d="M6 6l12 12M18 6L6 18"/>', ' stroke-width="2"')}</button>
       </div>
       <div class="dsp-lines">
-        ${seg("dsp-text", "Text size", "Makes every word on the site bigger, the panel too.", [["0", '<span class="dsp-a dsp-a0">A</span>', "Default text size"], ["1", '<span class="dsp-a dsp-a1">A</span>', "Large text"], ["2", '<span class="dsp-a dsp-a2">A</span>', "Larger text"]])}
+        ${seg("dsp-text", "Text size", "Makes every word on the site smaller or bigger, the panel too.", [["-1", '<span class="dsp-a dsp-a0">A</span>', "Smaller text"], ["0", '<span class="dsp-a dsp-a1">A</span>', "Default text size"], ["1", '<span class="dsp-a dsp-a2">A</span>', "Larger text"]])}
         ${seg("dsp-motion", "Motion", "", [["lively", ic('<path class="dsp-spark dsp-spark-a" d="M10 6.5l1.5 4.6 4.6 1.5-4.6 1.5L10 18.7l-1.5-4.6-4.6-1.5 4.6-1.5z"/><path class="dsp-spark dsp-spark-b" d="M18 3l.7 2.1 2.1.7-2.1.7L18 8.6l-.7-2.1-2.1-.7 2.1-.7z"/>') + "<span>Lively</span>", "Lively motion"], ["calm", ic('<ellipse cx="12" cy="18.2" rx="7.2" ry="2.6"/><ellipse cx="12" cy="12.7" rx="5" ry="2.3"/><ellipse cx="12" cy="7.9" rx="3" ry="1.8"/>') + "<span>Calm</span>", "Calm motion"]])}
         ${seg("dsp-clicks", "Click sounds", "A soft click whenever you press something on the site.", [["off", "<span>Off</span>", "Click sounds off"], ["on", "<span>On</span>", "Click sounds on"]])}
       </div>
@@ -3173,7 +3175,8 @@
     });
     const resetBtn = panel.querySelector(".dsp-reset");
     const apply = () => {
-      if (textNow()) html.setAttribute("data-text", String(textNow())); else html.removeAttribute("data-text");
+      if (textNow() > 0) html.setAttribute("data-text", "1"); else html.removeAttribute("data-text");
+      if (textNow() < 0) html.setAttribute("data-text-small", ""); else html.removeAttribute("data-text-small");
       TOGGLES.forEach(([k]) => { if (prefs[k]) html.setAttribute("data-" + k, ""); else html.removeAttribute("data-" + k); });
       const before = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       if (prefs.motion) html.setAttribute("data-motion", prefs.motion); else html.removeAttribute("data-motion");

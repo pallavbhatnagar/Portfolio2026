@@ -3472,6 +3472,7 @@ html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
 /* --- What each setting does to the site --- */
 html[data-text="1"] { --text-scale: 1.125; }
 html[data-text="2"] { --text-scale: 1.25; }
+html[data-text-small] { --text-scale: 0.9; } /* the smaller step, below the default */
 
 /* Easier reading: the WCAG 1.4.12 kinds of spacing, at a comfortable level. */
 html[data-read] :is(p, li, dd, dt, blockquote, figcaption, summary, label, td):not(.nav *):not(.rd-line, .pl-word) { line-height: 1.75 !important; letter-spacing: 0.03em !important; word-spacing: 0.1em !important; }
