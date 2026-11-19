@@ -134,3 +134,12 @@
   .proj-stack .project-desc { max-width: none; }
 }
 .proj-stack .project-tag.is-on-shot { box-shadow: none !important; }
+
+/* Screenshot a little narrower so the title gets more room. */
+@media (min-width: 641px) {
+  .proj-stack .project-copy { width: 51%; }
+  .proj-stack .project-panel { width: calc(49% - 0.5rem); }
+  .proj-stack .project-foot { left: calc(51% + 1.5rem); right: 1.5rem; }
+  .proj-stack .project-title.is-hook { max-width: none; text-wrap: balance; }
+  .proj-stack .project-desc { max-width: 40ch; }
+}

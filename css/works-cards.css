@@ -106,3 +106,6 @@
 /* A little air between the word and its underline. */
 .rd-trig { padding-top: 0.1875rem !important; padding-bottom: 0.5625rem !important; }
 .rd-trig::after { bottom: 0.0625rem; }
+
+/* List view: the same split as the Home cards, words 51%, screenshot 49%. */
+@media (min-width: 901px) { .wk-list:not(.is-grid) .wk-card { grid-template-columns: minmax(0, 51fr) minmax(0, 49fr); } .wk-list:not(.is-grid) .wk-what { max-width: 40ch; } }
