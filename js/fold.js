@@ -5,10 +5,18 @@
 (() => {
   const btn = document.querySelector(".hc-down");
   if (!btn) return;
-  // At the very top, the bottom blur steps aside (css/hero.css).
+  // At the very top, the bottom blur steps aside (css/hero.css). It comes
+  // back gradually over the first 600px of scroll (--edge-in, 0 to 1), on a
+  // curve that starts very softly, so a few notches of the wheel never make
+  // it switch on all at once.
   const root = document.documentElement;
   let ticking = false;
-  const set = () => { ticking = false; root.classList.toggle("home-top", window.scrollY < 24); };
+  const set = () => {
+    ticking = false;
+    root.classList.toggle("home-top", window.scrollY < 24);
+    const t = Math.min(1, Math.max(0, window.scrollY / 600));
+    root.style.setProperty("--edge-in", (t * t * (3 - 2 * t)).toFixed(3));
+  };
   set();
   addEventListener("scroll", () => { if (!ticking) { ticking = true; requestAnimationFrame(set); } }, { passive: true });
   // The glide: its own eased scroll (about a second, slow at both ends)

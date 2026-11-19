@@ -45,3 +45,18 @@
    off the screen, so the space above the numbers follows the screen
    height instead, between about 45px and 70px. */
 @media (min-width: 641px) and (max-width: 1199px), (min-width: 641px) and (hover: none) and (pointer: coarse) { .ws { margin-top: clamp(3rem, 7svh, 5rem); } }
+
+/* Text size ("Make it comfortable") should change the words, not the
+   gaps. These gaps are in rem, so a larger text step used to stretch them
+   too and push the cards down off the screen (and up at the smaller step).
+   Dividing by the text scale keeps each gap the same height at every step,
+   the way Home's first screen stays put. */
+.wk-reader { padding-top: calc((var(--pad) + 7.5rem) / var(--text-scale, 1)); padding-bottom: calc(5.25rem / var(--text-scale, 1)); }
+.ws { margin-top: calc(10rem / var(--text-scale, 1)); margin-bottom: calc(2.75rem / var(--text-scale, 1)); }
+@media (max-width: 640px) {
+  .wk-reader { padding-top: calc((var(--pad) + 5.5rem) / var(--text-scale, 1)); padding-bottom: calc(3.5rem / var(--text-scale, 1)); }
+  .ws { margin-top: calc(8.5rem / var(--text-scale, 1)); margin-bottom: calc(2rem / var(--text-scale, 1)); }
+}
+@media (min-width: 641px) and (max-width: 1199px), (min-width: 641px) and (hover: none) and (pointer: coarse) {
+  .ws { margin-top: clamp(3rem, 7svh, 5rem); }
+}

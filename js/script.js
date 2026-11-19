@@ -737,10 +737,25 @@
     // The footer waits behind the page (always "on screen" to an
     // observer), so the cue is the page's own end coming up instead.
     const end = document.querySelector(".page-end") || document.querySelector(".site-footer");
-    if (end && "IntersectionObserver" in window) {
-      // Off a little before the end arrives, so the band never fades out
-      // over the page's rounded bottom and the footer.
-      new IntersectionObserver(([en]) => edge.classList.toggle("is-off", en.isIntersecting), { rootMargin: "0px 0px 180px 0px" }).observe(end);
+    if (end) {
+      // It fades out with the scroll as the end of the page comes up
+      // (--edge-out, 1 to 0 over the last 260px before the footer), so it is
+      // always gone by the time the footer shows, even after a fast flick
+      // or a momentum scroll that lands at the bottom in one frame.
+      const rootEl = document.documentElement;
+      let queued = false;
+      const fadeOut = () => {
+        queued = false;
+        const dist = end.getBoundingClientRect().top - window.innerHeight;
+        const v = Math.min(1, Math.max(0, (dist - 40) / 220));
+        rootEl.style.setProperty("--edge-out", v.toFixed(3));
+        edge.classList.toggle("is-off", v === 0);
+      };
+      const queue = () => { if (!queued) { queued = true; requestAnimationFrame(fadeOut); } };
+      addEventListener("scroll", queue, { passive: true });
+      document.querySelector(".shell-scroll")?.addEventListener("scroll", queue, { passive: true });
+      addEventListener("resize", queue);
+      fadeOut();
     }
   }
 

@@ -30,8 +30,8 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?Math.max(-1,Math.min(1,+s.text||0)):0;if(T>0)d.setAttribute("data-text","1");if(T<0)d.setAttribute("data-text-small","");["read","contrast","links","focus","plain","saber"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded"))d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261892" />
-<script src="/js/motion-css.js?v=20261892"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261900" />
+<script src="/js/motion-css.js?v=20261900"></script>
 </head>
 <body>
 
@@ -68,7 +68,6 @@
      answers. ============ -->
 <main class="cs" id="case" data-slug="wealthbasket" style="--tint: var(--mint-bg); --tint-panel: var(--mint-panel); --tint-ink: var(--ink)">
     <nav class="cs-side" aria-label="Case study">
-      <a class="cs-rail-back" href="/works/" data-back="history" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"></path><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg></a>
       <p class="cs-rail-name" aria-hidden="true">On this page</p>
       <ol class="cs-toc">
         <li><a href="#overview">Overview</a></li><li><a href="#problem">Problem</a></li><li><a href="#users">Users</a></li><li><a href="#research">Research</a></li><li><a href="#process">Process</a></li><li><a href="#solution">Solution</a></li><li><a href="#flows">Flows</a></li><li><a href="#web">Web</a></li><li><a href="#results">Results</a></li><li><a href="#reflection">Reflection</a></li>
@@ -78,7 +77,7 @@
     <header class="cs-hero">
       <div class="cs-hero-row">
         <div class="cs-hero-text">
-          <div class="cs-crumbs cs-in" style="--d:0"><a class="cs-crumb-back" href="/works/" data-back="history" aria-label="Back" title="Back"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 14L4 9l5-5"></path><path d="M20 20v-7a4 4 0 0 0-4-4H4"></path></svg></a><span class="cs-crumb-cat">Fintech</span></div>
+          <nav class="cs-crumbs cs-in" style="--d:0" aria-label="Breadcrumb"><ol class="cs-bc"><li><a href="/works/" data-back="history">Work</a></li><li aria-current="page">WealthBasket</li></ol></nav>
           <h1 class="cs-title cs-in" style="--d:1">WealthBasket</h1>
           <p class="cs-headline cs-in" style="--d:2">Helping first-time investors put money into expert-built portfolios on Paytm Money, and making it easy to keep investing.</p>
         </div>
@@ -96,7 +95,7 @@
 
     <div class="cs-locked-content">
       <figure class="cs-cover" style="aspect-ratio: 1140 / 713">
-        <span class="cs-cover-tag" style="top: auto; bottom: 0.875rem">Case study</span>
+        <span class="cs-cover-tags" style="top: auto; bottom: 0.875rem"><span class="cs-cover-tag cs-cover-dom">Fintech</span><span class="cs-cover-tag">Case study</span></span>
         <!-- Video: plays the Vimeo film (605510281) from a play button, once the
              video is public or allows embedding on this site (case.js checks;
              until then the still image shows with no button). -->
@@ -404,11 +403,11 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and the project cards (js/projects.js). -->
-<script src="/js/content.js?v=20261892" defer fetchpriority="high"></script>
-<script src="/js/projects.js?v=20261892" defer fetchpriority="high"></script>
-<script src="/js/case.js?v=20261892" defer fetchpriority="high"></script>
-<script src="/js/render.js?v=20261892" defer fetchpriority="high"></script>
-<script src="/js/script.js?v=20261892" defer fetchpriority="high"></script>
-<script src="/js/lumos.js?v=20261892" defer></script>
+<script src="/js/content.js?v=20261900" defer fetchpriority="high"></script>
+<script src="/js/projects.js?v=20261900" defer fetchpriority="high"></script>
+<script src="/js/case.js?v=20261900" defer fetchpriority="high"></script>
+<script src="/js/render.js?v=20261900" defer fetchpriority="high"></script>
+<script src="/js/script.js?v=20261900" defer fetchpriority="high"></script>
+<script src="/js/lumos.js?v=20261900" defer></script>
 </body>
 </html>
