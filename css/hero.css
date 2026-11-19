@@ -438,3 +438,14 @@ html[data-motion="calm"] .hc-down { transition: none; }
 /* The hero description, a size up. */
 .hc .hc-lede { font-size: 1.1875rem; line-height: 1.55; }
 @media (max-width: 640px) { .hc .hc-lede { font-size: 1.0625rem; } }
+
+/* "messy": the hover and click area hugs the letters, so it no longer
+   reaches up toward the "Hi, I'm" line. */
+.hc-mess { line-height: 0.72; vertical-align: baseline; }
+.hc-mess .ch, .hc-mess .sr-only { pointer-events: none; }
+.hc-mess:focus-visible { outline-offset: 3px; }
+/* Only the letters answer the pointer: the word itself ignores it, and an
+   invisible strip from the top of the letters to just under the baseline
+   takes the hover and the click. */
+.hc-mess { position: relative; z-index: 1; pointer-events: none; }
+.hc-mess::after { content: ""; position: absolute; left: 0; right: 0; top: 0.14em; bottom: -0.12em; pointer-events: auto; }

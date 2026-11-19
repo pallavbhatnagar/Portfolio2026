@@ -39,3 +39,7 @@
 /* More breathing room above and below the numbers. */
 .ws { margin: 1.75rem auto 6.25rem; }
 @media (max-width: 640px) { .ws { margin: 2rem auto 4rem; } }
+
+/* A hairline above the numbers, the width of the row. */
+.ws-row { padding-top: 1.75rem !important; border-top: 1px solid var(--line); }
+@media (max-width: 640px) { .ws-row { padding-top: 1.25rem !important; } }
