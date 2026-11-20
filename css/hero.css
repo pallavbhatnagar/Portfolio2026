@@ -459,3 +459,61 @@ html[data-motion="calm"] .hc-down { transition: none; }
 @media (min-width: 641px) and (max-width: 1199px) and (orientation: portrait), (min-width: 641px) and (orientation: portrait) and (hover: none) and (pointer: coarse) {
   .hc { min-height: 0; grid-template-rows: minmax(0, 1fr) auto auto auto auto auto 6.5rem auto; padding-bottom: 1rem; }
 }
+
+/* Trial: the headline in medium (500) instead of extra-bold (800). Lighter
+   strokes read a touch wider, so the tracking opens slightly. */
+.hc-title.hc-big { font-weight: 500; letter-spacing: -0.04em; }
+
+/* Trial: the ask box keeps its design (the light travelling round the edge,
+   the soft shade underneath, the dark send key) but in greys only, no blue,
+   violet or pink. */
+.hc-ask { box-shadow: var(--hc-base), -1.75rem 1rem 3rem -1.25rem rgb(60 60 60 / calc(0.22 * var(--hc-k))), 1.25rem 1.25rem 3rem -1.25rem rgb(120 120 120 / calc(0.2 * var(--hc-k))); --hc-base: 0 1.5rem 3rem -1.75rem rgba(40, 40, 40, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.6); }
+:root[data-theme="dark"] .hc-ask { --hc-base: 0 1.5rem 3rem -1.5rem rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06); }
+@media (prefers-reduced-motion: no-preference) { .hc-ask { animation-name: hc-shade-grey; } }
+@keyframes hc-shade-grey {
+  0% { box-shadow: var(--hc-base), -1.75rem 1rem 3rem -1.25rem rgb(60 60 60 / calc(0.22 * var(--hc-k))), 1.25rem 1.25rem 3rem -1.25rem rgb(120 120 120 / calc(0.2 * var(--hc-k))); }
+  50% { box-shadow: var(--hc-base), 0.25rem 1.5rem 3.25rem -1.25rem rgb(90 90 90 / calc(0.24 * var(--hc-k))), 1.75rem 0.75rem 3rem -1.25rem rgb(60 60 60 / calc(0.18 * var(--hc-k))); }
+  100% { box-shadow: var(--hc-base), 1.75rem 1rem 3rem -1.25rem rgb(120 120 120 / calc(0.22 * var(--hc-k))), -1.25rem 1.25rem 3rem -1.25rem rgb(60 60 60 / calc(0.2 * var(--hc-k))); }
+}
+.hc-ask::before { background: conic-gradient(from var(--hc-a), #6b6b6b, #a3a3a3 12%, #d6d6d6 24%, transparent 36%, transparent 64%, #6b6b6b); }
+:root[data-theme="dark"] .hc-ask::before { background: conic-gradient(from var(--hc-a), #d6d6d6, #9a9a9a 12%, #5c5c5c 24%, transparent 36%, transparent 64%, #d6d6d6); }
+
+/* Trial: the hero set flush left. Every line, the box, the resume link and
+   the down arrow start at the same left edge. The app sticker hangs in the
+   margin beside the second line on wide screens; on phones (no margin) it
+   sits at the start of that line instead. */
+.hc { justify-items: start; text-align: left; }
+.hc > .hc-hi, .hc > .hc-title, .hc > .hc-lede, .hc > .hc-ask, .hc > .hc-resume { justify-self: start; }
+.hc-big .hc-line { margin-inline: 0; }
+.hc .hc-lede { margin-inline: 0; text-wrap: pretty; }
+.hc-foot { align-items: flex-start; }
+@media (max-width: 640px) {
+  .hs-app { position: relative; left: auto; top: 0.02em; display: inline-block; margin-right: 0.18em; vertical-align: -0.02em; }
+}
+
+/* Trial: the ask box holds still. No light travelling round the edge, no
+   drifting shade: a plain grey edge and a soft, steady grey shadow. */
+.hc-ask { animation: none !important; border-color: color-mix(in srgb, var(--ink) 18%, transparent); box-shadow: var(--hc-base), 0 1rem 2.5rem -1.25rem rgb(60 60 60 / 0.22); }
+:root[data-theme="dark"] .hc-ask { border-color: rgba(255, 255, 255, 0.16); box-shadow: var(--hc-base); }
+.hc-ask::before { display: none; }
+
+/* Trial: the ask box in its colours again, held still: the blue, violet
+   and pink light rests on the top-left edge, and the soft blue and pink
+   shade sits under the box without drifting. */
+.hc-ask { border-color: color-mix(in srgb, var(--ink) 12%, transparent); box-shadow: var(--hc-base), -1.75rem 1rem 3rem -1.25rem rgb(57 101 250 / calc(0.34 * var(--hc-k))), 1.25rem 1.25rem 3rem -1.25rem rgb(242 54 154 / calc(0.26 * var(--hc-k))) !important; animation: none !important; }
+:root[data-theme="dark"] .hc-ask { border-color: color-mix(in srgb, var(--ink) 12%, transparent); }
+.hc-ask::before { display: block; --hc-a: 200deg; background: conic-gradient(from var(--hc-a), #3965fa, #9b7fe8 12%, #f2369a 24%, transparent 36%, transparent 64%, #3965fa) !important; animation: none !important; }
+/* Trial: and its motion back, as in the original: the light travels round
+   the edge and the shade drifts. Still with reduced motion or in Calm. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .hc-ask { animation: hc-shade 9s ease-in-out infinite alternate !important; }
+  html:not([data-motion="calm"]) .hc-ask::before { animation: hc-turn 6s linear infinite !important; }
+}
+/* Trial: no colour wash behind the hero; plain page colour. */
+.hc .hc-sky, .hc-sky { display: none !important; }
+/* Trial: no shadow under the ask box; only the light travelling round
+   its edge moves. */
+html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none !important; animation: none !important; }
+/* Trial: a softer edge light on the ask box: the same colours, toned down. */
+.hc .hc-ask::before { opacity: 1; } /* light: full colour */
+:root[data-theme="dark"] .hc .hc-ask::before { opacity: 0.55; }

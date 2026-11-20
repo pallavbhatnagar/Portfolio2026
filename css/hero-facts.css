@@ -157,3 +157,12 @@ html[data-motion="calm"] .fl-cx .fl-stk.is-pop, html[data-motion="calm"] .fl-cx 
 /* The second line under each counter, a size up. */
 .fl-cx .fl-txt span { font-size: 0.875rem !important; }
 .fl-cx .fl-txt b { font-size: 1rem !important; }
+
+/* Trial: no icons beside the figures; the figures stay in plain ink. */
+.fl-stk, .hc-fact-ic { display: none !important; }
+.fl-num { margin-right: 0.75rem !important; }
+/* Trial: the figures in bold; the arrow down to the work sits centred
+   under the row (the hero is left-aligned, the arrow is not). */
+.fl-num, .fl-num .od, .hc-fact b { font-weight: 800 !important; }
+.hc-foot { align-items: stretch; }
+.hc-down { align-self: center !important; }
