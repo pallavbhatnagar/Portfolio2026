@@ -414,7 +414,7 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* About: looping animations pause while their section is off screen (script.js). */
 .is-offscreen, .is-offscreen *, .is-offscreen *::before, .is-offscreen *::after { animation-play-state: paused !important; }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .hero { --hero-top: calc(var(--pad) + 7.125rem); }
 }
 /* Phones: the hero stacks. */
@@ -729,14 +729,14 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 @media (max-width: 640px) { .proj-stack .project { position: relative; top: auto; } }
 /* Wider screens, cards not stacking: the same space under the heading as
    when they stack. */
-@media (prefers-reduced-motion: reduce) and (min-width: 901px) {
+@media (prefers-reduced-motion: reduce) and (min-width: 1025px) {
   .proj-head, .projects.proj-pinned .proj-head { margin-bottom: 3rem; }
 }
-@media (min-width: 901px) { .projects.proj-flat .proj-head { margin-bottom: 3rem; } }
+@media (min-width: 1025px) { .projects.proj-flat .proj-head { margin-bottom: 3rem; } }
 /* Small tablets (and phones): one column; the cards stack on tablets; the heading
    scrolls with the page (no pinning). script.js reads the heading's
    position, so with it not sticky it stops pinning altogether. */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .proj-stack .project { grid-template-columns: 1fr; min-height: 0; margin-bottom: 2rem; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
   .projects + .value { margin-top: calc(var(--home-gap) - 2rem - 0.75rem - 2.75rem); }
@@ -872,7 +872,7 @@ html[data-motion="calm"] .vx-card { transition: none; }
   .vx-item.is-active .vx-bar i { transform: none; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .vx { grid-template-columns: 1fr; gap: var(--space-3); }
   .vx { align-items: start; }
   .vx-trigger { padding-block: 0.625rem; }
@@ -1002,7 +1002,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
   html { scroll-behavior: smooth; }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .footer-bar { flex-wrap: wrap; gap: var(--space-2); }
 }
 
@@ -1437,7 +1437,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
   .im-grid { min-height: 0; grid-template-rows: none; }
   .im-card { min-height: 9.25rem; }
 }
-@media (max-width: 560px) { .im-grid { grid-template-columns: 1fr; } }
+@media (max-width: 640px) { .im-grid { grid-template-columns: 1fr; } }
 @media (prefers-reduced-motion: no-preference) {
   .js .ab-r:not(.is-in) { opacity: 0; transform: translateY(0.75rem); }
   .ab-r { transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
@@ -1833,7 +1833,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
   to   { transform: translateY(4%) scale(1.1); }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .wk-hero { padding-top: calc(var(--pad) + 3.75rem); }
   /* A clear step below the nav. */
   .wk-filter-bar { top: 4.75rem; }
@@ -2232,7 +2232,7 @@ body.ask-open .shell-scrollbar {
 /* Tool logos: assets/projects/<slug>/tools/*.png, in the badge's place. */
 .cs-tool-ic:has(img) { background: none; }
 .cs-tool-ic img { display: block; width: 100%; height: 100%; border-radius: inherit; object-fit: contain; }
-@media (max-width: 765px) {
+@media (max-width: 1024px) {
   .cs-context { grid-template-columns: 1fr; }
 }
 
@@ -2295,7 +2295,7 @@ body.ask-open .shell-scrollbar {
   .cs-ask:hover .cs-ask-ic { transform: scale(1.12) rotate(90deg); }
 }
 /* Below 1200px there's no room beside the content for the chapter list. */
-@media (max-width: 1200px) { .cs-side { display: none; } }
+@media (max-width: 1024px) { .cs-side { display: none; } }
 
 /* Above the title: the Back button (the same round glass button as the
    chapter rail's, which replaces it on wide windows), then the category.
@@ -2318,7 +2318,7 @@ body.ask-open .shell-scrollbar {
 .cs-rail-name { max-width: 11rem; margin: 1.25rem 0 0.625rem; font-size: var(--fs-small); line-height: 1.35; color: var(--ink-soft); }
 .cs-gated .cs-rail-name { display: none; }
 /* With the rail showing, only the category stays above the title. */
-@media (min-width: 1201px) {
+@media (min-width: 1025px) {
   body:not(.ask-open) .cs-crumb-back { display: none; }
 }
 @media (max-width: 640px) { .cs-crumbs { margin-top: 0.875rem; } }
@@ -2326,7 +2326,7 @@ body.ask-open .shell-scrollbar {
    above the divider over Role / Timeline / Team / Platform. */
 .cs-hero-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 1.125rem 2.125rem; }
 .cs-hero-text { min-width: 0; }
-@media (max-width: 900px) { .cs-hero-row { flex-direction: column; align-items: flex-start; } }
+@media (max-width: 1024px) { .cs-hero-row { flex-direction: column; align-items: flex-start; } }
 /* While the chat panel is open the page narrows, so the side column steps
    aside and Back / Ask AI sit in the heading instead. */
 body.ask-open .cs-side { display: none; }
@@ -2440,7 +2440,7 @@ body.ask-open .cs-side { display: none; }
 .cs-note { margin-top: 1rem; font-size: var(--fs-small); color: var(--ink-soft); }
 .cs-ch > .cs-note { font-size: var(--fs-small); color: var(--ink-soft); }
 
-@media (max-width: 765px) {
+@media (max-width: 1024px) {
   .cs-insights.cs-cards, .cs-personas, .cs-personas.is-two, .cs-principles, .cs-compare { grid-template-columns: 1fr; }
   .cs-row { grid-template-columns: 1fr; }
   .cs-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -2448,7 +2448,7 @@ body.ask-open .cs-side { display: none; }
 
 /* Two personas side by side (the default is three). */
 .cs-personas.is-two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-@media (max-width: 765px) { .cs-personas.is-two { grid-template-columns: 1fr; } }
+@media (max-width: 1024px) { .cs-personas.is-two { grid-template-columns: 1fr; } }
 
 /* Figure: a wide image (a diagram, a photo) on the project's tint, with a
    caption under it. .is-photo lets a photo fill the frame edge to edge. */
@@ -2628,7 +2628,7 @@ body.ask-open .cs-side { display: none; }
 @keyframes cs-drift-crop { from { transform: translateY(-5%) scale(1.7); } to { transform: translateY(5%) scale(1.7); } }
 @keyframes cs-drift-full { from { transform: translateY(-3%) scale(1.08); } to { transform: translateY(3%) scale(1.08); } }
 
-@media (max-width: 765px) {
+@media (max-width: 1024px) {
   .cs-hero { padding-top: calc(var(--pad) + 3rem); }
   .cs-cover { aspect-ratio: 4 / 3; margin-top: 1.625rem; }
   .cs-outcomes { grid-template-columns: 1fr; }
@@ -3432,7 +3432,7 @@ html:not(.js) .lf-card[aria-hidden="true"] { display: none; }
   .lf-pic[data-type="video"] > svg { animation: lf-drift 9s ease-in-out infinite alternate; }
 }
 @keyframes lf-drift { to { transform: scale(1.12) translate(-3%, -2%); } }
-@media (max-width: 767px) {
+@media (max-width: 1024px) {
   .ab-life { grid-template-columns: minmax(0, 1fr); }
   .lf-row { margin-inline: calc(var(--pad) * -1); padding-inline: var(--pad); }
 }
@@ -3915,7 +3915,7 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 .ab-life-top { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
 .ab-life-top .now-stamp { margin-top: 0.75rem; }
 .ab-life-top .now-list > div:first-child { padding-top: 0; }
-@media (max-width: 900px) { .ab-life-top { grid-template-columns: 1fr; gap: var(--space-3); } }
+@media (max-width: 1024px) { .ab-life-top { grid-template-columns: 1fr; gap: var(--space-3); } }
 /* About: "Where I've been" is the second half of "The path so far": it runs
    the full width under the story, with a smaller heading. */
 .ab-story > .ab-path { grid-column: 1 / -1; margin-top: clamp(2.5rem, 5vw, 3.5rem); }
@@ -3960,7 +3960,7 @@ html[data-motion="calm"] .wl .w { opacity: 1 !important; transition: none !impor
 .hs-book svg { width: 72%; height: 72%; }
 /* Up to 900px (where the heading and description stack), "Every product
    has a story." runs on one line; the break is for the two-column layout. */
-@media (max-width: 900px) { .proj-head .proj-intro h2 br { display: none; } }
+@media (max-width: 1024px) { .proj-head .proj-intro h2 br { display: none; } }
 /* Phones: the testimonials and closing headings wrap to three or four lines,
    so they get more space between lines. */
 @media (max-width: 640px) {
@@ -4049,3 +4049,15 @@ html.js:not(.fonts-in) .hs { opacity: 0 !important; }
    The script already sizes the line to three even lines (fitLines), so plain
    wrapping is used here. */
 .rd-line { text-wrap: wrap !important; }
+
+
+/* The nav plays its entrance once per visit. Moving between pages after
+   that, it is simply there (the head script marks html.nav-seen), so it
+   no longer blinks out and slides back in on every page. */
+html.nav-seen .site-header, html.nav-seen:has(.hc) .site-header, html.nav-seen:has(.hc:not(.is-in)) .site-header { animation: none !important; opacity: 1 !important; transform: none !important; transition: none !important; }
+
+/* Case studies: the round Back button above "On this page", shown only once
+   the page is scrolled (script.js), so the top of the page stays clean. */
+.cs-side .cs-rail-back { margin-bottom: 1rem; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s; }
+.cs-side .cs-rail-back.is-shown { opacity: 1; visibility: visible; transform: none; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s; }
+@media (prefers-reduced-motion: reduce) { .cs-side .cs-rail-back { transition: none; } }

@@ -180,7 +180,7 @@ details.air-sec[open]::details-content { block-size: auto; }
 .air-table td { color: var(--ink-soft); }
 .air-table td:first-child { color: var(--ink); font-weight: 500; }
 .air-id { display: inline-block; padding: 0.0625rem 0.375rem; border-radius: 0.3125rem; background: var(--air-panel); color: var(--air-ink); font-size: 0.8125rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
-@media (max-width: 899px) { .air-table table { min-width: 34rem; } }
+@media (max-width: 1024px) { .air-table table { min-width: 34rem; } }
 
 /* Cards */
 .air-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.75rem; margin-top: 1.25rem; }
@@ -299,7 +299,7 @@ details.air-sec[open]::details-content { block-size: auto; }
 }
 
 /* ---------- Narrow screens ---------- */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .air-explorer { grid-template-columns: 1fr; }
   .air-explorer .air-tablist { flex-direction: row; max-height: none; overflow-x: auto; padding-bottom: 0.25rem; }
   .air-explorer .air-tab { width: auto; max-width: 15rem; }
@@ -339,4 +339,4 @@ details.air-sec[open]::details-content { block-size: auto; }
 .air-explorer.is-running .air-tab[aria-selected="true"] .air-tab-bar i { animation: air-run 7s linear forwards; }
 .air-explorer.is-running:hover .air-tab[aria-selected="true"] .air-tab-bar i, .air-explorer.is-running:focus-within .air-tab[aria-selected="true"] .air-tab-bar i { animation-play-state: paused; }
 @keyframes air-run { to { transform: scaleX(1); } }
-@media (max-width: 900px) { .air-tab-bar { bottom: 0.1875rem; } }
+@media (max-width: 1024px) { .air-tab-bar { bottom: 0.1875rem; } }

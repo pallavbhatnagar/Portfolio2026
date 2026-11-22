@@ -227,3 +227,22 @@ html:has(.hc), html:has(.hc) body { overflow-anchor: none; }
 }
 /* "How I untangle": the card's text runs the card's full width. */
 .vx-panel .value-text, .vx-panel p { max-width: none !important; }
+
+/* =========================================================
+   "How I untangle a product" on tablets (641-1024px): the card in two
+   columns. The result on the left (a large figure over its line), the
+   habit and what you get on the right, "You get" and "Timeline" side by
+   side under a rule.
+   ========================================================= */
+@media (min-width: 641px) and (max-width: 1024px) {
+  .vx-card { padding: 1.75rem 2rem !important; }
+  .vx-panel.is-on, .vx-panel { display: grid !important; grid-template-columns: minmax(9rem, 0.36fr) minmax(0, 1fr); grid-template-rows: auto auto; column-gap: 2rem; row-gap: 0; align-items: start; }
+  .vx-panel .value-stat { grid-column: 1; grid-row: 1 / span 2; display: flex !important; flex-direction: column !important; align-items: flex-start !important; gap: 0.5rem !important; margin: 0 !important; padding: 0 2rem 0 0 !important; align-self: stretch; border-right: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+  .vx-panel .value-num { font-size: 3rem !important; font-weight: 700; letter-spacing: -0.04em; line-height: 1; }
+  .vx-panel .value-cap { font-size: 0.9375rem !important; line-height: 1.4; color: var(--ink-soft); }
+  .vx-panel .value-text { grid-column: 2; grid-row: 1; margin: 0 !important; font-size: 1.0625rem !important; line-height: 1.55; }
+  .vx-panel .value-meta { grid-column: 2; grid-row: 2; display: grid !important; grid-template-columns: 1.5fr 1fr; gap: 1.5rem !important; margin: 1.25rem 0 0 !important; padding-top: 1.125rem !important; border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent) !important; }
+  .vx-panel .value-meta > div { display: flex; flex-direction: column; gap: 0.25rem; margin: 0 !important; }
+  .vx-panel .value-meta dt { font-size: 0.8125rem !important; color: var(--ink-soft); }
+  .vx-panel .value-meta dd { margin: 0; font-size: 0.9375rem !important; font-weight: 500; line-height: 1.4; }
+}

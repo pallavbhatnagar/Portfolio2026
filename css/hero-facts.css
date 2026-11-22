@@ -40,7 +40,7 @@ html.has-hero-facts .hc-facts-view { display: none !important; }
 .fl-ticker.fl > li { all: unset; }
 
 /* ---------- Narrow screens ---------- */
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .fl-counters li { padding: 0 0.75rem; }
   .fl-num { font-size: clamp(2rem, 7vw, 2.75rem); }
   .fl-counters .fl-txt span { display: none; }
@@ -130,7 +130,7 @@ html[data-motion="calm"] .fl-cx .fl-stk.is-pop, html[data-motion="calm"] .fl-cx 
 .fl-cx .fl-stk.is-pop, .fl-cx li:last-child .fl-stk.is-pop { position: static !important; order: 1; width: 2.5rem; height: 2.5rem; border-radius: 0.75rem; }
 .fl-cx .fl-stk.is-pop svg { width: 56%; height: 56%; }
 .fl-cx .fl-txt { padding-left: 0.25rem; border-left: 0; }
-@media (max-width: 900px) { .fl-cx .fl-stk.is-pop { width: 2.125rem; height: 2.125rem; } .fl-cx .fl-counters > li { gap: 0.625rem; } }
+@media (max-width: 1024px) { .fl-cx .fl-stk.is-pop { width: 2.125rem; height: 2.125rem; } .fl-cx .fl-counters > li { gap: 0.625rem; } }
 .fl-counters li + li { border-left: 0 !important; }
 @media (max-width: 640px) { .fl-counters li { padding: 0; } }
 /* Sit inside the content column: spread the three, no side padding. */

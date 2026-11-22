@@ -33,11 +33,12 @@
       const col = (set, ch, loop) => { const to = set.indexOf(ch) + (loop ? set.length : 0); const strip = (loop ? set + set : set); return `<span class="od-c" style="--to:${to};--c:${c++}"><span class="od-sz">${ch}</span><span class="od-strip">${[...strip].map((x, k) => `<span${k === to ? ' class="t"' : ""}>${x}</span>`).join("")}</span></span>`; };
       const od = (str) => { c = 0; return [...str].map((ch) => /[0-9]/.test(ch) ? col(DIG, ch, true) : /[A-Z]/.test(ch) ? col(ABC, ch, false) : `<span class="od-s">${ch}</span>`).join(""); };
       const NUM = ["5+", "10+", "20+"], UNIT = ["Years", "Products", "Sessions"], SUB = ["Designing and building products", "And features shipped", "Of usability testing run"];
+      const SHORT = ["In product design", "Shipped", "Of usability testing"]; // the line on phones
       const run = F.map((f) => `<li>${sticker(f, "is-sm")}<b>${f.titleHtml}</b><span>${esc(f.sub)}</span></li><li class="fl-star" aria-hidden="true">✦</li>`).join("");
       return `<div class="fl fl-cx">
         <ul class="fl-counters">${F.map((f, i) => `<li style="--i:${i}">
           <span class="fl-num"><span class="sr-only">${NUM[i]}</span><span class="od" aria-hidden="true">${od(NUM[i])}</span>${sticker(f, "is-pop")}</span>
-          <span class="fl-txt"><b>${esc(UNIT[i])}</b><span>${esc(SUB[i])}</span></span></li>`).join("")}</ul>
+          <span class="fl-txt"><b>${esc(UNIT[i])}</b><span><span class="fl-long">${esc(SUB[i])}</span><span class="fl-short" aria-hidden="true">${esc(SHORT[i])}</span></span></span></li>`).join("")}</ul>
         <div class="fl-ticker"><ul class="fl-run">${run}</ul><ul class="fl-run" aria-hidden="true">${run}</ul></div>
       </div>`;
     },

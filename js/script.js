@@ -393,7 +393,26 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
   //    the end of the page (start of the footer reveal) is on screen.
   const toTop = document.querySelector(".to-top");
   const pageEnd = document.querySelector(".page-end");
-  if (toTop && pageEnd && "IntersectionObserver" in window) {
+  // Case studies: it appears once you are half way down the page instead,
+  // and the Back button above the chapter list appears once you scroll.
+  const caseStudy = document.querySelector("main.cs");
+  if (toTop && caseStudy) {
+    const railBack = document.querySelector(".cs-rail-back");
+    const shell = document.getElementById("shellScroll");
+    let queued = false;
+    const check = () => {
+      queued = false;
+      const sc = shell && shell.scrollTop > 0 ? shell : document.scrollingElement;
+      const y = sc.scrollTop, max = sc.scrollHeight - sc.clientHeight;
+      toTop.dataset.show = String(max > 0 && y >= max / 2);
+      if (railBack) railBack.classList.toggle("is-shown", y > 120);
+    };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(check); } };
+    addEventListener("scroll", queue, { passive: true });
+    shell?.addEventListener("scroll", queue, { passive: true });
+    addEventListener("resize", queue);
+    check();
+  } else if (toTop && pageEnd && "IntersectionObserver" in window) {
     new IntersectionObserver(([entry]) => {
       toTop.dataset.show = String(entry.isIntersecting);
     }).observe(pageEnd);

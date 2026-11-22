@@ -11,7 +11,7 @@
 .wk-what { margin-top: 0.875rem; max-width: 34ch; font-size: 1.0625rem; line-height: 1.55; color: var(--ink-soft); text-wrap: pretty; }
 .wk-meta { font-size: 0.875rem; }
 .wk-visual { margin: 0; border-radius: 1.125rem; }
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .wk-card { grid-template-columns: 1fr; gap: 0; padding: 0.375rem; border-radius: 1.25rem; }
   .wk-visual { order: -1; border-radius: 1rem; }
   .wk-copy { padding: 1rem 1rem 1.25rem; }
@@ -61,7 +61,7 @@
 .wk-badge { font-weight: 500; }
 .wk-list.is-grid .wk-card { grid-template-rows: auto 1fr; }
 .wk-list.is-grid .wk-what { margin-bottom: 1.25rem; }
-@media (max-width: 900px) { .wk-card { grid-template-rows: auto 1fr; } }
+@media (max-width: 1024px) { .wk-card { grid-template-rows: auto 1fr; } }
 
 /* The way in is just an icon now: a small round arrow (or the lock),
    quiet until the card is pointed at. */
@@ -108,7 +108,7 @@
 .rd-trig::after { bottom: 0.0625rem; }
 
 /* List view: the same split as the Home cards, words 51%, screenshot 49%. */
-@media (min-width: 901px) { .wk-list:not(.is-grid) .wk-card { grid-template-columns: minmax(0, 51fr) minmax(0, 49fr); } .wk-list:not(.is-grid) .wk-what { max-width: 40ch; } }
+@media (min-width: 1025px) { .wk-list:not(.is-grid) .wk-card { grid-template-columns: minmax(0, 51fr) minmax(0, 49fr); } .wk-list:not(.is-grid) .wk-what { max-width: 40ch; } }
 /* Phones: the reader's sentence keeps the height of the longest one
    (script.js fitLines), so changing the reader never moves the switcher
    or the cards; the sentence sits at the top of that space. */

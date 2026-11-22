@@ -190,3 +190,20 @@
   .hc .hc-lede { width: 100% !important; max-width: 25rem !important; text-wrap: balance !important; }
 }
 @media (max-width: 374px) { .hc .hc-lede { font-size: 0.9375rem !important; } }
+
+/* The hero figures in full at every width: number, label and the line under it. */
+.fl-cx .fl-counters .fl-txt span { display: block !important; }
+@media (max-width: 1024px) { .fl-cx .fl-counters .fl-txt span { font-size: 0.8125rem !important; line-height: 1.35; color: var(--ink-soft); } }
+@media (max-width: 640px) {
+  .fl-cx .fl-counters .fl-txt { gap: 0.125rem; }
+  .fl-cx .fl-counters .fl-txt b { color: var(--ink) !important; font-weight: 600 !important; }
+  .fl-cx .fl-counters .fl-txt span { font-size: 0.75rem !important; max-width: 12ch; margin-inline: auto; text-wrap: balance; }
+}
+/* The line under each figure: in full on wider screens, a short version on phones. */
+.fl-cx .fl-counters .fl-txt span.fl-short { display: none !important; }
+.fl-cx .fl-counters .fl-txt span.fl-long { display: inline !important; }
+@media (max-width: 640px) {
+  .fl-cx .fl-counters .fl-txt span.fl-long { position: absolute !important; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .fl-cx .fl-counters .fl-txt span.fl-short { display: inline !important; }
+  .fl-cx .fl-counters .fl-txt > span { max-width: none !important; }
+}

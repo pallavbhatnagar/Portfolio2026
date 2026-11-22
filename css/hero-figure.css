@@ -160,7 +160,7 @@
    It shares the hero's grid on wide screens, sitting in the right column
    and running under the end of the headline; the words stay on top. */
 .hx-fig { display: none; }
-@media (min-width: 1025px) {
+@media (min-width: 641px) {
   .hc { grid-template-columns: minmax(0, 1fr) minmax(0, 0.92fr); column-gap: 2rem; }
   .hc > .hc-hi, .hc > .hc-title, .hc > .hc-lede, .hc > .hc-ask, .hc > .hc-resume { grid-column: 1; position: relative; z-index: 1; }
   .hc > .hc-foot { grid-column: 1 / -1; }
@@ -175,6 +175,6 @@
 :root[data-theme="dark"] .hx-fig { opacity: 0.55; }
 /* The description holds to two lines on wide screens: it may run past the
    text column, over the faint blueprint, at a width that splits it evenly. */
-@media (min-width: 1025px) {
+@media (min-width: 641px) {
   .hc > .hc-lede { grid-column: 1 / -1; width: auto; max-width: 31em; text-wrap: balance; }
 }

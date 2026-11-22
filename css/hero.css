@@ -294,8 +294,8 @@
   html:not([data-motion="calm"]) .hc-down svg { animation: hc-down-nudge 2.4s ease-in-out infinite; }
 }
 @keyframes hc-down-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px); } }
-@media (max-width: 900px) { .hc-facts { flex-direction: column; gap: 1rem; } }
-@media (max-width: 900px), (max-height: 700px) {
+@media (max-width: 1024px) { .hc-facts { flex-direction: column; gap: 1rem; } }
+@media (max-width: 1024px), (max-height: 700px) {
   .hc { padding-bottom: 3rem; }
   .hc-foot { position: static; margin-top: 3rem; width: 100%; }
 }
@@ -348,7 +348,7 @@
 }
 /* Tablets and narrow windows (641-900px): the three facts stay in one row
    at the bottom of the first screen, as on wide screens. */
-@media (min-width: 641px) and (max-width: 900px) and (min-height: 701px) {
+@media (min-width: 641px) and (max-width: 1024px) and (min-height: 701px) {
   .hc { padding-bottom: max(14rem, 33vh); }
   .hc-foot { position: absolute; left: var(--pad); right: var(--pad); bottom: 1.75rem; margin-top: 0; width: auto; }
   .hc-facts { flex-direction: row; gap: 1rem; }
@@ -396,7 +396,7 @@ html[data-motion="calm"] .hc-down { transition: none; }
   .hc-facts { flex-direction: row; justify-content: center; flex-wrap: wrap; gap: 1.25rem clamp(2rem, 6vw, 4.5rem); }
   .hc-fact { flex: none; }
 }
-@media (min-width: 641px) and (max-width: 900px) {
+@media (min-width: 641px) and (max-width: 1024px) {
   .hc-facts { gap: 1rem 1.5rem; }
   .hc-fact { gap: 0.5rem; }
   .hc-fact-ic { width: 1.875rem; height: 1.875rem; }
@@ -433,7 +433,7 @@ html[data-motion="calm"] .hc-down { transition: none; }
 }
 /* Smaller screens: the description is as wide as the title (hero.js measures
    it), with lines filled rather than balanced so it reaches that width. */
-@media (max-width: 820px) {
+@media (max-width: 1024px) {
   .hc .hc-lede { width: 100%; max-width: var(--hc-title-w, 40em); text-wrap: pretty; }
 }
 
@@ -456,8 +456,9 @@ html[data-motion="calm"] .hc-down { transition: none; }
    the full, very tall screen, which left a large empty band between the
    words and the facts. It ends with its content; the facts follow a fixed
    distance below, and the projects start soon after. */
-@media (min-width: 641px) and (max-width: 1199px) and (orientation: portrait), (min-width: 641px) and (orientation: portrait) and (hover: none) and (pointer: coarse) {
-  .hc { min-height: 0; grid-template-rows: minmax(0, 1fr) auto auto auto auto auto 6.5rem auto; padding-bottom: 1rem; }
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: portrait), (min-width: 641px) and (orientation: portrait) and (hover: none) and (pointer: coarse) {
+  /* The hero fills the screen (figures at its foot); in a tall portrait screen the words sit a little lower, nearer the middle. */
+  .hc { grid-template-rows: minmax(0, 0.4fr) auto auto auto auto auto minmax(4rem, 1fr) auto !important; }
 }
 
 /* Trial: the headline in medium (500) instead of extra-bold (800). Lighter
