@@ -122,6 +122,19 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     new IntersectionObserver(([entry]) => {
       header.dataset.scrolled = String(!entry.isIntersecting);
     }).observe(sentinel);
+    // A reload restores the old scroll spot for a moment before the page
+    // settles at the top, which could leave the bar showing there. Check
+    // the real position again as the page settles and on every scroll.
+    const shell = document.getElementById("shellScroll");
+    const atTop = () => window.scrollY < 4 && (!shell || shell.scrollTop < 4);
+    let queued = false;
+    const recheck = () => { queued = false; header.dataset.scrolled = String(!atTop()); };
+    const queue = () => { if (!queued) { queued = true; requestAnimationFrame(recheck); } };
+    addEventListener("scroll", queue, { passive: true });
+    shell?.addEventListener("scroll", queue, { passive: true });
+    addEventListener("load", () => { queue(); setTimeout(queue, 300); });
+    addEventListener("pageshow", queue);
+    queue();
   }
 
   // 1a) Sound effects (assets/audio/sound-effects/), used by the chat
@@ -1431,14 +1444,21 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       // gap); it eases to the new height when the reader changes. Wider
       // screens: as tall as the longest, so the page below never moves.
       const on = rdLines.querySelector(".rd-line.is-on");
-      const h = matchMedia("(max-width: 640px)").matches && on ? on.offsetHeight
-        : Math.max(...Array.from(rdLines.querySelectorAll(".rd-line"), (l) => l.offsetHeight));
-      // Phones: an exact height, so it can ease to the next sentence. Wider
-      // screens: a minimum, so the box can never be shorter than its text
-      // and spill over "Start with" below.
-      if (h > 0) {
-        if (matchMedia("(max-width: 640px)").matches) { rdLines.style.minHeight = ""; rdLines.style.height = `${h}px`; }
-        else { rdLines.style.height = ""; rdLines.style.minHeight = `${h}px`; }
+      // As tall as the longest sentence on every screen, so changing the
+      // reader never moves the page. Wider screens: the box holds that
+      // height. Phones: the box fits the sentence showing, so "Start with"
+      // follows it closely, and the difference is kept as space under the
+      // chips instead (--rd-spare), which keeps the switcher still.
+      const longest = Math.max(...Array.from(rdLines.querySelectorAll(".rd-line"), (l) => l.offsetHeight));
+      const reader = rdLines.closest(".wk-reader");
+      if (longest > 0) {
+        if (matchMedia("(max-width: 640px)").matches && on) {
+          rdLines.style.minHeight = ""; rdLines.style.height = `${on.offsetHeight}px`;
+          reader?.style.setProperty("--rd-spare", `${longest - on.offsetHeight}px`);
+        } else {
+          rdLines.style.height = ""; rdLines.style.minHeight = `${longest}px`;
+          reader?.style.removeProperty("--rd-spare");
+        }
       }
     }
     window.addEventListener("resize", () => fitLines());

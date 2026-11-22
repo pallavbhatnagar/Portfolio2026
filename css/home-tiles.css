@@ -1,0 +1,229 @@
+/* =========================================================
+   Home, 22 Nov: the project tiles, the grey cards, the hero moved in, and
+   the nav arriving with the hero.
+   ========================================================= */
+
+/* ---------- Projects: four tiles in a row ----------
+   Picture on top, then the field, the name, one line and an arrow. Grey,
+   all alike. Two across on tablets, one on phones. The heading no longer
+   pins (that was for the stacked cards). */
+.projects .proj-head { position: static !important; transform: none !important; }
+.proj-tiles { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1rem; }
+@media (max-width: 1099px) { .proj-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .proj-tiles { grid-template-columns: minmax(0, 1fr); gap: 0.875rem; } }
+.proj-tiles .pt { position: relative; display: flex; flex-direction: column; min-height: 0 !important; overflow: hidden; border-radius: 1rem; background: var(--surface); transition: background-color 0.25s ease; }
+:root[data-theme="dark"] .proj-tiles .pt { background: var(--surface-2); }
+.pt-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: color-mix(in srgb, var(--ink) 6%, var(--surface)); }
+.pt-media :is(img, video) { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+.pt-media .shot-lock { position: absolute; top: 0.75rem; right: 0.75rem; z-index: 1; }
+.pt-copy { display: flex; flex: 1; flex-direction: column; padding: 1.125rem 1.25rem 1.25rem; }
+.pt-cat { margin: 0; font-size: 0.8125rem; font-weight: 500; color: var(--ink-soft); }
+.pt-name { margin: 0.375rem 0 0; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; line-height: 1.25; color: var(--ink); }
+.pt-desc { margin: 0.5rem 0 0; font-size: 0.9375rem; line-height: 1.5; color: var(--ink-soft); text-wrap: pretty; }
+.pt-go { display: inline-grid; margin-top: auto; padding-top: 1.125rem; color: var(--ink); }
+.pt-go svg { width: 1.125rem; height: 1.125rem; transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1); }
+.proj-tiles .project-link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+.proj-tiles .project-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+@media (hover: hover) and (pointer: fine) {
+  .proj-tiles .pt:hover { background: color-mix(in srgb, var(--ink) 6%, var(--surface)); }
+  :root[data-theme="dark"] .proj-tiles .pt:hover { background: color-mix(in srgb, #fff 5%, var(--surface-2)); }
+  .proj-tiles .pt:hover .pt-media :is(img, video) { transform: scale(1.03); }
+  .proj-tiles .pt:not([data-locked]):hover .pt-go svg { transform: translate(2px, -2px); }
+}
+@media (prefers-reduced-motion: reduce) { .pt-media :is(img, video), .pt-go svg { transition: none; } }
+/* The card-following "Read case study" sticker is for the old stacked
+   cards; the tiles carry their own arrow. */
+.proj-tip { display: none !important; }
+
+/* ---------- Grey cards: "How I untangle a product" ---------- */
+.vx-card, :root[data-theme="dark"] .vx-card { --vx-tint: transparent !important; background: var(--surface) !important; }
+:root[data-theme="dark"] .vx-card { background: var(--surface-2) !important; }
+/* No coloured band behind "untangle". */
+#value-title .hc-mark::before, .hc-mark::before { display: none !important; }
+
+/* ---------- Hero: moved in a little from the left edge ----------
+   Everything down to "Download resume"; the facts row stays full width. */
+@media (min-width: 1025px) {
+  .hc > .hc-hi, .hc > .hc-title, .hc > .hc-lede, .hc > .hc-ask, .hc > .hc-resume { margin-left: 0.875rem; } /* in line with "Home" in the nav (its inner padding) */
+}
+
+/* ---------- The nav (and the blueprint) arrive with the hero ----------
+   On a reload there's no hello screen, so the nav used to show at once
+   while the hero was still fading up from a blur. On Home they now wait
+   for the hero and come in just after the headline. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]):has(.hc) .site-header { animation: none; opacity: 0; transform: translateY(-10px); transition: opacity 0.7s var(--ease-out) 0.45s, transform 0.7s var(--ease-out) 0.45s; }
+  html:not([data-motion="calm"]):has(.hc.is-in) .site-header { opacity: 1; transform: none; }
+  html:not([data-motion="calm"]):has(.hc:not(.is-in)) .hx-fig { opacity: 0; }
+  html:not([data-motion="calm"]) .hx-fig { transition: opacity 0.9s var(--ease-out) 0.6s; }
+}
+
+/* ---------- Grey testimonial cards on phones (the carousel) ---------- */
+.tq-card, .tq-card--pink { --tint: var(--surface) !important; --tint-ink: var(--ink) !important; background: var(--surface) !important; background-image: none !important; }
+:root[data-theme="dark"] .tq-card, :root[data-theme="dark"] .tq-card--pink { --tint: var(--surface-2) !important; background: var(--surface-2) !important; }
+.tq-card .tq-dp { background: color-mix(in srgb, var(--ink) 10%, transparent) !important; color: var(--ink) !important; }
+
+/* 22 Nov, later: the project tiles two by two (one column on phones), and
+   more room between the nav and the hero on wide screens. */
+.proj-tiles { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; gap: 1.25rem !important; }
+@media (max-width: 640px) { .proj-tiles { grid-template-columns: minmax(0, 1fr) !important; gap: 0.875rem !important; } }
+.proj-tiles .pt-media { aspect-ratio: 16 / 10; }
+.proj-tiles .pt-copy { padding: 1.25rem 1.5rem 1.5rem; }
+.proj-tiles .pt-name { font-size: 1.5rem; }
+.proj-tiles .pt-desc { font-size: 1rem; max-width: 42ch; }
+@media (min-width: 1025px) { .hc { padding-top: calc(var(--pad) + 11rem) !important; } }
+/* On a reload the hero settles its height after first paint, and the
+   browser's scroll anchoring nudged the page ~11px down to compensate,
+   which left the nav's bar showing at the top. Home doesn't need it. */
+html:has(.hc), html:has(.hc) body { overflow-anchor: none; }
+
+/* =========================================================
+   22 Nov, final: the tiles drawn strictly like the reference, two by two.
+   Square corners; a pale grey tile; the picture filling the top in
+   greyscale (it takes its colour back when pointed at); a small spaced
+   category label; the name in bold; one short line; a plain arrow.
+   ========================================================= */
+.proj-tiles { gap: 1rem !important; }
+.proj-tiles .pt { border-radius: 0 !important; background: #f5f5f4 !important; }
+:root[data-theme="dark"] .proj-tiles .pt { background: #1c1c1c !important; }
+.proj-tiles .pt:hover, :root[data-theme="dark"] .proj-tiles .pt:hover { background: #f5f5f4 !important; }
+:root[data-theme="dark"] .proj-tiles .pt:hover { background: #1c1c1c !important; }
+.proj-tiles .pt-media { aspect-ratio: 16 / 9.4 !important; background: #ececeb; }
+:root[data-theme="dark"] .proj-tiles .pt-media { background: #242424; }
+.proj-tiles .pt-media :is(img, video) { filter: grayscale(1) contrast(1.02); transition: filter 0.5s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); }
+@media (hover: hover) and (pointer: fine) { .proj-tiles .pt:hover .pt-media :is(img, video) { filter: none; transform: none; } }
+.proj-tiles .pt-media .shot-lock { border-radius: 0; }
+.proj-tiles .pt-copy { padding: 1.5rem 1.5rem 1.375rem !important; }
+.proj-tiles .pt-cat { font-size: 0.75rem !important; font-weight: 500 !important; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-soft); }
+.proj-tiles .pt-name { margin-top: 0.5rem !important; font-size: 1.5rem !important; font-weight: 700 !important; letter-spacing: -0.025em !important; }
+.proj-tiles .pt-desc { margin-top: 0.625rem !important; font-size: 1rem !important; line-height: 1.5; max-width: 30ch !important; }
+.proj-tiles .pt-go { padding-top: 1.5rem !important; }
+.proj-tiles .pt-go svg { width: 1.125rem; height: 1.125rem; stroke-width: 2; }
+.proj-tiles .project-link:focus-visible { outline-offset: 2px; border-radius: 0; }
+@media (prefers-reduced-motion: reduce) { .proj-tiles .pt-media :is(img, video) { transition: none; } }
+/* Pointed at, a tile takes its project's own colour (Wave sand, WealthBasket
+   mint, and so on), along with the picture's colour. */
+@media (hover: hover) and (pointer: fine) {
+  .proj-tiles .pt { transition: background-color 0.35s ease; }
+  .proj-tiles .pt:hover, :root[data-theme="dark"] .proj-tiles .pt:hover { background: var(--tile-tint, #f5f5f4) !important; }
+}
+@media (prefers-reduced-motion: reduce) { .proj-tiles .pt { transition: none; } }
+
+/* ---------- Tiles: subtle round corners, and the question with its brief ---------- */
+.proj-tiles .pt { border-radius: 0.875rem !important; }
+.proj-tiles .pt-hook { margin: 0.75rem 0 0; font-size: 1.0625rem; font-weight: 500; line-height: 1.4; letter-spacing: -0.01em; color: var(--ink); text-wrap: pretty; }
+.proj-tiles .pt-desc { margin-top: 0.5rem !important; font-size: 0.9375rem !important; max-width: 46ch !important; }
+.proj-tiles .project-link:focus-visible { border-radius: 0.875rem; }
+
+/* ---------- Colour on hover: the "untangle" card and the testimonials ----------
+   Grey at rest like the tiles; pointed at, each takes its own colour. */
+@media (hover: hover) and (pointer: fine) {
+  .vx-card { transition: background-color 0.35s ease !important; }
+  .vx-card:hover:has(#vx-p0.is-on) { background: var(--sky-panel) !important; }
+  .vx-card:hover:has(#vx-p1.is-on) { background: var(--mint-panel) !important; }
+  .vx-card:hover:has(#vx-p2.is-on) { background: var(--lilac-panel) !important; }
+  .vx-card:hover:has(#vx-p3.is-on) { background: var(--rose-panel) !important; }
+  .vx-card:hover:has(#vx-p4.is-on) { background: var(--sand-panel) !important; }
+  .tpanel:hover, :root[data-theme="dark"] .tpanel:hover, .tpanel:not(.is-active):hover { background: var(--tint, var(--surface)) !important; }
+}
+@media (prefers-reduced-motion: reduce) { .vx-card { transition: none !important; } }
+/* No visible project name on the tiles; the question keeps its own style,
+   under the category. The name stays for screen readers (the heading). */
+.proj-tiles .pt-name { position: absolute !important; width: 1px; height: 1px; margin: -1px !important; padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
+/* The pictures in full colour all the time (no greyscale at rest). */
+.proj-tiles .pt-media :is(img, video) { filter: none !important; }
+
+/* Tiles carry their project's colour at rest (no change on hover); every
+   tile ends in the same arrow; a locked project shows one round lock on
+   its picture. */
+.proj-tiles .pt, .proj-tiles .pt:hover, :root[data-theme="dark"] .proj-tiles .pt, :root[data-theme="dark"] .proj-tiles .pt:hover { background: var(--tile-tint, var(--surface)) !important; }
+.proj-tiles .pt-media .shot-lock { display: grid; place-items: center; width: 2.25rem; height: 2.25rem; padding: 0; border-radius: 50% !important; background: rgba(255, 255, 255, 0.92) !important; box-shadow: 0 0.25rem 0.75rem rgba(13, 13, 13, 0.14) !important; color: #141414; }
+:root[data-theme="dark"] .proj-tiles .pt-media .shot-lock { background: rgba(20, 20, 20, 0.85) !important; color: #f2f1ee; }
+.proj-tiles .pt-media .shot-lock svg { width: 1rem; height: 1rem; }
+@media (hover: hover) and (pointer: fine) { .proj-tiles .pt:hover .pt-go svg { transform: translate(2px, -2px); } }
+
+/* =========================================================
+   The Work page card layout, on the Home tiles: the picture inset in the
+   card with its own rounded corners, the field and "Case study" as tags on
+   the picture, and a small round arrow at the end. The words keep their
+   styles (the question and the brief).
+   ========================================================= */
+.proj-tiles .pt { padding: 0.375rem; border-radius: 1.25rem !important; }
+.proj-tiles .pt-media { border-radius: 1rem; }
+.proj-tiles .pt-copy { padding: 1rem 1.125rem 1.125rem !important; }
+.proj-tiles .pt-hook { margin-top: 0 !important; }
+.pt-marks { position: absolute; top: 0.75rem; left: 0.75rem; z-index: 1; display: flex; flex-wrap: wrap; gap: 0.375rem; }
+.pt-tag, .pt-kind { display: inline-flex; padding: 0.25rem 0.625rem; border-radius: 999px; font-size: var(--fs-small); font-weight: 500; line-height: 1.3; }
+.pt-tag { background: #fff; color: #141414; font-weight: 600; }
+.pt-kind { background: #e7e3fb; color: #2a1d5c; }
+.pt-kind.is-explore { background: #fbe7c8; color: #5a3a08; }
+:root[data-theme="dark"] .pt-tag { background: #141414; color: #f2f1ee; }
+:root[data-theme="dark"] .pt-kind { background: #2d2752; color: #e7e3fb; }
+.proj-tiles .pt-go { display: grid !important; place-items: center; align-self: flex-start; width: 2.25rem; height: 2.25rem; margin-top: auto; padding: 0 !important; border-radius: 50%; background: color-mix(in srgb, var(--ink) 7%, transparent); color: var(--ink-soft); transition: background-color 0.25s ease, color 0.25s ease, transform 0.35s cubic-bezier(0.23, 1, 0.32, 1); }
+.proj-tiles .pt-desc { margin-bottom: 1.25rem !important; }
+.proj-tiles .pt-go svg { width: 1rem !important; height: 1rem !important; transform: none !important; }
+@media (hover: hover) and (pointer: fine) { .proj-tiles .pt:hover .pt-go { background: var(--fill); color: var(--fill-ink); transform: rotate(45deg); } }
+@media (prefers-reduced-motion: reduce) { .proj-tiles .pt-go { transition: none; } }
+
+/* Colour at rest too: the "untangle" card in the colour of the skill that is
+   showing, and each testimonial panel (and phone card) in its person's
+   colour, all the time, not only when pointed at. */
+.vx-card:has(#vx-p0.is-on) { background: var(--sky-panel) !important; }
+.vx-card:has(#vx-p1.is-on) { background: var(--mint-panel) !important; }
+.vx-card:has(#vx-p2.is-on) { background: var(--lilac-panel) !important; }
+.vx-card:has(#vx-p3.is-on) { background: var(--rose-panel) !important; }
+.vx-card:has(#vx-p4.is-on) { background: var(--sand-panel) !important; }
+.tpanel, :root[data-theme="dark"] .tpanel { background: var(--tint, var(--surface)) !important; }
+.tq-card:nth-child(1) { background: var(--sky-panel) !important; }
+.tq-card:nth-child(3) { background: var(--rose-panel) !important; }
+.tq-card:nth-child(4) { background: var(--sand-panel) !important; }
+
+/* One even step between every section after the hero (the old stacked
+   cards left the step below the projects much shorter than the rest). */
+.projects { margin-top: calc(var(--home-gap) - 0.75rem) !important; }
+.projects + .value { margin-top: calc(var(--home-gap) - 2.75rem) !important; }
+@media (max-width: 640px) { .projects + .value { margin-top: calc(var(--home-gap) - 2.75rem) !important; } }
+
+/* Testimonials: grey at rest; only the one pointed at shows its colour. */
+.tpanel, :root[data-theme="dark"] .tpanel { background: var(--surface) !important; }
+:root[data-theme="dark"] .tpanel { background: var(--surface-2) !important; }
+@media (hover: hover) and (pointer: fine) { .tpanel:hover, :root[data-theme="dark"] .tpanel:hover { background: var(--tint, var(--surface)) !important; } }
+.tq-card:nth-child(n) { background: var(--surface) !important; }
+:root[data-theme="dark"] .tq-card:nth-child(n) { background: var(--surface-2) !important; }
+
+/* "How I untangle a product": the card's colour softer (about half). */
+.vx-card:has(#vx-p0.is-on) { background: color-mix(in srgb, var(--sky-panel) 50%, var(--surface)) !important; }
+.vx-card:has(#vx-p1.is-on) { background: color-mix(in srgb, var(--mint-panel) 50%, var(--surface)) !important; }
+.vx-card:has(#vx-p2.is-on) { background: color-mix(in srgb, var(--lilac-panel) 50%, var(--surface)) !important; }
+.vx-card:has(#vx-p3.is-on) { background: color-mix(in srgb, var(--rose-panel) 50%, var(--surface)) !important; }
+.vx-card:has(#vx-p4.is-on) { background: color-mix(in srgb, var(--sand-panel) 50%, var(--surface)) !important; }
+
+/* Project tiles: their colour a little softer (about 70%). */
+.proj-tiles .pt, .proj-tiles .pt:hover, :root[data-theme="dark"] .proj-tiles .pt, :root[data-theme="dark"] .proj-tiles .pt:hover { background: color-mix(in srgb, var(--tile-tint, var(--surface)) 70%, var(--surface)) !important; }
+/* The open video testimonial shows its colour by default. */
+.tpanel--video.is-active, :root[data-theme="dark"] .tpanel--video.is-active { background: var(--tint, var(--surface)) !important; }
+
+/* =========================================================
+   Phones: a tighter flow.
+   - The hero ends with its content instead of filling the screen, so the
+     facts ticker follows the resume link and the projects start sooner.
+   - One smaller step between sections (desktop's 9rem reads as dead space).
+   - Shorter project tiles: a wider picture and less padding.
+   ========================================================= */
+@media (max-width: 640px) {
+  :root { --home-gap: 5.5rem; }
+  .hc { min-height: 0 !important; padding-top: calc(var(--pad) + 6.5rem) !important; grid-template-rows: auto auto auto auto auto auto 2.75rem auto !important; padding-bottom: 0 !important; }
+  .hc > .hc-foot { position: relative !important; }
+  .projects { margin-top: 5.5rem !important; }
+  .proj-tiles .pt-media { aspect-ratio: 16 / 9 !important; }
+  .proj-tiles .pt-copy { padding: 0.875rem 0.875rem 1rem !important; }
+  .proj-tiles .pt-hook { font-size: 1rem; }
+  .proj-tiles .pt-desc { font-size: 0.875rem !important; margin-bottom: 0.875rem !important; }
+  .proj-tiles .pt-go { width: 2rem; height: 2rem; }
+  .pt-marks { top: 0.5rem; left: 0.5rem; }
+  .pt-tag, .pt-kind { padding: 0.1875rem 0.5rem; font-size: 0.8125rem; }
+  .testi { padding-top: calc(var(--home-gap) - 2.75rem) !important; }
+  .next-ch { margin-top: calc(var(--home-gap) - 1rem) !important; margin-bottom: 4rem !important; }
+}
+/* "How I untangle": the card's text runs the card's full width. */
+.vx-panel .value-text, .vx-panel p { max-width: none !important; }

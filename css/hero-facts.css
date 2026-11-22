@@ -166,3 +166,10 @@ html[data-motion="calm"] .fl-cx .fl-stk.is-pop, html[data-motion="calm"] .fl-cx 
 .fl-num, .fl-num .od, .hc-fact b { font-weight: 800 !important; }
 .hc-foot { align-items: stretch; }
 .hc-down { align-self: center !important; }
+
+/* The "+" after each figure in its own colour, as on the Work page before:
+   green, violet, rose. */
+.fl-counters li:nth-child(1) .od-s, .hc-fact:nth-child(1) .hf-plus, .fl-run li:nth-child(1) .hf-plus { color: #3aa76d; }
+.fl-counters li:nth-child(2) .od-s, .hc-fact:nth-child(2) .hf-plus, .fl-run li:nth-child(3) .hf-plus { color: #7c5cf0; }
+.fl-counters li:nth-child(3) .od-s, .hc-fact:nth-child(3) .hf-plus, .fl-run li:nth-child(5) .hf-plus { color: #e0606f; }
+@media (forced-colors: active) { .od-s, .hf-plus { color: CanvasText !important; } }

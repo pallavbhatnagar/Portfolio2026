@@ -15,10 +15,11 @@
   const F = src.map((li, i) => ({
     icon: li.querySelector(".hc-fact-ic").innerHTML,
     title: li.querySelector("b").textContent.trim(),
+    titleHtml: li.querySelector("b").innerHTML.trim(),
     sub: li.querySelector(".hc-fact-txt span").textContent.trim(),
     bg: STK[i][0], ink: STK[i][1], tilt: STK[i][2], i,
   }));
-  const BIG = [{ n: 10, pre: "", suf: "+", unit: "Projects" }, { n: 5, pre: "", suf: "+", unit: "Years in UX" }, { n: null, word: "UX", unit: "Certified" }];
+  const BIG = [{ n: 5, pre: "", suf: "+", unit: "Years" }, { n: 10, pre: "", suf: "+", unit: "Products" }, { n: 20, pre: "", suf: "+", unit: "Sessions" }];
   const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const sticker = (f, cls = "") => `<span class="fl-stk ${cls}" style="--bg:${f.bg};--ink:${f.ink};--tilt:${f.tilt}deg" aria-hidden="true">${f.icon}</span>`;
 
@@ -31,8 +32,8 @@
       let c = 0;
       const col = (set, ch, loop) => { const to = set.indexOf(ch) + (loop ? set.length : 0); const strip = (loop ? set + set : set); return `<span class="od-c" style="--to:${to};--c:${c++}"><span class="od-sz">${ch}</span><span class="od-strip">${[...strip].map((x, k) => `<span${k === to ? ' class="t"' : ""}>${x}</span>`).join("")}</span></span>`; };
       const od = (str) => { c = 0; return [...str].map((ch) => /[0-9]/.test(ch) ? col(DIG, ch, true) : /[A-Z]/.test(ch) ? col(ABC, ch, false) : `<span class="od-s">${ch}</span>`).join(""); };
-      const NUM = ["10+", "5+", "UX"], UNIT = ["Projects", "Years in UX", "Certified"], SUB = [F[0].sub, "Of contribution and learning", F[2].sub];
-      const run = F.map((f) => `<li>${sticker(f, "is-sm")}<b>${esc(f.title)}</b><span>${esc(f.sub)}</span></li><li class="fl-star" aria-hidden="true">✦</li>`).join("");
+      const NUM = ["5+", "10+", "20+"], UNIT = ["Years", "Products", "Sessions"], SUB = ["Designing and building products", "And features shipped", "Of usability testing run"];
+      const run = F.map((f) => `<li>${sticker(f, "is-sm")}<b>${f.titleHtml}</b><span>${esc(f.sub)}</span></li><li class="fl-star" aria-hidden="true">✦</li>`).join("");
       return `<div class="fl fl-cx">
         <ul class="fl-counters">${F.map((f, i) => `<li style="--i:${i}">
           <span class="fl-num"><span class="sr-only">${NUM[i]}</span><span class="od" aria-hidden="true">${od(NUM[i])}</span>${sticker(f, "is-pop")}</span>

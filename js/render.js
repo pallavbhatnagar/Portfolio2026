@@ -28,20 +28,21 @@
   const stack = document.getElementById("projStack");
   if (stack) {
     const featured = projects.filter((p) => p.home).sort((a, b) => (a.home.order || 0) - (b.home.order || 0));
+    // Tiles: picture on top, then the field, the project's name, one line
+    // about it and an arrow (a lock when it needs the password). The whole
+    // tile is the link (.project-link stretches over it).
+    stack.classList.add("proj-tiles");
+    stack.classList.remove("proj-stack");
     stack.insertAdjacentHTML("beforeend", featured.map((p, i) => `
-    <article class="project" data-theme="${esc(p.tint)}" style="--n:${i}"${p.locked ? " data-locked" : ""}>
-      <div class="project-copy">
-        
-        <h3 class="project-title is-hook">${esc(p.home.hook || p.name)}</h3>
-        <p class="project-desc">${esc(p.home.text)}</p>
-        <div class="project-foot">
-          <dl class="metrics">
-            ${(p.home.metrics || []).map(([label, value]) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`).join("\n          ")}
-          </dl>
-        </div>
-        <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}"></a>
+    <article class="project pt" style="--n:${i}; --tile-tint: var(--${esc(p.tint)}-panel)"${p.locked ? " data-locked" : ""}>
+      <div class="pt-media">${p.home.video ? `<video src="${esc(p.home.video)}" poster="${esc(p.home.image || thumb(p))}" aria-label="${esc(p.home.imageAlt || thumbAlt(p))}" muted loop playsinline preload="none" data-card-video></video>` : p.home.image ? `<img src="${esc(p.home.image)}" alt="${esc(p.home.imageAlt || thumbAlt(p))}" loading="lazy" decoding="async">` : media(p, 'loading="lazy" decoding="async"')}<div class="pt-marks"><span class="pt-tag">${esc(p.category)}</span><span class="pt-kind${isExploration(p) ? " is-explore" : ""}">${esc(isExploration(p) ? "Exploration" : "Case study")}</span></div>${p.locked ? lockBadge : ""}</div>
+      <div class="pt-copy">
+        <h3 class="pt-name">${esc(p.name)}</h3>
+        ${p.home.hook ? `<p class="pt-hook">${esc(p.home.hook)}</p>` : ""}
+        <p class="pt-desc">${esc(p.home.text)}</p>
+        <span class="pt-go" aria-hidden="true">${'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M8 7h9v9"/></svg>'}</span>
       </div>
-      <div class="project-panel"><div class="project-shot"><span class="project-tag is-on-shot" style="--tag-bg: var(--${esc(p.tint)}-panel); --tag-ink: var(--${esc(p.tint)}-ink)">${esc(p.category)}</span>${p.locked ? lockBadge : ""}${media(p, 'loading="lazy"')}</div></div>
+      <a class="project-link" href="${link(p)}" aria-label="Read the ${esc(p.name)} case study${p.locked ? " (password protected)" : ""}"></a>
     </article>`).join("\n"));
   }
 

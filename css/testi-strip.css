@@ -1,0 +1,42 @@
+/* Testimonials on wide screens: the earlier strip (from 12 October).
+   Portraits stand side by side; pointing at one, focusing it or tapping it
+   opens it to read, the others narrow. The video opens by default and
+   reopens when the pointer leaves. All panels stay grey. Phones (and
+   tablets held upright) keep the carousel (.tq-view). js/testi-strip.js. */
+.tstrip { display: none; }
+@media (min-width: 901px) {
+  .testi .tq-view, .testi .tq-arrows { display: none !important; }
+  .tstrip { display: flex; gap: 0.375rem; height: 21rem; margin-top: 2rem; }
+}
+.tpanel { position: relative; flex: 1 1 0; min-width: 0; overflow: hidden; border-radius: 0.75rem; background: var(--surface); cursor: pointer; contain: layout paint; transition: flex-grow 0.7s var(--ease-out), background-color 0.4s var(--ease-out); }
+:root[data-theme="dark"] .tpanel { background: var(--surface-2); }
+.tpanel.is-active { flex-grow: 7; }
+@media (hover: hover) and (pointer: fine) { .tpanel:not(.is-active):hover { background: color-mix(in srgb, var(--ink) 7%, var(--surface)); } }
+.tpanel:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.tside { position: absolute; left: 50%; bottom: 1rem; margin: 0; writing-mode: vertical-rl; transform: translateX(-50%) rotate(180deg); font-size: var(--fs-small); font-weight: 500; letter-spacing: 0.02em; color: var(--ink); white-space: nowrap; transition: opacity 0.3s var(--ease-out); }
+.tpanel.is-active .tside { opacity: 0; }
+.tdp { position: absolute; top: 1rem; left: 50%; display: grid; place-items: center; width: 2.25rem; height: 2.25rem; overflow: hidden; border-radius: 50%; background: color-mix(in srgb, var(--ink) 10%, transparent); font-size: var(--fs-small); font-weight: 500; letter-spacing: 0.03em; color: var(--ink); transform: translateX(-50%); transition: left 0.7s var(--ease-out), transform 0.7s var(--ease-out), opacity 0.3s ease; }
+.tpanel.is-active .tdp { left: 1.25rem; transform: none; }
+.tbody { position: absolute; left: 0; right: 0; bottom: 0; padding: 1.25rem 1.5rem; color: var(--ink); opacity: 0; transform: translateY(0.5rem); pointer-events: none; transition: opacity 0.3s var(--ease-out), transform 0.4s var(--ease-out); }
+.tpanel.is-active .tbody { opacity: 1; transform: none; transition-duration: 0.5s; transition-delay: 0.18s; }
+.tbody blockquote { margin: 0; max-width: 34ch; font-size: 1.375rem; font-weight: 500; line-height: 1.4; letter-spacing: -0.01em; }
+.tname { margin: 0.75rem 0 0; font-size: var(--fs-small); color: var(--ink-soft); }
+.tname strong { display: block; font-size: var(--fs-body); font-weight: 600; color: var(--ink); }
+/* The video panel: the clip fills the panel down to the name. */
+.tpanel--video .tbody { top: 0; display: flex; flex-direction: column; padding: 0.625rem 0.625rem 1rem; }
+.tpanel--video .tname { padding-inline: 0.875rem; }
+.tvideo { position: relative; flex: 1 1 auto; min-height: 5rem; overflow: hidden; border-radius: 0.5rem; background: #1c1c1c; }
+.tpanel.is-active .tvideo { pointer-events: auto; }
+.tpanel--video.is-active .tdp { opacity: 0; pointer-events: none; }
+.tvideo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.tpanel--video.is-active video { cursor: pointer; }
+.tpanel--video .tctl { top: auto; right: 0.5rem; bottom: 0.5rem; }
+.tpanel--video.is-playing .tplay .i-play { display: none; }
+.tpanel--video.is-playing .tplay .i-pause { display: block; }
+@media (prefers-reduced-motion: no-preference) {
+  .js .tstrip:not(.is-in) .tpanel { opacity: 0; transform: translateY(0.875rem); }
+  .tpanel { transition: flex-grow 0.7s var(--ease-out), background-color 0.4s var(--ease-out), opacity 0.8s var(--ease-out) calc(var(--i, 0) * 80ms), transform 0.8s var(--ease-out) calc(var(--i, 0) * 80ms); }
+}
+@media (prefers-reduced-motion: reduce) { .tpanel, .tdp, .tbody, .tside { transition: none !important; } }
+html[data-motion="calm"] .tpanel, html[data-motion="calm"] .tdp, html[data-motion="calm"] .tbody { transition: none !important; }
+@media (forced-colors: active) { .tpanel { border: 1px solid CanvasText; } .tpanel.is-active { outline: 2px solid Highlight; } }

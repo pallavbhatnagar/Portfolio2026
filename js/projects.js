@@ -22,7 +22,12 @@
    - video      optional: a short silent clip that plays on the card in place
                 of the image (the thumbnail shows until it starts, and stays
                 with motion reduced or in Calm)
-   - home       optional: show on the Home page (order 1-4, text, two metrics)
+   - home       optional: show on the Home page (order 1-4, short: the one
+                line on the Home tile, image and imageAlt: the
+                Home tile's picture if different from the thumbnail; video: a
+                silent looping clip on the Home tile, with image as its
+                poster; text,
+                two metrics)
    - works      the Works page card (text, and two lines under it)
    ========================================================= */
 window.CASE_STUDIES = [
@@ -39,6 +44,10 @@ window.CASE_STUDIES = [
     thumbAlt: "Wave 2.0 trading screen on a phone",
     home: {
       order: 1,
+      image: "/assets/projects/wave/images/screens-poster.jpg",
+      video: "/assets/videos/projects/work1.mp4",
+      imageAlt: "Wave 2.0 trading screens: a box order, a price alert and stock pages",
+      short: "A white-label trading app for many broker brands.",
       hook: "How do you give dozens of brokers their own trading app, without building dozens of apps?",
       text: "I designed a single white-label system that feels native under every brand.",
       metrics: [
@@ -73,6 +82,9 @@ window.CASE_STUDIES = [
     thumbAlt: "WealthBasket on Paytm Money: a phone showing curated WealthBaskets beside a Paytm card",
     home: {
       order: 2,
+      image: "/assets/projects/wealthbasket/images/sip-01.webp",
+      imageAlt: "WealthBasket screens: portfolio summary, my WealthBaskets and starting a SIP",
+      short: "Expert-built portfolios for investors on Paytm Money.",
       hook: "Would you put money into stocks you didn't pick?",
       text: "So the app earns trust first: it shows performance, then asks for money.",
       metrics: [
@@ -108,6 +120,9 @@ window.CASE_STUDIES = [
     thumbAlt: "Atlas design system: colour tokens, buttons, toggles and form fields",
     home: {
       order: 3,
+      image: "/assets/projects/atlasdesignsystem/images/cover.jpg",
+      imageAlt: "Atlas Design System: colour scale, buttons, toggles and form fields",
+      short: "One design language for separate enterprise products.",
       hook: "Every team drew its own button. Could they all speak one language?",
       text: "So I set up one shared language for design and engineering: tokens, parts and rules.",
       metrics: [
@@ -134,6 +149,9 @@ window.CASE_STUDIES = [
     thumbAlt: "Supply chain map: a network of suppliers with risk colours and a detail panel",
     home: {
       order: 4,
+      image: "/assets/projects/supplychainmap/images/cover.jpg",
+      imageAlt: "Supply chain map: a network of suppliers across tiers with a details panel",
+      short: "Trace a disruption across tiers and act on the risk.",
       hook: "When one supplier stumbles, who else falls with it?",
       text: "The map makes that ripple visible, so teams can trace the risk instead of guessing.",
       metrics: [

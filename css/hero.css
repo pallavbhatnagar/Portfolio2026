@@ -517,3 +517,11 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 /* Trial: a softer edge light on the ask box: the same colours, toned down. */
 .hc .hc-ask::before { opacity: 1; } /* light: full colour */
 :root[data-theme="dark"] .hc .hc-ask::before { opacity: 0.55; }
+/* The ask box with softer corners (was 1.25rem), its send key to match. */
+.hc .hc-ask { border-radius: 0.75rem; }
+.hc .hc-go { border-radius: 0.5rem; }
+/* Rounder ask boxes: the hero's and the chat panel's, with their send keys. */
+.hc .hc-ask { border-radius: 1.5rem; }
+.hc .hc-go { border-radius: 1rem; }
+.ask-panel-form { border-radius: 1.5rem !important; }
+.ask-panel-send { border-radius: 1rem !important; }

@@ -152,3 +152,54 @@
     window.addEventListener("scroll", () => { if (last && !raf) raf = requestAnimationFrame(paint); }, { passive: true });
   }
 })();
+
+/* Phones: the photo strip keeps the height of its tallest opened photo, so
+   opening or closing a photo's line never moves the page below it. */
+(() => {
+  const pile = document.querySelector(".ab-pile");
+  if (!pile) return;
+  const narrow = matchMedia("(max-width: 640px)");
+  const fit = () => {
+    pile.style.minHeight = "";
+    if (!narrow.matches) return;
+    const snaps = Array.from(pile.querySelectorAll(".ab-snap"));
+    const was = snaps.filter((s) => s.classList.contains("is-open"));
+    pile.classList.add("is-measuring");
+    snaps.forEach((s) => s.classList.add("is-open"));
+    const h = pile.getBoundingClientRect().height;
+    snaps.forEach((s) => { if (!was.includes(s)) s.classList.remove("is-open"); });
+    pile.classList.remove("is-measuring");
+    pile.style.minHeight = Math.ceil(h) + "px";
+  };
+  const later = () => requestAnimationFrame(() => requestAnimationFrame(fit));
+  if (document.readyState === "complete") later(); else addEventListener("load", later);
+  if (document.fonts?.ready) document.fonts.ready.then(later);
+  narrow.addEventListener?.("change", later);
+  let t = 0; addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 150); });
+})();
+
+/* Phones: the same hint as under Home's figures, a small down arrow, here
+   on the right of "At a glance". It shows only while the page is at the top
+   and fades away once you scroll; a tap glides down to the section. */
+(() => {
+  const glance = document.querySelector(".ab-glance");
+  const h = glance && glance.querySelector(".ab-h2");
+  if (!h) return;
+  const a = document.createElement("a");
+  a.className = "ab-down";
+  a.href = "#glance";
+  a.setAttribute("aria-label", "At a glance, this way");
+  a.innerHTML = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 6.5 8 10l3.5-3.5"/></svg>';
+  glance.classList.add("has-down");
+  (glance.querySelector(".ab-sig") || h).append(a);
+  const root = document.documentElement;
+  let queued = false;
+  const set = () => { queued = false; root.classList.toggle("ab-top", window.scrollY < 24); };
+  addEventListener("scroll", () => { if (!queued) { queued = true; requestAnimationFrame(set); } }, { passive: true });
+  set();
+  a.addEventListener("click", (e) => {
+    e.preventDefault();
+    const still = matchMedia("(prefers-reduced-motion: reduce)").matches || root.dataset.motion === "calm";
+    glance.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
+  });
+})();

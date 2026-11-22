@@ -109,3 +109,32 @@
 
 /* List view: the same split as the Home cards, words 51%, screenshot 49%. */
 @media (min-width: 901px) { .wk-list:not(.is-grid) .wk-card { grid-template-columns: minmax(0, 51fr) minmax(0, 49fr); } .wk-list:not(.is-grid) .wk-what { max-width: 40ch; } }
+/* Phones: the reader's sentence keeps the height of the longest one
+   (script.js fitLines), so changing the reader never moves the switcher
+   or the cards; the sentence sits at the top of that space. */
+@media (max-width: 640px) { .rd-lines { grid-template-rows: auto !important; align-items: start !important; transition: none !important; } }
+/* Phones: the "Start with" chips stay on one line (scrolling sideways if
+   they need to), so a reader with longer project names doesn't add a line. */
+@media (max-width: 640px) {
+  .rd-foot { flex-wrap: nowrap !important; }
+  .rd-start { display: flex !important; flex-wrap: nowrap; align-items: center; gap: 0.375rem; max-width: 100%; overflow-x: auto; scrollbar-width: none; white-space: nowrap; }
+  .rd-start::-webkit-scrollbar { display: none; }
+  .rd-start .rd-chip, .rd-start-label { flex: none; }
+}
+@media (max-width: 640px) { .rd-foot { justify-content: safe center !important; } .rd-start { justify-content: safe center; margin-inline: calc(var(--pad) * -1); padding-inline: var(--pad); max-width: none; width: calc(100% + 2 * var(--pad)); box-sizing: border-box; } }
+/* Centred when the chips fit, started from the left when they don't (auto
+   side margins collapse to nothing once the row overflows). */
+@media (max-width: 640px) {
+  .rd-foot { justify-content: flex-start !important; }
+  .rd-start { justify-content: flex-start !important; }
+  .rd-start > :first-child { margin-left: auto; }
+  .rd-start > :last-child { margin-right: auto; }
+}
+@media (max-width: 640px) {
+  .wk-reader .rd-foot { align-self: stretch; width: 100%; min-width: 0; }
+  .rd-start { flex: 1 1 auto; min-width: 0; width: auto !important; margin-inline: calc(var(--pad) * -1) !important; }
+}
+/* Phones: the space a shorter sentence leaves goes under the chips. */
+@media (max-width: 640px) { .wk-reader .rd-foot { margin-bottom: var(--rd-spare, 0px); } }
+/* Phones: more room above the content switcher. */
+@media (max-width: 640px) { .wk-reader { padding-bottom: 7rem !important; } }

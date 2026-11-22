@@ -47,3 +47,31 @@
 /* Even space above the first row and below the last. */
 .now-list > div:first-child { padding-top: 0.875rem !important; }
 .now-list > div:last-child { padding-bottom: 0.875rem !important; }
+/* While the strip measures its tallest opened photo (js/about-extra.js),
+   nothing animates, so the measurement is the finished size. */
+.ab-pile.is-measuring, .ab-pile.is-measuring * { transition: none !important; }
+@media (max-width: 640px) { .ab-pile .ab-track { align-items: flex-start; } }
+/* Phones: "At a glance" closer to the photo strip above it. */
+@media (max-width: 640px) { .ab-glance { margin-top: 2.4306rem !important; } } /* 35px at the default text size */
+
+/* The scroll hint beside "At a glance" (js/about-extra.js), phones only. */
+.ab-down { display: none; }
+@media (max-width: 640px) {
+  .ab-glance.has-down { position: relative; }
+  .ab-down { position: absolute; top: 0; right: 0; display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; color: var(--ink); text-decoration: none; opacity: 0; pointer-events: none; transition: opacity 0.35s ease; }
+  html.ab-top .ab-down { opacity: 1; pointer-events: auto; }
+  .ab-down svg { width: 1.125rem; height: 1.125rem; }
+  .ab-down:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 50%; }
+}
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) { .ab-down:hover svg { transform: translateY(2px); transition: transform 0.25s ease; } }
+/* The hint sits on the right of the name row, centred on it. */
+@media (max-width: 640px) {
+  .ab-glance .ab-sig { display: flex; align-items: center; }
+  .ab-sig .ab-down { position: static; margin-left: auto; align-self: center; }
+}
+/* The hint nudges down, the same rhythm as Home's arrow; still in Calm or
+   with motion reduced. */
+@keyframes ab-down-nudge { 0%, 60%, 100% { transform: none; } 30% { transform: translateY(3px); } }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .ab-down svg { animation: ab-down-nudge 2.4s ease-in-out infinite; }
+}
