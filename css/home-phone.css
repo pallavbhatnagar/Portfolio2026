@@ -184,3 +184,9 @@
 @media (max-width: 640px) {
   .hc > .hc-ask { width: var(--hc-title-w, 100%) !important; max-width: 100% !important; justify-self: center !important; margin-inline: auto !important; }
 }
+/* Phones: the description as wide as the headline, so it can sit on two
+   balanced lines wherever the screen allows. */
+@media (max-width: 640px) {
+  .hc .hc-lede { width: 100% !important; max-width: 25rem !important; text-wrap: balance !important; }
+}
+@media (max-width: 374px) { .hc .hc-lede { font-size: 0.9375rem !important; } }
