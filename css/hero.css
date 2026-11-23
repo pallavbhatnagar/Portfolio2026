@@ -547,3 +547,5 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 .hw-hand, .hw-lines { transform-box: fill-box; }
 @media (forced-colors: active) { .hw-bg { fill: Canvas; stroke: CanvasText; } .hc-wave svg g { stroke: CanvasText; } }
 .hc-wave .hw-lines { stroke: var(--ink); }
+/* The headline a step heavier (was medium, 500). */
+.hc-title.hc-big { font-weight: 600 !important; letter-spacing: -0.042em; }
