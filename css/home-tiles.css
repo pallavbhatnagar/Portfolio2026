@@ -246,3 +246,8 @@ html:has(.hc), html:has(.hc) body { overflow-anchor: none; }
   .vx-panel .value-meta dt { font-size: 0.8125rem !important; color: var(--ink-soft); }
   .vx-panel .value-meta dd { margin: 0; font-size: 0.9375rem !important; font-weight: 500; line-height: 1.4; }
 }
+/* Touch screens (iPad) have no hover: the testimonial you tap open shows
+   its colour instead. */
+@media (hover: none), (pointer: coarse) {
+  .tpanel.is-active, :root[data-theme="dark"] .tpanel.is-active { background: var(--tint, var(--surface)) !important; }
+}

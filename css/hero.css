@@ -554,3 +554,10 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 /* "Hi, I'm Pallav Bhatnagar" a size up. */
 .hc .hc-hi { font-size: 1.375rem !important; }
 @media (max-width: 640px) { .hc .hc-hi { font-size: 1.1875rem !important; } }
+
+/* iPad held upright: the hero ends with its content and the figures follow
+   close below, instead of sitting at the foot of the very tall screen. */
+@media (min-width: 641px) and (max-width: 1024px) and (orientation: portrait) {
+  .hc { min-height: 0 !important; grid-template-rows: 0 auto auto auto auto auto 5rem auto !important; padding-bottom: 1rem !important; }
+  .projects { margin-top: 6rem !important; }
+}

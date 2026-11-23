@@ -4074,3 +4074,8 @@ html[data-plain] .hx-fig { visibility: hidden !important; } /* hidden, but its p
    (script.js 0b sets its position); its top edge on that line. */
 .preloader.is-anchored { display: block; }
 .preloader.is-anchored .pl-word { position: absolute; white-space: nowrap; margin-top: -0.35em; }
+
+/* Scroll to top, light theme: a dark button over the page, a white one
+   once it sits over the dark footer (script.js marks .is-over-footer). */
+:root:not([data-theme="dark"]) .to-top { background: #141414; color: #fff; box-shadow: none; transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), visibility 0s linear 0.3s, background-color 0.25s ease, color 0.25s ease; }
+:root:not([data-theme="dark"]) .to-top.is-over-footer { background: #fff; color: #0d0d0d; box-shadow: 0 0 0 1px rgba(13, 13, 13, 0.1); }

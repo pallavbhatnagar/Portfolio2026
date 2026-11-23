@@ -434,6 +434,22 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     }).observe(pageEnd);
   }
 
+  // 6b) The button knows when it sits over the dark footer, so it can turn
+  //     from dark (over the page) to white (over the footer).
+  if (toTop) {
+    const footer = document.querySelector(".site-footer");
+    let q = false;
+    // The footer waits behind the page, so the cue is where the page itself
+    // ends (.page-end): above the button's middle means the footer shows there.
+    const end = document.querySelector(".page-end");
+    const over = () => { q = false; const ref = end || footer; if (!ref) return; const e = ref.getBoundingClientRect(), b = toTop.getBoundingClientRect(); toTop.classList.toggle("is-over-footer", e.top <= b.top + b.height / 2); };
+    const queue = () => { if (!q) { q = true; requestAnimationFrame(over); } };
+    addEventListener("scroll", queue, { passive: true });
+    document.getElementById("shellScroll")?.addEventListener("scroll", queue, { passive: true });
+    addEventListener("resize", queue);
+    over();
+  }
+
   // 7) Back-to-top: scroll the window itself (the #top anchor is the fixed
   //    header, which never moves, so a plain link would do nothing).
   if (toTop) {
