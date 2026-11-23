@@ -4061,3 +4061,16 @@ html.nav-seen .site-header, html.nav-seen:has(.hc) .site-header, html.nav-seen:h
 .cs-side .cs-rail-back { margin-bottom: 1rem; opacity: 0; visibility: hidden; transform: translateY(-4px); transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s linear 0.3s; }
 .cs-side .cs-rail-back.is-shown { opacity: 1; visibility: visible; transform: none; transition: opacity 0.3s ease, transform 0.3s ease, visibility 0s; }
 @media (prefers-reduced-motion: reduce) { .cs-side .cs-rail-back { transition: none; } }
+
+/* The plain reading line belongs to the case studies only. On Home, About
+   and Work it shows only when the lightsaber is switched on (it lights on
+   every page then). */
+html:not(:has(main.cs)) .scroll-line:not(.is-saber) { display: none !important; }
+
+/* "Hide extras" also hides the blueprint drawing in the Home hero. */
+html[data-plain] .hx-fig { visibility: hidden !important; } /* hidden, but its place kept, so the words do not move */
+
+/* Home: "Hello" anchored where "Hi, I'm Pallav Bhatnagar" will appear
+   (script.js 0b sets its position); its top edge on that line. */
+.preloader.is-anchored { display: block; }
+.preloader.is-anchored .pl-word { position: absolute; white-space: nowrap; margin-top: -0.35em; }

@@ -526,3 +526,24 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 .hc .hc-go { border-radius: 1rem; }
 .ask-panel-form { border-radius: 1.5rem !important; }
 .ask-panel-send { border-radius: 1rem !important; }
+
+/* A small square photo between "I'm" and the name. */
+.hc-hi-dp { display: inline-block; width: 1.4em; height: 1.4em; margin: 0 0.1em; vertical-align: -0.38em; border-radius: 0.3em; object-fit: cover; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent); }
+.hc-hi-dp { border-radius: 0 !important; box-shadow: none !important; }
+
+/* A waving hand before "Hi". It waves once as the hero arrives; still with
+   motion reduced or in Calm. */
+.hc-wave { display: inline-block; margin-right: 0.3em; transform-origin: 70% 80%; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .hc.is-in .hc-wave { animation: hc-wave 1.6s ease-in-out 0.9s 1 both; }
+}
+@keyframes hc-wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
+/* The hand as a sticker in the hero's own style: a navy line drawing on a
+   soft peach disc, two small motion marks. It waves from the wrist. */
+.hc-wave { width: 1.45em; height: 1.45em; vertical-align: -0.4em; margin-right: 0.35em; transform-origin: 40% 85%; }
+.hc-wave svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hw-bg { fill: #fbe0bf; }
+:root[data-theme="dark"] .hw-bg { fill: #f3cf9f; }
+.hw-hand, .hw-lines { transform-box: fill-box; }
+@media (forced-colors: active) { .hw-bg { fill: Canvas; stroke: CanvasText; } .hc-wave svg g { stroke: CanvasText; } }
+.hc-wave .hw-lines { stroke: var(--ink); }

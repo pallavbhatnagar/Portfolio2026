@@ -138,3 +138,5 @@
 @media (max-width: 640px) { .wk-reader .rd-foot { margin-bottom: var(--rd-spare, 0px); } }
 /* Phones: more room above the content switcher. */
 @media (max-width: 640px) { .wk-reader { padding-bottom: 7rem !important; } }
+/* The reader's sentence a weight lighter (was 600). */
+.rd-line { font-weight: 500 !important; }

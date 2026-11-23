@@ -20,15 +20,15 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?Math.max(-1,Math.min(1,+s.text||0)):0;try{if(sessionStorage.getItem("nav-seen"))d.classList.add("nav-seen");sessionStorage.setItem("nav-seen","1");}catch(e){}if(T>0)d.setAttribute("data-text","1");if(T<0)d.setAttribute("data-text-small","");["read","contrast","links","focus","plain","saber"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded"))d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20261988" />
-<link rel="stylesheet" href="/css/hero.css?v=20261988" />
-<link rel="stylesheet" href="/css/home-cards.css?v=20261988" />
-<link rel="stylesheet" href="/css/hero-facts.css?v=20261988" />
-<link rel="stylesheet" href="/css/hero-figure.css?v=20261988" />
-<link rel="stylesheet" href="/css/home-tiles.css?v=20261988" />
-<link rel="stylesheet" href="/css/testi-strip.css?v=20261988" />
-<link rel="stylesheet" href="/css/home-phone.css?v=20261988" />
-<script src="/js/motion-css.js?v=20261988"></script>
+<link rel="stylesheet" href="/css/style.css?v=20261997" />
+<link rel="stylesheet" href="/css/hero.css?v=20261997" />
+<link rel="stylesheet" href="/css/home-cards.css?v=20261997" />
+<link rel="stylesheet" href="/css/hero-facts.css?v=20261997" />
+<link rel="stylesheet" href="/css/hero-figure.css?v=20261997" />
+<link rel="stylesheet" href="/css/home-tiles.css?v=20261997" />
+<link rel="stylesheet" href="/css/testi-strip.css?v=20261997" />
+<link rel="stylesheet" href="/css/home-phone.css?v=20261997" />
+<script src="/js/motion-css.js?v=20261997"></script>
 </head>
 <body>
 
@@ -66,7 +66,7 @@
   <!-- The headline on two lines, with two stickers that act out its words:
        a knot on "messy", an app window before "into ones people get", a tick on
        "obvious". -->
-  <p class="hc-hi hc-rise" style="--d:0"><span class="hc-hi-in">Hi, I'm <button class="say" type="button" data-say="/assets/audio/sound-effects/pallav-bhatnagar.mp3" aria-describedby="say-home">Pallav Bhatnagar<span class="say-tip" id="say-home" role="tooltip"><span>Pronounced (Pah-luv Bhat-naah-gar)</span><span class="say-hint">Click to hear it (US English)</span></span></button></span></p>
+  <p class="hc-hi hc-rise" style="--d:0"><span class="hc-hi-in"><span class="hc-wave" aria-hidden="true"><svg viewBox="0 0 32 32"><circle class="hw-bg" cx="16" cy="16" r="15"/><g class="hw-hand" fill="none" stroke="#1b1b39" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" transform="translate(5.6 5.4) scale(0.86)"><path d="M18 11V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2"/><path d="M14 10V4a2 2 0 0 0-2-2a2 2 0 0 0-2 2v2"/><path d="M10 10.5V6a2 2 0 0 0-2-2a2 2 0 0 0-2 2v8"/><path d="M18 8a2 2 0 1 1 4 0v6a8 8 0 0 1-8 8h-2c-2.8 0-4.5-.86-5.99-2.34l-3.6-3.6a2 2 0 0 1 2.83-2.82L7 15"/></g><g class="hw-lines" fill="none" stroke="#1b1b39" stroke-width="1.5" stroke-linecap="round"><path d="M26.2 6.4l1.6-1.6"/><path d="M27.6 10.2l2.1-.5"/></g></svg></span>Hi, I'm <button class="say" type="button" data-say="/assets/audio/sound-effects/pallav-bhatnagar.mp3" aria-describedby="say-home">Pallav Bhatnagar<span class="say-tip" id="say-home" role="tooltip"><span>Pronounced (Pah-luv Bhat-naah-gar)</span><span class="say-hint">Click to hear it (US English)</span></span></button></span></p>
   <h1 class="hc-title hc-big"><span class="hc-line hc-rise" style="--d:90">I turn <span class="hc-mess">messy</span> products<span class="hs hs-knot" aria-hidden="true"><svg viewBox="0 0 64 64"><path class="hs-burst" d="M32 2l6.5 7.8 10-2.2 1.8 10 9.4 4.2-4.2 9.2 4.2 9.2-9.4 4.2-1.8 10-10-2.2L32 62l-6.5-7.8-10 2.2-1.8-10-9.4-4.2L8.5 33 4.3 23.8l9.4-4.2 1.8-10 10 2.2z"/><path d="M14 38c5-14 12 6 16-6s8 6 10-2c1.5-6 6 0 10 0" fill="none" stroke="#1b1b39" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span> <span class="hc-line hc-rise" style="--d:180"><span class="hs hs-app" aria-hidden="true"><svg viewBox="0 0 40 32"><rect x="1.5" y="1.5" width="37" height="29" rx="6" fill="#cfe7b0" stroke="#215452" stroke-width="2.4"/><path d="M1.5 9.5h37" stroke="#215452" stroke-width="2.4"/><circle cx="7" cy="5.6" r="1.4" fill="#215452"/><circle cx="11.5" cy="5.6" r="1.4" fill="#215452"/><rect x="7" y="15" width="12" height="3" rx="1.5" fill="#215452"/><rect x="7" y="21" width="20" height="3" rx="1.5" fill="#215452" opacity=".5"/></svg></span>into ones people get.<span class="hs hs-tick" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span></span></h1>
   <p class="hc-lede hc-rise" style="--d:340">I design product experiences that make complex things simple, across fintech and logistics.</p>
   <button class="hc-ask hc-rise" id="askAiTrigger" type="button" aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false" aria-label="Talk to my Work" style="--d:420">
@@ -399,16 +399,16 @@
 </dialog>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20261988" defer fetchpriority="high"></script>
-<script src="/js/projects.js?v=20261988" defer fetchpriority="high"></script>
-<script src="/js/render.js?v=20261988" defer fetchpriority="high"></script>
-<script src="/js/script.js?v=20261988" defer fetchpriority="high"></script>
-<script src="/js/lumos.js?v=20261988" defer></script>
-<script src="/js/hero.js?v=20261988" defer fetchpriority="high"></script>
-<script src="/js/words.js?v=20261988" defer></script>
-<script src="/js/fold.js?v=20261988" defer></script>
-<script src="/js/hero-facts.js?v=20261988" defer></script>
-<script src="/js/hero-figure.js?v=20261988" defer></script>
-<script src="/js/testi-strip.js?v=20261988" defer></script>
+<script src="/js/content.js?v=20261997" defer fetchpriority="high"></script>
+<script src="/js/projects.js?v=20261997" defer fetchpriority="high"></script>
+<script src="/js/render.js?v=20261997" defer fetchpriority="high"></script>
+<script src="/js/script.js?v=20261997" defer fetchpriority="high"></script>
+<script src="/js/lumos.js?v=20261997" defer></script>
+<script src="/js/hero.js?v=20261997" defer fetchpriority="high"></script>
+<script src="/js/words.js?v=20261997" defer></script>
+<script src="/js/fold.js?v=20261997" defer></script>
+<script src="/js/hero-facts.js?v=20261997" defer></script>
+<script src="/js/hero-figure.js?v=20261997" defer></script>
+<script src="/js/testi-strip.js?v=20261997" defer></script>
 </body>
 </html>
