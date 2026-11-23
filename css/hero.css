@@ -547,5 +547,10 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 .hw-hand, .hw-lines { transform-box: fill-box; }
 @media (forced-colors: active) { .hw-bg { fill: Canvas; stroke: CanvasText; } .hc-wave svg g { stroke: CanvasText; } }
 .hc-wave .hw-lines { stroke: var(--ink); }
-/* The headline a step heavier (was medium, 500). */
-.hc-title.hc-big { font-weight: 600 !important; letter-spacing: -0.042em; }
+/* The headline bold (700). */
+.hc-title.hc-big { font-weight: 700 !important; letter-spacing: -0.045em; }
+/* The description a size up (desktop and tablet 1.1875 -> 1.3125rem). */
+@media (min-width: 641px) { .hc .hc-lede { font-size: 1.3125rem !important; } }
+/* "Hi, I'm Pallav Bhatnagar" a size up. */
+.hc .hc-hi { font-size: 1.375rem !important; }
+@media (max-width: 640px) { .hc .hc-hi { font-size: 1.1875rem !important; } }
