@@ -561,3 +561,22 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
   .hc { min-height: 0 !important; grid-template-rows: 0 auto auto auto auto auto 5rem auto !important; padding-bottom: 1rem !important; }
   .projects { margin-top: 6rem !important; }
 }
+
+/* The waving hand, drawn as a sticker like the others: a solid warm hand
+   with a navy outline and finger lines, mid-wave, two motion marks. */
+.hc-wave { --hw-skin: #ffd59a; width: 1.6em; height: 1.6em; vertical-align: -0.48em; margin-right: 0.3em; color: #1b1b39; transform-origin: 45% 85%; }
+.hc-wave .hw-lines { stroke: var(--ink); }
+:root[data-theme="dark"] .hc-wave { --hw-skin: #ffd59a; color: #1b1b39; }
+@media (forced-colors: active) { .hc-wave { --hw-skin: Canvas; color: CanvasText; } }
+
+/* The waving hand: Phosphor's "hand-waving" (duotone, MIT), the hand in a
+   warm fill under the site's ink line. Replaces the earlier drawings. */
+.hc-wave { width: 1.35em !important; height: 1.35em !important; vertical-align: -0.3em !important; margin-right: 0.3em !important; color: var(--ink) !important; transform-origin: 30% 80% !important; }
+.hc-wave svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.hc-wave .hw-fill { fill: #ffc966; }
+.hc-wave .hw-line { fill: currentColor; }
+:root[data-theme="dark"] .hc-wave .hw-fill { fill: #f0b54a; }
+@media (forced-colors: active) { .hc-wave .hw-fill { fill: Canvas; } .hc-wave .hw-line { fill: CanvasText; } }
+.hc-wave { width: 1.55em !important; height: 1.4em !important; vertical-align: -0.34em !important; transform-origin: 50% 90% !important; }
+/* Wave hand: Fluent Emoji "Waving hand" (Flat), full colour as drawn. */
+.hc-wave { width:1.3em!important; height:1.3em!important; vertical-align:-0.24em!important; margin-right:0.3em!important; transform-origin:70% 90%!important; }
