@@ -41,11 +41,17 @@ jobs:
           rsync -a --exclude '.git' --exclude '.github' --exclude '.gitattributes' --exclude '*.md' ./ ../_site/
           mv ../_site ./_site
 
+      # The upload is named per attempt, so "Re-run jobs" on the same run
+      # never finds several artifacts called "github-pages" (the error
+      # "Multiple artifacts named github-pages were unexpectedly found").
       - name: Upload the site
         uses: actions/upload-pages-artifact@v4
         with:
           path: _site
+          name: github-pages-${{ github.run_attempt }}
 
       - name: Publish
         id: deployment
         uses: actions/deploy-pages@v4
+        with:
+          artifact_name: github-pages-${{ github.run_attempt }}
