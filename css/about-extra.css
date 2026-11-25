@@ -99,3 +99,8 @@
   .ab-path.is-tracing .path-grid li:not(.is-focus) { opacity: 1; }
   .ab-path .path-grid li { transition: none; }
 }
+
+/* The title's second line ("Engineer by degree, designer by habit.") on
+   one line at every width: smaller than the greeting, never wider than
+   the copy column (about 16.5 of its own em across) or the screen. */
+.ab-title .hl:last-child { font-size: min(0.72em, calc((100vw - 2.25rem) / 16.5)); white-space: nowrap; line-height: 1.15; margin-top: 0.15em; }

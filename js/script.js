@@ -2487,10 +2487,10 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
   // Work history, newest first. Keep it in step with "Where I've been" on
   // the About page.
   const EXPERIENCE = [
-    { co: "Resilinc", role: "UX designer", years: "2023 – now", tint: "mint" },
-    { co: "Wave", role: "Product designer", years: "2020 – 2023", tint: "lilac" },
-    { co: "Pixelcraft", role: "UI designer", years: "2018 – 2020", tint: "rose" },
-    { co: "Studio Nine", role: "Design intern", years: "2017", tint: "sky" }
+    { co: "Resilinc", role: "UX designer", years: "2022 – now", tint: "mint" },
+    { co: "THEM Consulting", role: "UX designer", years: "2020 – 2021", tint: "lilac" },
+    { co: "Rajasthan Patrika", role: "Visual designer", years: "2018 – 2020", tint: "rose" },
+    { co: "JECRC University", role: "Design intern", years: "2016 – 2017", tint: "sky" }
   ];
 
   const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="/works/${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
@@ -2534,7 +2534,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     { k: ["how do you work", "process", "approach", "sketch", "method"],
       text: 'He sketches on paper before opening Figma, says "I don’t know yet" out loud rather than guessing, and keeps a running list of small interface details worth stealing from. Short version: research first, prototype fast, measure what shipped.', next: ["What have you shipped?", "Where have you worked?", "Are you available to hire?"] },
     { k: ["worked", "experience", "companies", "career", "history", "resume", "cv"],
-      text: "Five years across four teams, from a design internship to UX designer at Resilinc:", render: renderExperience, next: ["What have you shipped?", "How do you work?", "Are you available to hire?"] },
+      text: "Four teams since 2016, from a design internship at JECRC University to UX designer at Resilinc:", render: renderExperience, next: ["What have you shipped?", "How do you work?", "Are you available to hire?"] },
     { k: ["freelance", "hire", "available", "open to work", "full-time", "contract"],
       text: "Open to full-time roles and selected freelance projects — he usually replies within two days.", render: renderContactCard, next: ["How can I reach you?", "Where have you worked?", "What have you shipped?"] },
     { k: ["contact", "email", "reach", "get in touch", "talk to"],
@@ -2551,7 +2551,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     // Greetings and "who are you" last, so a specific topic wins ("tell me
     // about your music" is about music, not about you).
     { k: ["hello", "hi there", " hi ", "hey", "who are you", "about you", "who is pallav", "yourself"],
-      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder with five years of shipping research-led products, from early-stage startups to platforms used by millions. Ask about a project, how he works, or how to reach him.", next: ["What have you shipped?", "How do you work?", "How can I reach you?"] },
+      text: "I'm a scripted guide to Pallav's portfolio, not Pallav himself. He's a UX builder who studied computer science and now designs supply chain software at Resilinc. Ask about a project, how he works, or how to reach him.", next: ["What have you shipped?", "How do you work?", "How can I reach you?"] },
   ];
   const fallback = { text: "I don't have a scripted answer for that one yet. Try a question about a project, how Pallav works, or reach him directly:", render: renderContactCard, next: ["What have you shipped?", "How do you work?", "Where have you worked?"] };
   // On a case study the page answers questions about its own project

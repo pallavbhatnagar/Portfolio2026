@@ -528,12 +528,12 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 .ask-panel-send { border-radius: 1rem !important; }
 
 /* A waving hand before "Hi": Fluent Emoji "Waving hand" (Flat, MIT), in
-   full colour as drawn. It waves once as the hero arrives; still with
+   full colour as drawn. It keeps waving, a wave then a rest; still with
    motion reduced or in Calm. */
 .hc-wave { display: inline-block; width: 1.3em; height: 1.3em; margin-right: 0.3em; vertical-align: -0.24em; transform-origin: 70% 90%; }
 .hc-wave svg { display: block; width: 100%; height: 100%; overflow: visible; }
 @media (prefers-reduced-motion: no-preference) {
-  html:not([data-motion="calm"]) .hc.is-in .hc-wave { animation: hc-wave 1.6s ease-in-out 0.9s 1 both; }
+  html:not([data-motion="calm"]) .hc.is-in .hc-wave { animation: hc-wave 2.6s ease-in-out 0.9s infinite both; }
 }
 @keyframes hc-wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
 
