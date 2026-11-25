@@ -3962,3 +3962,36 @@ html[data-plain] .hx-fig { visibility: hidden !important; } /* hidden, but its p
    once it sits over the dark footer (script.js marks .is-over-footer). */
 :root:not([data-theme="dark"]) .to-top { background: #141414; color: #fff; box-shadow: none; transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), visibility 0s linear 0.3s, background-color 0.25s ease, color 0.25s ease; }
 :root:not([data-theme="dark"]) .to-top.is-over-footer { background: #fff; color: #0d0d0d; box-shadow: 0 0 0 1px rgba(13, 13, 13, 0.1); }
+
+/* =========================================================
+   More contrast (display settings, html[data-contrast]): the whole site.
+   Ink goes to pure black or white, every grey moves close to it, lines and
+   control edges get firm, text that was faded with a mix or opacity is set
+   solid, cards get an outline, and the decorative layers that sit behind
+   text (the colour washes, the line drawing, the blueprint figure, the
+   glow) step aside. Placed last so it wins over the earlier rules.
+   ========================================================= */
+html[data-contrast] {
+  --ink: #000000; --ink-soft: #262626; --ink-dim: #333333;
+  --line: #666666; --hairline: rgba(0, 0, 0, 0.5); --control-edge: #333333; --fade: #8a8a8a;
+}
+html[data-contrast][data-theme="dark"] {
+  --ink: #ffffff; --ink-soft: #ededed; --ink-dim: #d6d6d6;
+  --line: #a3a3a3; --hairline: rgba(255, 255, 255, 0.55); --control-edge: #d0d0d0; --fade: #777777;
+}
+/* Text faded with a colour mix or opacity: solid. */
+html[data-contrast] :is(.im-cap, .off-p, .path-p, .cs-insight p, .tq-name span, .lf-fig figcaption, .tname, .pt-desc, .pt-hook) { color: var(--ink-soft) !important; opacity: 1 !important; }
+html[data-contrast] .fl-star { opacity: 1; }
+html[data-contrast] ::placeholder { color: var(--ink-soft); opacity: 1; }
+/* The dark music card keeps its dark ground, with near-white text. */
+html[data-contrast] :is(.off-music .off-p, .om-s .off-p, .om-vid-tag span, .om-genres li) { color: rgba(255, 255, 255, 0.95) !important; }
+html[data-contrast] .om-genres li { border-color: rgba(255, 255, 255, 0.6) !important; }
+/* Cards and panels: a firm outline, so a tint is never the only edge. */
+html[data-contrast] :is(.proj-tiles .pt, .tpanel, .now-card, .hc-ask, .faq-list details, .lf-pic, .bcv) { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.45); }
+html[data-contrast][data-theme="dark"] :is(.proj-tiles .pt, .tpanel, .now-card, .hc-ask, .faq-list details, .lf-pic, .bcv) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.5); }
+/* Decoration behind text steps aside. */
+html[data-contrast] :is(.hc .hc-sky, .hx-fig) { visibility: hidden !important; }
+html[data-contrast] .next-ch::before { display: none !important; }
+html[data-contrast] :is(.hc-title.hc-big, #next-title) { text-shadow: none !important; filter: none !important; }
+/* Focus: a heavier ring. */
+html[data-contrast] :focus-visible { outline: 3px solid var(--ink) !important; outline-offset: 3px !important; }
