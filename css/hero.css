@@ -551,3 +551,36 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
   .hc { min-height: 0 !important; grid-template-rows: 0 auto auto auto auto auto 5rem auto !important; padding-bottom: 1rem !important; }
   .projects { margin-top: 6rem !important; }
 }
+
+/* The title's key words in one solid colour: the deep teal of the
+   app-window sticker beside them (#215452), lifted a touch so it reads as
+   a highlight; a soft mint on the dark page. */
+.hc-blue { color: #1f6b5e; }
+:root[data-theme="dark"] .hc-blue { color: #e9c58f; } /* warm sand: the amber of the dark page's colour wash, calm on black */
+html[data-contrast] .hc-blue { color: #134a40; }
+html[data-contrast][data-theme="dark"] .hc-blue { color: #f6dcb0; }
+
+/* The blueprint figure behind the hero title is hidden for now (keep the
+   markup; delete this rule to bring it back). */
+.hc .hx-fig { display: none !important; }
+.hc .hs-tick svg { width: 74%; height: 74%; } /* the node sticker reads better a touch larger */
+/* Even rhythm: the greeting sits as far above the title as the
+   description sits below it (the title's descenders make the lower gap
+   look larger, so the greeting's gap is a touch bigger in numbers). */
+.hc .hc-hi { margin-bottom: 0.75rem; }
+/* Compact hero: tighter steps from title to description, box and resume. */
+.hc .hc-lede { margin-top: 0.875rem; }
+.hc > .hc-ask { margin-top: 1.5rem; }
+.hc > .hc-resume { margin-top: 1rem; }
+@media (max-width: 640px) {
+  .hc .hc-hi { margin-bottom: 0.5rem !important; }
+  .hc .hc-lede { margin-top: 0.625rem !important; }
+  .hc > .hc-ask { margin-top: 1.125rem !important; }
+  .hc > .hc-resume { margin-top: 0.875rem !important; }
+}
+
+/* The two stickers on the second line, swapped: the lilac disc (nodes)
+   leads the line, the green card (code) ends it. */
+.hc .hs-swap-card { background: none; border-radius: 0; width: 0.74em; height: 0.6em; top: 0.04em; right: -0.92em; }
+.hc .hs-swap-card svg { width: 100% !important; height: 100% !important; }
+@media (max-width: 640px) { .hc .hs-swap-card { width: 0.6em; height: 0.5em; right: -0.78em; } }

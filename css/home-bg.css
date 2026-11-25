@@ -25,7 +25,7 @@
   opacity: 0.25;
   -webkit-mask-image: none; mask-image: none;
 }
-:root[data-theme="dark"] .hc .hc-sky::before { opacity: 0.28; }
+:root[data-theme="dark"] .hc .hc-sky::before { opacity: 0.16; }
 /* The drawing: hairlines on a 1440 by 900 sheet, centred and cropped to
    the hero, fading out towards the edges. */
 .hc .hc-sky {
@@ -68,7 +68,7 @@ html[data-plain] .hc .hc-sky { visibility: hidden; }
 }
 .next-ch { --hb-1: #ffd6bd; --hb-2: #fbcfe5; --hb-3: #d9d4ff; }
 :root[data-theme="dark"] .next-ch { --hb-1: #4a2a1a; --hb-2: #4a1d38; --hb-3: #2b2563; }
-:root[data-theme="dark"] .next-ch::before { opacity: 0.28; }
+:root[data-theme="dark"] .next-ch::before { opacity: 0.16; }
 html[data-plain] .next-ch::before { visibility: hidden; }
 @media (forced-colors: active) { .next-ch::before { display: none; } }
 
@@ -78,6 +78,7 @@ html[data-plain] .next-ch::before { visibility: hidden; }
    line sweeps colour through clipped text, so it glows with a drop-shadow
    filter rather than a text-shadow. */
 :root[data-theme="dark"] .hc-title.hc-big { text-shadow: 0 0 1.125rem rgba(255, 255, 255, 0.16), 0 0 2.75rem rgba(176, 160, 255, 0.14); }
-:root[data-theme="dark"] #next-title { filter: drop-shadow(0 0 0.625rem rgba(255, 255, 255, 0.22)) drop-shadow(0 0 1.5rem rgba(176, 160, 255, 0.24)); }
 html[data-plain] .hc-title.hc-big, html[data-plain] #next-title { text-shadow: none !important; filter: none !important; }
 @media (forced-colors: active) { .hc-title.hc-big, #next-title { text-shadow: none !important; filter: none !important; } }
+
+

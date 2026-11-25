@@ -3730,10 +3730,10 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
   html:not([data-motion="calm"]) #next-title.is-swept {
     background: linear-gradient(100deg, var(--ink) 38%, #3965fa 45%, #9b62e0 50%, #f2369a 55%, var(--ink) 62%) 100% 0 / 300% 100% no-repeat;
     -webkit-background-clip: text; background-clip: text; color: transparent;
-    animation: next-sweep 4s linear infinite;
+    animation: next-sweep 10s linear 1s infinite backwards;
   }
 }
-@keyframes next-sweep { 0% { background-position: 100% 0; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); } 85%, 100% { background-position: 0 0; } } /* 3.4s of slow sweep, then a short 0.6s of plain ink before the next */
+@keyframes next-sweep { 0% { background-position: 100% 0; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); } 34%, 100% { background-position: 0 0; } } /* first sweep 1s after the line is in view: 3.4s of sweep, then 6.6s of plain ink before the next */
 @media (forced-colors: active) { #next-title.is-swept { background: none !important; color: CanvasText !important; } }
 .next-ch p { max-width: 52ch; margin-top: 1rem; font-size: 1.125rem; line-height: 1.5; color: var(--ink-soft); }
 /* The line under the heading runs on one line where the screen has room. */
@@ -3995,3 +3995,45 @@ html[data-contrast] .next-ch::before { display: none !important; }
 html[data-contrast] :is(.hc-title.hc-big, #next-title) { text-shadow: none !important; filter: none !important; }
 /* Focus: a heavier ring. */
 html[data-contrast] :focus-visible { outline: 3px solid var(--ink) !important; outline-offset: 3px !important; }
+
+/* About, The path so far: with motion reduced (the device setting) or in
+   Calm, the reading highlight does not run, so the story is shown whole,
+   in full ink, from the start. */
+@media (prefers-reduced-motion: reduce) { .ab-story-body p, .ab-story-body .w { color: var(--ink) !important; } }
+html[data-motion="calm"] :is(.ab-story-body p, .ab-story-body .w) { color: var(--ink) !important; }
+
+/* About, How I think: five beliefs under the intro, in the right-hand
+   column. Each is a short bold line with one sentence under it, between
+   hairlines; a small tinted mark at the start of each line. Phones: the
+   section is one column, so they follow the intro. */
+.ab-think { grid-column: 2; margin: 1.75rem 0 0; padding: 0; list-style: none; }
+.ab-think li { position: relative; padding: 1.125rem 0 1.125rem 1.5rem; border-top: 1px solid var(--hairline); }
+.ab-think li:last-child { border-bottom: 1px solid var(--hairline); }
+.ab-think li::before { content: ""; position: absolute; left: 0; top: 1.5rem; width: 0.5rem; height: 0.5rem; border-radius: 0.125rem; background: var(--mk, var(--mint-ink)); rotate: 45deg; }
+.ab-think li:nth-child(2) { --mk: var(--lilac-ink); } .ab-think li:nth-child(3) { --mk: var(--rose-ink); }
+.ab-think li:nth-child(4) { --mk: var(--sky-ink); } .ab-think li:nth-child(5) { --mk: var(--sand-ink); }
+.ab-think h3 { margin: 0; font-size: 1.125rem; font-weight: 600; letter-spacing: -0.015em; line-height: 1.35; color: var(--ink); }
+.ab-think p { max-width: 52ch; margin: 0.375rem 0 0; font-size: var(--fs-body); line-height: 1.55; color: var(--ink-soft); }
+@media (max-width: 1024px) { .ab-think { grid-column: auto; } }
+@media (max-width: 640px) {
+  .ab-think { margin-top: 1.25rem; }
+  .ab-think li { padding: 0.9375rem 0 0.9375rem 1.25rem; }
+  .ab-think li::before { top: 1.3125rem; }
+  .ab-think h3 { font-size: 1.0625rem; }
+}
+/* How I think, while scrolling (js/about-think.js): the belief at the
+   reading line is full strength, its marker a little larger; the others
+   step back. */
+.ab-think li { transition: opacity 0.35s ease; }
+.ab-think li::before { transition: scale 0.35s var(--ease-out); }
+
+.ab-story > .ab-path:first-child { margin-top: 0; margin-bottom: clamp(3.5rem, 7vw, 5.5rem); }
+
+/* Beliefs: their words light up line by line with the intro (script.js
+   17), each toward its own ink (titles full ink, sentences soft ink).
+   Once a line is lit it stays lit. Reduced motion, Calm or More contrast:
+   shown whole from the start. */
+.ab-think h3 .w { color: color-mix(in srgb, var(--ink) calc(var(--k, 1) * 100%), color-mix(in srgb, var(--ink) 26%, var(--bg))); }
+.ab-think p .w { color: color-mix(in srgb, var(--ink-soft) calc(var(--k, 1) * 100%), color-mix(in srgb, var(--ink) 22%, var(--bg))); }
+@media (prefers-reduced-motion: reduce) { .ab-think .w { color: inherit !important; } }
+html[data-motion="calm"] .ab-think .w, html[data-contrast] .ab-think .w, html[data-contrast] .ab-story-body .w { color: inherit !important; }

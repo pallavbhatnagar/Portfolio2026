@@ -246,7 +246,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       if (!e.isIntersecting) return;
       sweepIo.disconnect();
       closeLine.classList.add("is-swept");
-    }, { rootMargin: "0px 0px 15% 0px" }); // starts just before the line scrolls into view
+    }, { threshold: 0.9 }); // starts once the line is fully in view (the CSS waits 1s more)
     sweepIo.observe(closeLine);
   }
 
@@ -2175,7 +2175,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
   //     screen and each line darkens as it passes it (a little left to right
   //     within the line), so the whole text lights up one line at a time.
   //     Runs only while the story is on screen; skipped for reduced motion.
-  const storyPs = Array.from(document.querySelectorAll(".ab-story-body p"));
+  const storyPs = Array.from(document.querySelectorAll(".ab-story-body p, .ab-think h3, .ab-think p")); // the intro and every belief
   if (storyPs.length && !reduce.matches) {
     const paras = storyPs.map((p) => {
       const words = p.textContent.trim().split(/\s+/);
@@ -2213,7 +2213,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
         g.lines.forEach((line) => {
           const top = line.els[0].getBoundingClientRect().top;
           const k = Math.min(1, Math.max(0, (readY - top) / g.lh));
-          if (Math.abs(k - line.last) < 0.01) return;
+          if (Math.abs(k - line.last) < 0.01) return; // follows the scroll both ways
           line.last = k;
           const m = line.els.length;
           line.els.forEach((el, j) => {
@@ -2228,7 +2228,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     window.addEventListener("scroll", request2, { passive: true });
     window.addEventListener("resize", relayout);
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(relayout);
-    const storySec = document.querySelector(".ab-story");
+    const storySec = document.querySelector(".ab-story"); // holds the intro and the beliefs
     if (storySec && "IntersectionObserver" in window) {
       new IntersectionObserver(([entry]) => { live = entry.isIntersecting; if (live) request2(); }, { rootMargin: "20% 0px" }).observe(storySec);
     }

@@ -12,7 +12,7 @@
 <meta name="msapplication-config" content="/assets/favicon/browserconfig.xml" />
 <meta name="theme-color" content="#ffffff" />
 <title>About | Pallav Bhatnagar</title>
-<meta name="description" content="About Pallav Bhatnagar: a UX builder who studied computer science, found design and now designs supply chain software at Resilinc." />
+<meta name="description" content="About Pallav Bhatnagar: a UX builder who studied engineering, found design and now designs supply chain software at Resilinc." />
 <link rel="preload" href="/assets/fonts/Manrope-Light.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Regular.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/assets/fonts/Manrope-Medium.woff2" as="font" type="font/woff2" crossorigin />
@@ -20,10 +20,10 @@
 <script>/* Display settings ("Make it comfortable" in the nav): applied before anything paints. Calm motion also answers every reduced-motion question the scripts ask. */(function(){var d=document.documentElement,s={};try{s=JSON.parse(localStorage.getItem("display")||"{}")||{};}catch(e){}var T=s.text!=null?Math.max(-1,Math.min(1,+s.text||0)):0;try{if(sessionStorage.getItem("nav-seen"))d.classList.add("nav-seen");sessionStorage.setItem("nav-seen","1");}catch(e){}if(T>0)d.setAttribute("data-text","1");if(T<0)d.setAttribute("data-text-small","");["read","contrast","links","focus","plain","saber"].forEach(function(k){if(s[k])d.setAttribute("data-"+k,"");});if(s.motion)d.setAttribute("data-motion",s.motion);var mm=window.matchMedia.bind(window),hooks=[];window.__motionHooks=hooks;window.matchMedia=function(q){var real=mm(q);if(!/prefers-reduced-motion/.test(q))return real;var wantReduce=/reduce/.test(q),fns=[];var o={media:q,onchange:null,get matches(){var m=d.getAttribute("data-motion");if(m==="calm")return wantReduce;if(m==="lively")return !wantReduce;return real.matches;},addEventListener:function(t,f){fns.push(f);},removeEventListener:function(t,f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},addListener:function(f){fns.push(f);},removeListener:function(f){var i=fns.indexOf(f);if(i>-1)fns.splice(i,1);},dispatchEvent:function(){return true;}};var fire=function(){var e={matches:o.matches,media:q};fns.forEach(function(f){try{f(e);}catch(x){}});if(o.onchange)try{o.onchange(e);}catch(x){}};hooks.push(fire);try{real.addEventListener("change",fire);}catch(x){}return o;};})();</script>
 <script>(function(){var d=document.documentElement;d.classList.add("js");try{if(!sessionStorage.getItem("preloaded"))d.classList.add("is-preloading");}catch(e){}try{var s=localStorage.getItem("theme");var dark=s?s==="dark":matchMedia("(prefers-color-scheme: dark)").matches;if(dark)d.setAttribute("data-theme","dark");}catch(e){}})();</script>
 <script>/* Music carrying on from the last page: started here, before the rest of the page loads, so the gap between pages is as short as possible (script.js takes it over). Skipped where a page can't set the volume (iPhone, iPad). */(function(){try{if(sessionStorage.getItem("ambient")!=="on")return;var au=new Audio("/assets/audio/ambient/ambient.mp3");au.volume=0.5;if(au.volume!==0.5)return;au.loop=true;au.preload="auto";au.volume=0;var at=parseFloat(sessionStorage.getItem("ambient-at"))||0,lf=parseFloat(sessionStorage.getItem("ambient-left"))||0;if(at>0)au.addEventListener("loadedmetadata",function(){var g=lf>0?(Date.now()-lf)/1000:0;au.currentTime=(at+g)%(au.duration||at+g+1);},{once:true});window.__ambient=au;var p=au.play();if(p&&p.then)p.then(function(){var t0=performance.now();(function s(t){var k=Math.min(1,(t-t0)/200);if(!window.__ambTaken)au.volume=0.35*k;if(k<1&&!window.__ambTaken)requestAnimationFrame(s);})(t0);},function(){});}catch(e){}})();</script>
-<link rel="stylesheet" href="/css/style.css?v=20262021" />
-<link rel="stylesheet" href="/css/about-extra.css?v=20262021" />
-<link rel="stylesheet" href="/css/about-cards.css?v=20262021" />
-<script src="/js/motion-css.js?v=20262021"></script>
+<link rel="stylesheet" href="/css/style.css?v=20262023" />
+<link rel="stylesheet" href="/css/about-extra.css?v=20262023" />
+<link rel="stylesheet" href="/css/about-cards.css?v=20262023" />
+<script src="/js/motion-css.js?v=20262023"></script>
 </head>
 <body>
 
@@ -67,7 +67,7 @@
   <nav class="cs-side ab-side" aria-label="On this page">
     <p class="cs-rail-name" aria-hidden="true">On this page</p>
     <ol class="cs-toc">
-      <li><a href="#overview">Overview</a></li><li><a href="#glance">At a glance</a></li><li><a href="#story">The path so far</a></li><li><a href="#life">Life, lately</a></li><li><a href="#outside">Outside the brief</a></li><li><a href="#working">Working with me</a></li><li><a href="#questions">FAQ</a></li>
+      <li><a href="#overview">Overview</a></li><li><a href="#glance">At a glance</a></li><li><a href="#story">My story</a></li><li><a href="#working">Working with me</a></li><li><a href="#life">Life, lately</a></li><li><a href="#outside">Outside the brief</a></li><li><a href="#questions">FAQ</a></li>
     </ol>
   </nav>
 
@@ -78,7 +78,7 @@
         <span class="hl"><span>Hi, I'm <button class="say" type="button" data-say="/assets/audio/sound-effects/puhluv.mp3" aria-describedby="say-about">Pallav<span class="say-tip" id="say-about" role="tooltip"><span>Pronounced (Pah-luv)</span><span class="say-hint">Click to hear it (US English)</span></span></button>.</span></span>
         <span class="hl"><span>Engineer by degree, designer by habit.</span></span>
       </h1>
-      <p class="ab-lede">I've always wanted to know how things work. That took me from computer science to design, and today it's my job at Resilinc: making complex supply chain data easy to read and act on.</p>
+      <p class="ab-lede">I've always wanted to know how things work. That took me from engineering to design, and today it's my job at Resilinc: making complex supply chain data easy to read and act on.</p>
       <p class="ab-now-time"><span class="ab-now-dot" aria-hidden="true"></span><span class="ab-now-text">Open to new opportunities</span></p>
     </div>
     <div class="ab-pile" role="group" aria-label="Snapshots from my life and work">
@@ -151,20 +151,13 @@
 
   <!-- ============ STORY ============ -->
   <section id="story" class="ab-story">
-    <h2 class="ab-h2 ab-r"><span class="hs-host">The path so far<span class="hs hs-steps" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h5v-5h5V9h6" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 5.5 20 9l-3.5 3.5" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></h2>
-    <div class="ab-story-body ab-r">
-      <p>It started with a question I still ask: how does this actually work? I studied computer science to find out, and kept designing on the side. An internship at my university joined the two. The infographics I made grew active users by 13.5% in five months, and I saw that design could change what people do.</p>
-      <p>A newsroom taught me that words and pictures have to agree. A consultancy gave me my first UX role and the habit of asking before drawing: persona research, design sprints, user interviews. Since 2022 I've been at Resilinc, where the questions got bigger: supplier networks, risk signals, and AI that people need to be able to check.</p>
-      <p>The question never changed. I still look past the screen to the system behind it: the people, the data, the rules and the odd cases. Then I shape the experience so the complexity stays with the system, and the person can get on with the work they came to do.</p>
-    </div>
-  
-    <!-- ============ WHERE I'VE BEEN, part of The path so far (sample data). One <li> per job, oldest
+    <!-- ============ WHERE I'VE BEEN, part of Beliefs I design by (sample data). One <li> per job, oldest
          first; the last one is "now". The line above them is drawn for four
          stops: to add or remove one, change the grid count in style.css
          (.path-grid) and the nodes in the SVG. ============ -->
     <div id="path" class="ab-path" role="group" aria-labelledby="path-title">
       <h3 class="ab-h2 path-h" id="path-title">Where I've been</h3>
-      <p class="ab-sub">Four teams since 2016, each one a bigger version of the same question.</p>
+      <p class="ab-sub">Four teams since 2016. Each one asked the same question at a bigger scale.</p>
       <svg class="path-line" viewBox="0 0 1000 64" aria-hidden="true">
         <path class="pl-main" pathLength="1" d="M8 40C40 2 78 64 104 28S160 8 140 46S206 44 250 40H750"/>
         <path class="pl-next" d="M760 40H992"/>
@@ -178,8 +171,71 @@
         <li><p class="path-yr">2022 – now <span class="path-now">Now</span></p><p class="path-co">Resilinc</p><p class="path-role">UX designer</p><p class="path-p">Supply chain risk software, a new design system on IBM Carbon, and AI people can check.</p></li>
       </ol>
     </div>
+
+    <h2 class="ab-h2 ab-r"><span class="hs-host">Beliefs I design by<span class="hs hs-steps" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 19h5v-5h5V9h6" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><path d="M16.5 5.5 20 9l-3.5 3.5" fill="none" stroke="#215452" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span></span></h2>
+    <div class="ab-story-body ab-r">
+      <p>Engineering taught me to ask how a system behaves before asking how it looks. Every role since has sharpened that habit into these five.</p>
+    </div>
+    <!-- The beliefs: a short line each and one sentence under it
+         (css/style.css, .ab-think). Outside .ab-story-body so the reading
+         highlight leaves them as written. -->
+    <ul class="ab-think ab-r">
+      <li><h3>I think in systems.</h3><p>I learn the users, the data, the business rules and the odd cases first, so the workflow holds up in real use, beyond a convincing demo.</p></li>
+      <li><h3>Make complexity readable.</h3><p>Dense data, connected records, risk signals: I find the hierarchy and level of detail that show what is happening and what to do next, without hiding what people need.</p></li>
+      <li><h3>Design for the decision.</h3><p>What does someone need to know before acting? What if the data is incomplete, or the AI isn't sure? The moments before and after the click shape the screen.</p></li>
+      <li><h3>Consistency people can trust.</h3><p>A design system is how a product learns to behave predictably: its states, tokens and constraints, and the documentation behind them.</p></li>
+      <li><h3>Technology as a design material.</h3><p>Claude Code, Figma and code prototypes let me test ideas as working things. Defining the problem and owning the result stay with me.</p></li>
+    </ul>
+
   </section>
 
+
+<!-- ============ WORKING WITH ME: how I work, in three habits. Edit the sentences. ============ -->
+  <section id="working" class="ab-impact" aria-labelledby="impact-title">
+    <div class="im-copy ab-r">
+      <h2 class="ab-h2" id="impact-title"><span class="hs-host">Who you'd be working with<span class="hs hs-hand" aria-hidden="true"><span>&#129309;</span></span></span></h2>
+      <p class="im-lede">A curious designer who builds, and who <strong>values clarity over novelty.</strong></p>
+      <div class="im-foot">
+        <p><strong>The short version:</strong> I explore widely, question assumptions, test early and make sure every decision that ships has a reason behind it.</p>
+        <div class="im-rating">
+          <!-- Three ink-drawn teammates: grey at rest, each takes its colour when the row is hovered (style.css, .im-avatars). -->
+          <span class="im-avatars" aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true" style="--g: #9d9d9d; --c: #f88c63"><defs><clipPath id="av1"><circle cx="24" cy="24" r="24"/></clipPath></defs><g clip-path="url(#av1)"><circle class="av-bg" cx="24" cy="24" r="24"/><g transform="translate(24 30) scale(1.16) translate(-24 -30)"><path d="M5 50c1.5-8 8-11 19-11s17.5 3 19 11z" fill="#111"/><path d="M21 30v7.5c2 2 6 2 8 0V30z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.5 23.5c0-6.5 3.8-11 9-11s8.5 4.5 8.5 11c0 7-3.8 11.5-8.7 11.5S16.5 30.5 16.5 23.5z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M14.5 24c-2-9 3-16 11-16 6 0 10 3.5 10 8.5-3.5-3-8.5-3.5-12.5-2-3 1.2-5.5 4-6 9.5z" fill="#111"/><path d="M17.4 22.5c-1.6-.6-2.8.6-2.4 2.4.4 1.8 1.6 2.5 2.8 2.2" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="27" cy="23.3" rx="1" ry="1.3" fill="#111"/><ellipse cx="32" cy="23.3" rx="1" ry="1.3" fill="#111"/><path d="M24.8 21.2l3.3-.6M30.6 20.7l3 .3" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" fill="none"/><path d="M30.3 24.5c.6 1.8 1 3.2.2 3.7" fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M27.8 30.8c1.5.7 3 .6 4.2-.3" fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><g class="av-blush"><ellipse cx="27" cy="27.3" rx="2" ry="1.2"/><ellipse cx="33.2" cy="27.3" rx="2" ry="1.2"/></g></g></g></svg><svg viewBox="0 0 48 48" aria-hidden="true" style="--g: #b0b0b0; --c: #ffc31f"><defs><clipPath id="av4"><circle cx="24" cy="24" r="24"/></clipPath></defs><g clip-path="url(#av4)"><circle class="av-bg" cx="24" cy="24" r="24"/><g transform="translate(24 30) scale(1.16) translate(-24 -30)"><path d="M13.5 24.5c-1.2-9.5 3.5-15.5 10.5-15.5s11.7 6 10.5 15.5c-.4 5 .7 9 2.6 12-3.4 2.2-7.6 2.6-10 1.6h-6.2c-2.4 1-6.6.6-10-1.6 1.9-3 3-7 2.6-12z" fill="#111"/><path d="M5 50c1.5-8 8-11 19-11s17.5 3 19 11z" fill="#111"/><path d="M20 30v7.5c2 2 6 2 8 0V30z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.8 22.8c0-6 3.7-9.5 8.2-9.5s8.2 3.5 8.2 9.5c0 7.3-3.6 12-8.2 12s-8.2-4.7-8.2-12z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.3 23c-.6-7 3.4-11.2 8.7-11.2 5.6 0 9.4 4.2 8.7 11.2-1.4-3.8-3.8-6.2-7.3-6.8-1.4 2.6-5 5-10.1 6.8z" fill="#111"/><ellipse cx="20.6" cy="24" rx="1" ry="1.3" fill="#111"/><ellipse cx="27.4" cy="24" rx="1" ry="1.3" fill="#111"/><path d="M24 25l-.5 2.8h1.1" fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 30.3c1.3.9 2.7.9 4 0" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><g class="av-blush"><ellipse cx="19.3" cy="27.6" rx="2" ry="1.2"/><ellipse cx="28.7" cy="27.6" rx="2" ry="1.2"/></g></g></g></svg><svg viewBox="0 0 48 48" aria-hidden="true" style="--g: #8e8e8e; --c: #4ea4ff"><defs><clipPath id="av5"><circle cx="24" cy="24" r="24"/></clipPath></defs><g clip-path="url(#av5)"><circle class="av-bg" cx="24" cy="24" r="24"/><g transform="translate(24 30) scale(1.16) translate(-24 -30)"><path d="M5 50c1.5-8 8-11 19-11s17.5 3 19 11z" fill="#111"/><path d="M20 30v7.5c2 2 6 2 8 0V30z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.8 22.5c0-6 3.7-9.5 8.2-9.5s8.2 3.5 8.2 9.5c0 7.5-3.6 12.5-8.2 12.5s-8.2-5-8.2-12.5z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.2 21c-.8-7 3-12.5 9-12.5 5.8 0 9.5 4.5 8.8 12-1.2-2.5-2-4.8-2.4-6.5-3.5 1.4-8.2 1.4-12.5.3-.9 1.7-1.9 4-2.9 6.7z" fill="#111"/><path d="M15.9 24.5c.3 7.3 3.7 12.3 8.1 12.3s7.8-5 8.1-12.3c-1.3 2.3-2.6 3.3-3.9 3.3-1.4-.9-2.7-1.3-4.2-1.3s-2.8.4-4.2 1.3c-1.3 0-2.6-1-3.9-3.3z" fill="#111"/><path d="M21.8 30.5c1.4.6 3 .6 4.4 0" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><g fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"><rect x="16.8" y="19.3" width="6" height="4.2" rx="1.3"/><rect x="25.2" y="19.3" width="6" height="4.2" rx="1.3"/><path d="M22.8 21h2.4"/></g><circle cx="19.8" cy="21.5" r=".9" fill="#111"/><circle cx="28.2" cy="21.5" r=".9" fill="#111"/><g class="av-blush"><ellipse cx="19.3" cy="25.6" rx="2" ry="1.2"/><ellipse cx="28.7" cy="25.6" rx="2" ry="1.2"/></g></g></g></svg></span>
+          <span class="im-rating-text">Built alongside engineers, PMs and researchers</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="im-grid">
+      <article class="im-card im-wide" style="--tint: var(--lime-bg); --tone: var(--lime-ink)">
+        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.200-4.400L16.800 4a2.100 2.100 0 0 1 3 3L8.400 18.800z"/><path d="M14.500 6.500l3 3"/></svg>Where I start</p>
+        <svg class="im-doodle" viewBox="0 0 150 52" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M4 40 C 20 8, 32 58, 48 28 S 76 16, 92 32 S 122 46, 144 10"/><path class="dd dd2" pathLength="1" d="M124 4l10 10M134 4l-4 12"/></svg>
+        <p class="im-big">With the system, not the screen.</p>
+        <p class="im-cap">Before any screen, I learn who uses the product, what the data looks like and which rules and odd cases shape it. The design follows from that.</p>
+      </article>
+      <article class="im-card" style="--tint: var(--blue-bg); --tone: var(--blue-ink)">
+        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>How I collaborate</p>
+        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M10 8h40a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H26l-12 12V40h-4a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"/><path class="dd dd2" pathLength="1" d="M24 20a6 6 0 1 1 8 5c-2 1-2 2-2 4M30 33v.5"/></svg>
+        <p class="im-big im-big-s">I design in the open.</p>
+        <p class="im-cap">Rough flows and prototypes go up early, so engineers and product can shape them while they are still cheap to change.</p>
+      </article>
+      <article class="im-card" style="--tint: var(--rose-panel); --tone: var(--rose-ink)">
+        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.900 5.100L19 10l-5.100 1.900L12 17l-1.900-5.100L5 10l5.100-1.900z"/></svg>After handoff</p>
+        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M30 6a24 24 0 1 1-0.1 0"/><path class="dd dd2" pathLength="1" d="M19 31l8 8 15-17"/></svg>
+        <p class="im-big im-big-s">I stay until it ships.</p>
+        <p class="im-cap">I answer questions fast during the build and check the live version against the design before calling it done.</p>
+      </article>
+    </div>
+
+    <!-- What teams bring me in for: its own row under the cards. -->
+    <div class="im-fit ab-r">
+      <p class="im-fit-h">Teams usually bring me in to</p>
+      <ul class="im-fit-list">
+        <li>Make dense data and complex workflows easy to read.</li>
+        <li>Design AI features people can check and trust.</li>
+        <li>Take an idea from a rough flow to a working prototype.</li>
+      </ul>
+    </div>
+  </section>
 
 <!-- ============ LIFE, LATELY: the heading on the left; on the right, an
        endless row of tall photos and videos, each with a place name on the
@@ -1017,52 +1073,6 @@
     </div>
   </section>
 
-  <!-- ============ WORKING WITH ME: how I work, in three habits. Edit the sentences. ============ -->
-  <section id="working" class="ab-impact" aria-labelledby="impact-title">
-    <div class="im-copy ab-r">
-      <h2 class="ab-h2" id="impact-title"><span class="hs-host">Who you'd be working with<span class="hs hs-hand" aria-hidden="true"><span>&#129309;</span></span></span></h2>
-      <p class="im-lede">A curious designer who builds, and who <strong>values clarity over novelty.</strong></p>
-      <div class="im-foot">
-        <p><strong>The short version:</strong> I explore widely, question assumptions, test early and make sure every decision that ships has a reason behind it.</p>
-        <div class="im-rating">
-          <!-- Three ink-drawn teammates: grey at rest, each takes its colour when the row is hovered (style.css, .im-avatars). -->
-          <span class="im-avatars" aria-hidden="true"><svg viewBox="0 0 48 48" aria-hidden="true" style="--g: #9d9d9d; --c: #f88c63"><defs><clipPath id="av1"><circle cx="24" cy="24" r="24"/></clipPath></defs><g clip-path="url(#av1)"><circle class="av-bg" cx="24" cy="24" r="24"/><g transform="translate(24 30) scale(1.16) translate(-24 -30)"><path d="M5 50c1.5-8 8-11 19-11s17.5 3 19 11z" fill="#111"/><path d="M21 30v7.5c2 2 6 2 8 0V30z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M16.5 23.5c0-6.5 3.8-11 9-11s8.5 4.5 8.5 11c0 7-3.8 11.5-8.7 11.5S16.5 30.5 16.5 23.5z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M14.5 24c-2-9 3-16 11-16 6 0 10 3.5 10 8.5-3.5-3-8.5-3.5-12.5-2-3 1.2-5.5 4-6 9.5z" fill="#111"/><path d="M17.4 22.5c-1.6-.6-2.8.6-2.4 2.4.4 1.8 1.6 2.5 2.8 2.2" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><ellipse cx="27" cy="23.3" rx="1" ry="1.3" fill="#111"/><ellipse cx="32" cy="23.3" rx="1" ry="1.3" fill="#111"/><path d="M24.8 21.2l3.3-.6M30.6 20.7l3 .3" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round" fill="none"/><path d="M30.3 24.5c.6 1.8 1 3.2.2 3.7" fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M27.8 30.8c1.5.7 3 .6 4.2-.3" fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><g class="av-blush"><ellipse cx="27" cy="27.3" rx="2" ry="1.2"/><ellipse cx="33.2" cy="27.3" rx="2" ry="1.2"/></g></g></g></svg><svg viewBox="0 0 48 48" aria-hidden="true" style="--g: #b0b0b0; --c: #ffc31f"><defs><clipPath id="av4"><circle cx="24" cy="24" r="24"/></clipPath></defs><g clip-path="url(#av4)"><circle class="av-bg" cx="24" cy="24" r="24"/><g transform="translate(24 30) scale(1.16) translate(-24 -30)"><path d="M13.5 24.5c-1.2-9.5 3.5-15.5 10.5-15.5s11.7 6 10.5 15.5c-.4 5 .7 9 2.6 12-3.4 2.2-7.6 2.6-10 1.6h-6.2c-2.4 1-6.6.6-10-1.6 1.9-3 3-7 2.6-12z" fill="#111"/><path d="M5 50c1.5-8 8-11 19-11s17.5 3 19 11z" fill="#111"/><path d="M20 30v7.5c2 2 6 2 8 0V30z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.8 22.8c0-6 3.7-9.5 8.2-9.5s8.2 3.5 8.2 9.5c0 7.3-3.6 12-8.2 12s-8.2-4.7-8.2-12z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.3 23c-.6-7 3.4-11.2 8.7-11.2 5.6 0 9.4 4.2 8.7 11.2-1.4-3.8-3.8-6.2-7.3-6.8-1.4 2.6-5 5-10.1 6.8z" fill="#111"/><ellipse cx="20.6" cy="24" rx="1" ry="1.3" fill="#111"/><ellipse cx="27.4" cy="24" rx="1" ry="1.3" fill="#111"/><path d="M24 25l-.5 2.8h1.1" fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M22 30.3c1.3.9 2.7.9 4 0" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/><g class="av-blush"><ellipse cx="19.3" cy="27.6" rx="2" ry="1.2"/><ellipse cx="28.7" cy="27.6" rx="2" ry="1.2"/></g></g></g></svg><svg viewBox="0 0 48 48" aria-hidden="true" style="--g: #8e8e8e; --c: #4ea4ff"><defs><clipPath id="av5"><circle cx="24" cy="24" r="24"/></clipPath></defs><g clip-path="url(#av5)"><circle class="av-bg" cx="24" cy="24" r="24"/><g transform="translate(24 30) scale(1.16) translate(-24 -30)"><path d="M5 50c1.5-8 8-11 19-11s17.5 3 19 11z" fill="#111"/><path d="M20 30v7.5c2 2 6 2 8 0V30z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.8 22.5c0-6 3.7-9.5 8.2-9.5s8.2 3.5 8.2 9.5c0 7.5-3.6 12.5-8.2 12.5s-8.2-5-8.2-12.5z" fill="#fff" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/><path d="M15.2 21c-.8-7 3-12.5 9-12.5 5.8 0 9.5 4.5 8.8 12-1.2-2.5-2-4.8-2.4-6.5-3.5 1.4-8.2 1.4-12.5.3-.9 1.7-1.9 4-2.9 6.7z" fill="#111"/><path d="M15.9 24.5c.3 7.3 3.7 12.3 8.1 12.3s7.8-5 8.1-12.3c-1.3 2.3-2.6 3.3-3.9 3.3-1.4-.9-2.7-1.3-4.2-1.3s-2.8.4-4.2 1.3c-1.3 0-2.6-1-3.9-3.3z" fill="#111"/><path d="M21.8 30.5c1.4.6 3 .6 4.4 0" fill="none" stroke="#fff" stroke-width="1.2" stroke-linecap="round"/><g fill="none" stroke="#111" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"><rect x="16.8" y="19.3" width="6" height="4.2" rx="1.3"/><rect x="25.2" y="19.3" width="6" height="4.2" rx="1.3"/><path d="M22.8 21h2.4"/></g><circle cx="19.8" cy="21.5" r=".9" fill="#111"/><circle cx="28.2" cy="21.5" r=".9" fill="#111"/><g class="av-blush"><ellipse cx="19.3" cy="25.6" rx="2" ry="1.2"/><ellipse cx="28.7" cy="25.6" rx="2" ry="1.2"/></g></g></g></svg></span>
-          <span class="im-rating-text">Built alongside engineers, PMs and researchers</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="im-grid">
-      <article class="im-card im-wide" style="--tint: var(--lime-bg); --tone: var(--lime-ink)">
-        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.200-4.400L16.800 4a2.100 2.100 0 0 1 3 3L8.400 18.800z"/><path d="M14.500 6.500l3 3"/></svg>Where I start</p>
-        <svg class="im-doodle" viewBox="0 0 150 52" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M4 40 C 20 8, 32 58, 48 28 S 76 16, 92 32 S 122 46, 144 10"/><path class="dd dd2" pathLength="1" d="M124 4l10 10M134 4l-4 12"/></svg>
-        <p class="im-big">With the system, not the screen.</p>
-        <p class="im-cap">Before any screen, I learn who uses the product, what the data looks like and which rules and odd cases shape it. The design follows from that.</p>
-      </article>
-      <article class="im-card" style="--tint: var(--blue-bg); --tone: var(--blue-ink)">
-        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4z"/></svg>How I collaborate</p>
-        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M10 8h40a4 4 0 0 1 4 4v24a4 4 0 0 1-4 4H26l-12 12V40h-4a4 4 0 0 1-4-4V12a4 4 0 0 1 4-4z"/><path class="dd dd2" pathLength="1" d="M24 20a6 6 0 1 1 8 5c-2 1-2 2-2 4M30 33v.5"/></svg>
-        <p class="im-big im-big-s">I design in the open.</p>
-        <p class="im-cap">Rough flows and prototypes go up early, so engineers and product can shape them while they are still cheap to change.</p>
-      </article>
-      <article class="im-card" style="--tint: var(--rose-panel); --tone: var(--rose-ink)">
-        <p class="im-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l1.900 5.100L19 10l-5.100 1.900L12 17l-1.900-5.100L5 10l5.100-1.900z"/></svg>After handoff</p>
-        <svg class="im-doodle im-q" viewBox="0 0 60 60" fill="none" aria-hidden="true"><path class="dd" pathLength="1" d="M30 6a24 24 0 1 1-0.1 0"/><path class="dd dd2" pathLength="1" d="M19 31l8 8 15-17"/></svg>
-        <p class="im-big im-big-s">I stay until it ships.</p>
-        <p class="im-cap">I answer questions fast during the build and check the live version against the design before calling it done.</p>
-      </article>
-    </div>
-
-    <!-- What teams bring me in for: its own row under the cards. -->
-    <div class="im-fit ab-r">
-      <p class="im-fit-h">Teams usually bring me in to</p>
-      <ul class="im-fit-list">
-        <li>Make dense data and complex workflows easy to read.</li>
-        <li>Design AI features people can check and trust.</li>
-        <li>Take an idea from a rough flow to a working prototype.</li>
-      </ul>
-    </div>
-  </section>
 
   <!-- ============ QUESTIONS PEOPLE ASK (sample answers). Add or remove a
        <details> block per question. The first one starts open; opening one
@@ -1070,14 +1080,14 @@
   <section id="questions" class="ab-faq" aria-labelledby="faq-title">
     <div class="faq-side ab-r">
       <h2 class="ab-h2" id="faq-title"><span class="hs-host">Questions people ask<span class="hs hs-ask" aria-hidden="true"><span>?</span></span></span></h2>
-      <p>Short answers to what teams usually ask me first.</p>
+      <p>Short answers to what hiring teams usually ask me first.</p>
     </div>
     <div class="faq-list ab-r">
-      <details open><summary>Are you open to new roles?</summary><div class="faq-a"><p>Yes. I want to keep moving toward where product design, AI and building meet, and I'm looking for senior product design roles on teams that ship often and talk to their users. Product companies interest me most, especially ones where the product is complex and the people using it are busy: supply chain, finance, data and AI tools, B2B software.</p><p>What matters more than the industry is the setup: a team that gives design a seat early, measures what it ships, and is honest about what isn't working yet.</p><p>I can start in about 30 days. Happy to do a portfolio walkthrough, a design exercise or a short paid trial first, whichever helps you decide.</p></div></details>
-      <details><summary>Remote or on-site?</summary><div class="faq-a"><p>Either works. I'm based in New Delhi and have worked with teams across India, Europe and the US, so I'm used to splitting the day around other time zones.</p><p>Remotely, I keep at least a few hours of overlap with the team, write decisions down so nobody has to wait on a call, and share work in progress in the open rather than saving it for a big reveal.</p><p>In person, I'm happy to be in the office regularly, and I think kickoffs, research sessions and workshops are worth travelling for wherever the team is.</p></div></details>
-      <details><summary>What does your process look like on a new project?</summary><div class="faq-a"><p>I start by listening and mapping: the users, the data, the business rules and the edge cases. In the first week or two I want to understand who the product is for, where they get stuck, and what the business needs from the fix.</p><p>That becomes a one-page brief: the problem in plain words, who it affects, what we'll change and how we'll know it worked. Everyone signs off on that before anyone opens Figma.</p><p>Then I sketch rough flows, test them early with real people, and only polish what survives. Expect clickable prototypes within the first couple of weeks, not just slides, and a design that's been argued with by engineering before it's final.</p></div></details>
-      <details><summary>Do you code?</summary><div class="faq-a"><p>Enough to prototype in HTML, CSS and JavaScript, and to talk details with engineers. I built this site myself, from the layout to the little dog.</p><p>I don't ship production code, but I can read a pull request, check the build against the design, and suggest the CSS fix instead of just filing a bug.</p><p>Prototyping in code also changes how I design: I find edge cases sooner, I respect what's expensive to build, and I can test motion and real data instead of guessing at them.</p></div></details>
-      <details><summary>How do you use AI in your work?</summary><div class="faq-a"><p>To explore and build faster. I use Claude Code, Figma and code prototypes to move between ideas, interaction models and working demos, and to put something real in front of people sooner.</p><p>It never replaces judgement. Defining the problem, checking the output, making the trade-offs and owning the result are still my job.</p><p>Every decision still goes back to real users and the team. And I'm careful with data: nothing confidential goes into an AI tool unless the company has approved it.</p></div></details>
+      <details open><summary>What kind of role are you looking for?</summary><div class="faq-a"><p>A senior product design role on a team that builds complex products: B2B and enterprise software, data and AI tools, supply chain or fintech. I'm a UX designer today and ready for that step up.</p><p>I do my best work where design has a seat early, the team talks to its users, and success is measured after launch.</p></div></details>
+      <details><summary>What have you owned end to end?</summary><div class="faq-a"><p>At Resilinc I take features from research to handoff: user interviews and testing, flows, interaction and visual design, and the prototype the team reviews.</p><p>I was also part of the small team that built a new design system on IBM's Carbon, and I've designed supply chain maps and AI-assisted workflows where people need to check the system's work.</p><p>Each case study on this site names my role and what I was responsible for.</p></div></details>
+      <details><summary>How do you know a design worked?</summary><div class="faq-a"><p>We agree on what success looks like before designing: a task finished faster, fewer support questions, a decision made with confidence.</p><p>Then I test with real users before and after release. My first design job showed me why: the infographics I made at JECRC University grew active users by 13.5% in five months, and I've designed toward measurable outcomes since.</p></div></details>
+      <details><summary>How do you work with product and engineering?</summary><div class="faq-a"><p>Early and in the open. Rough flows and prototypes go up while they're still cheap to change, so product and engineering shape them with me.</p><p>I write decisions down, document components and their states for handoff, and stay through the build to check the live version against the design.</p></div></details>
+      <details><summary>Where are you based, and when can you start?</summary><div class="faq-a"><p>I'm based in New Delhi and open to remote, hybrid or on-site roles. I've worked with teams across India, Europe and the US, so splitting the day across time zones is routine.</p><p>I can start in about 30 days, and I'm happy to begin with a portfolio walkthrough or a short design exercise, whichever helps you decide.</p></div></details>
       <div class="faq-more">
         <p>Didn't find your question?</p>
         <button class="btn btn-secondary nav-ai faq-talk ask-cta" type="button" data-ask-trigger aria-haspopup="dialog" aria-controls="askPanel" aria-expanded="false"><svg class="nav-ai-ic" width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 1.6c.7 0 1.2.5 1.4 1.2 1.1 4.4 3.6 6.9 8 8 .7.2 1.2.7 1.2 1.2s-.5 1-1.2 1.2c-4.4 1.1-6.9 3.6-8 8-.2.7-.7 1.2-1.4 1.2s-1.2-.5-1.4-1.2c-1.1-4.4-3.6-6.9-8-8C1.9 13 1.4 12.5 1.4 12s.5-1 1.2-1.2c4.4-1.1 6.9-3.6 8-8 .2-.7.7-1.2 1.4-1.2z"/></svg><span>Ask me anything</span></button>
@@ -1143,12 +1153,12 @@
 </div>
 
 <!-- Content: your details (js/content.js) and projects (js/projects.js). -->
-<script src="/js/content.js?v=20262021" defer fetchpriority="high"></script>
-<script src="/js/projects.js?v=20262021" defer fetchpriority="high"></script>
-<script src="/js/render.js?v=20262021" defer fetchpriority="high"></script>
-<script src="/js/script.js?v=20262021" defer fetchpriority="high"></script>
-<script src="/js/lumos.js?v=20262021" defer></script>
-<script src="/js/about-extra.js?v=20262021" defer fetchpriority="high"></script>
-<script src="/js/pixel-dog.js?v=20262021" defer fetchpriority="high"></script>
+<script src="/js/content.js?v=20262023" defer fetchpriority="high"></script>
+<script src="/js/projects.js?v=20262023" defer fetchpriority="high"></script>
+<script src="/js/render.js?v=20262023" defer fetchpriority="high"></script>
+<script src="/js/script.js?v=20262023" defer fetchpriority="high"></script>
+<script src="/js/lumos.js?v=20262023" defer></script>
+<script src="/js/about-extra.js?v=20262023" defer fetchpriority="high"></script>
+<script src="/js/pixel-dog.js?v=20262023" defer fetchpriority="high"></script>
 </body>
 </html>
