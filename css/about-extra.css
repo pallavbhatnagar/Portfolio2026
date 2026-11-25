@@ -104,3 +104,27 @@
    one line at every width: smaller than the greeting, never wider than
    the copy column (about 16.5 of its own em across) or the screen. */
 .ab-title .hl:last-child { font-size: min(0.72em, calc((100vw - 2.25rem) / 16.5)); white-space: nowrap; line-height: 1.15; margin-top: 0.15em; }
+
+/* ---------- Voice note (At a glance) ----------
+   A small pill on the right of the name row: a round play button and a
+   waveform that fills in as it plays (js/about-extra.js). Demo audio for
+   now. Phones: its own row under the name. */
+.ab-sig .vn { order: 2; margin-left: auto; display: inline-flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.875rem 0.5rem 0.5rem; border-radius: 999px; background: var(--surface); }
+:root[data-theme="dark"] .ab-sig .vn { background: var(--surface-2); }
+.vn-play { flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; padding: 0; border: 0; border-radius: 50%; background: color-mix(in srgb, var(--ink) 12%, transparent); color: var(--ink); cursor: pointer; transition: transform 0.16s var(--ease-out), background-color 0.2s ease; }
+.vn-play svg { width: 0.875rem; height: 0.875rem; }
+.vn-play .i-pause, .vn.is-playing .vn-play .i-play { display: none; }
+.vn.is-playing .vn-play .i-pause { display: block; }
+.vn-play:active { transform: scale(0.95); }
+.vn-play:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
+@media (hover: hover) and (pointer: fine) { .vn-play:hover { background: color-mix(in srgb, var(--ink) 18%, transparent); } }
+.vn-wave { display: flex; align-items: center; gap: 2px; height: 1.5rem; cursor: pointer; }
+.vn-wave i { width: 2px; height: calc(var(--h) * 100%); border-radius: 1px; background: color-mix(in srgb, var(--ink) 22%, transparent); transition: background-color 0.15s linear; }
+.vn-wave i.is-on { background: var(--ink); }
+.ab-sig .ab-down { order: 3; }
+@media (max-width: 640px) {
+  .ab-glance .ab-sig { flex-wrap: wrap; }
+  .ab-sig .vn { order: 4; flex: 1 0 100%; margin: 0.25rem 0 0; justify-content: flex-start; }
+  .ab-sig .vn .vn-wave { flex: 1; justify-content: space-between; }
+}
+@media (forced-colors: active) { .vn-wave i { background: GrayText; } .vn-wave i.is-on { background: CanvasText; } }

@@ -203,3 +203,42 @@
     glance.scrollIntoView({ behavior: still ? "auto" : "smooth", block: "start" });
   });
 })();
+
+/* At a glance, the voice note (css/about-extra.css, .vn): builds the
+   waveform bars, plays or pauses the clip, fills the bars as it plays and
+   lets a click on the wave jump to that point. The audio loads only on the
+   first play. */
+(() => {
+  const vn = document.querySelector(".vn");
+  if (!vn) return;
+  const btn = vn.querySelector(".vn-play"), wave = vn.querySelector(".vn-wave"), audio = vn.querySelector(".vn-audio");
+  const N = 36;
+  let seed = 7;
+  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  wave.innerHTML = Array.from({ length: N }, (_, i) => {
+    const env = 0.45 + 0.55 * Math.sin(Math.PI * (i + 0.5) / N); // louder in the middle
+    return `<i style="--h:${Math.max(0.18, env * (0.35 + rnd() * 0.65)).toFixed(2)}"></i>`;
+  }).join("");
+  const bars = Array.from(wave.children);
+  let raf = 0;
+  const paint = () => {
+    const p = audio.duration ? audio.currentTime / audio.duration : 0;
+    const lit = Math.round(p * N);
+    bars.forEach((b, i) => b.classList.toggle("is-on", i < lit));
+    if (!audio.paused) raf = requestAnimationFrame(paint);
+  };
+  const sync = () => {
+    const playing = !audio.paused && !audio.ended;
+    vn.classList.toggle("is-playing", playing);
+    btn.setAttribute("aria-label", playing ? "Pause voice note" : "Play voice note");
+    cancelAnimationFrame(raf); paint();
+  };
+  btn.addEventListener("click", () => { if (audio.paused || audio.ended) audio.play().catch(() => {}); else audio.pause(); });
+  wave.addEventListener("click", (e) => {
+    const r = wave.getBoundingClientRect();
+    const go = () => { audio.currentTime = Math.min(0.999, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration; paint(); };
+    if (audio.duration) go(); else { audio.addEventListener("loadedmetadata", go, { once: true }); audio.load(); }
+  });
+  ["play", "pause", "ended", "seeked"].forEach((ev) => audio.addEventListener(ev, sync));
+  audio.addEventListener("ended", () => { audio.currentTime = 0; paint(); });
+})();

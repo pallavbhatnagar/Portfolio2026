@@ -4037,3 +4037,14 @@ html[data-motion="calm"] :is(.ab-story-body p, .ab-story-body .w) { color: var(-
 .ab-think p .w { color: color-mix(in srgb, var(--ink-soft) calc(var(--k, 1) * 100%), color-mix(in srgb, var(--ink) 22%, var(--bg))); }
 @media (prefers-reduced-motion: reduce) { .ab-think .w { color: inherit !important; } }
 html[data-motion="calm"] .ab-think .w, html[data-contrast] .ab-think .w, html[data-contrast] .ab-story-body .w { color: inherit !important; }
+
+/* Beliefs, simplified: heading on the left, the three beliefs on the
+   right as plain statements, larger title and one short line each, with
+   space between them and no markers or rules. Phones: one column. */
+.ab-think { grid-column: 2; display: grid; gap: clamp(1.5rem, 3vw, 2.25rem); margin: 0; }
+.ab-think li, .ab-think li:last-child { padding: 0; border: 0; }
+.ab-think li::before { display: none; }
+.ab-think h3 { font-size: clamp(1.375rem, 2.2vw, 1.625rem); font-weight: 600; letter-spacing: -0.025em; line-height: 1.2; }
+.ab-think p { max-width: 46ch; margin-top: 0.5rem; font-size: var(--fs-lead); }
+@media (max-width: 1024px) { .ab-think { grid-column: auto; } }
+@media (max-width: 640px) { .ab-think { gap: 1.375rem; margin-top: 0.5rem; } .ab-think h3 { font-size: 1.25rem; } }

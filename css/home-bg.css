@@ -9,7 +9,7 @@
 .hc { --hb-1: #ffd6bd; --hb-2: #fbcfe5; --hb-3: #d9d4ff; --hb-4: #ffdcc8; --hb-5: #efe4ff; --hb-line: rgba(20, 20, 20, 0.055); }
 :root[data-theme="dark"] .hc { --hb-1: #4a2a1a; --hb-2: #4a1d38; --hb-3: #2b2563; --hb-4: #43291b; --hb-5: #2e2047; --hb-line: rgba(255, 255, 255, 0.05); }
 
-.hc .hc-sky { display: block !important; }
+.hc .hc-sky { display: block !important; background: var(--hb-draw) 50% 30% / max(100%, 1440px) auto no-repeat; } /* the line drawing sits at the back, under the colour */
 .hc .hc-sky::before {
   content: "";
   position: absolute;
@@ -29,13 +29,13 @@
 /* The drawing: hairlines on a 1440 by 900 sheet, centred and cropped to
    the hero, fading out towards the edges. */
 .hc .hc-sky {
-  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23141414' stroke-opacity='.03' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
+  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23141414' stroke-opacity='.016' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
 }
 :root[data-theme="dark"] .hc .hc-sky {
-  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23ffffff' stroke-opacity='.035' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
+  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23ffffff' stroke-opacity='.02' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
 }
 /* The page colour rises at the foot, so the next section starts clean. */
-.hc .hc-sky::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, transparent 60%, var(--bg)), var(--hb-draw) 50% 30% / max(100%, 1440px) auto no-repeat; }
+.hc .hc-sky::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, transparent 60%, var(--bg)); }
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="calm"]) .hc .hc-sky::before { animation: hb-drift 26s ease-in-out infinite alternate; }
 }

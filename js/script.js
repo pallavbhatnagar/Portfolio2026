@@ -57,22 +57,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     document.body.appendChild(pl);
     html.classList.add("pl-ready");
     const word = pl.querySelector(".pl-word");
-    // On Home, "Hello" stands where "Hi, I'm Pallav Bhatnagar" will be: the
-    // same line and the same left edge (or the same centre when the hero is
-    // centred, on phones), so the greeting hands straight over to it.
-    const hi = document.querySelector(".hc .hc-hi");
-    const placeWord = () => {
-      if (!hi) return;
-      const r = hi.getBoundingClientRect();
-      if (!r.width) return;
-      const centred = getComputedStyle(hi).textAlign === "center";
-      pl.classList.add("is-anchored");
-      word.style.top = `${Math.round(r.top + window.scrollY - (hi.offsetTop ? 0 : 0))}px`;
-      if (centred) { word.style.left = `${Math.round(r.left + r.width / 2)}px`; word.style.transform = "translateX(-50%)"; word.style.textAlign = "center"; }
-      else { word.style.left = `${Math.round(r.left)}px`; word.style.transform = "none"; word.style.textAlign = "left"; }
-    };
-    placeWord();
-    addEventListener("resize", placeWord);
+    // "Hello" sits in the middle of the screen on every page (CSS centres it).
     let i = 0, timer = 0, done = false;
     const finish = () => {
       if (done) return;
