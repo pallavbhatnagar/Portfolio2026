@@ -204,27 +204,36 @@
   });
 })();
 
-/* At a glance, the voice note (css/about-extra.css, .vn): builds the
-   waveform bars, plays or pauses the clip, fills the bars as it plays and
-   lets a click on the wave jump to that point. The audio loads only on the
-   first play. */
+/* At a glance, the voice note (css/about-extra.css, .vn): a round play
+   button, a label with the time, and a waveform that fills as it plays.
+   Click the wave to jump. Only one small metadata request until played. */
 (() => {
   const vn = document.querySelector(".vn");
   if (!vn) return;
-  const btn = vn.querySelector(".vn-play"), wave = vn.querySelector(".vn-wave"), audio = vn.querySelector(".vn-audio");
-  const N = 36;
-  let seed = 7;
-  const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
-  wave.innerHTML = Array.from({ length: N }, (_, i) => {
-    const env = 0.45 + 0.55 * Math.sin(Math.PI * (i + 0.5) / N); // louder in the middle
-    return `<i style="--h:${Math.max(0.18, env * (0.35 + rnd() * 0.65)).toFixed(2)}"></i>`;
-  }).join("");
-  const bars = Array.from(wave.children);
+  const btn = vn.querySelector(".vn-play"), wave = vn.querySelector(".vn-wave"), audio = vn.querySelector(".vn-audio"), time = vn.querySelector(".vn-time");
+  const narrow = matchMedia("(max-width: 640px)");
+  let bars = [], N = 0;
+  // The real loudness of the clip (data-peaks, 0 to 100), resampled to as
+  // many bars as fit: 3px bars with 2px gaps.
+  const peaks = (wave.dataset.peaks || "").split(",").map(Number).filter((n) => !isNaN(n));
+  const build = () => {
+    const w = wave.clientWidth || 240;
+    N = Math.max(12, Math.floor((w + 2) / 5));
+    wave.innerHTML = Array.from({ length: N }, (_, i) => {
+      let v = 0.3;
+      if (peaks.length) { const a = Math.floor(i * peaks.length / N), b = Math.max(a + 1, Math.floor((i + 1) * peaks.length / N)); v = Math.max(...peaks.slice(a, b)) / 100; }
+      return `<i style="--h:${Math.max(0.12, v).toFixed(2)}"></i>`;
+    }).join("");
+    bars = Array.from(wave.children);
+  };
+  const fmt = (s) => { s = Math.max(0, Math.round(s || 0)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
   let raf = 0;
   const paint = () => {
-    const p = audio.duration ? audio.currentTime / audio.duration : 0;
-    const lit = Math.round(p * N);
-    bars.forEach((b, i) => b.classList.toggle("is-on", i < lit));
+    const d = audio.duration || 0, p = d ? audio.currentTime / d : 0;
+    const lit = p * N;
+    vn.style.setProperty("--p", p.toFixed(4));
+    bars.forEach((b, i) => { b.classList.toggle("is-on", i < Math.floor(lit)); b.classList.toggle("is-head", i === Math.floor(lit) && !audio.paused); });
+    time.textContent = fmt(audio.paused && !audio.currentTime ? d : d - audio.currentTime);
     if (!audio.paused) raf = requestAnimationFrame(paint);
   };
   const sync = () => {
@@ -233,12 +242,79 @@
     btn.setAttribute("aria-label", playing ? "Pause voice note" : "Play voice note");
     cancelAnimationFrame(raf); paint();
   };
+  build();
+  narrow.addEventListener("change", () => { build(); paint(); });
+  let rw = 0; addEventListener("resize", () => { cancelAnimationFrame(rw); rw = requestAnimationFrame(() => { build(); paint(); }); });
   btn.addEventListener("click", () => { if (audio.paused || audio.ended) audio.play().catch(() => {}); else audio.pause(); });
   wave.addEventListener("click", (e) => {
     const r = wave.getBoundingClientRect();
     const go = () => { audio.currentTime = Math.min(0.999, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration; paint(); };
     if (audio.duration) go(); else { audio.addEventListener("loadedmetadata", go, { once: true }); audio.load(); }
   });
-  ["play", "pause", "ended", "seeked"].forEach((ev) => audio.addEventListener(ev, sync));
-  audio.addEventListener("ended", () => { audio.currentTime = 0; paint(); });
+  ["play", "pause", "ended", "seeked", "loadedmetadata"].forEach((ev) => audio.addEventListener(ev, sync));
+  audio.addEventListener("ended", () => { audio.currentTime = 0; sync(); });
+  sync();
+})();
+
+/* Beliefs, the tool tags: they light up with the reading highlight as
+   they cross the same line (60% down the window), and dim again above it.
+   Motion reduced, Calm or More contrast: shown whole. */
+(() => {
+  const tags = Array.from(document.querySelectorAll(".ab-tools li"));
+  if (!tags.length) return;
+  const root = document.documentElement, reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  const off = () => reduce.matches || root.dataset.motion === "calm" || root.hasAttribute("data-contrast");
+  let queued = false;
+  const paint = () => {
+    queued = false;
+    const line = innerHeight * 0.6, still = off();
+    tags.forEach((t, i) => {
+      if (still) { t.style.removeProperty("--k"); return; }
+      const r = t.getBoundingClientRect();
+      const k = Math.min(1, Math.max(0, (line - r.top) / r.height * 1.4 - (i % 5) * 0.12));
+      t.style.setProperty("--k", k.toFixed(2));
+    });
+  };
+  const queue = () => { if (!queued) { queued = true; requestAnimationFrame(paint); } };
+  addEventListener("scroll", queue, { passive: true });
+  const shell = document.getElementById("shellScroll"); if (shell) shell.addEventListener("scroll", queue, { passive: true });
+  addEventListener("resize", queue);
+  paint();
+})();
+
+
+/* Books shelf: drifts by itself on a seamless loop (the books are listed
+   twice), slows right down while the pointer is over it, and can be dragged
+   with a mouse or swiped. A drag or swipe takes over; the drift picks up
+   again from wherever you leave it. Still with motion reduced or in Calm,
+   and paused while off screen. */
+(() => {
+  const bm = document.querySelector(".off-books .bm"), track = bm && bm.querySelector(".bm-track");
+  if (!bm || !track) return;
+  const root = document.documentElement, reduce = matchMedia("(prefers-reduced-motion: reduce)");
+  const still = () => reduce.matches || root.dataset.motion === "calm";
+  const FAST = 32, SLOW = 7; // pixels per second
+  let pos = 0, speed = FAST, target = FAST, last = 0, onScreen = false, down = false, x0 = 0, p0 = 0, moved = false, holdUntil = 0, raf = 0;
+  const half = () => track.scrollWidth / 2;
+  const wrap = (v) => { const h = half(); return h ? ((v % h) + h) % h : 0; };
+  const tick = (t) => {
+    raf = 0;
+    const dt = last ? Math.min(0.15, (t - last) / 1000) : 0; last = t;
+    speed += (target - speed) * Math.min(1, dt * 4);
+    if (!down && t > holdUntil && !still()) { pos = wrap(pos + speed * dt); bm.scrollLeft = pos; }
+    if (onScreen && !still()) raf = requestAnimationFrame(tick); else last = 0;
+  };
+  const run = () => { if (!raf && onScreen && !still()) raf = requestAnimationFrame(tick); };
+  if ("IntersectionObserver" in window) new IntersectionObserver(([en]) => { onScreen = en.isIntersecting; run(); }).observe(bm); else { onScreen = true; run(); }
+  bm.addEventListener("pointerenter", (e) => { if (e.pointerType === "mouse") target = SLOW; });
+  bm.addEventListener("pointerleave", () => { target = FAST; });
+  bm.addEventListener("pointerdown", (e) => { if (e.pointerType !== "mouse") return; down = true; moved = false; x0 = e.clientX; p0 = pos; });
+  addEventListener("pointermove", (e) => { if (!down) return; const dx = e.clientX - x0; if (Math.abs(dx) > 4) { moved = true; bm.classList.add("is-dragging"); } pos = wrap(p0 - dx); bm.scrollLeft = pos; });
+  addEventListener("pointerup", () => { if (!down) return; down = false; bm.classList.remove("is-dragging"); });
+  bm.addEventListener("click", (e) => { if (moved) { e.preventDefault(); e.stopPropagation(); moved = false; } }, true);
+  // Touch, trackpad and wheel scroll natively: follow them, and wait a moment before drifting again.
+  bm.addEventListener("scroll", () => { if (Math.abs(bm.scrollLeft - pos) > 2) { holdUntil = performance.now() + 1500; pos = wrap(bm.scrollLeft); if (bm.scrollLeft !== pos) bm.scrollLeft = pos; } }, { passive: true });
+  bm.addEventListener("keydown", (e) => { if (e.key === "ArrowRight" || e.key === "ArrowLeft") { e.preventDefault(); holdUntil = performance.now() + 1500; pos = wrap(pos + (e.key === "ArrowRight" ? 180 : -180)); bm.scrollLeft = pos; } });
+  reduce.addEventListener("change", run);
+  new MutationObserver(run).observe(root, { attributes: true, attributeFilter: ["data-motion"] });
 })();

@@ -1,0 +1,324 @@
+/* =========================================================
+   Pixel touch (About, trial): 2D game style clouds drifting behind the
+   photos in the opening spread, and a small pixel landscape at the foot of the page, just above
+   the footer. All drawn on an 8-unit pixel grid (crisp edges). Light: a
+   daytime palette. Dark: the same scene at night, quieter.
+   ========================================================= */
+.ab-table, .px-land {
+  --pc-b: #e4eefc; --pc-s: #c7daf6; --pc-h: #f7fbff;
+  --pl-sky: #cfe3fb; --pl-far: #6fae6a; --pl-farS: #5e9c5b; --pl-near: #3f8a46; --pl-nearS: #2f6f39; --pl-trunk: #6b4a2f;
+  --pl-grass: #7cc35e; --pl-grassD: #5fa748; --pl-wall: #c9c2b2; --pl-wallD: #a59d8b;
+}
+:root[data-theme="dark"] :is(.ab-table, .px-land) {
+  --pc-b: #3a4256; --pc-s: #2c3344; --pc-h: #4a5369;
+  --pl-sky: #1b2236; --pl-far: #1f3a2c; --pl-farS: #1a3226; --pl-near: #183024; --pl-nearS: #12261c; --pl-trunk: #2a2018;
+  --pl-grass: #2a4a2c; --pl-grassD: #223e25; --pl-wall: #3a3a42; --pl-wallD: #2c2c33;
+}
+.pc-b { fill: var(--pc-b); } .pc-s { fill: var(--pc-s); } .pc-h { fill: var(--pc-h); }
+.pl-far { fill: var(--pl-far); } .pl-farS { fill: var(--pl-farS); } .pl-near { fill: var(--pl-near); } .pl-nearS { fill: var(--pl-nearS); }
+.pl-trunk { fill: var(--pl-trunk); } .pl-grass { fill: var(--pl-grass); } .pl-grassD { fill: var(--pl-grassD); }
+.pl-wall { fill: var(--pl-wall); } .pl-wallD { fill: var(--pl-wallD); }
+
+/* ---------- Clouds over the hero ----------
+   Behind the words, full width, drifting left to right at different
+   speeds. Still (spread across the sky) with motion reduced or in Calm. */
+.px-clouds { position: absolute; z-index: -1; top: 0; bottom: 0; left: 50%; width: 100vw; translate: -50% 0; overflow: hidden; pointer-events: none; }
+.px-cloud { position: absolute; top: var(--top); left: 0; width: var(--w); opacity: 0.85; }
+.px-cloud svg { display: block; width: 100%; height: auto; }
+:root[data-theme="dark"] .px-cloud { opacity: 0.55; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .px-cloud { animation: px-drift var(--dur) linear var(--del) infinite; }
+}
+@keyframes px-drift { from { transform: translateX(-14rem); } to { transform: translateX(calc(100vw + 2rem)); } }
+/* Still: spread out instead of stacked at the left edge. */
+.px-cloud:nth-child(1) { left: 6%; } .px-cloud:nth-child(2) { left: 72%; } .px-cloud:nth-child(3) { left: 38%; }
+.px-cloud:nth-child(4) { left: 86%; } .px-cloud:nth-child(5) { left: 20%; }
+@media (prefers-reduced-motion: no-preference) { html:not([data-motion="calm"]) .px-cloud { left: 0; } }
+@media (max-width: 640px) { .px-cloud { width: calc(var(--w) * 0.6); } }
+
+/* Clouds in front: two of them drift over the photos and the words
+   (never catching clicks), a little see-through so the words stay read. */
+.px-clouds.is-front { z-index: 6; }
+.px-clouds.is-front .px-cloud { opacity: 0.78; }
+:root[data-theme="dark"] .px-clouds.is-front .px-cloud { opacity: 0.45; }
+.px-clouds.is-front .px-cloud:nth-child(1) { left: 58%; } .px-clouds.is-front .px-cloud:nth-child(2) { left: 24%; }
+@media (prefers-reduced-motion: no-preference) { html:not([data-motion="calm"]) .px-clouds.is-front .px-cloud { left: 0; } }
+
+/* ---------- The landscape at the foot of the page ----------
+   A quiet spot: flat sky rising out of the page, a tall cumulus, hills
+   with pines, a blossom tree and a bench, bushes and grass, and a dark
+   ground band that the footer slides out from under. */
+.px-land {
+  --sky: #5b9be6; --cl0: #ffffff; --cl1: #d6ebff; --cl2: #9cc6f2; --cl3: #6f9fdd;
+  --hillFar: #8cc56a; --hillNear: #5fa857; --hillNearL: #74b862; --pineL: #6fb25f; --pineD: #3f8a4c;
+  --leafL: #b9e36e; --leaf: #5dbb5a; --leafD: #2f7a4b; --bloom: #fff1a8; --bloomP: #f4a7a0;
+  --bark: #6b4b3e; --barkD: #4a3330; --bench: #8a5d48; --benchD: #5c3d33;
+  --bush: #2f6d45; --bushL: #3f8a52; --grass: #3f9a4c; --grassL: #7ccf5e; --ground: #2b2833; --groundTop: #3a3542;
+  --star: transparent; --star2: transparent;
+  position: relative; height: clamp(14rem, 22vw, 22rem); margin-top: -2rem; overflow: hidden;
+  border-bottom-left-radius: inherit; border-bottom-right-radius: inherit;
+  background: linear-gradient(to bottom, var(--bg) 0%, var(--sky) 48%);
+}
+:root[data-theme="dark"] .px-land {
+  --sky: #141a33; --cl0: #4a5274; --cl1: #39405e; --cl2: #2c324c; --cl3: #22273d;
+  --hillFar: #1f3326; --hillNear: #172a1f; --hillNearL: #1d3326; --pineL: #1d3a2a; --pineD: #132a1e;
+  --leafL: #2f5a3a; --leaf: #22452e; --leafD: #183424; --bloom: #e8d98a; --bloomP: #c98d88;
+  --bark: #3a2a25; --barkD: #2a1e1b; --bench: #4a3329; --benchD: #33241e;
+  --bush: #142a1d; --bushL: #1b3626; --grass: #1d3a24; --grassL: #2c5a33; --ground: #0f0f14; --groundTop: #18171f;
+  --star: #c9d2ff; --star2: #ffffff;
+}
+.pb-cl0 { fill: var(--cl0); } .pb-cl1 { fill: var(--cl1); } .pb-cl2 { fill: var(--cl2); } .pb-cl3 { fill: var(--cl3); } .pb-hillFar { fill: var(--hillFar); } .pb-hillNear { fill: var(--hillNear); } .pb-hillNearL { fill: var(--hillNearL); } .pb-pineL { fill: var(--pineL); } .pb-pineD { fill: var(--pineD); } .pb-leafL { fill: var(--leafL); } .pb-leaf { fill: var(--leaf); } .pb-leafD { fill: var(--leafD); } .pb-bloom { fill: var(--bloom); } .pb-bloomP { fill: var(--bloomP); } .pb-bark { fill: var(--bark); } .pb-barkD { fill: var(--barkD); } .pb-bench { fill: var(--bench); } .pb-benchD { fill: var(--benchD); } .pb-bush { fill: var(--bush); } .pb-bushL { fill: var(--bushL); } .pb-grass { fill: var(--grass); } .pb-grassL { fill: var(--grassL); } .pb-ground { fill: var(--ground); } .pb-groundTop { fill: var(--groundTop); } .pb-star { fill: var(--star); } .pb-star2 { fill: var(--star2); }
+.page:has(.px-land) { overflow: clip; }
+.px-land-svg { position: absolute; left: 0; bottom: 0; width: 100%; height: 100%; }
+.page > :has(+ .px-land), main:has(+ .px-land) { margin-bottom: 0; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .pb-star2 { animation: px-twinkle 3.2s ease-in-out infinite; }
+  html:not([data-motion="calm"]) .pb-bloom { animation: px-twinkle 5s ease-in-out infinite; }
+}
+@keyframes px-twinkle { 50% { opacity: 0.35; } }
+@media (max-width: 640px) { .px-land { height: 11rem; } }
+
+html[data-plain] :is(.px-clouds, .px-land) { display: none; }
+html[data-contrast] .px-clouds { display: none; }
+@media (forced-colors: active) { .px-clouds, .px-land { display: none; } }
+
+/* About: the clouds sit behind the photo pile and the words. */
+.ab-table .px-clouds { z-index: -1; }
+.ab-table .px-clouds.is-front { z-index: 6; } /* wins over the "behind the photos" rule above */
+/* The two front clouds are larger, so they read as passing over the photos. */
+.ab-table .px-clouds.is-front .px-cloud:nth-child(1) { width: 11rem; top: 18%; }
+.ab-table .px-clouds.is-front .px-cloud:nth-child(2) { width: 8rem; top: 62%; }
+@media (max-width: 640px) { .ab-table .px-clouds.is-front .px-cloud:nth-child(1) { width: 7rem; } .ab-table .px-clouds.is-front .px-cloud:nth-child(2) { width: 5rem; } }
+/* More clouds: still positions for the extra ones (Calm or reduced motion). */
+.px-cloud:nth-child(6) { left: 52%; } .px-cloud:nth-child(7) { left: 3%; } .px-cloud:nth-child(8) { left: 62%; }
+.px-cloud:nth-child(9) { left: 30%; } .px-cloud:nth-child(10) { left: 92%; }
+.px-clouds.is-front .px-cloud:nth-child(3) { left: 80%; } .px-clouds.is-front .px-cloud:nth-child(4) { left: 10%; }
+@media (prefers-reduced-motion: no-preference) { html:not([data-motion="calm"]) .px-cloud:nth-child(n) { left: 0; } }
+
+/* ---------- Village at dusk (the About footer) ----------
+   An original pixel scene, an homage to the mood of ninja-village anime:
+   no characters, symbols or landmarks. Sunset sky rising out of the page,
+   cliffs, rooftops and water towers, a lantern string, a ramen stand,
+   leaves on the wind. Night in the dark theme, with lit windows. */
+.px-land.is-village { --v-s1: #ffd9a0; --v-s2: #ffb877; --v-s3: #f58a5c; --v-s4: #d9604f; --v-star: transparent; --v-star2: transparent; --v-sun: #fff1c4; --v-halo: #ffd27a; --v-cloud: #ffe3b8; --v-cloudD: #f7a978; --v-cliff: #a8553f; --v-cliffL: #c46d4f; --v-cliffD: #8a4334; --v-treeFar: #5f6e3a; --v-wall: #f1dcc0; --v-wallD: #d6b998; --v-win: #7a4a3a; --v-roofR: #c9473a; --v-roofRD: #94302a; --v-roofT: #2f7a7a; --v-roofTD: #1f5656; --v-tank: #7b8a8c; --v-tankD: #5a6668; --v-tankTop: #97a6a8; --v-pole: #5a4038; --v-rope: #5a4038; --v-lantern: #ff6a3d; --v-lanternD: #c8432a; --v-standRoof: #8a3b2c; --v-standRoofD: #5e2620; --v-noren: #f6efe2; --v-norenL: #e2d6c2; --v-post: #5a3a2c; --v-counter: #b07a4f; --v-counterD: #7a5136; --v-stool: #c9473a; --v-steam: #ffffff; --v-path: #c99a6e; --v-pathD: #a77a52; --v-ground: #2b2329; --v-groundTop: #3a2f35; height: clamp(16rem, 24vw, 24rem); background: linear-gradient(to bottom, var(--bg) 0%, var(--bg) 14%, var(--v-s1) 26%); }
+:root[data-theme="dark"] .px-land.is-village { --v-s1: #2a2350; --v-s2: #22204a; --v-s3: #1b1a3d; --v-s4: #151431; --v-star: #c9cfff; --v-star2: #ffffff; --v-sun: #f4f0dc; --v-halo: #9b9ac4; --v-cloud: #3d3a66; --v-cloudD: #2c2a52; --v-cliff: #2c2440; --v-cliffL: #3a3052; --v-cliffD: #211b31; --v-treeFar: #1a2a22; --v-wall: #3a3448; --v-wallD: #2c2738; --v-win: #ffcf6a; --v-roofR: #5a2a33; --v-roofRD: #3d1c23; --v-roofT: #1d3a40; --v-roofTD: #142a2f; --v-tank: #3a4048; --v-tankD: #2a2e35; --v-tankTop: #4a515b; --v-pole: #241c20; --v-rope: #3a2c30; --v-lantern: #ffb14a; --v-lanternD: #e0702e; --v-standRoof: #3d1f22; --v-standRoofD: #2a1517; --v-noren: #cfc4b0; --v-norenL: #b3a892; --v-post: #2a1d1a; --v-counter: #5a3d2c; --v-counterD: #3d2a1f; --v-stool: #5a2a33; --v-steam: #e8e4f6; --v-path: #3a3040; --v-pathD: #2c2432; --v-ground: #0f0e14; --v-groundTop: #1a1820; }
+.pv-s1 { fill: var(--v-s1); } .pv-s2 { fill: var(--v-s2); } .pv-s3 { fill: var(--v-s3); } .pv-s4 { fill: var(--v-s4); } .pv-star { fill: var(--v-star); } .pv-star2 { fill: var(--v-star2); } .pv-sun { fill: var(--v-sun); } .pv-halo { fill: var(--v-halo); } .pv-cloud { fill: var(--v-cloud); } .pv-cloudD { fill: var(--v-cloudD); } .pv-cliff { fill: var(--v-cliff); } .pv-cliffL { fill: var(--v-cliffL); } .pv-cliffD { fill: var(--v-cliffD); } .pv-treeFar { fill: var(--v-treeFar); } .pv-wall { fill: var(--v-wall); } .pv-wallD { fill: var(--v-wallD); } .pv-win { fill: var(--v-win); } .pv-roofR { fill: var(--v-roofR); } .pv-roofRD { fill: var(--v-roofRD); } .pv-roofT { fill: var(--v-roofT); } .pv-roofTD { fill: var(--v-roofTD); } .pv-tank { fill: var(--v-tank); } .pv-tankD { fill: var(--v-tankD); } .pv-tankTop { fill: var(--v-tankTop); } .pv-pole { fill: var(--v-pole); } .pv-rope { fill: var(--v-rope); } .pv-lantern { fill: var(--v-lantern); } .pv-lanternD { fill: var(--v-lanternD); } .pv-standRoof { fill: var(--v-standRoof); } .pv-standRoofD { fill: var(--v-standRoofD); } .pv-noren { fill: var(--v-noren); } .pv-norenL { fill: var(--v-norenL); } .pv-post { fill: var(--v-post); } .pv-counter { fill: var(--v-counter); } .pv-counterD { fill: var(--v-counterD); } .pv-stool { fill: var(--v-stool); } .pv-steam { fill: var(--v-steam); } .pv-path { fill: var(--v-path); } .pv-pathD { fill: var(--v-pathD); } .pv-ground { fill: var(--v-ground); } .pv-groundTop { fill: var(--v-groundTop); }
+.pv-leaf { fill: #6fae4a; }
+:root[data-theme="dark"] .pv-leaf { fill: #3f6a3a; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .pv-leaf { animation: pv-drift calc(14s + var(--i) * 1.7s) linear calc(var(--i) * -2.3s) infinite; }
+  html:not([data-motion="calm"]) .pv-lantern { animation: pv-glow 2.6s ease-in-out infinite alternate; }
+  html:not([data-motion="calm"]) .pv-steam { animation: pv-steam 2.2s ease-in-out infinite; }
+  html:not([data-motion="calm"]) .pv-star2 { animation: px-twinkle 3.2s ease-in-out infinite; }
+}
+@keyframes pv-drift { 0% { transform: translate(-60px, 0); } 50% { transform: translate(900px, 90px); } 100% { transform: translate(1900px, 40px); } }
+@keyframes pv-glow { to { opacity: 0.72; } }
+@keyframes pv-steam { 0%, 100% { opacity: 0.9; transform: translateY(0); } 50% { opacity: 0.25; transform: translateY(-8px); } }
+.pv-leaf { transform-box: fill-box; }
+@media (max-width: 640px) { .px-land.is-village { height: 12rem; } }
+/* The village's sky melts into the page: the top third fades in. */
+.px-land.is-village { background: none; }
+.px-land.is-village .px-land-svg { -webkit-mask-image: linear-gradient(to bottom, transparent 18%, #000 52%); mask-image: linear-gradient(to bottom, transparent 18%, #000 52%); }
+.px-land.is-village:not(:root[data-theme="dark"] *) { --v-star: #ffc58a; --v-star2: #ffd09a; } /* by day the star cells take the sky colour */
+
+
+/* ---------- The painted field (the About footer) ----------
+   An original painterly scene: storm clouds breaking to a warm horizon, a
+   lone rider with a long red banner galloping across now and then, a field
+   of red flowers. Brush texture from SVG turbulence filters. Night in the
+   dark theme. Its sky fades into the page at the top. */
+.px-land.is-field { --f-sky0: #9aa8b6; --f-sky1: #5f6f82; --f-sky2: #c9b89c; --f-sky3: #efd7ae; --f-glow0: #fff0cf; --f-glow1: rgba(255,226,180,0); --f-c1: #6e7d8f; --f-c2: #55647a; --f-c3: #3f4c60; --f-hill: #2f3a33; --f-hill2: #46544a; --f-field: #3b4535; --f-grass: #222a20; --f-banner: #b8241f; --f-pole: #2a201c; --f-cape: #7c9cc2; --f-body: #2a2622; --f-horse: #1f1814; --f-stem: #1b2219; --f-r0: #c42a1f; --f-r1: #a51e1a; --f-r2: #d9452c; --f-r3: #8e1916; --f-rim: #f3c8a8; --f-pt: #c42a1f; --f-foot: #29231f; height: clamp(18rem, 28vw, 28rem); background: none; }
+:root[data-theme="dark"] .px-land.is-field { --f-sky0: #1e2433; --f-sky1: #18202d; --f-sky2: #3a3a4a; --f-sky3: #5e5566; --f-glow0: #c9c2d8; --f-glow1: rgba(160,150,190,0); --f-c1: #2a3142; --f-c2: #222837; --f-c3: #1a1f2b; --f-hill: #10150f; --f-hill2: #171d17; --f-field: #151a14; --f-grass: #0c100b; --f-banner: #7a1714; --f-pole: #0e0b0a; --f-cape: #4a5a72; --f-body: #0e0c0b; --f-horse: #0b0908; --f-stem: #0b0f0a; --f-r0: #6e1814; --f-r1: #5a1311; --f-r2: #842016; --f-r3: #4a0f0d; --f-rim: #8a6a70; --f-pt: #6e1814; --f-foot: #0d0c10; }
+.is-field .pf-svg { -webkit-mask-image: linear-gradient(to bottom, transparent 6%, #000 40%); mask-image: linear-gradient(to bottom, transparent 6%, #000 40%); }
+.pf-sky0 { stop-color: var(--f-sky0); } .pf-sky1 { stop-color: var(--f-sky1); } .pf-sky2 { stop-color: var(--f-sky2); } .pf-sky3 { stop-color: var(--f-sky3); }
+.pf-glow0 { stop-color: var(--f-glow0); } .pf-glow1 { stop-color: var(--f-glow1); }
+.pf-c1 { fill: var(--f-c1); opacity: 0.92; } .pf-c2 { fill: var(--f-c2); opacity: 0.9; } .pf-c3 { fill: var(--f-c3); opacity: 0.88; }
+.pf-hill path { fill: var(--f-hill); } .pf-hill .pf-hill2 { fill: var(--f-hill2); } .pf-field { fill: var(--f-field); }
+.pf-grass path, .pf-stems path { fill: none; stroke-width: 1.6; stroke-linecap: round; } .pf-grass path { stroke: var(--f-grass); } .pf-stems path { stroke: var(--f-stem); }
+.pf-banner { fill: var(--f-banner); } .pf-pole { stroke: var(--f-pole); stroke-width: 2.4; } .pf-cape { fill: var(--f-cape); } .pf-body { fill: var(--f-body); }
+.pf-horse { fill: var(--f-horse); } .pf-horse .pf-leg, .pf-horse .pf-tail { fill: none; stroke: var(--f-horse); stroke-width: 5; stroke-linecap: round; stroke-linejoin: round; }
+.pf-r0 { fill: var(--f-r0); } .pf-r1 { fill: var(--f-r1); } .pf-r2 { fill: var(--f-r2); } .pf-r3 { fill: var(--f-r3); } .pf-rim { fill: var(--f-rim); opacity: 0.7; }
+.pf-pt { fill: var(--f-pt); } .pf-foot { fill: var(--f-foot); } .pf-grainrect { pointer-events: none; mix-blend-mode: multiply; }
+/* The rider: crosses in about 12s, then the field rests for 14s. */
+.pf-ride .pf-rider { transform: translateX(-260px); }
+.pf-f1 { visibility: hidden; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .pf-ride .pf-rider { animation: pf-ride 26s linear 1.5s infinite both; }
+  html:not([data-motion="calm"]) .pf-f0 { animation: pf-frame 0.42s steps(1) infinite; }
+  html:not([data-motion="calm"]) .pf-f1 { visibility: visible; animation: pf-frame 0.42s steps(1) -0.21s infinite; }
+  html:not([data-motion="calm"]) .pf-rider-in { animation: pf-bob 0.42s ease-in-out infinite; }
+  html:not([data-motion="calm"]) .pf-banner { transform-box: fill-box; transform-origin: 100% 30%; animation: pf-wave 1.1s ease-in-out infinite alternate; }
+  html:not([data-motion="calm"]) .pf-clouds { animation: pf-clouds 40s ease-in-out infinite alternate; }
+  html:not([data-motion="calm"]) .pf-pt { animation: pf-petal calc(9s + var(--i) * 0.8s) linear calc(var(--i) * -1.3s) infinite; }
+}
+/* Still: the rider rests mid-field. */
+@media (prefers-reduced-motion: reduce) { .pf-ride .pf-rider { transform: translateX(820px); } }
+html[data-motion="calm"] .pf-ride .pf-rider { transform: translateX(820px); animation: none !important; }
+@keyframes pf-ride { 0% { transform: translateX(-260px); } 46% { transform: translateX(1840px); } 100% { transform: translateX(1840px); } }
+@keyframes pf-frame { 0% { visibility: visible; } 50% { visibility: hidden; } }
+@keyframes pf-bob { 50% { transform: translateY(-4px); } }
+@keyframes pf-wave { from { transform: skewY(-2deg) scaleY(0.9); } to { transform: skewY(2.5deg) scaleY(1.08); } }
+@keyframes pf-clouds { to { transform: translateX(-40px); } }
+@keyframes pf-petal { from { transform: translate(-200px, 0) rotate(0deg); opacity: 0; } 10% { opacity: 1; } 90% { opacity: 1; } to { transform: translate(1700px, 60px) rotate(540deg); opacity: 0; } }
+.pf-pt { transform-box: fill-box; transform-origin: center; }
+@media (max-width: 640px) { .px-land.is-field { height: 14rem; } }
+/* Field only: no sky or rider; the page shows above it. The field is
+   shorter and fades in softly at its top edge. */
+.px-land.is-field { height: clamp(10rem, 16vw, 16rem); }
+.is-field .pf-svg { -webkit-mask-image: linear-gradient(to bottom, transparent 58%, #000 74%); mask-image: linear-gradient(to bottom, transparent 58%, #000 74%); }
+@media (max-width: 640px) { .px-land.is-field { height: 8rem; } }
+/* Crisp: the field starts on its own edge, no fade. */
+.is-field .pf-svg { -webkit-mask-image: none; mask-image: none; }
+
+/* ---------- The meadow (the About footer) ----------
+   An original painted meadow: green hills, paler at the back, windmills
+   turning on the far ridge, a sword in a mossy rock on the right, flowers
+   in the grass, leaves on the breeze. No sky: the page shows above. Night
+   in the dark theme. Still in Calm or with motion reduced. */
+.px-land.is-meadow { --m-h1: #b9d29a; --m-h2: #97c06c; --m-h3: #7caf55; --m-h4: #5f9a43; --m-h5: #4a8738; --m-sun: #c9e07e; --m-g: #3d7430; --m-gL: #8cc35a; --m-fw: #ffffff; --m-fy: #f6d34a; --m-fb: #8fb6f0; --m-fp: #f3a6c4; --m-fc: #f2c14a; --m-mtower: #e9e2d2; --m-mcap: #b8574a; --m-blade: #6f7d8c; --m-rock: #8d8f86; --m-rockL: #b7b6a8; --m-moss: #6f9a48; --m-rock2: #7c7e76; --m-bladeS: #c9d3dc; --m-bladeL: #eef3f6; --m-guard: #c99a3a; --m-grip: #7a2f2a; --m-pommel: #d4a845; --m-gem: #c0392b; --m-leaf: #7fb54a; --m-leafD: #4f8a36; --m-foot: #2b3324; height: clamp(13rem, 21vw, 21rem); background: none; }
+:root[data-theme="dark"] .px-land.is-meadow { --m-h1: #2a3a33; --m-h2: #22332a; --m-h3: #1c2c23; --m-h4: #17251d; --m-h5: #132018; --m-sun: #2d4230; --m-g: #0e1a12; --m-gL: #2c4a2c; --m-fw: #cfd6e6; --m-fy: #a89440; --m-fb: #5f7cae; --m-fp: #a46d86; --m-fc: #a8893a; --m-mtower: #4a4a55; --m-mcap: #4a2a2a; --m-blade: #2e3440; --m-rock: #3a3c40; --m-rockL: #4c4e52; --m-moss: #28402a; --m-rock2: #323438; --m-bladeS: #8d98a8; --m-bladeL: #c2cbd6; --m-guard: #8a6a2a; --m-grip: #3a1a18; --m-pommel: #8f7330; --m-gem: #7a2420; --m-leaf: #3e6a32; --m-leafD: #2a4a24; --m-foot: #0f130e; }
+.is-meadow .gm-svg { -webkit-mask-image: none; mask-image: none; }
+.gm-h1 { fill: var(--m-h1); } .gm-h2 { fill: var(--m-h2); } .gm-h3 { fill: var(--m-h3); } .gm-h4 { fill: var(--m-h4); } .gm-h5 { fill: var(--m-h5); }
+.gm-sun { fill: var(--m-sun); opacity: 0.55; }
+.gm-grass path { fill: none; stroke-width: 1.5; stroke-linecap: round; } .gm-g { stroke: var(--m-g); } .gm-gL { stroke: var(--m-gL); }
+.gm-fw { fill: var(--m-fw); } .gm-fy { fill: var(--m-fy); } .gm-fb { fill: var(--m-fb); } .gm-fp { fill: var(--m-fp); } .gm-fc { fill: var(--m-fc); }
+.gm-mtower { fill: var(--m-mtower); } .gm-mcap { fill: var(--m-mcap); } .gm-blades { fill: var(--m-blade); }
+.gm-rock { fill: var(--m-rock); } .gm-rockL { fill: var(--m-rockL); } .gm-moss { fill: var(--m-moss); } .gm-rock2 { fill: var(--m-rock2); }
+.gm-blade { fill: var(--m-bladeS); } .gm-bladeL { fill: var(--m-bladeL); } .gm-guard { fill: var(--m-guard); } .gm-grip { fill: var(--m-grip); } .gm-pommel { fill: var(--m-pommel); } .gm-gem { fill: var(--m-gem); }
+.gm-leaf { fill: var(--m-leaf); } .gm-leaf.is-dark { fill: var(--m-leafD); } .gm-foot { fill: var(--m-foot); }
+.gm-leaf { transform-box: fill-box; transform-origin: center; opacity: 0; }
+.gm-blades { transform-box: view-box; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .gm-mill use { }
+  html:not([data-motion="calm"]) .is-meadow .gm-blades { animation: gm-spin calc(7s + var(--i, 0) * 1.3s) linear infinite; }
+  html:not([data-motion="calm"]) .gm-leaf { animation: gm-leaf calc(11s + var(--i) * 0.9s) linear calc(var(--i) * -1.7s) infinite; }
+}
+.gm-mill .gm-blades { transform-origin: 0 -42px; }
+@keyframes gm-spin { from { transform: translate(0, -42px) rotate(0deg); } to { transform: translate(0, -42px) rotate(360deg); } }
+@keyframes gm-leaf { 0% { transform: translate(-140px, 0) rotate(0deg); opacity: 0; } 8% { opacity: 1; } 50% { transform: translate(700px, 40px) rotate(260deg); } 92% { opacity: 1; } 100% { transform: translate(1500px, -10px) rotate(560deg); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .gm-leaf { opacity: 1; } }
+html[data-motion="calm"] .gm-leaf { opacity: 1; animation: none !important; }
+@media (max-width: 640px) { .px-land.is-meadow { height: 9.5rem; } }
+
+/* ---------- Grass and flowers on the footer (About) ----------
+   Just a low green strip with grass blades and small flowers, sitting on
+   the footer bar; the band at its foot is the footer colour, so the two
+   join. */
+.px-land.is-grass { --s-band: #5f9a43; --s-g: #3d7430; --s-gM: #4f8a38; --s-gL: #8cc35a; --s-stem: #3a6a2c; --s-fw: #ffffff; --s-fy: #f6d34a; --s-fb: #8fb6f0; --s-fp: #f3a6c4; --s-fr: #e0533f; --s-fc: #f2c14a; --s-foot: #141414; height: clamp(4.5rem, 6vw, 6rem); background: none; }
+:root[data-theme="dark"] .px-land.is-grass { --s-band: #1f3324; --s-g: #0e1a12; --s-gM: #17281b; --s-gL: #2c4a2c; --s-stem: #14241a; --s-fw: #cfd6e6; --s-fy: #a89440; --s-fb: #5f7cae; --s-fp: #a46d86; --s-fr: #8a3a30; --s-fc: #a8893a; --s-foot: #0067ff; }
+.is-grass .gs-svg { -webkit-mask-image: none; mask-image: none; }
+.gs-band { fill: var(--s-band); } .gs-grass path, .gs-stem { fill: none; stroke-width: 1.6; stroke-linecap: round; }
+.gs-g { stroke: var(--s-g); } .gs-gM { stroke: var(--s-gM); } .gs-gL { stroke: var(--s-gL); } .gs-stem { stroke: var(--s-stem); }
+.gs-fw { fill: var(--s-fw); } .gs-fy { fill: var(--s-fy); } .gs-fb { fill: var(--s-fb); } .gs-fp { fill: var(--s-fp); } .gs-fr { fill: var(--s-fr); } .gs-fc { fill: var(--s-fc); }
+.gs-foot { fill: var(--s-band); }
+@media (max-width: 640px) { .px-land.is-grass { height: 3.75rem; } }
+
+/* ---------- Painted hillside (the About footer) ----------
+   Two paintings with transparent skies: day in the light theme, night in
+   the dark. They span the full width at their own proportions, so wide
+   screens never crop them; phones keep a minimum height and crop from the
+   left, keeping the tree and the figures on the right. Over them: gusts of
+   leaves and faint wind lines, and at night the robot's lights blink. */
+.px-land.is-photo { height: auto; aspect-ratio: 2172 / 514; margin-top: -2rem; background: none; overflow: hidden; }
+.fp-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 100% 100%; }
+.fp-night, :root[data-theme="dark"] .fp-day { display: none; }
+:root[data-theme="dark"] .fp-night { display: block; }
+.fp-fx { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; pointer-events: none; }
+.fp-leaf { fill: #7fa63e; opacity: 0; transform-box: fill-box; transform-origin: center; }
+.fp-leaf.is-dark { fill: #4f7a2e; }
+:root[data-theme="dark"] .fp-leaf { fill: #9a9440; } :root[data-theme="dark"] .fp-leaf.is-dark { fill: #6a7a34; }
+.fp-wind { fill: none; stroke: #ffffff; stroke-width: 2; stroke-linecap: round; opacity: 0; stroke-dasharray: 60 300; }
+:root[data-theme="dark"] .fp-wind { stroke: #c9d6ff; }
+.fp-led { fill: #7fd4ff; opacity: 0; }
+.fp-led.is-r { fill: #ff4a3a; }
+@media (prefers-reduced-motion: no-preference) {
+  /* Leaves come off the tree in gusts and sail left across the valley. */
+  html:not([data-motion="calm"]) .fp-leaf { animation: fp-leaf calc(9s + var(--i) * 0.45s) cubic-bezier(0.3, 0, 0.6, 1) calc(var(--i) * -0.9s) infinite; }
+  html:not([data-motion="calm"]) .fp-wind { animation: fp-wind calc(6s + var(--i) * 0.7s) linear calc(var(--i) * -1.1s) infinite; }
+  html[data-theme="dark"]:not([data-motion="calm"]) .fp-led { animation: fp-led 2.4s steps(1) calc(var(--i) * -0.37s) infinite; }
+}
+:root[data-theme="dark"] .fp-led { opacity: 0.9; } /* lit and still when motion is off */
+@keyframes fp-leaf {
+  0% { transform: translate(0, 0) rotate(0deg); opacity: 0; }
+  6% { opacity: 1; }
+  40% { transform: translate(-420px, 40px) rotate(-220deg); }
+  70% { transform: translate(-820px, 10px) rotate(-420deg); opacity: 1; }
+  100% { transform: translate(-1300px, 70px) rotate(-680deg); opacity: 0; }
+}
+@keyframes fp-wind { 0% { stroke-dashoffset: 360; opacity: 0; } 15% { opacity: 0.35; } 70% { opacity: 0.25; } 100% { stroke-dashoffset: -60; opacity: 0; transform: translateX(-200px); } }
+@keyframes fp-led { 0%, 40% { opacity: 1; } 41%, 55% { opacity: 0.2; } 56%, 100% { opacity: 0.95; } }
+:root[data-theme="dark"] .fp-led { filter: drop-shadow(0 0 4px currentColor); }
+.fp-led.is-b { color: #7fd4ff; } .fp-led.is-r { color: #ff4a3a; }
+@media (max-width: 640px) { .px-land.is-photo { aspect-ratio: auto; height: 9rem; margin-top: -1.25rem; } }
+html[data-plain] .fp-fx { display: none; }
+/* Footer: less space above the hillside, and the same pixel clouds as the
+   top of the page drifting over everything in its sky. */
+.ab:has(+ .px-land.is-photo), main.ab { padding-bottom: 2.5rem; }
+.px-land.is-photo { margin-top: -1rem; }
+.fp-clouds { z-index: 5; top: 0; bottom: 35%; left: 0; width: 100%; translate: none; }
+.fp-clouds .px-cloud { opacity: 0.85; }
+:root[data-theme="dark"] .fp-clouds .px-cloud { opacity: 0.5; }
+.px-land.is-photo { --pc-b: #e4eefc; --pc-s: #c7daf6; --pc-h: #f7fbff; }
+:root[data-theme="dark"] .px-land.is-photo { --pc-b: #3a4256; --pc-s: #2c3344; --pc-h: #4a5369; }
+
+/* ---------- Round of fixes ---------- */
+/* No white hairline under the footer painting: the 1px page-end marker
+   sits over the painting's foot instead of below it. */
+.px-land.is-photo + .page-end { margin-top: -1px; position: relative; }
+@media (max-width: 640px) {
+  /* The painting on phones: taller, trimmed from the left, the right side
+     (the tree and the figures on the hill) kept whole. */
+  .px-land.is-photo { height: 12.5rem; }
+}
+
+/* The painting now lives inside the effects SVG (so every layer shares
+   one frame). The tree crown and the grass clump right of the figure are
+   cut out of it and sway gently from their bases. The clouds drift behind
+   the painting, showing only through its transparent sky. */
+.fp-fx { z-index: 1; }
+.fp-clouds { z-index: 0 !important; bottom: 20%; }
+.fp-fx .fp-night, :root[data-theme="dark"] .fp-fx .fp-day { display: none; }
+:root[data-theme="dark"] .fp-fx .fp-night { display: inline; }
+.fp-sway { transform-box: view-box; }
+.fp-sway-crown { transform-origin: 2130px 196px; }
+.fp-sway-plant { transform-origin: 2050px 346px; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .fp-sway-crown { animation: fp-crown 5.5s ease-in-out infinite alternate; }
+  html:not([data-motion="calm"]) .fp-sway-plant { animation: fp-plant 3.2s ease-in-out infinite alternate; }
+}
+@keyframes fp-crown { 0% { transform: rotate(-0.6deg); } 100% { transform: rotate(0.9deg); } }
+@keyframes fp-plant { 0% { transform: skewX(-2.5deg); } 100% { transform: skewX(3deg); } }
+/* Stronger sway. */
+@keyframes fp-crown { 0% { transform: rotate(-1.6deg); } 100% { transform: rotate(2deg); } }
+@keyframes fp-plant { 0% { transform: skewX(-7deg); } 100% { transform: skewX(8deg); } }
+.px-land.is-photo { aspect-ratio: 4096 / 974; } /* the new paintings (4096 x 974) */
+@media (max-width: 640px) { .px-land.is-photo { aspect-ratio: auto; height: 12.5rem; } }
+/* No hairline under the painting: the painting runs 3px past the page's
+   rounded bottom edge (the page clips it), so the last, fractional pixel
+   is always painting, never the page colour showing through. */
+.px-land.is-photo { overflow: visible; }
+.fp-fx { height: calc(100% + 3px); }
+/* The robot's lights blink in both themes (by day a little softer). */
+.fp-led { opacity: 0.85; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .fp-led { animation: fp-led 2.4s steps(1) calc(var(--i) * -0.37s) infinite; }
+}
+:root:not([data-theme="dark"]) .fp-led { filter: drop-shadow(0 0 3px currentColor); }
+/* About hero: the title and words sit above the clouds; the front clouds
+   pass over the photos only. */
+.ab-table .ab-table-copy { position: relative; z-index: 7; }
+/* Light theme: the robot's lights blend into the painting, softer. */
+:root:not([data-theme="dark"]) .fp-led { filter: none; mix-blend-mode: multiply; opacity: 0.55; }
+:root:not([data-theme="dark"]) .fp-led.is-b { fill: #4aa8e0; } :root:not([data-theme="dark"]) .fp-led.is-r { fill: #e0604a; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-theme="dark"]):not([data-motion="calm"]) .fp-led { animation: fp-led-soft 2.4s steps(1) calc(var(--i) * -0.37s) infinite; }
+}
+@keyframes fp-led-soft { 0%, 40% { opacity: 0.6; } 41%, 55% { opacity: 0.15; } 56%, 100% { opacity: 0.5; } }
+/* Light theme: the robot's lights glow again, just softer than at night. */
+:root:not([data-theme="dark"]) .fp-led { mix-blend-mode: normal; opacity: 0.8; filter: drop-shadow(0 0 2.5px currentColor); }
+:root:not([data-theme="dark"]) .fp-led.is-b { fill: #6cc6ff; } :root:not([data-theme="dark"]) .fp-led.is-r { fill: #ff5a44; }
+@keyframes fp-led-soft { 0%, 40% { opacity: 0.85; } 41%, 55% { opacity: 0.25; } 56%, 100% { opacity: 0.75; } }
+/* About hero: the photo you point at (or focus) comes up above the
+   clouds while you hold it there. */
+.ab-table .ab-pile:has(.ab-snap:hover, .ab-snap:focus-within) { z-index: 8; }
+.ab-table .ab-snap:hover, .ab-table .ab-snap:focus-within { z-index: 9; }

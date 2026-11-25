@@ -1705,11 +1705,11 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       const on = Number(cv.dataset.book) === pick;
       cv.classList.toggle("is-reading", on);
       const tag = cv.querySelector(".bcv-tag");
-      if (on && !tag) cv.insertAdjacentHTML("beforeend", '<span class="bcv-tag">Reading</span>');
+      if (on && !tag) cv.insertAdjacentHTML("beforeend", '<span class="bcv-tag">Reading now</span>');
       if (!on && tag) tag.remove();
     });
     const title = covers.find((cv) => Number(cv.dataset.book) === pick)?.querySelector(".bcv-t")?.textContent;
-    if (title) readingEl.textContent = title + ".";
+    if (title) readingEl.textContent = title;
   }
 
   // Stickers (.hs) on headings: the heading gets .is-in the first time it

@@ -4048,3 +4048,128 @@ html[data-motion="calm"] .ab-think .w, html[data-contrast] .ab-think .w, html[da
 .ab-think p { max-width: 46ch; margin-top: 0.5rem; font-size: var(--fs-lead); }
 @media (max-width: 1024px) { .ab-think { grid-column: auto; } }
 @media (max-width: 640px) { .ab-think { gap: 1.375rem; margin-top: 0.5rem; } .ab-think h3 { font-size: 1.25rem; } }
+
+/* Books card: smaller covers, so the card is shorter (about 78% of the old
+   size; each book still keeps its own slight height difference). */
+.off-books .bcv { width: calc(9.5rem * var(--s)); height: calc(13.875rem * var(--s)); margin-right: 0.875rem; }
+.off-books .bcv-meta { padding: 2.25rem 0.625rem 0.625rem 0.75rem; }
+.off-books .bcv-t { font-size: 0.8125rem; }
+.off-books .bcv-a { font-size: 0.6875rem; }
+
+/* Beliefs, "Tools change": the tools I use, as small logo chips that
+   wrap. Logos in ink, so they follow the theme. */
+.ab-tools { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.875rem 0 0; padding: 0; list-style: none; }
+.ab-tools li { display: inline-flex; align-items: center; gap: 0.4375rem; padding: 0.375rem 0.75rem 0.375rem 0.5625rem; border: 1px solid var(--hairline); border-radius: 999px; font-size: 0.875rem; font-weight: 500; color: var(--ink); }
+.ab-tools svg { width: 0.9375rem; height: 0.9375rem; flex: none; }
+/* Tool tags follow the scroll highlight (js/about-extra.js): dim until
+   the reading line reaches them, then full ink. */
+.ab-tools li { color: color-mix(in srgb, var(--ink) calc(var(--k, 1) * 100%), color-mix(in srgb, var(--ink) 26%, var(--bg))); border-color: color-mix(in srgb, var(--ink) calc(8% + var(--k, 1) * 6%), transparent); }
+
+/* Life, lately: the photo row stays inside the content column at every
+   width (it used to run to the screen edges on tablets and phones). */
+@media (max-width: 1024px) { .lf-row { margin-inline: 0; padding-inline: 0; } }
+.lf-row { border-radius: 0.75rem; }
+
+/* Books card: the words on the left, the book being read on the right as
+   a small card with its cover; the shelf runs full width underneath.
+   Phones: one column, the current read as a row. */
+.off-books { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 2rem; align-items: start; }
+.off-books > .off-tag { grid-column: 1; grid-row: 1; }
+.off-books > .off-h { grid-column: 1; grid-row: 2; }
+.off-books > .off-p:not(.off-now) { grid-column: 1; grid-row: 3; max-width: 46ch; }
+.off-books > .off-now { grid-column: 2; grid-row: 1 / span 3; align-self: center; display: flex; align-items: center; gap: 0.75rem; margin: 0; padding: 0.625rem 1rem 0.625rem 0.625rem; border-radius: 0.875rem; background: color-mix(in srgb, var(--bg) 70%, transparent); font-size: 0.8125rem; line-height: 1.35; color: var(--ink-soft); }
+.off-now-cover { flex: none; width: 2.75rem; aspect-ratio: 2 / 3; border-radius: 0.25rem; object-fit: cover; box-shadow: 0 0.375rem 0.875rem -0.375rem rgba(0, 0, 0, 0.45); }
+.off-now-text { display: flex; flex-direction: column; }
+.off-now-text strong { margin-top: 0.125rem; font-size: 0.9375rem; font-weight: 600; color: var(--ink); }
+.off-books > .bm { grid-column: 1 / -1; }
+@media (max-width: 640px) {
+  .off-books { grid-template-columns: minmax(0, 1fr); }
+  .off-books > .off-now { grid-column: 1; grid-row: 4; align-self: start; justify-self: start; margin-top: 0.875rem; }
+}
+
+/* Books card: "Reading right now" is a quiet line under the description,
+   a small cover beside it, no box. */
+.off-books { display: block; }
+.off-books > .off-now { display: flex; align-items: center; gap: 0.625rem; margin: 0.875rem 0 0; padding: 0; background: none; border-radius: 0; font-size: 0.875rem; color: var(--ink-soft); }
+.off-now-cover { width: 1.625rem; border-radius: 0.1875rem; box-shadow: 0 0.25rem 0.625rem -0.25rem rgba(0, 0, 0, 0.45); }
+.off-now-text { flex-direction: row; align-items: baseline; gap: 0.375rem; }
+.off-now-text strong { margin: 0; font-size: 0.875rem; font-weight: 600; }
+@media (max-width: 640px) { .off-books > .off-now { margin-top: 0.75rem; } }
+
+/* Books card: no "Reading now" line; the book being read carries a tag on
+   its cover instead (script.js). The line stays in the page, hidden, as
+   script.js uses it to pick the book. */
+.off-books > .off-now { display: none !important; }
+.bcv.is-reading .bcv-tag { top: 0.5rem; right: 0.5rem; padding: 0.1875rem 0.5rem; border-radius: 999px; background: var(--ink); color: var(--bg); font-size: 0.6875rem; font-weight: 600; box-shadow: 0 0.25rem 0.625rem -0.25rem rgba(0, 0, 0, 0.5); }
+/* "Now reading" back under the description, as a small quiet tag; no tag
+   on the cover. */
+.off-books > .off-now { display: inline-flex !important; align-items: center; gap: 0.3125rem; margin: 0.75rem 0 0; padding: 0.1875rem 0.5625rem; border: 1px solid var(--hairline); border-radius: 999px; background: none; font-size: 0.75rem; line-height: 1.4; color: var(--ink-soft); }
+.off-books > .off-now strong { font-weight: 600; color: var(--ink); }
+.bcv.is-reading .bcv-tag { display: none; }
+/* "Now reading" tag on a soft fill. */
+.off-books > .off-now { border-color: transparent; background: color-mix(in srgb, var(--ink) 7%, var(--bg)); }
+:root[data-theme="dark"] .off-books > .off-now { background: color-mix(in srgb, var(--ink) 10%, var(--bg)); }
+
+/* The shelf scrolls: swipe, trackpad, wheel or drag (js/about-extra.js)
+   instead of drifting by itself. Each book once; edges fade; no scrollbar. */
+.off-books .bm { overflow-x: auto; overscroll-behavior-x: contain; scrollbar-width: none; scroll-snap-type: x proximity; }
+.off-books .bm::-webkit-scrollbar { display: none; }
+.off-books .bm-track { animation: none !important; transform: none !important; padding-inline: 1.125rem; }
+.off-books .bcv { scroll-snap-align: start; }
+.off-books .bcv.is-loop { display: none; }
+.js .off-books .bm { cursor: grab; }
+.js .off-books .bm.is-dragging { cursor: grabbing; scroll-snap-type: none; }
+.off-books .bm.is-dragging .bcv { pointer-events: none; }
+/* Shelf: no fading edges; both sets shown for the seamless loop; no snap
+   (the drift moves it smoothly). Drifting is done in js/about-extra.js. */
+.off-books .bm { -webkit-mask-image: none !important; mask-image: none !important; scroll-snap-type: none !important; }
+.off-books .bcv.is-loop { display: block !important; }
+@media (prefers-reduced-motion: reduce) { .off-books .bcv.is-loop { display: none !important; } }
+html[data-motion="calm"] .off-books .bcv.is-loop { display: none !important; }
+/* "Now reading" tag on a dark fill (light fill in the dark theme). */
+.off-books > .off-now { background: #141414; color: rgba(255, 255, 255, 0.72); }
+.off-books > .off-now strong { color: #fff; }
+:root[data-theme="dark"] .off-books > .off-now { background: #f2f1ee; color: rgba(20, 20, 20, 0.7); }
+:root[data-theme="dark"] .off-books > .off-now strong { color: #141414; }
+
+/* Nav bar: a little more opaque, so content scrolling under it shows
+   through less. */
+.nav::before { background: rgba(255, 255, 255, 0.985); }
+:root[data-theme="dark"] .nav::before { background: rgba(28, 28, 30, 0.985); }
+@media (prefers-reduced-transparency: reduce) {
+  .nav::before { background: rgba(255, 255, 255, 0.97); }
+  :root[data-theme="dark"] .nav::before { background: rgba(24, 24, 26, 0.97); }
+}
+/* "Now reading:" a size up; the book title in the site's green (the
+   lime of the music card on the dark tag, the hero's teal on the light
+   tag in the dark theme). */
+.off-books > .off-now { font-size: 0.875rem; padding: 0.25rem 0.75rem; gap: 0.375rem; }
+.off-books > .off-now strong { color: #b6e37b; }
+:root[data-theme="dark"] .off-books > .off-now strong { color: #1f6b5e; }
+
+/* ---------- Grass above the footer (every page but About) ----------
+   A painted strip of grass, day or night with the theme, spanning the
+   width at its own proportions. It runs 3px past the page's rounded
+   bottom edge (the page clips it), so no hairline of page colour ever
+   shows between the grass and the footer bar. */
+.px-grass { position: relative; aspect-ratio: 2172 / 194; margin-top: 1rem; pointer-events: none; }
+.px-grass img { position: absolute; left: 0; top: 0; width: 100%; height: calc(100% + 3px); object-fit: cover; object-position: 50% 0; }
+.pg-night, :root[data-theme="dark"] .pg-day { display: none; }
+:root[data-theme="dark"] .pg-night { display: block; }
+.page:has(.px-grass) { overflow: clip; }
+.px-grass + .page-end { margin-top: -1px; position: relative; }
+@media (max-width: 640px) { .px-grass { aspect-ratio: auto; height: 3.75rem; } .px-grass img { object-position: 30% 0; } }
+@media (forced-colors: active) { .px-grass { display: none; } }
+/* Grass sits lower: the strip is shorter than the picture, and the
+   picture's foot runs on under the page's bottom edge (clipped there), so
+   less of it shows above the footer. */
+.px-grass { aspect-ratio: 2172 / 130; }
+.px-grass img { height: auto; aspect-ratio: 2172 / 194; object-fit: cover; }
+@media (max-width: 640px) { .px-grass { aspect-ratio: auto; height: 2.75rem; } .px-grass img { height: 3.75rem; width: auto; min-width: 100%; aspect-ratio: auto; } }
+/* Grass a little lower still. */
+.px-grass { aspect-ratio: 2172 / 100; }
+@media (max-width: 640px) { .px-grass { aspect-ratio: auto; height: 2.125rem; } }
+.px-grass { aspect-ratio: 2172 / 122; }
+@media (max-width: 640px) { .px-grass { aspect-ratio: auto; height: 2.5rem; } }
+.px-grass { aspect-ratio: 2172 / 140; }
+@media (max-width: 640px) { .px-grass { aspect-ratio: auto; height: 3rem; } }
