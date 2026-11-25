@@ -29,10 +29,10 @@
 /* The drawing: hairlines on a 1440 by 900 sheet, centred and cropped to
    the hero, fading out towards the edges. */
 .hc .hc-sky {
-  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23141414' stroke-opacity='.06' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
+  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23141414' stroke-opacity='.03' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
 }
 :root[data-theme="dark"] .hc .hc-sky {
-  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23ffffff' stroke-opacity='.06' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
+  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23ffffff' stroke-opacity='.035' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
 }
 /* The page colour rises at the foot, so the next section starts clean. */
 .hc .hc-sky::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, transparent 60%, var(--bg)), var(--hb-draw) 50% 30% / max(100%, 1440px) auto no-repeat; }
