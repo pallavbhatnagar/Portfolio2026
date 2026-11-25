@@ -137,19 +137,6 @@
 :root[data-theme="dark"] .project[data-theme="rose"]  { --card: var(--rose-bg);   --ink-tag: var(--rose-ink); }
 :root[data-theme="dark"] .project[data-theme="sky"]   { --card: var(--sky-bg);     --ink-tag: var(--sky-ink); }
 :root[data-theme="dark"] .project[data-theme="sand"]  { --card: var(--sand-bg);   --ink-tag: var(--sand-ink); }
-/* Home's project cards carry their colour more fully than the page tints:
-   each family's shade 100 for the card and shade 900 for its accent ink
-   (one hue per family; ink 9-13:1, body and grey text 4.8:1 or more). */
-.proj-stack .project { --card: #edf5ea; --ink-tag: #29481e; }
-.proj-stack .project[data-theme="lilac"] { --card: #edeaf6; --ink-tag: #281b4b; }
-.proj-stack .project[data-theme="rose"]  { --card: #f7ebe9; --ink-tag: #511f15; }
-.proj-stack .project[data-theme="sky"]   { --card: #e9f0f7; --ink-tag: #153351; }
-.proj-stack .project[data-theme="sand"]  { --card: #f6f1e9; --ink-tag: #4e3818; }
-:root[data-theme="dark"] .proj-stack .project { --card: #283225; --ink-tag: #dcebd6; }
-:root[data-theme="dark"] .proj-stack .project[data-theme="lilac"] { --card: #282433; --ink-tag: #dbd5ec; }
-:root[data-theme="dark"] .proj-stack .project[data-theme="rose"]  { --card: #342623; --ink-tag: #eed7d2; }
-:root[data-theme="dark"] .proj-stack .project[data-theme="sky"]   { --card: #232b34; --ink-tag: #d2e0ee; }
-:root[data-theme="dark"] .proj-stack .project[data-theme="sand"]  { --card: #332d24; --ink-tag: #ede3d4; }
 
 /* Component-level dark overrides: places that hold a literal colour rather
    than a token, so flipping the tokens above doesn't reach them. */
@@ -160,10 +147,7 @@
 :root[data-theme="dark"] .wk-meta { border-top-color: rgba(255, 255, 255, 0.12); }
 :root[data-theme="dark"] .ag-card-metric { border-top-color: rgba(255, 255, 255, 0.12); }
 :root[data-theme="dark"] .ag-info { background: var(--surface-2); }
-:root[data-theme="dark"] .project-desc,
-:root[data-theme="dark"] .metrics dt,
-:root[data-theme="dark"] .wk-what,
-:root[data-theme="dark"] .ag-card p { color: var(--ink-soft); }
+:root[data-theme="dark"] .metrics dt, :root[data-theme="dark"] .wk-what, :root[data-theme="dark"] .ag-card p { color: var(--ink-soft); }
 
 /* A calm cross-fade between themes on the surfaces that actually change,
    not a blanket transition on every element. */
@@ -403,7 +387,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 /* Each card keeps its own layers (tags, badges) inside it, so nothing on a
    card can ever sit above the nav or other page chrome. */
 .wk-card { position: relative; isolation: isolate; }
-.proj-stack .project { isolation: isolate; }
 .btn:active { transform: scale(0.97); }
 .btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
@@ -471,10 +454,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    reader pick on Works; a touch heavier under the pointer. */
 :root { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%272.7%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%232a4fe0%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%237656d4%27/%3E%3Cstop offset=%271%27 stop-color=%27%23d9227f%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%275.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); }
 :root[data-theme="dark"] { --scribble: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%272.7%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%273.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%274.4%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); --scribble-sm-bold: url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 -1 200 14%27 preserveAspectRatio=%27none%27%3E%3ClinearGradient id=%27g%27 x1=%270%27 x2=%271%27%3E%3Cstop offset=%270%27 stop-color=%27%235b82ff%27/%3E%3Cstop offset=%27.5%27 stop-color=%27%23a68cf0%27/%3E%3Cstop offset=%271%27 stop-color=%27%23ff4fa6%27/%3E%3C/linearGradient%3E%3Cpath d=%27M3 9.6C24 7.4 44 6.2 70 7.6S118 9.4 146 6.4C164 4.6 182 5.6 197 2.8%27 fill=%27none%27 stroke=%27url(%23g)%27 stroke-width=%275.6%27 stroke-linecap=%27round%27/%3E%3C/svg%3E"); }
-.proj-title-link { color: inherit; text-decoration: none; padding-bottom: 0.1em; background-image: var(--scribble); background-size: 100% 0.373em; background-position: 0 100%; background-repeat: no-repeat; }
-@media (hover: hover) and (pointer: fine) { .proj-title-link:hover { background-image: var(--scribble-bold); } }
-.proj-title-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 0.25rem; }
-@media (forced-colors: active) { .proj-title-link { text-decoration: underline; background-image: none; } }
 @media (max-width: 640px) {
   .proj-head { flex-direction: column; align-items: flex-start; }
 }
@@ -495,17 +474,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
   top: var(--head-top);
   margin-bottom: 3rem;
 }
-
-/* Cards (the design from "portfolio - Copy (2)"): pure CSS stacking. Each
-   card sticks one strip lower than the one before (--n x --strip below
-   --stack-top), so the earlier cards' top strips stay visible as a pile.
-   script.js only sets --stack-top under the pinned heading and gives the
-   cards equal heights. Everything is scoped to .proj-stack so the Works
-   page's own .browser mockups are untouched. */
-.proj-stack { padding-bottom: 0.75rem; }
-/* No visible gap after the last card. The stack keeps its full height (the
-   pinned heading and the cards' release depend on it), so the next section
-   is pulled up by the last card's margin plus this padding instead. */
 /* Home: one step between every section after the hero (--home-gap, from
    the end of one section's content to the start of the next): the value
    section's bottom padding plus the testimonials' top padding. */
@@ -524,54 +492,10 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .project[data-theme="rose"]  { --card: var(--rose-bg);   --ink-tag: var(--rose-ink); }
 .project[data-theme="sky"]   { --card: var(--sky-bg);     --ink-tag: var(--sky-ink); }
 .project[data-theme="sand"]  { --card: var(--sand-bg);   --ink-tag: var(--sand-ink); }
-.proj-stack .project {
-  --strip: 3.5rem;
-  position: sticky;
-  top: calc(var(--stack-top) + var(--n) * var(--strip));
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 1.125rem;
-  min-height: 20.125rem;
-  margin-bottom: var(--card-gap);
-  padding: 1.125rem;
-  border-radius: 1.125rem;
-  background: var(--card);
-}
-/* The card holding keyboard focus comes to the front of the pile, so a
-   later card can never cover its focused link (WCAG 2.4.11). */
-.proj-stack .project:focus-within { z-index: 2; }
-.proj-stack .project-copy { display: flex; flex-direction: column; padding: 0.125rem; }
-.proj-stack .project-tag { font-size: 1rem; font-weight: 700; color: var(--ink-tag); }
-.proj-stack .project-title {
-  margin-top: 0.75rem;
-  font-size: clamp(1.375rem, 3.75vw, 1.6667rem);
-  font-weight: 700;
-  letter-spacing: var(--track-heading);
-  line-height: 1.08;
-}
-.proj-stack .project-desc { margin-top: 0.375rem; max-width: 45ch; font-size: var(--fs-body); line-height: 1.45; color: #444444; }
-/* Metrics: the number first, its label under it, a hairline between the
-   two (dt stays first in the markup; flex puts it underneath). */
-.proj-stack .metrics { display: flex; gap: 1.75rem; margin-top: auto; padding-top: 1.125rem; }
-.proj-stack .metrics > div { display: flex; flex-direction: column-reverse; justify-content: flex-end; }
-.proj-stack .metrics > div + div { padding-left: 1.75rem; border-left: 1px solid color-mix(in srgb, var(--ink-tag) 22%, transparent); }
-.proj-stack .metrics dt { max-width: 16ch; margin-top: 0.25rem; font-size: 0.9375rem; line-height: 1.35; color: var(--ink-soft); }
-.proj-stack .metrics dd {
-  margin-top: 0;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: var(--track-heading);
-  line-height: 1.1;
-  color: var(--ink-tag);
-}
 /* The whole card is the link: an invisible link covers the card (so the
    card is one click target and one tab stop), and keyboard focus rings the
    card. With a mouse, a tooltip in the card's own colour follows the
    pointer and says where the click goes (script.js block 11d). */
-.proj-stack .project-link { position: absolute; inset: 0; z-index: 1; border-radius: inherit; }
-.proj-stack .project-link:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-.proj-stack .project { transition: transform 0.2s var(--ease-out); }
-.proj-stack .project:has(.project-link:active) { transform: scale(0.995); }
 
 .proj-tip { position: fixed; top: 0; left: 0; z-index: 30; pointer-events: none; }
 .proj-tip-in {
@@ -597,25 +521,6 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
 .proj-tip.is-on .proj-tip-in { opacity: 1; transform: rotate(-4deg); }
 @media (prefers-reduced-motion: reduce) { .proj-tip-in { transform: none; transition: opacity 0.15s ease; } }
 @media (forced-colors: active) { .proj-tip-in { border: 1px solid CanvasText; } }
-
-/* Visual: the screenshot runs to the card's top, right and bottom edges.
-   Negative margins cancel the card's padding, and the right corners follow
-   the card's own radius. The image fills the frame (object-fit: cover). */
-.proj-stack .project-panel {
-  display: flex;
-  align-items: stretch;
-  overflow: hidden;
-  margin: calc(-1.125rem + 4px) calc(-1.125rem + 4px) calc(-1.125rem + 4px) 0; /* the screenshot sits 4px in from the card's top, right and bottom */
-  border-radius: calc(1.125rem - 4px);
-}
-.proj-stack .project-shot {
-  position: relative;
-  width: 100%;
-  min-height: 11.125rem;
-  overflow: hidden;
-  background: #fff;
-}
-.proj-stack .project-shot :is(img, video) { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 /* Locked projects (data-locked on the card): a lock badge on the image.
    It sits on the screenshot, so it stays light in both themes. */
 .shot-lock {
@@ -720,13 +625,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    with .proj-flat, since a card stuck half off screen would hide its own
    bottom under the next one. */
 @media (prefers-reduced-motion: reduce) {
-  .proj-stack .project { position: relative; top: auto; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
 }
-.projects.proj-flat .proj-stack .project { position: relative; top: auto; }
-/* Phones: the cards simply scroll by (a stack of screenshot strips reads
-   poorly that small). */
-@media (max-width: 640px) { .proj-stack .project { position: relative; top: auto; } }
 /* Wider screens, cards not stacking: the same space under the heading as
    when they stack. */
 @media (prefers-reduced-motion: reduce) and (min-width: 1025px) {
@@ -737,12 +637,8 @@ html.is-scrolling::-webkit-scrollbar-thumb, html.edge-hover::-webkit-scrollbar-t
    scrolls with the page (no pinning). script.js reads the heading's
    position, so with it not sticky it stops pinning altogether. */
 @media (max-width: 1024px) {
-  .proj-stack .project { grid-template-columns: 1fr; min-height: 0; margin-bottom: 2rem; }
   .projects.proj-pinned .proj-head { position: relative; top: auto; margin-bottom: var(--space-5); transform: none !important; }
   .projects + .value { margin-top: calc(var(--home-gap) - 2rem - 0.75rem - 2.75rem); }
-  .proj-stack .project-panel { order: -1; margin: calc(-1.125rem + 4px) calc(-1.125rem + 4px) 0; border-radius: calc(1.125rem - 4px); }
-  .proj-stack .project-shot { min-height: 0; aspect-ratio: 3 / 2; }
-  .proj-stack .metrics { margin-top: 1.125rem; }
 }
 
 /* =========================================================
@@ -1315,7 +1211,6 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .ab-stats { display: flex; justify-content: center; gap: clamp(1.5rem, 6vw, 3.125rem); text-align: center; }
 .ab-stat { padding: 0.875rem 0; }
 .ab-num { margin: 0; font-size: 2rem; font-weight: 500; letter-spacing: var(--track-heading); line-height: 1.1; font-variant-numeric: tabular-nums; color: var(--ink); }
-.ab-cap { margin: 0.25rem auto 0; max-width: 20ch; font-size: var(--fs-body); line-height: 1.4; color: var(--ink-soft); }
 
 .ab-story, .ab-glance { display: grid; grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr); gap: var(--space-4); align-items: start; }
 .ab-story .ab-h2 { position: sticky; top: 4.625rem; }
@@ -2308,19 +2203,16 @@ body.ask-open .shell-scrollbar {
    chapters. Where the rail is hidden (narrower windows, chat open)
    the breadcrumb above the title is the way back instead. */
 /* Glass look, like the nav (tint only, no blur). */
-.cs-rail-back, .cs-crumb-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.93); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
-:root[data-theme="dark"] .cs-rail-back, :root[data-theme="dark"] .cs-crumb-back { background: rgba(28, 28, 30, 0.93); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
-.cs-rail-back svg, .cs-crumb-back svg { flex: none; }
-.cs-rail-back:focus-visible, .cs-crumb-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.cs-rail-back { display: inline-grid; place-items: center; width: 2.25rem; height: 2.25rem; border: 1px solid var(--hairline); border-radius: 50%; background: rgba(255, 255, 255, 0.93); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.7), 0 0.5rem 1.5rem -1rem rgba(13, 13, 13, 0.25); color: var(--ink); transition: background-color 0.2s ease, border-color 0.2s ease; }
+:root[data-theme="dark"] .cs-rail-back { background: rgba(28, 28, 30, 0.93); border-color: rgba(255, 255, 255, 0.1); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 0.5rem 1.5rem -1rem rgba(0, 0, 0, 0.6); }
+.cs-rail-back svg { flex: none; }
+.cs-rail-back:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 @media (hover: hover) and (pointer: fine) {
-  .cs-rail-back:hover, .cs-crumb-back:hover { border-color: var(--ink); }
+  .cs-rail-back:hover { border-color: var(--ink); }
 }
 .cs-rail-name { max-width: 11rem; margin: 1.25rem 0 0.625rem; font-size: var(--fs-small); line-height: 1.35; color: var(--ink-soft); }
 .cs-gated .cs-rail-name { display: none; }
 /* With the rail showing, only the category stays above the title. */
-@media (min-width: 1025px) {
-  body:not(.ask-open) .cs-crumb-back { display: none; }
-}
 @media (max-width: 640px) { .cs-crumbs { margin-top: 0.875rem; } }
 /* Title and headline on the left; Ask AI in the bottom-right corner, just
    above the divider over Role / Timeline / Team / Platform. */
@@ -2371,12 +2263,6 @@ body.ask-open .cs-side { display: none; }
 .cs-decision-copy h3 { font-size: clamp(1.125rem, 2.4vw, 1.375rem); font-weight: 500; letter-spacing: -0.015em; line-height: 1.25; }
 .cs-decision-copy p { max-width: 44ch; margin-top: 0.4375rem; font-size: var(--fs-body); line-height: 1.65; color: var(--ink-soft); }
 .cs-decision:nth-child(even) .cs-crop { order: 2; }
-
-.cs-testimonial { margin: 1.625rem 0 0; padding: 1.375rem 1.5rem; border-radius: 0.4375rem; background: color-mix(in srgb, var(--tint) 60%, var(--bg)); }
-.cs-testimonial blockquote { margin: 0; }
-.cs-testimonial p { font-size: clamp(1.125rem, 2.4vw, 1.375rem); font-weight: 400; letter-spacing: -0.015em; line-height: 1.35; color: var(--ink); }
-.cs-testimonial figcaption { display: flex; flex-direction: column; gap: 0.0625rem; margin-top: 0.75rem; font-size: 1rem; color: var(--ink-soft); }
-.cs-testimonial strong { font-weight: 600; color: var(--ink); }
 
 /* Detailed story blocks (the Wave 2.0 case study). Same
    type sizes as the standard chapters: headings 1.125rem / 500, text
@@ -2659,10 +2545,10 @@ body.ask-open .cs-side { display: none; }
 @media (prefers-contrast: more) {
   :root { --ink-soft: #444444; --line: #8a8a8a; --hairline: rgba(13, 13, 13, 0.35); }
   :root[data-theme="dark"] { --ink-soft: #cfcfcf; --line: #8a8a8a; --hairline: rgba(255, 255, 255, 0.4); }
-  .proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card {
+  .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .im-card, .vx-card, .ag-card {
     box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.3);
   }
-  :root[data-theme="dark"] :is(.proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card) {
+  :root[data-theme="dark"] :is(.wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .im-card, .vx-card, .ag-card) {
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.35);
   }
   .footer-links img, .copy-mail { opacity: 0.85; }
@@ -2674,7 +2560,7 @@ body.ask-open .cs-side { display: none; }
    colour, and selected states get an outline or underline instead of a
    colour. Canvas, CanvasText and Highlight are the visitor's system colours. */
 @media (forced-colors: active) {
-  .proj-stack .project, .wk-card, .cs-cover, .cs-insight, .cs-quad, .cs-side-card, .cs-testimonial, .cs-gate, .im-card, .off-card, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv, .btn, .cs-ask, .wk-chip, .wk-badge, .cs-cover-tag, .shot-lock, .cs-tags li, .cs-quad-items li, .cs-tools li {
+  .wk-card, .cs-cover, .cs-insight, .cs-quad, .cs-side-card, .cs-gate, .im-card, .off-card, .vx-card, .ag-card, .ag-bubble, .ask-panel-form, .bcv, .btn, .cs-ask, .wk-chip, .wk-badge, .cs-cover-tag, .shot-lock, .cs-tags li, .cs-quad-items li, .cs-tools li {
     border: 1px solid CanvasText;
   }
   /* Selected states. */
@@ -2876,8 +2762,6 @@ html.is-preloading.pl-ready::before { display: none; }
   .preloader.is-leaving .pl-note { opacity: 0; } /* fades as the curtain lifts */
 } /* a fade in place: no slide or blur, so nothing nudges or seems to change weight */
 @media print { html.is-preloading::before, .preloader { display: none; } }
-/* Nothing of the page shows over the hello screen. */
-html.is-preloading .bp-toggle, html.pl-ready .bp-toggle { opacity: 0; pointer-events: none; }
 
 /* Works intro: "who's reading?". A quiet row of reader roles above one large
    sentence that rewrites itself for that reader, then the two case studies
@@ -3497,12 +3381,12 @@ html[data-motion="calm"] *, html[data-motion="calm"] *::before, html[data-motion
 /* Higher contrast: the same values the site uses when a device asks for more. */
 html[data-contrast] { --ink-soft: #3a3a3a; --line: #7a7a7a; --hairline: rgba(13, 13, 13, 0.4); }
 html[data-contrast][data-theme="dark"] { --ink-soft: #d6d6d6; --line: #8a8a8a; --hairline: rgba(255, 255, 255, 0.45); }
-html[data-contrast] :is(.proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card, .tq-card, .off-card) { box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.35); }
-html[data-contrast][data-theme="dark"] :is(.proj-stack .project, .wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .cs-testimonial, .im-card, .vx-card, .ag-card, .tq-card, .off-card) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4); }
+html[data-contrast] :is(.wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .im-card, .vx-card, .ag-card, .tq-card, .off-card) { box-shadow: inset 0 0 0 1px rgba(13, 13, 13, 0.35); }
+html[data-contrast][data-theme="dark"] :is(.wk-card, .cs-insight, .cs-quad, .cs-side-card.is-after, .im-card, .vx-card, .ag-card, .tq-card, .off-card) { box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.4); }
 html[data-contrast] .tq-name span, html[data-contrast] .lf-fig figcaption { color: var(--ink-soft); }
 
 /* Underline links: every text link, not the cards or buttons. */
-html[data-links] a:not(.btn):not(.project-link):not([class*="card"]):not(.cs-rail-back):not(.cs-crumb-back):not(.om-sc):not(.proj-title-link) { text-decoration-line: underline !important; text-decoration-thickness: 0.075em !important; text-underline-offset: 0.22em !important; }
+html[data-links] a:not(.btn):not(.project-link):not([class*="card"]):not(.cs-rail-back):not(.om-sc) { text-decoration-line: underline !important; text-decoration-thickness: 0.075em !important; text-underline-offset: 0.22em !important; }
 
 /* Bold focus ring: thick ink outline with a bright halo, on everything. */
 html[data-focus] :focus-visible { outline: 3px solid var(--ink) !important; outline-offset: 3px !important; box-shadow: 0 0 0 7px #ffd23f !important; }
@@ -3938,7 +3822,6 @@ html.theme-fading *, html.theme-fading *::before, html.theme-fading *::after { t
 /* The two lines in contrast, as in the About hero: the link line set firm,
    the rest light. */
 .proj-head .proj-intro h2 { font-weight: 600; letter-spacing: -0.035em; }
-.proj-head .proj-intro h2 .pt-soft { font-weight: 300; letter-spacing: -0.03em; } /* same size as the headings below (.value-head h2); a little more air so the underline clears the second line */
 /* Phones: the title runs on across the full width (the break is for the
    two-column layout). */
 @media (max-width: 640px) { .proj-head .proj-intro h2 { max-width: none; } .proj-head .proj-intro h2 br { display: none; } }

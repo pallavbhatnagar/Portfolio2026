@@ -527,26 +527,16 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
 .ask-panel-form { border-radius: 1.5rem !important; }
 .ask-panel-send { border-radius: 1rem !important; }
 
-/* A small square photo between "I'm" and the name. */
-.hc-hi-dp { display: inline-block; width: 1.4em; height: 1.4em; margin: 0 0.1em; vertical-align: -0.38em; border-radius: 0.3em; object-fit: cover; box-shadow: 0 0 0 1px color-mix(in srgb, var(--ink) 10%, transparent); }
-.hc-hi-dp { border-radius: 0 !important; box-shadow: none !important; }
-
-/* A waving hand before "Hi". It waves once as the hero arrives; still with
+/* A waving hand before "Hi": Fluent Emoji "Waving hand" (Flat, MIT), in
+   full colour as drawn. It waves once as the hero arrives; still with
    motion reduced or in Calm. */
-.hc-wave { display: inline-block; margin-right: 0.3em; transform-origin: 70% 80%; }
+.hc-wave { display: inline-block; width: 1.3em; height: 1.3em; margin-right: 0.3em; vertical-align: -0.24em; transform-origin: 70% 90%; }
+.hc-wave svg { display: block; width: 100%; height: 100%; overflow: visible; }
 @media (prefers-reduced-motion: no-preference) {
   html:not([data-motion="calm"]) .hc.is-in .hc-wave { animation: hc-wave 1.6s ease-in-out 0.9s 1 both; }
 }
 @keyframes hc-wave { 0%, 60%, 100% { transform: rotate(0); } 10%, 30% { transform: rotate(14deg); } 20%, 40% { transform: rotate(-8deg); } 50% { transform: rotate(10deg); } }
-/* The hand as a sticker in the hero's own style: a navy line drawing on a
-   soft peach disc, two small motion marks. It waves from the wrist. */
-.hc-wave { width: 1.45em; height: 1.45em; vertical-align: -0.4em; margin-right: 0.35em; transform-origin: 40% 85%; }
-.hc-wave svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.hw-bg { fill: #fbe0bf; }
-:root[data-theme="dark"] .hw-bg { fill: #f3cf9f; }
-.hw-hand, .hw-lines { transform-box: fill-box; }
-@media (forced-colors: active) { .hw-bg { fill: Canvas; stroke: CanvasText; } .hc-wave svg g { stroke: CanvasText; } }
-.hc-wave .hw-lines { stroke: var(--ink); }
+
 /* The headline bold (700). */
 .hc-title.hc-big { font-weight: 700 !important; letter-spacing: -0.045em; }
 /* The description a size up (desktop and tablet 1.1875 -> 1.3125rem). */
@@ -561,22 +551,3 @@ html .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask { box-shadow: none 
   .hc { min-height: 0 !important; grid-template-rows: 0 auto auto auto auto auto 5rem auto !important; padding-bottom: 1rem !important; }
   .projects { margin-top: 6rem !important; }
 }
-
-/* The waving hand, drawn as a sticker like the others: a solid warm hand
-   with a navy outline and finger lines, mid-wave, two motion marks. */
-.hc-wave { --hw-skin: #ffd59a; width: 1.6em; height: 1.6em; vertical-align: -0.48em; margin-right: 0.3em; color: #1b1b39; transform-origin: 45% 85%; }
-.hc-wave .hw-lines { stroke: var(--ink); }
-:root[data-theme="dark"] .hc-wave { --hw-skin: #ffd59a; color: #1b1b39; }
-@media (forced-colors: active) { .hc-wave { --hw-skin: Canvas; color: CanvasText; } }
-
-/* The waving hand: Phosphor's "hand-waving" (duotone, MIT), the hand in a
-   warm fill under the site's ink line. Replaces the earlier drawings. */
-.hc-wave { width: 1.35em !important; height: 1.35em !important; vertical-align: -0.3em !important; margin-right: 0.3em !important; color: var(--ink) !important; transform-origin: 30% 80% !important; }
-.hc-wave svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.hc-wave .hw-fill { fill: #ffc966; }
-.hc-wave .hw-line { fill: currentColor; }
-:root[data-theme="dark"] .hc-wave .hw-fill { fill: #f0b54a; }
-@media (forced-colors: active) { .hc-wave .hw-fill { fill: Canvas; } .hc-wave .hw-line { fill: CanvasText; } }
-.hc-wave { width: 1.55em !important; height: 1.4em !important; vertical-align: -0.34em !important; transform-origin: 50% 90% !important; }
-/* Wave hand: Fluent Emoji "Waving hand" (Flat), full colour as drawn. */
-.hc-wave { width:1.3em!important; height:1.3em!important; vertical-align:-0.24em!important; margin-right:0.3em!important; transform-origin:70% 90%!important; }

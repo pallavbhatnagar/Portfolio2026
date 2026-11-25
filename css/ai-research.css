@@ -52,8 +52,6 @@
 .air-reply.is-after { background: var(--bg); color: var(--ink); box-shadow: inset 0 0 0 1.5px color-mix(in srgb, var(--air-ink) 30%, transparent); }
 .air-tag { display: block; margin-bottom: 0.25rem; font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); }
 .is-after .air-tag { color: var(--air-ink); }
-.air-why { margin-top: auto; padding-top: 0.25rem; font-size: var(--fs-small); line-height: 1.5; color: var(--ink-soft); }
-.air-why b { font-weight: 600; color: var(--ink); }
 
 /* ---------- The audit ---------- */
 .air-audit { margin: 1.5rem 0 0; padding: 1.25rem; border-radius: 0.875rem; background: var(--surface); }
@@ -200,16 +198,12 @@ details.air-sec[open]::details-content { block-size: auto; }
 .air-when { display: block; font-size: 0.75rem; opacity: 0.7; }
 .air-reply p + p, .air-reply ul { margin-top: 0.375rem; }
 .air-reply ul { padding-left: 1.125rem; list-style: disc; }
-.air-pairs.is-one { grid-template-columns: 1fr; }
-.air-pairs.is-one .air-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 0.625rem; }
 .air-pair[hidden] { display: none; }
 
 /* Quote and code */
 .air-quote { margin: 1.125rem 0 0; padding: 1.25rem 1.5rem; border-radius: 0.75rem; background: var(--air-soft); font-size: 1.0625rem; line-height: 1.6; }
 .air-quote p + p { margin-top: 0.25rem; }
 .air-quote strong { color: var(--air-ink); }
-.air-code { margin-top: 1rem; padding: 1rem 1.125rem; overflow-x: auto; border-radius: 0.75rem; background: #16131f; color: #e9e4fb; font: 400 0.8125rem/1.6 ui-monospace, "Cascadia Code", Consolas, monospace; }
-:root[data-theme="dark"] .air-code { background: #0e0c14; box-shadow: inset 0 0 0 1px var(--hairline); }
 
 /* Sources */
 .air-sources { margin: 1rem 0 0; padding-left: 2.25rem; list-style: decimal; font-size: 0.875rem; line-height: 1.55; color: var(--ink-soft); }
@@ -316,7 +310,6 @@ details.air-sec[open]::details-content { block-size: auto; }
   .air-sum-m { display: none; }
   .air-cards, .air-cards.is-three, .air-found { grid-template-columns: 1fr; }
   .air-card dl > div { grid-template-columns: 1fr; gap: 0.25rem; }
-  .air-pairs.is-one .air-pair { grid-template-columns: 1fr; }
   .air-x-dl.is-case { grid-template-columns: 1fr; }
   .air-panel { padding: 1.125rem; }
   .air-rules-list li { grid-template-columns: 2.5rem minmax(0, 1fr); }
