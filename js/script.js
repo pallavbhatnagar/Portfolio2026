@@ -3054,8 +3054,16 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     const root = document.documentElement;
     const touch = window.matchMedia("(hover: none), (pointer: coarse)");
     const still = () => touch.matches || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const fade = (change) => {
+    // The new theme grows out of the button in a circle (CSS:
+    // ::view-transition-new(root)); the circle starts at the button's centre
+    // and grows to reach the farthest corner of the window.
+    const fade = (change, from) => {
       if (still()) { change(); return; }
+      const el = from || document.querySelector(".theme-toggle");
+      const r = el && el.getBoundingClientRect();
+      const x = r && r.width ? r.left + r.width / 2 : innerWidth / 2, y = r && r.height ? r.top + r.height / 2 : innerHeight / 2;
+      root.style.setProperty("--tx", x + "px"); root.style.setProperty("--ty", y + "px");
+      root.style.setProperty("--tr", Math.hypot(Math.max(x, innerWidth - x), Math.max(y, innerHeight - y)) + "px");
       root.classList.add("theme-fading");
       document.startViewTransition(change).finished.finally(() => root.classList.remove("theme-fading"));
     };
@@ -3066,7 +3074,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       if (!btn || passing || still()) return;
       e.stopImmediatePropagation();
       e.preventDefault();
-      fade(() => { passing = true; btn.click(); passing = false; });
+      fade(() => { passing = true; btn.click(); passing = false; }, btn);
     }, true);
     const setTheme = window.__setTheme;
     window.__setTheme = (mode) => {
