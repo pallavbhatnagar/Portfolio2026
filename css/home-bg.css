@@ -29,10 +29,10 @@
 /* The drawing: hairlines on a 1440 by 900 sheet, centred and cropped to
    the hero, fading out towards the edges. */
 .hc .hc-sky {
-  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23141414' stroke-opacity='.016' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
+  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23141414' stroke-opacity='.026' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
 }
 :root[data-theme="dark"] .hc .hc-sky {
-  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23ffffff' stroke-opacity='.02' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
+  --hb-draw: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 900' fill='none' stroke='%23ffffff' stroke-opacity='.032' stroke-width='1'%3E%3Ccircle cx='720' cy='380' r='310'/%3E%3Ccircle cx='720' cy='380' r='250'/%3E%3Cpath d='M0 -40 1440 840M1440 -40 0 840M480 0v900M720 0v900M960 0v900M0 120h1440M0 380h1440M0 640h1440'/%3E%3C/svg%3E");
 }
 /* The page colour rises at the foot, so the next section starts clean. */
 .hc .hc-sky::after { content: ""; position: absolute; inset: 0; z-index: 1; background: linear-gradient(to bottom, transparent 60%, var(--bg)); }
@@ -82,3 +82,46 @@ html[data-plain] .hc-title.hc-big, html[data-plain] #next-title { text-shadow: n
 @media (forced-colors: active) { .hc-title.hc-big, #next-title { text-shadow: none !important; filter: none !important; } }
 
 
+
+/* ---------- The crystal in the closing line ----------
+   A small glowing crystal floats just before "Right now": it bobs up and
+   down and leans a touch, its glow breathing with it (brighter in the dark
+   theme). Still in Calm or with motion reduced. */
+.nx-crystal { display: inline-block; position: relative; width: 0.95em; height: 1.65em; margin: 0 0.38em 0 0; vertical-align: -0.42em; }
+.nx-crystal img { display: block; width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 0.18em rgba(139, 92, 246, 0.55)) drop-shadow(0 0.35em 0.5em rgba(91, 33, 182, 0.25)); }
+.nx-crystal::before { content: ""; position: absolute; inset: -30% -60%; z-index: -1; border-radius: 50%; background: radial-gradient(closest-side, rgba(167, 139, 250, 0.35), transparent); }
+:root[data-theme="dark"] .nx-crystal img { filter: drop-shadow(0 0 0.22em rgba(167, 139, 250, 0.9)) drop-shadow(0 0 0.7em rgba(139, 92, 246, 0.65)) drop-shadow(0 0 1.4em rgba(124, 58, 237, 0.45)); }
+:root[data-theme="dark"] .nx-crystal::before { background: radial-gradient(closest-side, rgba(139, 92, 246, 0.55), transparent); inset: -45% -85%; }
+@media (prefers-reduced-motion: no-preference) {
+  html:not([data-motion="calm"]) .nx-crystal img { animation: nx-float 4.2s ease-in-out infinite; }
+  html:not([data-motion="calm"]) .nx-crystal::before { animation: nx-glow 4.2s ease-in-out infinite; }
+}
+@keyframes nx-float { 0%, 100% { transform: translateY(0.06em) rotate(-4deg); } 50% { transform: translateY(-0.16em) rotate(4deg); } }
+@keyframes nx-glow { 0%, 100% { opacity: 0.6; transform: scale(0.92); } 50% { opacity: 1; transform: scale(1.08); } }
+html[data-plain] .nx-crystal::before { display: none; }
+@media (max-width: 640px) { .nx-crystal { width: 0.9em; height: 1.55em; } }
+.nx-crystal { width: 1.1em; height: 1.9em; vertical-align: -0.55em; margin-right: 0.3em; } /* a touch bigger, centred on the line */
+
+/* Crystal v2 (an original drawing in the footer's palette): it stands to
+   the left of the heading, as tall as its first two lines, so it sits
+   before both "Right" and "software". Jade glow, warmer and stronger in
+   the dark theme. Phones: above the heading, centred. */
+#next-title { position: relative; padding-left: 1.7em; }
+.nx-crystal { position: absolute; left: 0; top: 0.05em; width: 1.3em; height: 2.4em; margin: 0; vertical-align: baseline; }
+.nx-crystal img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 0 0.12em rgba(95, 184, 154, 0.55)) drop-shadow(0 0.25em 0.4em rgba(31, 107, 94, 0.3)); }
+.nx-crystal::before { inset: -10% -45%; background: radial-gradient(closest-side, rgba(143, 214, 184, 0.4), transparent); }
+:root[data-theme="dark"] .nx-crystal img { filter: drop-shadow(0 0 0.18em rgba(191, 240, 216, 0.85)) drop-shadow(0 0 0.6em rgba(95, 184, 154, 0.7)) drop-shadow(0 0 1.2em rgba(240, 180, 90, 0.35)); }
+:root[data-theme="dark"] .nx-crystal::before { inset: -25% -75%; background: radial-gradient(closest-side, rgba(95, 184, 154, 0.5), rgba(240, 180, 90, 0.12) 60%, transparent); }
+@media (max-width: 640px) {
+  #next-title { padding-left: 0; }
+  .nx-crystal { position: relative; display: block; left: auto; top: auto; width: 2.4rem; height: 4rem; margin: 0 auto 0.75rem; }
+}
+/* Crystal: in the AI colours, and hung out in the left margin, beyond the
+   content grid, so the heading lines up with the rest of the column. */
+#next-title { padding-left: 0; }
+@media (min-width: 641px) { .nx-crystal { left: -2.1em; top: -0.05em; } }
+.nx-crystal img { filter: drop-shadow(0 0 0.12em rgba(155, 98, 224, 0.55)) drop-shadow(0 0.25em 0.4em rgba(57, 101, 250, 0.28)); }
+.nx-crystal::before { background: radial-gradient(closest-side, rgba(155, 98, 224, 0.32), rgba(242, 54, 154, 0.08) 60%, transparent); }
+:root[data-theme="dark"] .nx-crystal img { filter: drop-shadow(0 0 0.18em rgba(201, 184, 255, 0.85)) drop-shadow(0 0 0.6em rgba(155, 98, 224, 0.75)) drop-shadow(0 0 1.2em rgba(242, 54, 154, 0.4)); }
+:root[data-theme="dark"] .nx-crystal::before { background: radial-gradient(closest-side, rgba(155, 98, 224, 0.5), rgba(57, 101, 250, 0.15) 60%, transparent); }
+#next-title { padding-left: 0; }

@@ -322,3 +322,5 @@ html[data-plain] .fp-fx { display: none; }
    clouds while you hold it there. */
 .ab-table .ab-pile:has(.ab-snap:hover, .ab-snap:focus-within) { z-index: 8; }
 .ab-table .ab-snap:hover, .ab-table .ab-snap:focus-within { z-index: 9; }
+/* The robot's lights only at night (dark theme). */
+:root:not([data-theme="dark"]) .fp-led { display: none; }

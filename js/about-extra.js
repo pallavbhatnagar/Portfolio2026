@@ -216,22 +216,45 @@
   // The real loudness of the clip (data-peaks, 0 to 100), resampled to as
   // many bars as fit: 3px bars with 2px gaps.
   const peaks = (wave.dataset.peaks || "").split(",").map(Number).filter((n) => !isNaN(n));
+  // One smooth wave, mirrored round a centre line, from the clip's real
+  // loudness (a point every ~4px, curves through them). The played part is
+  // a second copy revealed by a clip (--p); a playhead marks the spot.
   const build = () => {
-    const w = wave.clientWidth || 240;
-    N = Math.max(12, Math.floor((w + 2) / 5));
-    wave.innerHTML = Array.from({ length: N }, (_, i) => {
-      let v = 0.3;
-      if (peaks.length) { const a = Math.floor(i * peaks.length / N), b = Math.max(a + 1, Math.floor((i + 1) * peaks.length / N)); v = Math.max(...peaks.slice(a, b)) / 100; }
-      return `<i style="--h:${Math.max(0.12, v).toFixed(2)}"></i>`;
-    }).join("");
-    bars = Array.from(wave.children);
+    const w = Math.max(80, wave.clientWidth || 240), h = Math.max(16, wave.clientHeight || 28), mid = h / 2;
+    const n = Math.max(16, Math.round(w / 4));
+    const v = Array.from({ length: n }, (_, i) => {
+      if (!peaks.length) return 0.3;
+      const a = Math.floor(i * peaks.length / n), b = Math.max(a + 1, Math.floor((i + 1) * peaks.length / n));
+      return Math.max(0.06, Math.pow(Math.max(...peaks.slice(a, b)) / 100, 1.8));
+    });
+    const pts = (sign) => v.map((x, i) => [i * w / (n - 1), mid - sign * x * (mid - 1)]);
+    const curve = (p) => { let d = "M" + p[0][0].toFixed(1) + " " + p[0][1].toFixed(1);
+      for (let i = 0; i < p.length - 1; i++) { const p0 = p[i - 1] || p[i], p1 = p[i], p2 = p[i + 1], p3 = p[i + 2] || p2;
+        d += " C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + " " + (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + " " + p2[0].toFixed(1) + " " + p2[1].toFixed(1); }
+      return d; };
+    const top = pts(1), bot = pts(-1).reverse();
+    const shape = curve(top) + " L" + bot[0][0].toFixed(1) + " " + bot[0][1].toFixed(1) + curve(bot).slice(curve(bot).indexOf(" C")) + " Z";
+    const svg = (cls) => `<svg class="${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" aria-hidden="true"><path d="${shape}"/><path class="vw-mid" d="M0 ${mid} H${w}"/></svg>`;
+    wave.innerHTML = svg("vw-base") + `<span class="vw-hover">${svg("")}</span><span class="vw-played">${svg("")}</span><span class="vw-head"></span>`;
+    bars = []; N = n;
   };
+  wave.addEventListener("pointermove", (e) => { const r = wave.getBoundingClientRect(); wave.style.setProperty("--hx", Math.min(1, Math.max(0, (e.clientX - r.left) / r.width)).toFixed(4)); wave.classList.add("is-hover"); });
+  wave.addEventListener("pointerleave", () => wave.classList.remove("is-hover"));
   const fmt = (s) => { s = Math.max(0, Math.round(s || 0)); return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`; };
   let raf = 0;
   const paint = () => {
     const d = audio.duration || 0, p = d ? audio.currentTime / d : 0;
     const lit = p * N;
     vn.style.setProperty("--p", p.toFixed(4));
+    wave.style.setProperty("--p", p.toFixed(4));
+    wave.classList.toggle("has-pos", p > 0.001);
+    if (card) {
+      card.style.setProperty("--p", p.toFixed(4));
+      let target = 0;
+      if (meter && !audio.paused) { meter.getByteTimeDomainData(levels); let s = 0; for (let k = 0; k < levels.length; k++) { const v = (levels[k] - 128) / 128; s += v * v; } target = Math.min(1, Math.sqrt(s / levels.length) * 3.2); }
+      lvl += (target - lvl) * 0.25;
+      card.style.setProperty("--lvl", lvl.toFixed(3));
+    }
     bars.forEach((b, i) => { b.classList.toggle("is-on", i < Math.floor(lit)); b.classList.toggle("is-head", i === Math.floor(lit) && !audio.paused); });
     time.textContent = fmt(audio.paused && !audio.currentTime ? d : d - audio.currentTime);
     if (!audio.paused) raf = requestAnimationFrame(paint);
@@ -245,7 +268,19 @@
   build();
   narrow.addEventListener("change", () => { build(); paint(); });
   let rw = 0; addEventListener("resize", () => { cancelAnimationFrame(rw); rw = requestAnimationFrame(() => { build(); paint(); }); });
-  btn.addEventListener("click", () => { if (audio.paused || audio.ended) audio.play().catch(() => {}); else audio.pause(); });
+  // A live level for the halo round the photo: an analyser on the clip.
+  const card = vn.closest(".ab-sig");
+  let meter = null, levels = null, lvl = 0;
+  const listen = () => {
+    if (meter || !window.AudioContext) return;
+    try {
+      const ctx = new AudioContext(), src = ctx.createMediaElementSource(audio);
+      meter = ctx.createAnalyser(); meter.fftSize = 512; levels = new Uint8Array(meter.fftSize);
+      src.connect(meter); meter.connect(ctx.destination);
+      if (ctx.state === "suspended") ctx.resume();
+    } catch (e) { meter = null; }
+  };
+  btn.addEventListener("click", () => { if (audio.paused || audio.ended) { listen(); audio.play().catch(() => {}); } else audio.pause(); });
   wave.addEventListener("click", (e) => {
     const r = wave.getBoundingClientRect();
     const go = () => { audio.currentTime = Math.min(0.999, Math.max(0, (e.clientX - r.left) / r.width)) * audio.duration; paint(); };
