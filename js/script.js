@@ -2434,7 +2434,11 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
           }
         });
       }, { threshold: 0.2 });
-      wkItems.forEach((it) => revealIo.observe(it));
+      // Cards already on screen when the page opens come in together, at
+      // once, instead of waiting for the observer (which showed empty
+      // tinted frames for a moment).
+      const vh = window.innerHeight;
+      wkItems.forEach((it, i) => { const r = it.getBoundingClientRect(); if (r.top < vh && r.bottom > 0) { it.style.setProperty("--rv", String(i)); it.classList.add("is-shown"); } else revealIo.observe(it); });
     } else {
       wkItems.forEach((it) => it.classList.add("is-shown"));
     }

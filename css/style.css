@@ -4216,3 +4216,11 @@ html[data-motion="calm"] .off-books .bcv.is-loop { display: none !important; }
 }
 html[data-plain] .pg-leaves { display: none; }
 @media (max-width: 640px) { .pg-leaves { height: 9rem; } }
+
+/* Work cards: an unrevealed card is hidden whole (no empty tinted frame),
+   then rises in; cards on screen at load come in together, a beat apart. */
+@media (prefers-reduced-motion: no-preference) {
+  .js .wk-item:not(.is-shown) .wk-card { opacity: 0; transform: translateY(1rem); }
+  .wk-item .wk-card { transition: opacity 0.6s var(--ease-out) calc(var(--rv, 0) * 80ms), transform 0.6s var(--ease-out) calc(var(--rv, 0) * 80ms); }
+}
+html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: none !important; }
