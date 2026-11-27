@@ -3975,6 +3975,8 @@ html[data-plain] .hx-fig { visibility: hidden !important; } /* hidden, but its p
    once it sits over the dark footer (script.js marks .is-over-footer). */
 :root:not([data-theme="dark"]) .to-top { background: #141414; color: #fff; box-shadow: none; transition: opacity 0.3s var(--ease-out), transform 0.3s var(--ease-out), visibility 0s linear 0.3s, background-color 0.25s ease, color 0.25s ease; }
 :root:not([data-theme="dark"]) .to-top.is-over-footer { background: #fff; color: #0d0d0d; box-shadow: 0 0 0 1px rgba(13, 13, 13, 0.1); }
+/* Showing: no wait on visibility, so the fade is seen (the rule above resets the delay). */
+.to-top[data-show="true"], :root:not([data-theme="dark"]) .to-top[data-show="true"] { transition-delay: 0s; }
 
 /* =========================================================
    More contrast (display settings, html[data-contrast]): the whole site.

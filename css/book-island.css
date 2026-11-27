@@ -2,18 +2,25 @@
    out of the button into a booking card, springy like a phone's dynamic
    island, and shrinks back on close. Inside: our own booking screens on
    Cal.com's public API. */
-.bi { position: fixed; inset: 0; z-index: 400; }
+/* The island follows the page: light on the light site, dark on the dark
+   site. Its colour tokens are set here, so every screen below follows. */
+.bi { position: fixed; inset: 0; z-index: 400;
+  --bi-frame: #f4f4f2; --bi-frame-ink: #0d0d0d; --bi-frame-soft: rgba(13, 13, 13, 0.6); --bi-chip: rgba(13, 13, 13, 0.07); --bi-chip-hover: rgba(13, 13, 13, 0.13); --bi-edge: rgba(13, 13, 13, 0.08);
+  --bg: #ffffff; --ink: #0d0d0d; --ink-soft: #5c5c5c; --hairline: rgba(13, 13, 13, 0.1); --surface: #f2f2f2; --control-edge: #b3b3b3; --bi-ok: #2f9e6a; --bi-err: #c0392b; }
+:root[data-theme="dark"] .bi {
+  --bi-frame: #0b0b0c; --bi-frame-ink: #f2f1ee; --bi-frame-soft: rgba(242, 241, 238, 0.65); --bi-chip: rgba(255, 255, 255, 0.1); --bi-chip-hover: rgba(255, 255, 255, 0.18); --bi-edge: rgba(255, 255, 255, 0.06);
+  --bg: #161616; --ink: #f2f1ee; --ink-soft: #a6a6a6; --hairline: rgba(255, 255, 255, 0.1); --surface: #222222; --control-edge: #4d4d4d; --bi-ok: #39b27a; --bi-err: #ff8a7a; }
 .bi[hidden] { display: none; }
 .bi-backdrop { position: absolute; inset: 0; background: rgba(10, 10, 12, 0.32); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.4s ease; }
 .bi.is-open .bi-backdrop { opacity: 1; }
 .bi-island {
   position: fixed; overflow: hidden; display: flex; flex-direction: column;
-  background: #0b0b0c; color: #f2f1ee;
-  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  background: var(--bi-frame); color: var(--bi-frame-ink);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--bi-edge);
   transition: left 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), top 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), width 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), height 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), border-radius 0.45s ease;
 }
 /* Closing: the contents go first, then the capsule shrinks toward the
-   button while it fades, so no black shape is left sitting on the button. */
+   button while it fades, so no solid shape is left sitting on the button. */
 .bi.is-closing .bi-island {
   opacity: 0;
   transition: left 0.42s cubic-bezier(0.32, 0.72, 0, 1), top 0.42s cubic-bezier(0.32, 0.72, 0, 1), width 0.42s cubic-bezier(0.32, 0.72, 0, 1), height 0.42s cubic-bezier(0.32, 0.72, 0, 1), border-radius 0.42s ease, opacity 0.3s ease 0.08s;
@@ -25,17 +32,17 @@
 .bi.is-open .bi-bar { opacity: 1; transition-delay: 0.22s; }
 .bi-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #39d07a; box-shadow: 0 0 0 4px rgba(57, 208, 122, 0.18); }
 .bi-title { margin: 0 auto 0 0; font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; }
-.bi-out { font-size: 0.8125rem; color: rgba(242, 241, 238, 0.65); text-decoration: underline; text-underline-offset: 0.2em; }
-.bi-out:hover { color: #fff; }
-.bi-close, .bi-back { display: grid; place-items: center; width: 2.125rem; height: 2.125rem; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: #fff; cursor: pointer; }
+.bi-out { font-size: 0.8125rem; color: var(--bi-frame-soft); text-decoration: underline; text-underline-offset: 0.2em; }
+.bi-out:hover { color: var(--bi-frame-ink); }
+.bi-close, .bi-back { display: grid; place-items: center; width: 2.125rem; height: 2.125rem; border: 0; border-radius: 50%; background: var(--bi-chip); color: var(--bi-frame-ink); cursor: pointer; }
 .bi-back { margin-left: -0.5rem; }
 .bi-back[hidden] { display: none; }
 .bi-close svg, .bi-back svg { width: 1rem; height: 1rem; }
-.bi-close:hover, .bi-back:hover { background: rgba(255, 255, 255, 0.18); }
-.bi-close:focus-visible, .bi-out:focus-visible, .bi-back:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.bi-close:hover, .bi-back:hover { background: var(--bi-chip-hover); }
+.bi-close:focus-visible, .bi-out:focus-visible, .bi-back:focus-visible { outline: 2px solid var(--bi-frame-ink); outline-offset: 2px; }
 
-/* The sheet inside the black frame, in the site's own theme. */
-.bi-body { position: relative; flex: 1 1 auto; margin: 0 0.5rem 0.5rem; border-radius: 1.25rem; overflow: auto; overscroll-behavior: contain; background: var(--bg); color: var(--ink); opacity: 0; transition: opacity 0.3s ease; }
+/* The sheet inside the frame, in the island's colours. */
+.bi-body { position: relative; color-scheme: light; flex: 1 1 auto; margin: 0 0.5rem 0.5rem; border-radius: 1.25rem; overflow: auto; overscroll-behavior: contain; background: var(--bg); color: var(--ink); opacity: 0; transition: opacity 0.3s ease; }
 .bi.is-open .bi-body { opacity: 1; transition-delay: 0.3s; }
 .bi-view { position: relative; min-height: 100%; padding: clamp(1rem, 2.5vw, 1.5rem); box-sizing: border-box; }
 .bi-view.is-in { animation: bi-in 0.35s cubic-bezier(0.23, 1, 0.32, 1); }
@@ -119,8 +126,7 @@
 .bi-actions .bi-cta { padding: 0.75rem 1.375rem; }
 .bi-field input, .bi-field textarea { width: 100%; box-sizing: border-box; padding: 0.6875rem 0.875rem; border: 1px solid var(--control-edge); border-radius: 0.625rem; background: var(--bg); color: var(--ink); font: inherit; font-size: 0.9375rem; font-weight: 400; resize: vertical; }
 .bi-field input:focus, .bi-field textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 12%, transparent); }
-.bi-error { margin: 0; min-height: 1.2em; font-size: 0.8125rem; color: #c0392b; }
-:root[data-theme="dark"] .bi-error { color: #ff8a7a; }
+.bi-error { margin: 0; min-height: 1.2em; font-size: 0.8125rem; color: var(--bi-err); }
 .bi-error a { color: inherit; }
 .bi-cta { display: inline-flex; justify-content: center; align-items: center; padding: 0.8125rem 1.25rem; border: 0; border-radius: 0.75rem; background: var(--ink); color: var(--bg); font: inherit; font-size: 0.9375rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: transform 0.15s ease, opacity 0.2s ease; }
 .bi-cta:active { transform: scale(0.98); }
@@ -130,7 +136,7 @@
 .bi-msg { display: grid; justify-items: center; gap: 0.5rem; max-width: 26rem; margin: 2rem auto 0; text-align: center; }
 .bi-msg p { margin: 0; }
 .bi-msg .bi-cta { margin-top: 0.75rem; }
-.bi-tick { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: 0.5rem; border-radius: 50%; background: #2f9e6a; color: #fff; }
+.bi-tick { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: 0.5rem; border-radius: 50%; background: var(--bi-ok); color: #fff; }
 .bi-tick svg { width: 1.75rem; height: 1.75rem; }
 
 html.bi-locked, html.bi-locked body { overflow: hidden; }
@@ -148,3 +154,4 @@ html.bi-locked, html.bi-locked body { overflow: hidden; }
 @media (prefers-reduced-motion: reduce) { .bi-island, .bi-backdrop, .bi-bar, .bi-body { transition: opacity 0.2s ease !important; } .bi-loading i { animation: none; } .bi-view.is-in { animation: none; } }
 html[data-motion="calm"] :is(.bi-island, .bi-backdrop, .bi-bar, .bi-body) { transition: opacity 0.2s ease !important; }
 html[data-motion="calm"] .bi-view.is-in { animation: none; }
+:root[data-theme="dark"] .bi-body { color-scheme: dark; }

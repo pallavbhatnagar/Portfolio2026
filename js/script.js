@@ -414,9 +414,11 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     addEventListener("resize", queue);
     check();
   } else if (toTop && pageEnd && "IntersectionObserver" in window) {
+    // It fades in a little before the end comes into view: the watch line
+    // sits half a screen below the bottom edge.
     new IntersectionObserver(([entry]) => {
       toTop.dataset.show = String(entry.isIntersecting);
-    }).observe(pageEnd);
+    }, { rootMargin: "0px 0px 50% 0px" }).observe(pageEnd);
   }
 
   // 6b) The button knows when it sits over the dark footer, so it can turn
