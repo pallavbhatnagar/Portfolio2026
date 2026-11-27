@@ -435,3 +435,14 @@ html[data-motion="calm"] .ab-sig .ab-sig-dp::before { display: none; }
 .vn-wave .vw-head { opacity: 0 !important; }
 .vn-wave.has-pos .vw-head, .vn.is-playing .vn-wave .vw-head { opacity: 1 !important; }
 .ab-glance .ab-sig .vn-wave { margin-left: 0.25rem; }
+
+/* Outside the brief, the music card scaling down into place
+   (js/scroll-scale.js): it grows from its top centre, its corners rounder
+   as it settles; the section clips the overflow sideways. */
+.off-music { transform-origin: 50% 0; will-change: scale; border-radius: calc(0.25rem + var(--ss, 1) * 0.875rem) !important; }
+.ab-off { overflow-x: clip; overflow-y: visible; }
+/* Let the big card spill past the content column (the page itself clips
+   it at the window's edges). */
+main.ab, .ab-off { overflow-x: visible !important; }
+.page { overflow-x: clip; }
+.off-music { position: relative; z-index: 3; }

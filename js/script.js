@@ -2460,7 +2460,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       const [label, value] = (p.home.metrics && p.home.metrics[0]) || ["", ""];
       return {
         id: p.slug, name: p.name, tint: p.tint,
-        desc: p.home.text,
+        desc: p.home.text, short: p.home.short, thumb: p.thumbnail, cat: p.category, year: p.year, locked: p.locked,
         metric: value,
         metricLabel: label
       };
@@ -2482,10 +2482,17 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     { co: "JECRC University", role: "Design intern", years: "2016 – 2017", tint: "sky" }
   ];
 
+  // Projects in the chat: one tidy row each (picture, name, what it is,
+  // where and when), so a list of four reads at a glance. A single project
+  // also gets its headline number.
+  const lockSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>';
+  const goSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"/></svg>';
   const projectCardHtml = (p, solo) => `<a class="ag-card${solo ? " ag-card-one" : ""}" href="/works/${p.id}" style="--tint: var(--${p.tint}-bg); --tint-ink: var(--${p.tint}-ink)">`
-    + `<div class="ag-card-top"><b>${p.name}</b></div>`
-    + `<p>${p.desc}</p>`
-    + `<span class="ag-card-metric"><b>${p.metric}</b>${p.metricLabel}</span></a>`;
+    + `<span class="ag-card-pic"><img src="${p.thumb}" alt="" loading="lazy" decoding="async"></span>`
+    + `<span class="ag-card-text"><b>${p.name}${p.locked ? `<span class="ag-card-lock" title="Password protected">${lockSvg}<span class="sr-only"> (password protected)</span></span>` : ""}</b>`
+    + `<span class="ag-card-desc">${p.short}</span><span class="ag-card-meta">${p.cat}, ${p.year}</span>`
+    + (solo && p.metric ? `<span class="ag-card-metric"><b>${p.metric}</b> ${p.metricLabel}</span>` : "")
+    + `</span><span class="ag-card-go" aria-hidden="true">${goSvg}</span></a>`;
   const renderProjectsGrid = () => `<div class="ag-cards">${PROJECTS.map((p) => projectCardHtml(p, false)).join("")}</div>`;
   const renderProjectCard = (id) => {
     const p = PROJECTS.find((x) => x.id === id);
@@ -2509,7 +2516,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
   const noSpell = () => touchy || reduce.matches;
   const topics = [
     { k: ["shipped", "projects", "portfolio", "what have you built", "case stud", "worked on"],
-      text: "Four recent ones — tap a card to open the full case study.", render: renderProjectsGrid,
+      text: "Here are four recent projects. Tap one to open its case study.", render: renderProjectsGrid,
       next: [`Tell me about ${PROJECTS[0] ? PROJECTS[0].name : "Wave 2.0"}`, "How do you work?", "Where have you worked?"] },
     // One answer per featured project, from js/projects.js. Extra words
     // people might use for a project go in EXTRA_KEYWORDS.

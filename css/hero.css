@@ -584,3 +584,4 @@ html[data-contrast][data-theme="dark"] .hc-blue { color: #f6dcb0; }
 .hc .hs-swap-card { background: none; border-radius: 0; width: 0.74em; height: 0.6em; top: 0.04em; right: -0.92em; }
 .hc .hs-swap-card svg { width: 100% !important; height: 100% !important; }
 @media (max-width: 640px) { .hc .hs-swap-card { width: 0.6em; height: 0.5em; right: -0.78em; } }
+
