@@ -1,0 +1,124 @@
+/* "Book a call" island (js/book-island.js): a black capsule that grows
+   out of the button into a booking card, springy like a phone's dynamic
+   island, and shrinks back on close. Inside: our own booking screens on
+   Cal.com's public API. */
+.bi { position: fixed; inset: 0; z-index: 400; }
+.bi[hidden] { display: none; }
+.bi-backdrop { position: absolute; inset: 0; background: rgba(10, 10, 12, 0.32); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.4s ease; }
+.bi.is-open .bi-backdrop { opacity: 1; }
+.bi-island {
+  position: fixed; overflow: hidden; display: flex; flex-direction: column;
+  background: #0b0b0c; color: #f2f1ee;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  transition: left 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), top 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), width 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), height 0.55s cubic-bezier(0.32, 1.25, 0.4, 1), border-radius 0.45s ease;
+}
+/* Closing: the contents go first, then the capsule shrinks toward the
+   button while it fades, so no black shape is left sitting on the button. */
+.bi.is-closing .bi-island {
+  opacity: 0;
+  transition: left 0.42s cubic-bezier(0.32, 0.72, 0, 1), top 0.42s cubic-bezier(0.32, 0.72, 0, 1), width 0.42s cubic-bezier(0.32, 0.72, 0, 1), height 0.42s cubic-bezier(0.32, 0.72, 0, 1), border-radius 0.42s ease, opacity 0.3s ease 0.08s;
+}
+.bi.is-closing :is(.bi-bar, .bi-body) { opacity: 0; transition: opacity 0.12s ease; transition-delay: 0s; }
+.bi-island.no-anim { transition: none !important; }
+/* The bar: back, a live dot, the title, a link out, close. */
+.bi-bar { flex: none; display: flex; align-items: center; gap: 0.75rem; height: 3.25rem; padding: 0 0.75rem 0 1.25rem; opacity: 0; transition: opacity 0.25s ease; }
+.bi.is-open .bi-bar { opacity: 1; transition-delay: 0.22s; }
+.bi-dot { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #39d07a; box-shadow: 0 0 0 4px rgba(57, 208, 122, 0.18); }
+.bi-title { margin: 0 auto 0 0; font-size: 0.9375rem; font-weight: 600; letter-spacing: -0.01em; }
+.bi-out { font-size: 0.8125rem; color: rgba(242, 241, 238, 0.65); text-decoration: underline; text-underline-offset: 0.2em; }
+.bi-out:hover { color: #fff; }
+.bi-close, .bi-back { display: grid; place-items: center; width: 2.125rem; height: 2.125rem; border: 0; border-radius: 50%; background: rgba(255, 255, 255, 0.1); color: #fff; cursor: pointer; }
+.bi-back { margin-left: -0.5rem; }
+.bi-back[hidden] { display: none; }
+.bi-close svg, .bi-back svg { width: 1rem; height: 1rem; }
+.bi-close:hover, .bi-back:hover { background: rgba(255, 255, 255, 0.18); }
+.bi-close:focus-visible, .bi-out:focus-visible, .bi-back:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+
+/* The sheet inside the black frame, in the site's own theme. */
+.bi-body { position: relative; flex: 1 1 auto; margin: 0 0.5rem 0.5rem; border-radius: 1.25rem; overflow: auto; overscroll-behavior: contain; background: var(--bg); color: var(--ink); opacity: 0; transition: opacity 0.3s ease; }
+.bi.is-open .bi-body { opacity: 1; transition-delay: 0.3s; }
+.bi-view { position: relative; min-height: 100%; padding: clamp(1rem, 2.5vw, 1.5rem); box-sizing: border-box; }
+.bi-view.is-in { animation: bi-in 0.35s cubic-bezier(0.23, 1, 0.32, 1); }
+@keyframes bi-in { from { opacity: 0; transform: translateY(6px); } }
+.bi-h { margin: 0; font-size: 1.375rem; font-weight: 600; letter-spacing: -0.02em; }
+.bi-sub { margin: 0.375rem 0 0; font-size: 0.875rem; color: var(--ink-soft); }
+.bi-kicker { margin: 0; font-size: 0.8125rem; font-weight: 600; color: var(--ink-soft); }
+.bi-loading { position: absolute; inset: 0; min-height: 12rem; display: grid; place-content: center; grid-auto-flow: column; gap: 0.375rem; }
+.bi-loading i { width: 0.5rem; height: 0.5rem; border-radius: 50%; background: color-mix(in srgb, var(--ink) 30%, transparent); animation: bi-dot 1s ease-in-out infinite; }
+.bi-loading i:nth-child(2) { animation-delay: 0.15s; } .bi-loading i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes bi-dot { 50% { transform: translateY(-5px); opacity: 0.5; } }
+
+/* 1. Meeting types: a list of rows. */
+.bi-types { list-style: none; margin: 1rem 0 0; padding: 0; display: grid; gap: 0.5rem; }
+.bi-type { display: grid; grid-template-columns: 4rem 1fr auto; align-items: center; gap: 1rem; width: 100%; padding: 0.875rem 1rem; border: 1px solid var(--hairline); border-radius: 1rem; background: var(--bg); color: inherit; font: inherit; text-align: left; cursor: pointer; transition: border-color 0.2s ease, transform 0.15s ease; }
+.bi-type:hover { border-color: var(--ink); }
+.bi-type:active { transform: scale(0.99); }
+.bi-type-len { font-size: 1.75rem; font-weight: 600; letter-spacing: -0.04em; line-height: 1; }
+.bi-type-len small { margin-left: 0.125rem; font-size: 0.75rem; font-weight: 500; letter-spacing: 0; color: var(--ink-soft); }
+.bi-type-text b { display: block; font-size: 1rem; font-weight: 600; }
+.bi-type-text span { display: block; margin-top: 0.1875rem; font-size: 0.875rem; color: var(--ink-soft); line-height: 1.45; }
+.bi-type-go svg { width: 1.125rem; height: 1.125rem; transform: rotate(180deg); color: var(--ink-soft); }
+
+/* 2. Day and time: details, a month, and the day's times. */
+/* Compact: the meeting's details are one line on top, then month and times side by side. */
+.bi-pick { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 0.75fr); gap: 0.875rem 1.5rem; }
+.bi-side { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 0.25rem 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--hairline); }
+.bi-side .bi-kicker { color: var(--ink); font-size: 0.875rem; }
+.bi-meta { display: flex; align-items: center; gap: 0.375rem; margin: 0; font-size: 0.8125rem; color: var(--ink-soft); }
+.bi-meta svg { flex: none; width: 0.875rem; height: 0.875rem; }
+.bi-desc { display: none; }
+.bi-cal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.75rem; font-size: 0.9375rem; }
+.bi-nav { display: inline-grid; place-items: center; width: 2rem; height: 2rem; border: 0; border-radius: 50%; background: none; color: var(--ink); cursor: pointer; }
+.bi-nav:hover:not(:disabled) { background: var(--surface); }
+.bi-nav:disabled { opacity: 0.3; cursor: default; }
+.bi-nav svg { width: 1rem; height: 1rem; }
+.bi-nav.is-next svg { transform: rotate(180deg); }
+.bi-week, .bi-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 0.25rem; }
+.bi-week span { font-size: 0.6875rem; font-weight: 600; color: var(--ink-soft); text-align: center; padding-bottom: 0.25rem; }
+.bi-cell { height: 2.375rem; display: grid; place-items: center; padding: 0; border: 0; border-radius: 0.625rem; background: none; color: color-mix(in srgb, var(--ink) 35%, transparent); font: inherit; font-size: 0.875rem; }
+.bi-cell.has { background: var(--surface); color: var(--ink); font-weight: 600; cursor: pointer; }
+.bi-cell.has:hover { background: color-mix(in srgb, var(--ink) 12%, var(--bg)); }
+.bi-cell.is-on { background: var(--ink) !important; color: var(--bg) !important; }
+.bi-cell.is-today { box-shadow: inset 0 0 0 1px var(--ink-soft); }
+.bi-none { margin: 0.75rem 0 0; font-size: 0.8125rem; color: var(--ink-soft); }
+.bi-day { margin: 0 0 0.75rem; font-size: 0.9375rem; font-weight: 600; }
+.bi-time-list { display: grid; gap: 0.375rem; max-height: 15.5rem; overflow: auto; padding-right: 0.25rem; }
+.bi-time { padding: 0.5rem; border: 1px solid var(--hairline); border-radius: 0.625rem; background: var(--bg); color: var(--ink); font: inherit; font-size: 0.875rem; font-weight: 600; cursor: pointer; transition: border-color 0.15s ease, background-color 0.15s ease; }
+.bi-time:hover { border-color: var(--ink); background: var(--surface); }
+
+/* 3. Details. */
+.bi-form { display: grid; gap: 0.75rem; max-width: 30rem; margin: 0 auto; }
+.bi-form .bi-error:empty { display: none; }
+.bi-summary { padding-bottom: 0.75rem; border-bottom: 1px solid var(--hairline); }
+.bi-when { margin: 0.25rem 0 0; font-size: 1.25rem; font-weight: 600; letter-spacing: -0.02em; }
+.bi-field { display: grid; gap: 0.375rem; font-size: 0.8125rem; font-weight: 600; }
+.bi-field i { font-style: normal; font-weight: 400; color: var(--ink-soft); }
+.bi-field input, .bi-field textarea { width: 100%; box-sizing: border-box; padding: 0.6875rem 0.875rem; border: 1px solid var(--control-edge); border-radius: 0.625rem; background: var(--bg); color: var(--ink); font: inherit; font-size: 0.9375rem; font-weight: 400; resize: vertical; }
+.bi-field input:focus, .bi-field textarea:focus { outline: none; border-color: var(--ink); box-shadow: 0 0 0 3px color-mix(in srgb, var(--ink) 12%, transparent); }
+.bi-error { margin: 0; min-height: 1.2em; font-size: 0.8125rem; color: #c0392b; }
+:root[data-theme="dark"] .bi-error { color: #ff8a7a; }
+.bi-error a { color: inherit; }
+.bi-cta { display: inline-flex; justify-content: center; align-items: center; padding: 0.8125rem 1.25rem; border: 0; border-radius: 0.75rem; background: var(--ink); color: var(--bg); font: inherit; font-size: 0.9375rem; font-weight: 600; text-decoration: none; cursor: pointer; transition: transform 0.15s ease, opacity 0.2s ease; }
+.bi-cta:active { transform: scale(0.98); }
+.bi-cta:disabled { opacity: 0.6; cursor: default; }
+
+/* 4. Done / errors. */
+.bi-msg { display: grid; justify-items: center; gap: 0.5rem; max-width: 26rem; margin: 2rem auto 0; text-align: center; }
+.bi-msg p { margin: 0; }
+.bi-msg .bi-cta { margin-top: 0.75rem; }
+.bi-tick { display: grid; place-items: center; width: 3.5rem; height: 3.5rem; margin-bottom: 0.5rem; border-radius: 50%; background: #2f9e6a; color: #fff; }
+.bi-tick svg { width: 1.75rem; height: 1.75rem; }
+
+html.bi-locked, html.bi-locked body { overflow: hidden; }
+@media (max-width: 640px) {
+  .bi-out { display: none; }
+  .bi-bar { padding-left: 1rem; }
+  .bi-pick { grid-template-columns: minmax(0, 1fr); }
+  .bi-desc { display: none; }
+  .bi-time-list { grid-template-columns: repeat(3, 1fr); max-height: none; }
+  .bi-type { grid-template-columns: 3.25rem 1fr; }
+  .bi-type-go { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { .bi-island, .bi-backdrop, .bi-bar, .bi-body { transition: opacity 0.2s ease !important; } .bi-loading i { animation: none; } .bi-view.is-in { animation: none; } }
+html[data-motion="calm"] :is(.bi-island, .bi-backdrop, .bi-bar, .bi-body) { transition: opacity 0.2s ease !important; }
+html[data-motion="calm"] .bi-view.is-in { animation: none; }

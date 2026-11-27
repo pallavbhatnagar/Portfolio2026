@@ -1093,9 +1093,9 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 :root[data-theme="dark"] .moon { opacity: 1; transform: none; }
 .theme-toggle:active { transform: scale(0.92); }
 @media (prefers-reduced-motion: no-preference) {
-  .sun-rays { transition: transform 0.7s var(--ease-out), opacity 0.4s var(--ease-out); }
-  .sun-core { transition: transform 0.5s var(--ease-out), opacity 0.4s var(--ease-out); }
-  .moon { transition: transform 0.4s var(--ease-out), opacity 0.4s var(--ease-out); }
+  .sun-rays { transition: transform 0.45s var(--ease-out), opacity 0.25s var(--ease-out); }
+  .sun-core { transition: transform 0.35s var(--ease-out), opacity 0.25s var(--ease-out); }
+  .moon { transition: transform 0.3s var(--ease-out), opacity 0.25s var(--ease-out); }
 }
 @media (hover: hover) and (pointer: fine) {
   .theme-toggle:hover { color: var(--ink); }
@@ -4242,7 +4242,7 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
    button as a circle, quick at first and settling as it reaches the far
    corner. Reduced motion, Calm or touch screens: the theme switches in
    place (see the script). */
-::view-transition-new(root) { animation: theme-grow 0.65s cubic-bezier(0.65, 0, 0.35, 1) both !important; }
+::view-transition-new(root) { animation: theme-grow 0.45s cubic-bezier(0.65, 0, 0.35, 1) both !important; }
 @keyframes theme-grow {
   from { clip-path: circle(0 at var(--tx, 50%) var(--ty, 50%)); }
   to { clip-path: circle(var(--tr, 150vmax) at var(--tx, 50%) var(--ty, 50%)); }
