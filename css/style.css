@@ -4294,3 +4294,9 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
   .app-row::after { will-change: opacity; }
 }
 @media (max-width: 1299px) and (prefers-reduced-motion: reduce) { .ask-panel { transition: none; } }
+
+/* No grey tap flash on iPad and iPhone. #appRow (the whole page) listens
+   for taps (a tap on the dimmed page closes the chat), so Safari flashed
+   its tap highlight across the entire screen whenever a button inside it
+   was tapped. Buttons and links show their own pressed states instead. */
+html { -webkit-tap-highlight-color: transparent; }
