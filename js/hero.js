@@ -270,3 +270,13 @@
   if ("ResizeObserver" in window) new ResizeObserver(fit).observe(hc.querySelector(".hc-title"));
   else addEventListener("resize", fit);
 })();
+
+/* The hero's looping animations (the Ask ring turning, the colour wash
+   drifting, the nudging arrow) pause while the hero is off screen. The
+   ring animates a CSS variable, which Safari repaints on the main thread
+   every frame; left running, it slowed the footer leaves on iPad. */
+(() => {
+  const hc = document.querySelector(".hc");
+  if (!hc || !("IntersectionObserver" in window)) return;
+  new IntersectionObserver(([e]) => hc.classList.toggle("is-away", !e.isIntersecting)).observe(hc);
+})();

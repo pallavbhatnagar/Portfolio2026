@@ -585,3 +585,7 @@ html[data-contrast][data-theme="dark"] .hc-blue { color: #f6dcb0; }
 .hc .hs-swap-card svg { width: 100% !important; height: 100% !important; }
 @media (max-width: 640px) { .hc .hs-swap-card { width: 0.6em; height: 0.5em; right: -0.78em; } }
 
+
+/* Off screen, the hero's loops hold still (js/hero.js): nothing is seen, and
+   Safari stops repainting the Ask ring every frame. */
+.hc.is-away .hc-ask::before, .hc.is-away .hc-sky::before, .hc.is-away .hc-down svg { animation-play-state: paused !important; }
