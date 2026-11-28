@@ -4253,3 +4253,23 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
 /* Image drift is driven by js/drift.js in every browser (the CSS scroll
    timelines above followed the clipped frame, which never scrolls). */
 .js-drift :is(.wk-media img, .wk-media video, .cs-cover-media img, .cs-cover-media video, .cs-crop img) { animation: none !important; }
+
+/* Touch screens (iPad, phones): the colour passes through the closing line
+   once, then it rests in ink. Looping, its repaints sat beside the footer
+   leaves and halved Safari's frame rate there. */
+@media (prefers-reduced-motion: no-preference) and (hover: none) {
+  html:not([data-motion="calm"]) #next-title.is-swept { animation-iteration-count: 1; animation-duration: 3.4s; animation-timing-function: cubic-bezier(0.45, 0, 0.55, 1); animation-name: next-sweep-once; animation-fill-mode: both; }
+}
+@keyframes next-sweep-once { from { background-position: 100% 0; } to { background-position: 0 0; } }
+
+/* The "Currently" dot's pulse as a ring that grows and fades (transform and
+   opacity only), instead of an animated shadow, which Safari repaints every
+   frame beside the footer leaves. Same look: a soft halo widening to 6px. */
+.next-dot { position: relative; }
+.next-dot::after { content: ""; position: absolute; inset: -3px; border-radius: 50%; background: currentColor; color: color-mix(in srgb, #2f9e44 25%, transparent); opacity: 0; pointer-events: none; }
+:root[data-theme="dark"] .next-dot::after { color: color-mix(in srgb, #5bd17a 25%, transparent); }
+@media (prefers-reduced-motion: no-preference) {
+  .next-dot { animation: none !important; }
+  html:not([data-motion="calm"]) .next-dot::after { animation: next-ring 2.4s ease-in-out infinite; }
+}
+@keyframes next-ring { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0; } }

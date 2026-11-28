@@ -57,18 +57,20 @@ html[data-plain] .hc .hc-sky { visibility: hidden; }
   top: -7rem; bottom: -7rem; left: 50%;
   width: 100vw; translate: -50% 0;
   pointer-events: none;
-  background:
-    radial-gradient(30% 46% at 14% 40%, var(--hb-3), transparent 72%),
-    radial-gradient(28% 44% at 86% 46%, var(--hb-1), transparent 72%),
-    radial-gradient(26% 36% at 50% 84%, var(--hb-2), transparent 72%);
-  filter: blur(36px);
-  opacity: 0.25;
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 28%, #000 72%, transparent);
-  mask-image: linear-gradient(to bottom, transparent, #000 28%, #000 72%, transparent);
+  /* A picture of the glow (lilac left, peach right, rose under the buttons,
+     fading top and bottom), baked from the gradients it used to be. Live
+     gradients under a blur and a mask were redrawn every frame the footer
+     leaves moved, which halved Safari's frame rate on iPad. */
+  background: url("/assets/images/home/glow-light.webp") 0 0 / 100% 100% no-repeat;
+  /* its strength (25% light, 16% dark) is baked into the image */
 }
+:root[data-theme="dark"] .next-ch::before { background-image: url("/assets/images/home/glow-dark.webp"); }
 .next-ch { --hb-1: #ffd6bd; --hb-2: #fbcfe5; --hb-3: #d9d4ff; }
 :root[data-theme="dark"] .next-ch { --hb-1: #4a2a1a; --hb-2: #4a1d38; --hb-3: #2b2563; }
-:root[data-theme="dark"] .next-ch::before { opacity: 0.16; }
+/* Touch screens (iPad, phones): no glow here. The footer leaves fly over
+   this spot, and Safari redrew the glow under them every frame, halving
+   the frame rate; without it, the footer runs like the other pages. */
+@media (hover: none) { .next-ch::before { display: none; } }
 html[data-plain] .next-ch::before { visibility: hidden; }
 @media (forced-colors: active) { .next-ch::before { display: none; } }
 
