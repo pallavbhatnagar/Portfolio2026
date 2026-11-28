@@ -260,9 +260,7 @@
   // ---------- on the page ----------
   // Reduced motion (the device setting, or Calm in the display settings) is
   // checked live: switching it sends him to sit still, or lets him roam again.
-  // Touch screens (iPad, phones) get the still dog too: his runs animate
-  // frame by frame, which made iPad Safari redraw much of the page.
-  const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce), (hover: none)");
+  const reduceMq = window.matchMedia("(prefers-reduced-motion: reduce)");
   let still = false;
   const el = document.createElement("div");
   el.className = "pxdog";

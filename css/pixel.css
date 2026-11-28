@@ -324,14 +324,3 @@ html[data-plain] .fp-fx { display: none; }
 .ab-table .ab-snap:hover, .ab-table .ab-snap:focus-within { z-index: 9; }
 /* The robot's lights only at night (dark theme). */
 :root:not([data-theme="dark"]) .fp-led { display: none; }
-
-/* Touch screens (iPad, phones): the clouds rest spread across the sky (the
-   same layout as with motion reduced) and the painting's tree and plants
-   hold still. Drifting and swaying, they made iPad Safari redraw large
-   parts of the page every frame (About ran at a fraction of its frame
-   rate). The falling leaves still fall. */
-@media (hover: none) {
-  html .px-cloud, html .fp-sway { animation: none !important; }
-  html .px-cloud:nth-child(1) { left: 6% !important; } html .px-cloud:nth-child(2) { left: 72% !important; } html .px-cloud:nth-child(3) { left: 38% !important; }
-  html .px-cloud:nth-child(4) { left: 86% !important; } html .px-cloud:nth-child(5) { left: 20% !important; }
-}
