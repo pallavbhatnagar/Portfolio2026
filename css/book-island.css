@@ -11,7 +11,7 @@
   --bi-frame: #0b0b0c; --bi-frame-ink: #f2f1ee; --bi-frame-soft: rgba(242, 241, 238, 0.65); --bi-chip: rgba(255, 255, 255, 0.1); --bi-chip-hover: rgba(255, 255, 255, 0.18); --bi-edge: rgba(255, 255, 255, 0.06);
   --bg: #161616; --ink: #f2f1ee; --ink-soft: #a6a6a6; --hairline: rgba(255, 255, 255, 0.1); --surface: #222222; --control-edge: #4d4d4d; --bi-ok: #39b27a; --bi-err: #ff8a7a; }
 .bi[hidden] { display: none; }
-.bi-backdrop { position: absolute; inset: 0; background: rgba(10, 10, 12, 0.32); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.4s ease; }
+.bi-backdrop { position: absolute; inset: 0; background: rgba(10, 10, 12, 0.32); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); opacity: 0; transition: opacity 0.4s ease; }
 .bi.is-open .bi-backdrop { opacity: 1; }
 .bi-island {
   position: fixed; overflow: hidden; display: flex; flex-direction: column;

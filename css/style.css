@@ -4249,3 +4249,7 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
   from { clip-path: circle(0 at var(--tx, 50%) var(--ty, 50%)); }
   to { clip-path: circle(var(--tr, 150vmax) at var(--tx, 50%) var(--ty, 50%)); }
 }
+
+/* Image drift is driven by js/drift.js in every browser (the CSS scroll
+   timelines above followed the clipped frame, which never scrolls). */
+.js-drift :is(.wk-media img, .wk-media video, .cs-cover-media img, .cs-cover-media video, .cs-crop img) { animation: none !important; }
