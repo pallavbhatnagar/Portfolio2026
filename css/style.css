@@ -4273,3 +4273,9 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
   html:not([data-motion="calm"]) .next-dot::after { animation: next-ring 2.4s ease-in-out infinite; }
 }
 @keyframes next-ring { 0%, 100% { transform: scale(1); opacity: 1; } 50% { transform: scale(1.6); opacity: 0; } }
+
+/* Tablets and phones: while the chat covers the page, the page can't scroll
+   (script.js pinPage). Its layout stays exactly as it is, so nothing redraws
+   and nothing blinks as the chat opens; the chat's own lists stay inside it. */
+html.ask-lock, html.ask-lock body { overflow: hidden; }
+.ask-panel, .ask-panel * { overscroll-behavior: contain; }

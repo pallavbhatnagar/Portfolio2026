@@ -2774,32 +2774,64 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       };
     };
     // Tablets and phones: the chat covers the page (a drawer, or full
-    // screen), so the page behind is pinned where it is: <body> is fixed at
-    // the current scroll offset and put back exactly on close. This is the
-    // dependable way to stop the page scrolling behind a panel on iPad and
-    // iPhone Safari, where overflow: hidden on the page doesn't hold it.
+    // screen), so the page behind is held where it is. Nothing about the
+    // page's layout changes (it used to be fixed in place, which made Safari
+    // lay out and redraw the whole page at once: the hero glow and videos
+    // blinked as the chat opened on iPad). Instead the page can't scroll
+    // (overflow: hidden), and on iPad and iPhone, where that alone doesn't
+    // hold, a swipe or wheel outside the chat is stopped; inside the chat,
+    // its own lists still scroll.
     const coverMq = window.matchMedia("(max-width: 1299px)");
     let pinnedY = null;
+    const scrollsInPanel = (target, dy) => {
+      for (let el = target instanceof Element ? target : null; el && el !== document.body; el = el.parentElement) {
+        if (!askPanel.contains(el)) return false;
+        const oy = getComputedStyle(el).overflowY;
+        if ((oy === "auto" || oy === "scroll") && el.scrollHeight > el.clientHeight + 1) {
+          if (dy < 0 && el.scrollTop > 0) return true; // room to scroll up
+          if (dy > 0 && el.scrollTop + el.clientHeight < el.scrollHeight - 1) return true; // room to scroll down
+          if (dy === 0) return true;
+        }
+      }
+      return false;
+    };
+    let touchY = 0;
+    const onTouchStart = (e) => { touchY = e.touches[0] ? e.touches[0].clientY : 0; };
+    const onTouchMove = (e) => {
+      if (e.touches.length > 1) return; // leave pinch-zoom alone
+      const y = e.touches[0] ? e.touches[0].clientY : touchY;
+      if (!scrollsInPanel(e.target, touchY - y)) e.preventDefault();
+    };
+    const onWheel = (e) => { if (!scrollsInPanel(e.target, e.deltaY)) e.preventDefault(); };
     const pinPage = (y) => {
       if (!coverMq.matches || pinnedY !== null) return;
-      pinnedY = y == null ? window.scrollY : y;
-      const s = document.body.style;
-      s.position = "fixed";
-      s.top = `-${pinnedY}px`;
-      s.left = "0";
-      s.right = "0";
-      s.width = "100%";
+      if (y != null && window.scrollY !== y) {
+        const root = document.documentElement;
+        root.style.scrollBehavior = "auto";
+        window.scrollTo(0, y);
+        root.style.scrollBehavior = "";
+      }
+      pinnedY = window.scrollY;
+      document.documentElement.classList.add("ask-lock");
+      document.addEventListener("touchstart", onTouchStart, { passive: true });
+      document.addEventListener("touchmove", onTouchMove, { passive: false });
+      document.addEventListener("wheel", onWheel, { passive: false });
     };
     const unpinPage = () => {
       if (pinnedY === null) return;
       const y = pinnedY;
       pinnedY = null;
-      const s = document.body.style;
-      s.position = s.top = s.left = s.right = s.width = "";
-      const root = document.documentElement;
-      root.style.scrollBehavior = "auto";
-      window.scrollTo(0, y);
-      root.style.scrollBehavior = "";
+      document.documentElement.classList.remove("ask-lock");
+      // Phones: the full-screen chat takes the page's height away, so the
+      // page is put back where it was (hidden under the chat, so unseen).
+      if (Math.abs(window.scrollY - y) > 1) {
+        const root = document.documentElement;
+        root.style.scrollBehavior = "auto";
+        requestAnimationFrame(() => { window.scrollTo(0, y); root.style.scrollBehavior = ""; });
+      }
+      document.removeEventListener("touchstart", onTouchStart);
+      document.removeEventListener("touchmove", onTouchMove);
+      document.removeEventListener("wheel", onWheel);
     };
     // toTop (a case study's "Ask AI about this project"): the page goes back
     // to its top as the panel opens, so the project's cover sits beside the
