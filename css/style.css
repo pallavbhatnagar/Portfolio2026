@@ -4300,3 +4300,7 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
    its tap highlight across the entire screen whenever a button inside it
    was tapped. Buttons and links show their own pressed states instead. */
 html { -webkit-tap-highlight-color: transparent; }
+
+/* Touch screens: the chat box's text is at least 16px, so tapping into it
+   doesn't make iPad and iPhone Safari zoom the page. */
+@media (hover: none) { .ask-panel-input { font-size: max(16px, var(--fs-body)); } }

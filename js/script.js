@@ -2690,6 +2690,19 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       glowTimer = setTimeout(() => askGlow.classList.remove("is-on"), wait);
     };
 
+    // Where focus goes in the chat. With a mouse or keyboard, into the box
+    // to type in. On touch screens (iPad, phones) the box isn't focused for
+    // you: Safari zooms and shifts the whole page when a text box gets
+    // focus by itself (the whole screen seemed to blink as the chat opened),
+    // and the keyboard would jump up unasked. There, on opening, focus goes
+    // to the chat's close button (so a screen reader starts in the chat),
+    // and after an answer it stays where it is.
+    const touchOnly = window.matchMedia("(hover: none)");
+    const focusAskInput = (opening) => {
+      if (!touchOnly.matches) { askInput.focus({ preventScroll: true }); return; }
+      if (opening && askClose) askClose.focus({ preventScroll: true });
+    };
+
     let askBusy = false;
     const given = new Set(); // the answers given so far, so none is offered twice
     askThread.addEventListener("click", (e) => {
@@ -2723,7 +2736,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
         glowOff(1100);
         askSend.disabled = false;
         askBusy = false;
-        askInput.focus();
+        focusAskInput();
       }, delay);
     };
 
@@ -2859,8 +2872,8 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
       void askPanel.offsetWidth;
       askPanel.classList.add("is-open");
       askTriggers.forEach((t) => t.setAttribute("aria-expanded", "true"));
-      if (reduce.matches) askInput.focus();
-      else askPanel.addEventListener("transitionend", () => askInput.focus(), { once: true });
+      if (reduce.matches) focusAskInput(true);
+      else askPanel.addEventListener("transitionend", () => focusAskInput(true), { once: true });
     };
     // One sound, on opening only (sound-effects/apple_intelligence.mp3);
     // closing is silent.
