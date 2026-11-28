@@ -2794,7 +2794,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     // iPad Safari it brings the address bar back and near the end of a page
     // the scroll snaps. Instead a swipe or wheel outside the chat is
     // stopped; inside the chat, its own lists still scroll.
-    const coverMq = window.matchMedia("(max-width: 1299px)");
+    const coverMq = window.matchMedia("(max-width: 1299px), (hover: none)"); // touch screens: a drawer at any width
     let pinnedY = null;
     const scrollsInPanel = (target, dy) => {
       for (let el = target instanceof Element ? target : null; el && el !== document.body; el = el.parentElement) {
@@ -3642,4 +3642,13 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     if (reduce.addEventListener) reduce.addEventListener("change", queue);
     draw();
   }
+})();
+
+/* Pause loops while they're off screen (CSS .is-away): the footer leaves and
+   the "Currently" dot. Nothing visible changes; the browser just stops
+   drawing frames for them while you're elsewhere on the page. */
+(() => {
+  if (!("IntersectionObserver" in window)) return;
+  const io = new IntersectionObserver((list) => list.forEach((e) => e.target.classList.toggle("is-away", !e.isIntersecting)), { rootMargin: "100px 0px" });
+  document.querySelectorAll(".px-grass, .next-ch, .px-land").forEach((el) => { el.classList.add("is-away"); io.observe(el); });
 })();

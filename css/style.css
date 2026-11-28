@@ -1011,7 +1011,7 @@ body.ask-open .to-top { right: calc(var(--ask-panel-w) + 1.125rem); bottom: calc
 .edge-blur.is-off { opacity: 0; }
 /* With the chat open beside the page (wide screens), the blur stays on the
    page side and never covers the chat's own box. */
-@media (min-width: 1300px) {
+@media (min-width: 1300px) and (hover: hover) {
   body.ask-open .edge-blur { left: var(--ask-gap); right: var(--ask-panel-w); bottom: var(--ask-gap); overflow: hidden; border-radius: 0 0 var(--ask-radius) var(--ask-radius); }
 }
 .edge-blur i { position: absolute; inset: 0; }
@@ -2082,8 +2082,10 @@ body.ask-open .shell-scrollbar {
    underneath, dimmed, and pinned in place while the chat is open (script.js
    fixes <body> at its scroll offset; overflow: hidden doesn't hold on iPad
    Safari). Tapping the dimmed area closes the chat.
-   Laptops and desktops (1300px and up) keep the side-by-side panel. */
-@media (min-width: 641px) and (max-width: 1299px) {
+   Laptops and desktops (1300px and up) keep the side-by-side panel; touch
+   screens get the drawer at any width (a big iPad in landscape is 1366px
+   wide, and squeezing the whole page beside the chat made it blink). */
+@media (min-width: 641px) and (max-width: 1299px), (min-width: 641px) and (hover: none) {
   :root { --ask-panel-w: 400px; }
   .ask-panel { position: fixed; inset: 0 0 0 auto; z-index: 60; box-shadow: -0.75rem 0 2.5rem rgba(13, 13, 13, 0.14); }
   body.ask-open .site-shell { margin: 0; height: auto; border-radius: 0; overflow: visible; }
@@ -2094,7 +2096,7 @@ body.ask-open .shell-scrollbar {
   .app-row::after { content: ""; position: fixed; inset: 0; z-index: 55; background: rgba(13, 13, 13, 0.36); opacity: 0; pointer-events: none; cursor: pointer; -webkit-tap-highlight-color: transparent; transition: opacity 0.4s var(--ease-out); }
   body.ask-open .app-row::after { opacity: 1; pointer-events: auto; }
 }
-@media (min-width: 641px) and (max-width: 1299px) and (orientation: landscape) { :root { --ask-panel-w: 440px; } }
+@media (min-width: 641px) and (max-width: 1299px) and (orientation: landscape), (min-width: 641px) and (hover: none) and (orientation: landscape) { :root { --ask-panel-w: 440px; } }
 @media (prefers-reduced-motion: reduce) { .app-row::after { transition: none; } }
 
 /* =========================================================
@@ -3692,8 +3694,8 @@ html.dsp-moving, html.dsp-moving * { cursor: move !important; user-select: none;
 .sb-spill.is-idle { opacity: 0; transition-duration: 0.4s, 0.4s, 0.6s; }
 html.is-preloading .sb-spill { display: none; }
 @media print, (forced-colors: active) { .sb-spill { display: none; } }
-@media (min-width: 1300px) { body.ask-open .scroll-line, body.ask-open .sb-spill { left: var(--ask-gap); right: var(--ask-panel-w); } }
-@media (max-width: 1299px) { body.ask-open .scroll-line { opacity: 0; } body.ask-open .sb-spill { display: none; } }
+@media (min-width: 1300px) and (hover: hover) { body.ask-open .scroll-line, body.ask-open .sb-spill { left: var(--ask-gap); right: var(--ask-panel-w); } }
+@media (max-width: 1299px), (hover: none) { body.ask-open .scroll-line { opacity: 0; } body.ask-open .sb-spill { display: none; } }
 @media (prefers-reduced-motion: reduce) { .scroll-line { transition: none; } }
 /* The plain line (default): the page's ink, 2.5px, from the very left edge,
    no hilt, no haze. "Lightsaber" in the display settings swaps it for the saber (.is-saber). */
@@ -4288,12 +4290,12 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
    Safari reflow the chat and resize its layer every frame, and the page
    blinked as it opened on iPad. The panel and the dimming layer are kept
    as ready layers, so opening only moves and fades them. */
-@media (max-width: 1299px) {
+@media (max-width: 1299px), (hover: none) {
   .ask-panel { width: min(var(--ask-panel-w), 100vw); transform: translateX(100%); transition: transform 0.4s var(--ease-out); will-change: transform; }
   .ask-panel.is-open { transform: none; }
   .app-row::after { will-change: opacity; }
 }
-@media (max-width: 1299px) and (prefers-reduced-motion: reduce) { .ask-panel { transition: none; } }
+@media (max-width: 1299px) and (prefers-reduced-motion: reduce), (hover: none) and (prefers-reduced-motion: reduce) { .ask-panel { transition: none; } }
 
 /* No grey tap flash on iPad and iPhone. #appRow (the whole page) listens
    for taps (a tap on the dimmed page closes the chat), so Safari flashed
@@ -4304,3 +4306,9 @@ html { -webkit-tap-highlight-color: transparent; }
 /* Touch screens: the chat box's text is at least 16px, so tapping into it
    doesn't make iPad and iPhone Safari zoom the page. */
 @media (hover: none) { .ask-panel-input { font-size: max(16px, var(--fs-body)); } }
+
+/* Loops that can't be seen hold still (script.js marks them .is-away when
+   off screen): the footer leaves and the "Currently" dot. Left running, they
+   kept the browser drawing new frames of the whole page while you read the
+   top of it. */
+.is-away .pgl, .is-away .next-dot::after, .is-away .fp-leaf, .is-away .fp-sway { animation-play-state: paused !important; }
