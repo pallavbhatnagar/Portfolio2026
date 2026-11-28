@@ -2777,10 +2777,10 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     // screen), so the page behind is held where it is. Nothing about the
     // page's layout changes (it used to be fixed in place, which made Safari
     // lay out and redraw the whole page at once: the hero glow and videos
-    // blinked as the chat opened on iPad). Instead the page can't scroll
-    // (overflow: hidden), and on iPad and iPhone, where that alone doesn't
-    // hold, a swipe or wheel outside the chat is stopped; inside the chat,
-    // its own lists still scroll.
+    // blinked as the chat opened on iPad). Nor is overflow: hidden used: on
+    // iPad Safari it brings the address bar back and near the end of a page
+    // the scroll snaps. Instead a swipe or wheel outside the chat is
+    // stopped; inside the chat, its own lists still scroll.
     const coverMq = window.matchMedia("(max-width: 1299px)");
     let pinnedY = null;
     const scrollsInPanel = (target, dy) => {

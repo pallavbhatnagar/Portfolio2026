@@ -4277,7 +4277,10 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
 /* Tablets and phones: while the chat covers the page, the page can't scroll
    (script.js pinPage). Its layout stays exactly as it is, so nothing redraws
    and nothing blinks as the chat opens; the chat's own lists stay inside it. */
-html.ask-lock, html.ask-lock body { overflow: hidden; }
+/* No overflow: hidden on the page: on iPad Safari it brings the address bar
+   back, the screen height changes, and near the end of a page the scroll
+   snaps (a blink when opening the chat from the buttons at the bottom).
+   The swipe and wheel guard in script.js holds the page on its own. */
 .ask-panel, .ask-panel * { overscroll-behavior: contain; }
 
 /* Tablets and phones (the chat covers the page): the panel slides in at its
