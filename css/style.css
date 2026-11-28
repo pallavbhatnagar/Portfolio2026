@@ -4279,3 +4279,15 @@ html[data-motion="calm"] .wk-item .wk-card { opacity: 1 !important; transform: n
    and nothing blinks as the chat opens; the chat's own lists stay inside it. */
 html.ask-lock, html.ask-lock body { overflow: hidden; }
 .ask-panel, .ask-panel * { overscroll-behavior: contain; }
+
+/* Tablets and phones (the chat covers the page): the panel slides in at its
+   full width (transform) instead of growing from zero width. Growing made
+   Safari reflow the chat and resize its layer every frame, and the page
+   blinked as it opened on iPad. The panel and the dimming layer are kept
+   as ready layers, so opening only moves and fades them. */
+@media (max-width: 1299px) {
+  .ask-panel { width: min(var(--ask-panel-w), 100vw); transform: translateX(100%); transition: transform 0.4s var(--ease-out); will-change: transform; }
+  .ask-panel.is-open { transform: none; }
+  .app-row::after { will-change: opacity; }
+}
+@media (max-width: 1299px) and (prefers-reduced-motion: reduce) { .ask-panel { transition: none; } }

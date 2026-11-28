@@ -127,3 +127,18 @@ html[data-plain] .nx-crystal::before { display: none; }
 :root[data-theme="dark"] .nx-crystal img { filter: drop-shadow(0 0 0.18em rgba(201, 184, 255, 0.85)) drop-shadow(0 0 0.6em rgba(155, 98, 224, 0.75)) drop-shadow(0 0 1.2em rgba(242, 54, 154, 0.4)); }
 :root[data-theme="dark"] .nx-crystal::before { background: radial-gradient(closest-side, rgba(155, 98, 224, 0.5), rgba(57, 101, 250, 0.15) 60%, transparent); }
 #next-title { padding-left: 0; }
+
+/* Touch screens (iPad, phones): the hero's colour wash without a live blur.
+   The same colours in wider, softer gradients, so Safari has no large
+   blurred layer to redraw while the page loads or the chat opens. */
+@media (hover: none) {
+  .hc .hc-sky::before {
+    filter: none;
+    background:
+      radial-gradient(38% 52% at 6% 28%, var(--hb-1), transparent 100%),
+      radial-gradient(36% 50% at 12% 60%, var(--hb-2), transparent 100%),
+      radial-gradient(46% 58% at 88% 10%, var(--hb-3), transparent 100%),
+      radial-gradient(38% 48% at 80% 50%, var(--hb-4), transparent 100%),
+      radial-gradient(36% 46% at 50% 78%, var(--hb-5), transparent 100%);
+  }
+}

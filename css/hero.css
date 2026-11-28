@@ -589,3 +589,10 @@ html[data-contrast][data-theme="dark"] .hc-blue { color: #f6dcb0; }
 /* Off screen, the hero's loops hold still (js/hero.js): nothing is seen, and
    Safari stops repainting the Ask ring every frame. */
 .hc.is-away .hc-ask::before, .hc.is-away .hc-sky::before, .hc.is-away .hc-down svg { animation-play-state: paused !important; }
+
+/* Touch screens: the hero rises with a fade and a lift but no blur; blurring
+   large text as the page loads is heavy on iPad. */
+@media (hover: none) and (prefers-reduced-motion: no-preference) {
+  .js .hc:not(.is-in) .hc-rise { filter: none; }
+  .hc-rise, .hc-foot.hc-rise { transition-property: opacity, transform; }
+}
