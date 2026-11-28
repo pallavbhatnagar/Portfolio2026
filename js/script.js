@@ -2794,7 +2794,7 @@ window.addEventListener("pageshow", (e) => { if (e.persisted) requestAnimationFr
     // iPad Safari it brings the address bar back and near the end of a page
     // the scroll snaps. Instead a swipe or wheel outside the chat is
     // stopped; inside the chat, its own lists still scroll.
-    const coverMq = window.matchMedia("(max-width: 1299px), (hover: none)"); // touch screens: a drawer at any width
+    const coverMq = window.matchMedia("(max-width: 1299px)");
     let pinnedY = null;
     const scrollsInPanel = (target, dy) => {
       for (let el = target instanceof Element ? target : null; el && el !== document.body; el = el.parentElement) {

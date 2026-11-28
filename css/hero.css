@@ -597,19 +597,4 @@ html[data-contrast][data-theme="dark"] .hc-blue { color: #f6dcb0; }
   .hc-rise, .hc-foot.hc-rise { transition-property: opacity, transform; }
 }
 
-/* Touch screens (iPad, phones): the Ask box holds its light and shade still.
-   The light travelling round its edge (a turning CSS variable) and the
-   drifting coloured shade (three large blurred shadows) were both redrawn
-   on every frame while the hero was in view, which iPad Safari does on its
-   main thread. Same colours, resting where they start. */
-@media (hover: none) {
-  html:not([data-motion="calm"]) .hc .hc-ask, html:not([data-motion="calm"]) .hc .hc-ask::before { animation: none !important; }
-}
 
-/* Touch screens: the hero's background holds still (no drifting colour
-   wash, no nudging scroll arrow). Any moving part made iPad Safari redraw
-   the whole hero background (colour wash, dot grid, line drawing) on every
-   frame, which ran the hero at a fraction of its frame rate. */
-@media (hover: none) {
-  html .hc .hc-sky::before, html .hc .hc-down svg { animation: none !important; }
-}
